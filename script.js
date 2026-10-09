@@ -67,6 +67,7 @@ const applyLanguage = (lang) => {
   });
 
   updateMenuLabel();
+  formatUpdatedDate();
   document.dispatchEvent(new CustomEvent("languagechange"));
 };
 
@@ -103,6 +104,17 @@ navigation.addEventListener("click", (event) => {
 });
 
 document.querySelector("#year").textContent = new Date().getFullYear();
+
+// Data da última atualização (atualizada pelo hook de pre-commit do git).
+function formatUpdatedDate() {
+  const updated = document.querySelector("#updated");
+  const [year, month, day] = updated.getAttribute("datetime").split("-").map(Number);
+  updated.textContent = new Intl.DateTimeFormat(htmlLang[currentLang], {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  }).format(new Date(year, month - 1, day));
+}
 
 /* ---------- Filtros por categoria ---------- */
 

@@ -130,6 +130,8 @@ window.I18N = {
     "contact.text": "Open to opportunities in full stack, mobile and AI development.",
     "footer.copy": "DESIGNED AND BUILT WITH CARE",
     "footer.top": "BACK TO TOP ↑",
+    "footer.updated": "UPDATED ON",
+    "cv.download": "Download résumé (PT) <span>↓</span>",
   },
 
   es: {
@@ -245,5 +247,7 @@ window.I18N = {
     "contact.text": "Abierto a oportunidades en desarrollo full stack, mobile e IA.",
     "footer.copy": "DISEÑADO Y CONSTRUIDO CON CUIDADO",
     "footer.top": "VOLVER ARRIBA ↑",
+    "footer.updated": "ACTUALIZADO EL",
+    "cv.download": "Descargar CV (PT) <span>↓</span>",
   },
 };
