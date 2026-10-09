@@ -143,7 +143,9 @@ window.I18N = {
     "chat.s3": "Formação acadêmica",
     "chat.s4": "Como entrar em contato?",
     "chat.suggestions": "Sugestões",
-    "chat.disclaimer": "Busca local — nada do que você digita sai do seu navegador."
+    "chat.disclaimer": "Busca local — nada do que você digita sai do seu navegador.",
+    "chat.hint": "Dúvidas sobre minha experiência? Pergunte aqui 👋",
+    "chat.hintClose": "Fechar aviso"
   },
   "en": {
     "menu.open": "Open menu",
@@ -278,7 +280,9 @@ window.I18N = {
     "chat.s3": "Education",
     "chat.s4": "How to get in touch?",
     "chat.suggestions": "Suggestions",
-    "chat.disclaimer": "Local search — nothing you type leaves your browser."
+    "chat.disclaimer": "Local search — nothing you type leaves your browser.",
+    "chat.hint": "Questions about my experience? Ask here 👋",
+    "chat.hintClose": "Dismiss"
   },
   "es": {
     "menu.open": "Abrir menú",
@@ -405,7 +409,9 @@ window.I18N = {
     "chat.s3": "Formación académica",
     "chat.s4": "¿Cómo contactarlo?",
     "chat.suggestions": "Sugerencias",
-    "chat.disclaimer": "Búsqueda local: nada de lo que escribes sale de tu navegador."
+    "chat.disclaimer": "Búsqueda local: nada de lo que escribes sale de tu navegador.",
+    "chat.hint": "¿Dudas sobre mi experiencia? Pregunta aquí 👋",
+    "chat.hintClose": "Cerrar aviso"
   },
   "fr": {
     "menu.open": "Ouvrir le menu",
@@ -549,7 +555,9 @@ window.I18N = {
     "chat.s3": "Formation",
     "chat.s4": "Comment le contacter ?",
     "chat.suggestions": "Suggestions",
-    "chat.disclaimer": "Recherche locale — rien de ce que vous tapez ne quitte votre navigateur."
+    "chat.disclaimer": "Recherche locale — rien de ce que vous tapez ne quitte votre navigateur.",
+    "chat.hint": "Des questions sur mon parcours ? Demandez ici 👋",
+    "chat.hintClose": "Fermer"
   },
   "it": {
     "menu.open": "Apri il menu",
@@ -693,7 +701,9 @@ window.I18N = {
     "chat.s3": "Formazione",
     "chat.s4": "Come contattarlo?",
     "chat.suggestions": "Suggerimenti",
-    "chat.disclaimer": "Ricerca locale: nulla di ciò che scrivi lascia il tuo browser."
+    "chat.disclaimer": "Ricerca locale: nulla di ciò che scrivi lascia il tuo browser.",
+    "chat.hint": "Domande sulla mia esperienza? Chiedi qui 👋",
+    "chat.hintClose": "Chiudi"
   },
   "zh": {
     "menu.open": "打开菜单",
@@ -837,7 +847,9 @@ window.I18N = {
     "chat.s3": "教育背景",
     "chat.s4": "如何联系？",
     "chat.suggestions": "建议",
-    "chat.disclaimer": "本地搜索 — 你输入的内容不会离开浏览器。"
+    "chat.disclaimer": "本地搜索 — 你输入的内容不会离开浏览器。",
+    "chat.hint": "想了解我的经历？在这里提问 👋",
+    "chat.hintClose": "关闭提示"
   },
   "ru": {
     "menu.open": "Открыть меню",
@@ -981,6 +993,8 @@ window.I18N = {
     "chat.s3": "Образование",
     "chat.s4": "Как связаться?",
     "chat.suggestions": "Подсказки",
-    "chat.disclaimer": "Локальный поиск — введённый текст не покидает ваш браузер."
+    "chat.disclaimer": "Локальный поиск — введённый текст не покидает ваш браузер.",
+    "chat.hint": "Вопросы о моём опыте? Спросите здесь 👋",
+    "chat.hintClose": "Закрыть подсказку"
   }
 };

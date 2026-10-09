@@ -182,7 +182,11 @@
         <button type="submit" data-chat-aria="send">↑</button>
       </form>
       <p class="chat-note" data-chat="disclaimer"></p>
-    </section>`;
+    </section>
+    <div class="chat-hint" hidden>
+      <button class="chat-hint-text" type="button" data-chat="hint"></button>
+      <button class="chat-hint-close" type="button" data-chat-aria="hintClose">×</button>
+    </div>`;
   document.body.append(root);
 
   const toggle = root.querySelector(".chat-toggle");
@@ -191,6 +195,7 @@
   const suggestions = root.querySelector(".chat-suggestions");
   const form = root.querySelector(".chat-form");
   const input = form.querySelector("input");
+  const hint = root.querySelector(".chat-hint");
   const tc = (key) => t(`chat.${key}`);
 
   const el = (tag, className, content) => {
@@ -322,7 +327,48 @@
     answer(trimmed);
   };
 
+  /* ---------- Balão de convite (uma vez por visitante) ---------- */
+
+  const hintStorageKey = "chatHintSeen";
+  const hintSeen = () => {
+    try {
+      return localStorage.getItem(hintStorageKey) === "1";
+    } catch {
+      return false;
+    }
+  };
+  const markHintSeen = () => {
+    try {
+      localStorage.setItem(hintStorageKey, "1");
+    } catch {
+      /* navegação privada: segue sem salvar */
+    }
+  };
+  let hintTimer = null;
+
+  const hideHint = () => {
+    clearTimeout(hintTimer);
+    hint.hidden = true;
+  };
+
+  const showHint = () => {
+    if (!panel.hidden || hintSeen()) return;
+    markHintSeen();
+    hint.hidden = false;
+    root.classList.add("is-nudging");
+    setTimeout(() => root.classList.remove("is-nudging"), 1800);
+    hintTimer = setTimeout(hideHint, 8000);
+  };
+
+  hint.querySelector(".chat-hint-text").addEventListener("click", () => setOpen(true));
+  hint.querySelector(".chat-hint-close").addEventListener("click", hideHint);
+  if (!prefersReducedMotion && !hintSeen()) setTimeout(showHint, 10000);
+
   function setOpen(open) {
+    if (open) {
+      hideHint();
+      markHintSeen();
+    }
     panel.hidden = !open;
     toggle.setAttribute("aria-expanded", String(open));
     root.classList.toggle("is-open", open);
