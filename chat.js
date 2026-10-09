@@ -368,6 +368,8 @@
     if (open) {
       hideHint();
       markHintSeen();
+      // Só conta a abertura; o texto digitado nunca sai do navegador.
+      if (panel.hidden) track("chat-aberto", "Abriu o assistente");
     }
     panel.hidden = !open;
     toggle.setAttribute("aria-expanded", String(open));

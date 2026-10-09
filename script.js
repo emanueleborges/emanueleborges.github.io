@@ -1,5 +1,12 @@
 const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+/* ---------- Estatísticas (GoatCounter) ---------- */
+
+// Registra um evento no painel do GoatCounter (ignorado se o script não carregou).
+const track = (path, title = path) => {
+  window.goatcounter?.count?.({ path, title, event: true });
+};
+
 /* ---------- Idiomas ---------- */
 
 const translations = window.I18N || {};
@@ -74,6 +81,19 @@ const langSelect = document.querySelector("[data-lang-select]");
 langSelect.addEventListener("change", () => {
   storeLang(langSelect.value);
   applyLanguage(langSelect.value);
+  track(`idioma-${langSelect.value}`, `Trocou idioma para ${langSelect.value.toUpperCase()}`);
+});
+
+// Cliques em currículo e contatos.
+document.addEventListener("click", (event) => {
+  const link = event.target.closest("a[href]");
+  if (!link) return;
+  const href = link.getAttribute("href");
+  if (link.hasAttribute("data-cv-link") || href.startsWith("cv/")) track(`curriculo-${currentLang}`, `Baixou currículo (${currentLang.toUpperCase()})`);
+  else if (href.includes("wa.me")) track("contato-whatsapp", "Clicou no WhatsApp");
+  else if (href.startsWith("mailto:")) track("contato-email", "Clicou no e-mail");
+  else if (href.includes("linkedin.com")) track("contato-linkedin", "Clicou no LinkedIn");
+  else if (href.includes("github.com")) track("contato-github", "Clicou no GitHub");
 });
 
 /* ---------- Menu mobile ---------- */
