@@ -1,0 +1,39 @@
+{
+  "en": [
+    ["Kafka experience", "Financial Hub"],
+    ["kafak", "Financial Hub"],
+    ["pyhton", "Backend"],
+    ["kubernets", "DevOps"],
+    ["postgress", "Data"],
+    ["where did he study?", "Education"],
+    ["database", "Data"],
+    ["mobile apps", "Frontend & Mobile"],
+    ["cloud", "INDT"],
+    ["chatbot", "Intelligent Legal Critic"],
+    ["microservices", "Financial Hub"],
+    ["Projects with AI", "Intelligent Legal Critic"],
+    ["how to contact him?", "answer:WhatsApp"],
+    ["download resume", "answer:résumé"],
+    ["Kafka", "answer:“Kafka”"]
+  ],
+  "pt": [
+    ["Projetos com IA", "Crítico Jurídico"],
+    ["onde trabalhou?", "INDT"],
+    ["onde estudou?", "Formação"],
+    ["sabe Oracle?", "ICCT"],
+    ["banco de dados", "Dados"],
+    ["experiência com React Native", "INDT"]
+  ],
+  "es": [
+    ["¿dónde estudió?", "Formación"],
+    ["proyectos con Kafka", "Financial Hub"]
+  ],
+  "zh": [
+    ["Kafka 相关项目", "Financial Hub"],
+    ["教育背景", "教育背景"]
+  ],
+  "ru": [
+    ["Проекты с ИИ", "Проекты"],
+    ["Опыт с Kafka", "Financial Hub"]
+  ]
+}

@@ -242,6 +242,16 @@ main, .footer { position: relative; z-index: 1; }
 .chat-note { margin: 0; padding: 0 16px 12px; color: #787285; font-size: 10.5px; }
 .chat-toggle:focus-visible, .chat-close:focus-visible, .chat-chip:focus-visible, .chat-form button:focus-visible, .chat-goto:focus-visible { outline: 2px solid #b895ff; outline-offset: 2px; }
 .chat-highlight { animation: chat-glow 2.4s ease; }
+.chat-summary { margin-top: 6px !important; color: #d6d1e2; font-size: 12.5px; }
+.chat-summary strong { color: var(--cyan-soft); font-weight: 700; }
+.chat-related { margin-top: 12px; }
+.chat-related p { margin-bottom: 6px !important; color: var(--muted); font-size: 12px; }
+.chat-related .chat-chip { margin: 0 6px 6px 0; }
+.chat-typing { display: inline-flex; gap: 4px; padding: 4px 2px; }
+.chat-typing i { width: 6px; height: 6px; border-radius: 50%; background: #b895ff; animation: chat-dot 1s ease-in-out infinite; }
+.chat-typing i:nth-child(2) { animation-delay: .15s; }
+.chat-typing i:nth-child(3) { animation-delay: .3s; }
+@keyframes chat-dot { 0%, 80%, 100% { opacity: .3; transform: translateY(0); } 40% { opacity: 1; transform: translateY(-3px); } }
 .chat-toggle { position: relative; }
 .chat.is-nudging .chat-toggle { animation: chat-wiggle .9s ease; }
 .chat.is-nudging .chat-toggle::after { content: ""; position: absolute; inset: 0; border-radius: 50%; border: 2px solid #b895ff; animation: chat-ring 1.6s ease-out 2; pointer-events: none; }

@@ -1,6 +1,6 @@
 // Assistente de busca local: procura as respostas no conteúdo da própria página,
 // no idioma atual. Nada é enviado para fora do navegador.
-// Usa `t` e `currentLang`, definidos em script.js.
+// Usa `t`, `currentLang`, `prefersReducedMotion` e `track`, definidos em script.js.
 
 (() => {
   /* ---------- Normalização e termos de busca ---------- */
@@ -14,12 +14,12 @@
 
   const stopwords = new Set(
     (
-      "o a os as de da do das dos e em no na nos nas com para por que qual quais como tem ter voce ele seu sua um uma onde quando sobre ja algum alguma " +
-      "the an of and in on with for what which how does do is are he his has have where when about any some " +
-      "el la los las del y en con para que cual cuales como tiene usted su un una donde algun alguna " +
-      "le les des du et avec pour quel quelle quels comment est il son sa une ou sur " +
-      "il lo gli di del con per che quale quali come ha lui suo un una dove sul " +
-      "и в на с по что как какой какие у он его есть ли о для " +
+      "o a os as de da do das dos e em no na nos nas com para por que qual quais como tem ter voce ele seu sua um uma onde quando sobre ja algum alguma sabe conhece usa usou " +
+      "the an of and in on with for what which how does do is are he his has have where when about any some know knows use used " +
+      "el la los las del y en con para que cual cuales como tiene usted su un una donde algun alguna conoce " +
+      "le les des du et avec pour quel quelle quels comment est il son sa une ou sur connait " +
+      "il lo gli di del con per che quale quali come ha lui suo un una dove sul conosce " +
+      "и в на с по что как какой какие у он его есть ли о для знает " +
       "emanuel borges"
     ).split(" "),
   );
@@ -29,26 +29,24 @@
   // Palavras longas viram prefixos para casar variações (projeto/projetos, проекты/проектов).
   const stem = (word) => (word.length >= 6 ? word.slice(0, word.length - 2) : word);
 
-  const queryTerms = (query) => {
-    const terms = new Set();
-    const text = normalize(query);
-    for (const word of text.match(/[\p{L}\p{N}+#.]+/gu) || []) {
-      const clean = word.replace(/^[.]+|[.?]+$/g, "");
-      if ([...clean].some(isCjk)) {
-        const chars = [...clean].filter(isCjk);
-        if (chars.length === 1) terms.add(chars[0]);
-        for (let i = 0; i < chars.length - 1; i += 1) terms.add(chars[i] + chars[i + 1]);
-        const latin = clean.replace(/[㐀-鿿]/g, " ").trim();
-        latin.split(/\s+/).filter((w) => w.length >= 2).forEach((w) => terms.add(w));
-      } else if (clean.length >= 2 && !stopwords.has(clean)) {
-        terms.add(stem(clean));
-      }
-    }
-    // Sinônimos simples entre idiomas.
-    if (terms.has("ai") || terms.has("ия") || terms.has("ии")) terms.add("ia");
-    if (terms.has("ia")) terms.add("ai").add("machine learning").add("nlp");
-    return [...terms];
-  };
+  const wordsOf = (text) => normalize(text).match(/[\p{L}\p{N}+#.]+/gu) || [];
+
+  /* ---------- Sinônimos: expressões que viram termos existentes no site ---------- */
+
+  const synonyms = [
+    [/banco de dados|database|base de datos|base de donnees|banca dati|数据库|баз[аы] данных|\bsql\b|\bdb\b/, ["postgresql", "oracle", "mysql", "mongodb", "sql server"]],
+    [/celular|mobile|movil|cellulare|手机|移动|мобил|\bapps?\b|android|\bios\b/, ["react native", "kotlin", "mobile"]],
+    [/nuvem|cloud|nube|nuage|nuvola|云|облак/, ["aws", "serverless", "lambda"]],
+    [/front|interface|\bui\b|\bux\b|前端|фронт/, ["react", "angular", "vue", "frontend"]],
+    [/chat ?bot|\bllm|gpt|genai|generativ|生成式|聊天机器人|чат-?бот/, ["rag", "langchain", "llm", "ollama"]],
+    [/micro-?s+ervi|微服务|микросервис/, ["kafka", "rabbitmq", "docker", "kubernetes", "hexagonal"]],
+    [/mensageria|messaging|mensajeria|messagerie|messaggistica|fila|queue|消息|очеред/, ["kafka", "rabbitmq"]],
+    [/devops|deploy|pipeline|container|contene?dor|容器|部署|контейнер/, ["docker", "kubernetes", "ci/cd", "gitlab"]],
+    [/qualidade|quality|calidad|qualite|qualita|teste?s?\b|testing|测试|质量|тест|качеств/, ["sonarqube", "tdd", "code review"]],
+    [/machine learning|aprendizado de maquina|aprendizaje automatico|apprentissage automatique|apprendimento automatico|机器学习|машинн/, ["machine learning", "scikit", "tensorflow", "xgboost"]],
+    [/financ|banco digital|pagamento|payment|pago|paiement|pagament|支付|金融|платеж|финанс/, ["financial", "p2p"]],
+    [/governo|government|gobierno|gouvernement|governo|政府|государ|prefeitura|setor publico|public sector/, ["manaus", "semef"]],
+  ];
 
   /* ---------- Assuntos que apontam para uma seção ---------- */
 
@@ -73,21 +71,29 @@
 
   const buildIndex = () => {
     const docs = [];
-    const add = (label, body, target, title = "", hidden = "") =>
-      docs.push({ label, body, target, title: normalize(title), haystack: normalize(`${label} ${title} ${body} ${hidden}`) });
+    const add = ({ section, item = "", body, target, title = "", hidden = "" }) =>
+      docs.push({
+        section,
+        item,
+        label: item ? `${section} · ${item}` : section,
+        body,
+        target,
+        title: normalize(title),
+        haystack: normalize(`${section} ${item} ${title} ${body} ${hidden}`),
+      });
 
     const about = sectionLabel("nav.about");
-    add(about, text(document.querySelector(".hero-description")), document.querySelector("#inicio"));
-    add(about, `${text(document.querySelector(".about-lead"))} ${text(document.querySelector(".about-content > .muted"))}`, document.querySelector("#sobre"));
+    add({ section: about, body: text(document.querySelector(".hero-description")), target: document.querySelector("#inicio") });
+    add({ section: about, body: `${text(document.querySelector(".about-lead"))} ${text(document.querySelector(".about-content > .muted"))}`, target: document.querySelector("#sobre") });
     document.querySelectorAll(".fact").forEach((fact) => {
       const title = text(fact.querySelector("strong"));
-      add(about, `${title}: ${text(fact.querySelector("small"))}`, fact, title);
+      add({ section: about, body: `${title}: ${text(fact.querySelector("small"))}`, target: fact, title });
     });
 
     const experience = sectionLabel("nav.experience");
     document.querySelectorAll(".job").forEach((job) => {
       const title = text(job.querySelector("h3"));
-      add(`${experience} · ${text(job.querySelector(".job-company"))}`, `${title} (${text(job.querySelector(".job-period"))}). ${text(job.querySelector("ul"))}`, job, title);
+      add({ section: experience, item: text(job.querySelector(".job-company")), body: `${title} (${text(job.querySelector(".job-period"))}). ${text(job.querySelector("ul"))}`, target: job, title });
     });
 
     const projects = sectionLabel("nav.projects");
@@ -95,47 +101,110 @@
       const title = text(card.querySelector("h3"));
       // Projetos da categoria "IA / ML" também respondem a buscas por IA.
       const hidden = card.dataset.category.split(" ").includes("ia") ? "ia ai machine learning nlp ии 人工智能" : "";
-      add(`${projects} · ${title}`, `${text(card.querySelector(".project-type"))} — ${text(card.querySelector(".muted"))}`, card, title, hidden);
+      add({ section: projects, item: title, body: `${text(card.querySelector(".project-type"))} — ${text(card.querySelector(".muted"))}`, target: card, title, hidden });
     });
 
     const skills = sectionLabel("nav.skills");
     document.querySelectorAll('[data-filter-group="habilidades"] [data-filter]:not([data-filter="todos"])').forEach((tab) => {
       const chips = [...document.querySelectorAll(`.skill-chip[data-category~="${tab.dataset.filter}"] strong`)].map(text);
-      add(`${skills} · ${text(tab)}`, chips.join(", "), document.querySelector("#habilidades"), text(tab));
+      add({ section: skills, item: text(tab), body: chips.join(", "), target: document.querySelector("#habilidades"), title: text(tab) });
     });
 
     const education = sectionLabel("nav.education");
     document.querySelectorAll(".education-list li").forEach((li) => {
       const title = text(li.querySelector("strong"));
-      add(education, `${title} — ${text(li.querySelector(".edu-text > span"))}`, li, title);
+      add({ section: education, item: title, body: `${title} — ${text(li.querySelector(".edu-text > span"))}`, target: li, title });
     });
     document.querySelectorAll(".education-extra > div").forEach((block) => {
       const title = text(block.querySelector(".section-kicker"));
-      add(`${education} · ${title}`, text(block.querySelector(".muted")), block, title);
+      add({ section: education, item: title, body: text(block.querySelector(".muted")), target: block, title });
     });
 
     return docs;
   };
 
+  /* ---------- Tolerância a erros de digitação ---------- */
+
+  // Distância de edição com troca de letras vizinhas (kafak → kafka).
+  const editDistance = (a, b) => {
+    const d = Array.from({ length: a.length + 1 }, (_, i) => [i, ...Array(b.length).fill(0)]);
+    for (let j = 1; j <= b.length; j += 1) d[0][j] = j;
+    for (let i = 1; i <= a.length; i += 1) {
+      for (let j = 1; j <= b.length; j += 1) {
+        const cost = a[i - 1] === b[j - 1] ? 0 : 1;
+        d[i][j] = Math.min(d[i - 1][j] + 1, d[i][j - 1] + 1, d[i - 1][j - 1] + cost);
+        if (i > 1 && j > 1 && a[i - 1] === b[j - 2] && a[i - 2] === b[j - 1]) d[i][j] = Math.min(d[i][j], d[i - 2][j - 2] + 1);
+      }
+    }
+    return d[a.length][b.length];
+  };
+
+  const correctWord = (word, vocabulary) => {
+    if (word.length < 4 || stopwords.has(word) || [...word].some(isCjk) || vocabulary.has(word)) return word;
+    if ([...vocabulary].some((known) => known.startsWith(word) || word.startsWith(known))) return word;
+    const limit = word.length >= 7 ? 2 : 1;
+    let best = word;
+    let bestDistance = limit + 1;
+    for (const known of vocabulary) {
+      if (Math.abs(known.length - word.length) > limit) continue;
+      const distance = editDistance(word, known);
+      if (distance < bestDistance) {
+        best = known;
+        bestDistance = distance;
+      }
+    }
+    return best;
+  };
+
+  /* ---------- Busca ---------- */
+
   // Termos curtos (ex.: "ai", "ia") só contam como palavra inteira.
   const matches = (haystack, term) =>
     term.length <= 3 && !isCjk(term[0])
-      ? new RegExp(`(^|[^\\p{L}])${term.replace(/[.+#]/g, "\\$&")}($|[^\\p{L}])`, "u").test(haystack)
+      ? new RegExp(`(^|[^\\p{L}])${term.replace(/[.+#/]/g, "\\$&")}($|[^\\p{L}])`, "u").test(haystack)
       : haystack.includes(term);
 
-  const search = (query) => {
-    const q = normalize(query);
-    const topicLabels = topics.filter(([, pattern]) => pattern.test(q)).map(([key]) => normalize(sectionLabel(key)));
-    // Palavras de assunto ("projetos", "estudou"…) contam só como assunto, não como termo.
-    const terms = queryTerms(query).filter((term) => !topics.some(([, pattern]) => pattern.test(term)));
-    if (!terms.length && !topicLabels.length) return [];
+  const isTopicWord = (term) => topics.some(([, pattern]) => pattern.test(term));
 
+  const search = (query) => {
     const docs = buildIndex();
-    // Termos raros (ex.: "kafka") pesam mais que termos comuns (ex.: "experiência").
+    const vocabulary = new Set(docs.flatMap((doc) => doc.haystack.match(/[\p{L}\p{N}+#.]{4,}/gu) || []));
+
+    // 1. Corrige erros de digitação palavra por palavra.
+    const corrected = wordsOf(query).map((word) => correctWord(word.replace(/[.?]+$/, ""), vocabulary)).join(" ");
+    const q = normalize(corrected);
+
+    // 2. Termos principais (o que a pessoa digitou) e termos de apoio (sinônimos).
+    const mainTerms = new Set();
+    for (const word of q.match(/[\p{L}\p{N}+#./]+/gu) || []) {
+      const clean = word.replace(/^[.]+|[.?]+$/g, "");
+      if ([...clean].some(isCjk)) {
+        const chars = [...clean].filter(isCjk);
+        if (chars.length === 1) mainTerms.add(chars[0]);
+        for (let i = 0; i < chars.length - 1; i += 1) mainTerms.add(chars[i] + chars[i + 1]);
+        clean.replace(/[㐀-鿿]/g, " ").trim().split(/\s+/).filter((w) => w.length >= 2).forEach((w) => mainTerms.add(w));
+      } else if (clean.length >= 2 && !stopwords.has(clean)) {
+        mainTerms.add(stem(clean));
+      }
+    }
+    if (mainTerms.has("ai") || mainTerms.has("ии")) mainTerms.add("ia");
+    const extraTerms = new Set();
+    if (mainTerms.has("ia")) ["ai", "machine learning", "nlp"].forEach((term) => extraTerms.add(term));
+    for (const [pattern, expansion] of synonyms) if (pattern.test(q)) expansion.forEach((term) => extraTerms.add(term));
+
+    // Palavras de assunto ("projetos", "estudou"…) contam só como assunto, não como termo.
+    const topicLabels = topics.filter(([, pattern]) => pattern.test(q)).map(([key]) => normalize(sectionLabel(key)));
+    const main = [...mainTerms].filter((term) => !isTopicWord(term));
+    const extra = [...extraTerms].filter((term) => !mainTerms.has(term));
+    const terms = [...main, ...extra];
+    if (!terms.length && !topicLabels.length) return { results: [], main: [] };
+
+    // 3. Termos raros (ex.: "kafka") pesam mais que termos comuns (ex.: "experiência").
     const weight = Object.fromEntries(
       terms.map((term) => {
         const df = docs.filter((doc) => matches(doc.haystack, term)).length;
-        return [term, df ? Math.log(1 + docs.length / df) : 0];
+        const idf = df ? Math.log(1 + docs.length / df) : 0;
+        return [term, extraTerms.has(term) && !mainTerms.has(term) ? idf * 0.6 : idf];
       }),
     );
 
@@ -145,17 +214,18 @@
         for (const term of terms) {
           if (matches(doc.haystack, term)) score += weight[term] * (matches(doc.title, term) ? 2 : 1);
         }
-        if (topicLabels.some((label) => normalize(doc.label).startsWith(label))) score += 1.5;
+        if (topicLabels.some((label) => normalize(doc.section).startsWith(label))) score += 1.5;
         return { doc, score };
       })
       .filter(({ score }) => score > 0)
       .sort((a, b) => b.score - a.score);
 
     const best = scored[0]?.score ?? 0;
-    return scored
+    const results = scored
       .filter(({ score }) => score >= best * 0.5)
       .slice(0, 4)
       .map(({ doc }) => ({ ...doc, terms }));
+    return { results, main: main.filter((term) => results.some((r) => matches(r.haystack, term))) };
   };
 
   /* ---------- Interface ---------- */
@@ -178,7 +248,7 @@
       <div class="chat-messages" aria-live="polite"></div>
       <div class="chat-suggestions" role="group"></div>
       <form class="chat-form">
-        <input type="text" autocomplete="off" maxlength="200" data-chat-placeholder="placeholder" />
+        <input type="text" autocomplete="off" maxlength="200" />
         <button type="submit" data-chat-aria="send">↑</button>
       </form>
       <p class="chat-note" data-chat="disclaimer"></p>
@@ -196,7 +266,7 @@
   const form = root.querySelector(".chat-form");
   const input = form.querySelector("input");
   const hint = root.querySelector(".chat-hint");
-  const tc = (key) => t(`chat.${key}`);
+  const tc = (key, vars) => t(`chat.${key}`, vars);
 
   const el = (tag, className, content) => {
     const node = document.createElement(tag);
@@ -238,6 +308,54 @@
     return p;
   };
 
+  // Forma como o termo aparece na página (ex.: "kafka" → "Kafka").
+  // Prefere a forma com letras minúsculas/maiúsculas normais a rótulos em CAIXA ALTA.
+  const displayTerm = (term, results) => {
+    const found = [];
+    for (const result of results) {
+      const lower = normalize(result.body);
+      for (let at = lower.indexOf(term); at >= 0; at = lower.indexOf(term, at + 1)) {
+        const match = result.body.slice(at).match(/^[\p{L}\p{N}+#./-]+/u);
+        if (match) found.push(match[0]);
+      }
+    }
+    return found.find((word) => word !== word.toUpperCase()) ?? found[0] ?? term;
+  };
+
+  // Frase-resumo: "Sobre “Kafka”, encontrei:" + resultados agrupados por seção.
+  const summary = (results, main) => {
+    const groups = new Map();
+    for (const result of results) {
+      if (!groups.has(result.section)) groups.set(result.section, []);
+      if (result.item) groups.get(result.section).push(result.item);
+    }
+    const nodes = [];
+    nodes.push(
+      el("p", null, main.length ? tc("summary", { q: main.map((term) => `“${displayTerm(term, results)}”`).join(" + ") }) : tc("found")),
+    );
+    const list = el("p", "chat-summary");
+    [...groups].forEach(([section, items], index) => {
+      if (index) list.append(" · ");
+      list.append(el("strong", null, section));
+      if (items.length) list.append(`: ${items.join(", ")}`);
+    });
+    nodes.push(list);
+    return nodes;
+  };
+
+  // Sugestões de continuação: outras tecnologias que aparecem nos resultados.
+  const relatedSuggestions = (results, terms) => {
+    const names = [...document.querySelectorAll(".skill-chip strong")].map(text);
+    const counts = new Map();
+    for (const name of names) {
+      const key = normalize(name);
+      if (terms.some((term) => key.includes(term) || term.includes(key))) continue;
+      const hitsCount = results.filter((result) => result.haystack.includes(key)).length;
+      if (hitsCount) counts.set(name, hitsCount);
+    }
+    return [...counts].sort((a, b) => b[1] - a[1]).slice(0, 3).map(([name]) => name);
+  };
+
   const goTo = (target) => {
     // Se o item estiver escondido por um filtro, volta para "todos".
     const group = target.closest("[data-filter-items]");
@@ -275,25 +393,27 @@
     return box;
   };
 
+  const chipButton = (label, query = label) => {
+    const chip = el("button", "chat-chip", label);
+    chip.type = "button";
+    chip.addEventListener("click", () => ask(query));
+    return chip;
+  };
+
+  // Monta a resposta (lista de elementos) para uma pergunta.
   const answer = (query) => {
     const q = normalize(query);
     if (intents.cv.test(q)) {
       const box = el("div", "chat-links");
       box.append(linkButton(text(document.querySelector('[data-i18n="cv.download"]')).replace(/[↓]/g, "").trim(), `cv/curriculo-emanuel-borges-${currentLang}.pdf`));
-      addMessage("bot", el("p", null, tc("cv")), box);
-      return;
+      return [el("p", null, tc("cv")), box];
     }
-    if (intents.contact.test(q)) {
-      addMessage("bot", el("p", null, tc("contact")), contactLinks());
-      return;
-    }
+    if (intents.contact.test(q)) return [el("p", null, tc("contact")), contactLinks()];
 
-    const results = search(query);
-    if (!results.length) {
-      addMessage("bot", el("p", null, tc("none")), contactLinks());
-      return;
-    }
-    const items = results.map((result) => {
+    const { results, main } = search(query);
+    if (!results.length) return [el("p", null, tc("none")), contactLinks()];
+
+    const cards = results.map((result) => {
       const card = el("div", "chat-result");
       const button = el("button", "chat-goto", `${tc("goTo")} →`);
       button.type = "button";
@@ -301,7 +421,15 @@
       card.append(el("strong", null, result.label), snippet(result.body, result.terms), button);
       return card;
     });
-    addMessage("bot", el("p", null, tc("found")), ...items);
+
+    const nodes = [...summary(results, main), ...cards];
+    const related = relatedSuggestions(results, results[0].terms);
+    if (related.length) {
+      const box = el("div", "chat-related");
+      box.append(el("p", null, tc("related")), ...related.map((name) => chipButton(name)));
+      nodes.push(box);
+    }
+    return nodes;
   };
 
   const renderTexts = () => {
@@ -310,21 +438,27 @@
     input.placeholder = tc("placeholder");
     toggle.setAttribute("aria-label", tc("open"));
     suggestions.setAttribute("aria-label", tc("suggestions"));
-    suggestions.replaceChildren(
-      ...["s1", "s2", "s3", "s4"].map((key) => {
-        const chip = el("button", "chat-chip", tc(key));
-        chip.type = "button";
-        chip.addEventListener("click", () => ask(tc(key)));
-        return chip;
-      }),
-    );
+    suggestions.replaceChildren(...["s1", "s2", "s3", "s4"].map((key) => chipButton(tc(key))));
   };
 
+  // Mostra "digitando…" por um instante antes da resposta.
   const ask = (query) => {
     const trimmed = query.trim();
     if (!trimmed) return;
     addMessage("user", el("p", null, trimmed));
-    answer(trimmed);
+    const reply = answer(trimmed);
+    if (prefersReducedMotion) {
+      addMessage("bot", ...reply);
+      return;
+    }
+    const typing = addMessage("bot", el("span", "chat-typing", ""));
+    typing.querySelector(".chat-typing").append(el("i"), el("i"), el("i"));
+    typing.setAttribute("aria-hidden", "true");
+    setTimeout(() => {
+      typing.removeAttribute("aria-hidden");
+      typing.replaceChildren(...reply);
+      messages.scrollTop = messages.scrollHeight;
+    }, 550);
   };
 
   /* ---------- Balão de convite (uma vez por visitante) ---------- */
@@ -403,4 +537,13 @@
     if (!panel.hidden) addMessage("bot", el("p", null, tc("greeting")));
   });
   renderTexts();
+
+  // Usado pelos testes automáticos (tests/): devolve a resposta em texto.
+  window.portfolioChat = {
+    answerText: (query) =>
+      answer(query)
+        .map((node) => node.textContent)
+        .join(" | "),
+    search: (query) => search(query).results.map((result) => result.label),
+  };
 })();
