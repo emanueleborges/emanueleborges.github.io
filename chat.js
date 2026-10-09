@@ -362,7 +362,7 @@
 
   hint.querySelector(".chat-hint-text").addEventListener("click", () => setOpen(true));
   hint.querySelector(".chat-hint-close").addEventListener("click", hideHint);
-  if (!prefersReducedMotion && !hintSeen()) setTimeout(showHint, 10000);
+  if (!prefersReducedMotion && !hintSeen()) setTimeout(showHint, 3000);
 
   function setOpen(open) {
     if (open) {
