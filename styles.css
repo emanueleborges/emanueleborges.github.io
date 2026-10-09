@@ -18,7 +18,7 @@ button { font: inherit; }
 .shell { width: min(1120px, calc(100% - 64px)); margin-inline: auto; }
 .mono { font-family: var(--mono); }
 .muted { color: var(--muted); line-height: 1.8; }
-.site-header { position: absolute; z-index: 5; inset: 0 0 auto; }
+.site-header { position: fixed; z-index: 10; inset: 0 0 auto; background: rgba(9,8,17,.82); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); }
 .nav { height: 82px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,.08); }
 .brand { display: inline-flex; align-items: center; gap: 11px; font-size: 14px; font-weight: 800; letter-spacing: -.04em; }
 .brand-mark { display: grid; place-items: center; width: 34px; height: 34px; border: 1px solid rgba(165,125,255,.6); border-radius: 11px; color: #f9f7ff; font-size: 18px; box-shadow: 0 0 22px rgba(138,89,255,.24); }
