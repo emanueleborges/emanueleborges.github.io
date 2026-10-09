@@ -138,7 +138,9 @@ blockquote { margin: 32px 0 0; padding: 12px 0 12px 16px; border-left: 2px solid
 .skills-panel { padding-top: 25px; min-width: 0; }
 .filter-count { margin: -12px 0 18px; color: #787285; font-size: 11px; letter-spacing: .1em; }
 .skills-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; margin: 0; padding: 0; list-style: none; }
-.skill-chip { position: relative; overflow: hidden; transition: border-color .2s, transform .2s; display: grid; gap: 6px; padding: 14px 16px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); }
+.skill-chip { position: relative; overflow: hidden; transition: border-color .2s, transform .2s; display: grid; grid-template-columns: 26px 1fr; align-items: center; gap: 4px 12px; padding: 14px 16px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); }
+.skill-icon { grid-row: span 2; width: 26px; height: 26px; object-fit: contain; filter: brightness(0) invert(1); opacity: .8; transition: opacity .2s, transform .2s; }
+.skill-chip:hover .skill-icon { opacity: 1; transform: scale(1.1); }
 .skill-chip strong { font-size: 15px; }
 .skill-chip span { color: #8e79b4; font-size: 10px; letter-spacing: .1em; }
 
