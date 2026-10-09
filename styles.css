@@ -79,6 +79,11 @@ button { font: inherit; }
 .section-kicker { margin: 0 0 24px; }
 .section-heading h2, .skills-intro h2, .contact-inner h2 { margin: 0; font-size: clamp(39px, 5vw, 58px); line-height: 1.1; letter-spacing: -.07em; }
 .gradient-text { color: #b895ff; }
+.about-photo { position: relative; width: min(280px, 100%); margin: 48px 0 0; animation: float 7s ease-in-out infinite; }
+.about-photo::before { content: ""; position: absolute; inset: 0; border: 1px solid rgba(184,149,255,.45); border-radius: 26px; translate: 14px 14px; z-index: -1; }
+.about-photo::after { content: ""; position: absolute; inset: 0; border-radius: 26px; background: linear-gradient(160deg, transparent 55%, rgba(106,61,240,.35)); pointer-events: none; }
+.about-photo img { display: block; width: 100%; height: auto; aspect-ratio: 1; object-fit: cover; border-radius: 26px; border: 1px solid rgba(232,222,255,.18); box-shadow: 0 24px 60px rgba(0,0,0,.45), 0 0 50px rgba(142,80,255,.25); filter: saturate(.9) contrast(1.05); }
+@keyframes float { 50% { transform: translateY(-10px); } }
 .about-lead { font-size: 20px; line-height: 1.55; letter-spacing: -.035em; font-weight: 600; margin: 5px 0 12px; }
 .about-content > .muted { max-width: 530px; font-size: 15px; }
 .about-facts { display: grid; grid-template-columns: 1fr 1fr; gap: 18px 10px; margin-top: 31px; }
@@ -210,6 +215,7 @@ main, .footer { position: relative; z-index: 1; }
   .education-extra { grid-template-columns: 1fr; gap: 22px; }
   .section-heading h2, .skills-intro h2 { font-size: 46px; }
   .about-lead { font-size: 18px; }
+  .about-photo { width: min(240px, 70%); margin-top: 32px; }
   .section-topline { align-items: start; flex-direction: column; gap: 15px; margin-bottom: 29px; }
   .section-aside br { display: none; }
   .projects-grid { grid-template-columns: 1fr; gap: 34px; }
@@ -237,6 +243,6 @@ main, .footer { position: relative; z-index: 1; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .hero-slide, .bg-aurora span, .hero h1 span { animation: none !important; }
+  .hero-slide, .bg-aurora span, .hero h1 span, .about-photo { animation: none !important; }
   *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; }
 }

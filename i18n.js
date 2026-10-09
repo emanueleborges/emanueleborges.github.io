@@ -39,6 +39,7 @@ window.I18N = {
 
     "about.kicker": "// 01. ABOUT ME",
     "about.title": 'Solid code,<br />now with <span class="gradient-text">AI.</span>',
+    "about.photoAlt": "Photo of Emanuel Borges",
     "about.lead": "Senior Software Engineer specialized in full stack, mobile and scalable systems architecture.",
     "about.body":
       "I've worked on large-scale projects in the public and private sectors — INDT, ICCT and Manaus City Hall — focusing on Clean Architecture, testing and DevOps practices. Today I apply Artificial Intelligence and NLP to solve complex problems, especially in semantic search, RAG and information retrieval.",
@@ -123,7 +124,7 @@ window.I18N = {
     "edu.certList":
       "Introduction to Node.js — Linux Foundation · Introduction to Cybersecurity — Cisco · Scrum Foundation — Certiprof · Full Cycle: Docker, Kubernetes, GitOps, RabbitMQ · Alura: LangChain with RAG, TypeScript, NestJS, React, CI/CD",
     "edu.lang": "LANGUAGES",
-    "edu.langList": "Portuguese — native · Spanish — intermediate (B2) · English (A2) — studying",
+    "edu.langList": "Portuguese — native · Spanish — intermediate (B2) · English — basic (A2)",
 
     "contact.kicker": "// 06. CONTACT",
     "contact.title": 'Have a project?<br /><span class="gradient-text">Let\'s talk.</span>',
@@ -165,6 +166,7 @@ window.I18N = {
 
     "about.kicker": "// 01. SOBRE MÍ",
     "about.title": 'Código sólido,<br />ahora con <span class="gradient-text">IA.</span>',
+    "about.photoAlt": "Foto de Emanuel Borges",
     "about.lead": "Ingeniero de Software Sénior especializado en full stack, mobile y arquitectura de sistemas escalables.",
     "about.body":
       "He trabajado en proyectos de gran escala en los sectores público y privado — INDT, ICCT y la Alcaldía de Manaus — con foco en Clean Architecture, pruebas y prácticas DevOps. Hoy aplico Inteligencia Artificial y NLP para resolver problemas complejos, especialmente en búsqueda semántica, RAG y recuperación de información.",
@@ -240,7 +242,7 @@ window.I18N = {
     "edu.certList":
       "Introduction to Node.js — Linux Foundation · Introduction to Cybersecurity — Cisco · Scrum Foundation — Certiprof · Full Cycle: Docker, Kubernetes, GitOps, RabbitMQ · Alura: LangChain con RAG, TypeScript, NestJS, React, CI/CD",
     "edu.lang": "IDIOMAS",
-    "edu.langList": "Portugués — nativo · Español — intermedio (B2) · Inglés (A2) — en estudio",
+    "edu.langList": "Portugués — nativo · Español — intermedio (B2) · Inglés — básico (A2)",
 
     "contact.kicker": "// 06. CONTACTO",
     "contact.title": '¿Tienes un proyecto?<br /><span class="gradient-text">Hablemos.</span>',
