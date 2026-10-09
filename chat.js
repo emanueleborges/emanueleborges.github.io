@@ -68,35 +68,123 @@
 
   /* ---------- Respostas prontas (perguntas frequentes) ---------- */
 
+  // A ordem importa: a primeira regra que casar responde.
   // `unless`: evita confundir, por ex., "linguagens de programação" com idiomas falados.
+  // `related`: botões de continuação mostrados depois da resposta.
   const faqs = [
+    {
+      key: "greeting",
+      pattern: /^\s*(oi+|ola|opa|hello|hi|hey|hola|bonjour|salut|ciao|buongiorno|buenas|bom dia|boa tarde|boa noite|good (morning|afternoon|evening)|buenos dias|你好|您好|привет|здравствуйте|добрый день)[\s!.,?！。]*$/,
+      related: ["about", "seeking", "ai", "stack"],
+    },
+    {
+      key: "thanks",
+      pattern: /^\s*((muito )?obrigad[oa]|valeu|thanks|thank you|thx|gracias|merci|grazie|谢谢|多谢|спасибо)[\s!.,?！。]*$/,
+      contacts: true,
+    },
     {
       key: "salary",
       pattern: /salari|salary|sueldo|remunera|pretens|quanto (cobra|ganha)|how much|cuanto cobra|tarif|hourly|薪|工资|зарплат|оплат/,
       contacts: true,
     },
     {
-      key: "years",
-      pattern: /quantos anos|anos de experiencia|how many years|years of experience|how long|cuantos anos|combien d.?annees|annees d.?experience|quanti anni|anni di esperienza|多少年|几年|сколько лет|лет опыта/,
-      target: "#experiencia",
+      key: "start",
+      pattern: /quando (ele )?(pode )?(comecar|iniciar)|data de inicio|start date|notice period|aviso previo|when can (he|you) start|cuando puede (empezar|comenzar)|preavis|quand .*commencer|quando (puo|potrebbe) iniziare|preavviso|何时.*入职|什么时候.*(开始|入职)|когда .*(начать|выйти)/,
+      contacts: true,
     },
     {
       key: "seeking",
       pattern: /tipo de vaga|qual vaga|que vaga|quais vagas|vaga (que|de) (procura|busca)|procura (qual|que|vaga|emprego|trabalho|oportunidade|posi)|busca (vaga|vacante|empleo|trabajo|puesto)|tipo de (puesto|vacante|empleo|trabajo|cargo)|looking for|seeking|what (kind of |type of )?(roles?|jobs?|positions?)|open to (roles|positions|jobs)|quel (type de )?poste|cherche (un )?(poste|emploi)|che tipo di (lavoro|posizione|ruolo)|cerca (lavoro|posizion)|寻找|什么职位|求职|ищет|какую (работу|вакансию|должность)|ваканс/,
       contacts: true,
+      related: ["work", "differential", "stack"],
+    },
+    {
+      key: "differential",
+      pattern: /diferencia|por que contrat|porque contrat|why (should (we|i) )?hire|why him|strength|ponto forte|pontos fortes|fortaleza|point fort|pourquoi (le |l.)?(embaucher|recruter)|punti di forza|perche (assumer|sceglier)|优势|为什么.*(选择|雇|招)|сильн\w* сторон|почему (он|его|нанять)|преимуществ/,
+      related: ["ai", "soft", "seeking"],
     },
     {
       key: "work",
-      pattern: /remot|home ?office|presencial|hibrid|hybrid|on-?site|fuso|timezone|time zone|zona horaria|fuseau|fuso orario|utc|gmt|onde mora|where .*(live|based|located)|donde vive|ou habite|dove vive|internaciona|internationa|exterior|abroad|estero|etranger|relocat|visa|clt|pj|contrat|freelanc|autonom|disponib|availab|远程|时区|国际|合同|удален|пояс|междунар|контракт|релокац/,
+      pattern: /remot|home ?office|presencial|hibrid|hybrid|on-?site|fuso|timezone|time zone|zona horaria|fuseau|fuso orario|\butc\b|\bgmt\b|onde mora|where .*(live|based|located)|donde vive|ou habite|dove vive|internaciona|internationa|exterior|abroad|estero|etranger|relocat|\bvisa\b|\bclt\b|\bpj\b|contrat|freelanc|autonom|disponib|availab|远程|时区|国际|合同|удален|пояс|междунар|контракт|релокац/,
       contacts: true,
+      related: ["seeking", "years"],
+    },
+    {
+      key: "years",
+      pattern: /quantos anos|anos de experiencia|how many years|years of experience|how long|cuantos anos|combien d.?annees|annees d.?experience|quanti anni|anni di esperienza|多少年|几年|工作年限|сколько лет|лет опыта|опыт в годах/,
+      target: "#experiencia",
+      related: ["current", "stack", "ai"],
+    },
+    {
+      key: "current",
+      pattern: /trabalha (hoje|atualmente|agora)|(onde|aonde) (ele )?trabalha (hoje|atualmente|agora)|emprego atual|empresa atual|cargo atual|current(ly)? (job|company|role|position|employer)|where does he (currently )?work|works? (now|currently)|trabajo actual|empresa actual|donde trabaja (ahora|actualmente)|poste actuel|ou travaille-t-il|lavoro attuale|dove lavora (ora|adesso|attualmente)|目前.*(工作|公司)|现在.*工作|где (он )?(сейчас )?работает|текущ\w* (работ|компан|должност)/,
+      target: ".job",
+      related: ["years", "stack"],
     },
     {
       key: "languages",
-      pattern: /idioma|lingua|language|langue|lengua|ingles|english|espanhol|spanish|espanol|frances|anglais|inglese|fala|speak|habla|parle|parla|语言|英语|язык|английск/,
+      pattern: /idioma|lingua|language|langue|lengua|ingles|english|espanhol|spanish|espanol|frances|anglais|inglese|\bfala\b|speak|habla|parle|parla|语言|英语|язык|английск/,
       unless: /program|codigo|code|codice|编程|программ|tecnolog|technolog/,
       target: ".education-extra",
     },
+    {
+      key: "soft",
+      pattern: /soft ?skills?|lideranca|leadership|liderazgo|trabalho em equipe|teamwork|trabajo en equipo|comunicac|communication|comportament|habilidades blandas|savoir-etre|competenze trasversali|软技能|领导力|沟通|гибк\w* навык|лидерств|коммуникац/,
+      related: ["differential", "years"],
+    },
+    {
+      key: "ai",
+      pattern: /(experien|esperienz|trabalha|works?|sabe|know|conhec|conoce|connait|conosce)\w*\s.{0,20}\b(ia|ai|inteligencia artificial|artificial intelligence|machine learning|nlp|llm)\b|опыт.{0,8}(ии|ai|машинн)|ai.{0,6}经验|人工智能.{0,4}经验/,
+      target: ".project-card",
+      related: ["differential", "stack", "seeking"],
+    },
+    {
+      key: "mobile",
+      pattern: /mobile|celular|aplicativ|\bapps?\b|android|\bios\b|movil|cellulare|мобил|移动|手机/,
+      target: "#habilidades",
+      related: ["stack", "ai"],
+    },
+    {
+      key: "devops",
+      pattern: /devops|infraestrutura|infrastructure|infraestructura|infrastruttura|\bcloud\b|nuvem|\bnube\b|nuage|nuvola|облак|云|девопс/,
+      target: ".job",
+      related: ["stack", "current"],
+    },
+    {
+      key: "databases",
+      pattern: /banco de dados|database|bases? de datos|base de donnees|banca dati|数据库|баз[аы] данных/,
+      target: "#habilidades",
+      related: ["stack", "years"],
+    },
+    {
+      key: "public",
+      pattern: /setor publico|governo|prefeitura|public sector|government|sector publico|gobierno|secteur public|gouvernement|settore pubblico|政府|госсектор|государств/,
+      target: "#experiencia",
+      related: ["years", "current"],
+    },
+    {
+      key: "stack",
+      pattern: /principais (tecnologias|habilidades|competencias|skills|ferramentas)|\bstack\b|tecnologias (que )?(ele )?(usa|domina)|main (technolog|skills|stack)|core (skills|stack)|what technolog|which technolog|tecnologias principales|technologies principales|tecnologie principali|主要技术|技术栈|основн\w* (технолог|навык)|стек/,
+      target: "#habilidades",
+      related: ["ai", "years", "differential"],
+    },
+    {
+      key: "about",
+      pattern: /quem e (voce|ele|o emanuel|emanuel)|(fale|conte|fala) (mais )?sobre (ele|voce|o emanuel|emanuel)|resumo (dele|profissional)|who is (he|emanuel)|tell me about (him|emanuel|yourself)|about (him|emanuel)|quien es|hablame (de|sobre) (el|emanuel)|qui est|parlez-moi (de lui|d.emanuel)|chi e|parlami (di lui|di emanuel)|他是谁|是谁|介绍一下|кто (он|такой)|расскажи о (нем|себе|emanuel)/,
+      target: "#sobre",
+      related: ["seeking", "differential", "ai"],
+    },
   ];
+
+  // As regras passam pela mesma normalização das perguntas (ex.: "й" → "и", sem acentos).
+  const fold = (pattern) => new RegExp(normalize(pattern.source), pattern.flags);
+  faqs.forEach((faq) => {
+    faq.pattern = fold(faq.pattern);
+    if (faq.unless) faq.unless = fold(faq.unless);
+  });
+  topics.forEach((topic) => (topic[1] = fold(topic[1])));
+  synonyms.forEach((synonym) => (synonym[0] = fold(synonym[0])));
+  Object.keys(intents).forEach((key) => (intents[key] = fold(intents[key])));
 
   /* ---------- Índice do conteúdo (no idioma atual) ---------- */
 
@@ -429,11 +517,35 @@
     return box;
   };
 
-  const chipButton = (label, query = label) => {
+  const chipButton = (label, onClick = () => ask(label)) => {
     const chip = el("button", "chat-chip", label);
     chip.type = "button";
-    chip.addEventListener("click", () => ask(query));
+    chip.addEventListener("click", onClick);
     return chip;
+  };
+
+  // Resposta pronta + contatos, "Ver na página" e botões de continuação.
+  const faqAnswer = (faq) => {
+    const nodes = [el("p", null, tc(`faq.${faq.key}`))];
+    if (faq.contacts) nodes.push(contactLinks());
+    const target = faq.target && document.querySelector(faq.target);
+    if (target) {
+      const button = el("button", "chat-goto", `${tc("goTo")} →`);
+      button.type = "button";
+      button.addEventListener("click", () => goTo(target));
+      nodes.push(button);
+    }
+    if (faq.related?.length) {
+      const box = el("div", "chat-related");
+      box.append(
+        ...faq.related.map((key) => {
+          const label = tc(`q.${key}`);
+          return chipButton(label, () => respond(label, () => faqAnswer(faqs.find((item) => item.key === key))));
+        }),
+      );
+      nodes.push(box);
+    }
+    return nodes;
   };
 
   // Monta a resposta (lista de elementos) para uma pergunta.
@@ -445,18 +557,7 @@
       return [el("p", null, tc("cv")), box];
     }
     const faq = faqs.find(({ pattern, unless }) => pattern.test(q) && !(unless && unless.test(q)));
-    if (faq) {
-      const nodes = [el("p", null, tc(`faq.${faq.key}`))];
-      if (faq.contacts) nodes.push(contactLinks());
-      const target = faq.target && document.querySelector(faq.target);
-      if (target) {
-        const button = el("button", "chat-goto", `${tc("goTo")} →`);
-        button.type = "button";
-        button.addEventListener("click", () => goTo(target));
-        nodes.push(button);
-      }
-      return nodes;
-    }
+    if (faq) return faqAnswer(faq);
     if (intents.contact.test(q)) return [el("p", null, tc("contact")), contactLinks()];
 
     const { results, main } = search(query);
@@ -493,9 +594,12 @@
   // Mostra "digitando…" por um instante antes da resposta.
   const ask = (query) => {
     const trimmed = query.trim();
-    if (!trimmed) return;
-    addMessage("user", el("p", null, trimmed));
-    const reply = answer(trimmed);
+    if (trimmed) respond(trimmed, () => answer(trimmed));
+  };
+
+  function respond(userText, makeReply) {
+    addMessage("user", el("p", null, userText));
+    const reply = makeReply();
     if (prefersReducedMotion) {
       addMessage("bot", ...reply);
       return;
@@ -508,7 +612,7 @@
       typing.replaceChildren(...reply);
       messages.scrollTop = messages.scrollHeight;
     }, 550);
-  };
+  }
 
   /* ---------- Balão de convite (uma vez por visitante) ---------- */
 

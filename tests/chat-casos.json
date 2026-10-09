@@ -1,60 +1,324 @@
 {
   "en": [
-    ["Kafka experience", "Financial Hub"],
-    ["kafak", "Financial Hub"],
-    ["pyhton", "Backend"],
-    ["kubernets", "DevOps"],
-    ["postgress", "Data"],
-    ["where did he study?", "Education"],
-    ["database", "Data"],
-    ["mobile apps", "Frontend & Mobile"],
-    ["cloud", "INDT"],
-    ["chatbot", "Intelligent Legal Critic"],
-    ["microservices", "Financial Hub"],
-    ["Projects with AI", "Intelligent Legal Critic"],
-    ["how to contact him?", "answer:WhatsApp"],
-    ["download resume", "answer:résumé"],
-    ["Kafka", "answer:“Kafka”"],
-    ["how many years of experience?", "answer:Over 10 years"],
-    ["does he work remotely?", "answer:UTC−4"],
-    ["is he open to international jobs?", "answer:internationally"],
-    ["what languages does he speak?", "answer:basic English (A2)"],
-    ["programming languages", "Backend"],
-    ["salary expectations", "answer:talk to Emanuel"],
-    ["what kind of role is he looking for?", "answer:He is looking for"]
+    [
+      "Kafka experience",
+      "Financial Hub"
+    ],
+    [
+      "kafak",
+      "Financial Hub"
+    ],
+    [
+      "pyhton",
+      "Backend"
+    ],
+    [
+      "kubernets",
+      "DevOps"
+    ],
+    [
+      "postgress",
+      "Data"
+    ],
+    [
+      "where did he study?",
+      "Education"
+    ],
+    [
+      "database",
+      "answer:strong Oracle"
+    ],
+    [
+      "mobile apps",
+      "answer:React Native apps"
+    ],
+    [
+      "cloud",
+      "answer:AWS Serverless"
+    ],
+    [
+      "chatbot",
+      "Intelligent Legal Critic"
+    ],
+    [
+      "microservices",
+      "Financial Hub"
+    ],
+    [
+      "Projects with AI",
+      "Intelligent Legal Critic"
+    ],
+    [
+      "how to contact him?",
+      "answer:WhatsApp"
+    ],
+    [
+      "download resume",
+      "answer:résumé"
+    ],
+    [
+      "Kafka",
+      "answer:“Kafka”"
+    ],
+    [
+      "how many years of experience?",
+      "answer:Over 10 years"
+    ],
+    [
+      "does he work remotely?",
+      "answer:UTC−4"
+    ],
+    [
+      "is he open to international jobs?",
+      "answer:internationally"
+    ],
+    [
+      "what languages does he speak?",
+      "answer:basic English (A2)"
+    ],
+    [
+      "programming languages",
+      "Backend"
+    ],
+    [
+      "salary expectations",
+      "answer:talk to Emanuel"
+    ],
+    [
+      "what kind of role is he looking for?",
+      "answer:He is looking for"
+    ],
+    [
+      "hello",
+      "answer:I can answer"
+    ],
+    [
+      "thanks!",
+      "answer:You're welcome"
+    ],
+    [
+      "tell me about him",
+      "answer:Senior Software Engineer based in Manaus"
+    ],
+    [
+      "where does he currently work?",
+      "answer:Since April 2023"
+    ],
+    [
+      "when can he start?",
+      "answer:start date"
+    ],
+    [
+      "tech stack",
+      "answer:Main technologies"
+    ],
+    [
+      "experience with AI?",
+      "answer:specializing in AI"
+    ],
+    [
+      "why should we hire him?",
+      "answer:His edge"
+    ],
+    [
+      "leadership",
+      "answer:Soft skills"
+    ],
+    [
+      "public sector experience?",
+      "answer:Manaus City Hall"
+    ]
   ],
   "pt": [
-    ["Projetos com IA", "Crítico Jurídico"],
-    ["onde trabalhou?", "INDT"],
-    ["onde estudou?", "Formação"],
-    ["sabe Oracle?", "ICCT"],
-    ["banco de dados", "Dados"],
-    ["experiência com React Native", "INDT"],
-    ["quantos anos de experiência?", "answer:Mais de 10 anos"],
-    ["trabalha remoto? CLT ou PJ?", "answer:CLT ou PJ"],
-    ["qual o fuso horário?", "answer:UTC−4"],
-    ["fala inglês?", "answer:inglês básico (A2)"],
-    ["pretensão salarial", "answer:conversar direto"],
-    ["quais linguagens de programação?", "Backend"],
-    ["Procura qual tipo de vaga ?", "answer:Procura vagas de Desenvolvedor"],
-    ["que vaga você procura?", "answer:Procura vagas de Desenvolvedor"]
+    [
+      "Projetos com IA",
+      "Crítico Jurídico"
+    ],
+    [
+      "onde trabalhou?",
+      "INDT"
+    ],
+    [
+      "onde estudou?",
+      "Formação"
+    ],
+    [
+      "sabe Oracle?",
+      "ICCT"
+    ],
+    [
+      "banco de dados",
+      "answer:Oracle desde 2015"
+    ],
+    [
+      "experiência com React Native",
+      "INDT"
+    ],
+    [
+      "quantos anos de experiência?",
+      "answer:Mais de 10 anos"
+    ],
+    [
+      "trabalha remoto? CLT ou PJ?",
+      "answer:CLT ou PJ"
+    ],
+    [
+      "qual o fuso horário?",
+      "answer:UTC−4"
+    ],
+    [
+      "fala inglês?",
+      "answer:inglês básico (A2)"
+    ],
+    [
+      "pretensão salarial",
+      "answer:conversar direto"
+    ],
+    [
+      "quais linguagens de programação?",
+      "Backend"
+    ],
+    [
+      "Procura qual tipo de vaga ?",
+      "answer:Procura vagas de Desenvolvedor"
+    ],
+    [
+      "que vaga você procura?",
+      "answer:Procura vagas de Desenvolvedor"
+    ],
+    [
+      "oi",
+      "answer:Olá!"
+    ],
+    [
+      "obrigado!",
+      "answer:De nada"
+    ],
+    [
+      "quem é o Emanuel?",
+      "answer:Engenheiro de Software Sênior em Manaus"
+    ],
+    [
+      "onde trabalha atualmente?",
+      "answer:Desde abril de 2023"
+    ],
+    [
+      "quando pode começar?",
+      "answer:data de início"
+    ],
+    [
+      "principais tecnologias",
+      "answer:Principais tecnologias"
+    ],
+    [
+      "experiência com IA",
+      "answer:Está se especializando"
+    ],
+    [
+      "tem experiência com mobile?",
+      "answer:React Native"
+    ],
+    [
+      "por que contratar ele?",
+      "answer:diferencial"
+    ],
+    [
+      "trabalho em equipe",
+      "answer:Competências comportamentais"
+    ],
+    [
+      "trabalhou para o governo?",
+      "answer:Prefeitura de Manaus"
+    ],
+    [
+      "experiência com devops",
+      "answer:AWS Serverless"
+    ]
   ],
   "es": [
-    ["¿dónde estudió?", "Formación"],
-    ["proyectos con Kafka", "Financial Hub"],
-    ["¿qué tipo de puesto busca?", "answer:Busca vacantes"]
+    [
+      "¿dónde estudió?",
+      "Formación"
+    ],
+    [
+      "proyectos con Kafka",
+      "Financial Hub"
+    ],
+    [
+      "¿qué tipo de puesto busca?",
+      "answer:Busca vacantes"
+    ],
+    [
+      "¿Por qué contratarlo?",
+      "answer:Su diferencial"
+    ],
+    [
+      "hola",
+      "answer:¡Hola!"
+    ]
   ],
   "zh": [
-    ["Kafka 相关项目", "Financial Hub"],
-    ["教育背景", "教育背景"]
+    [
+      "Kafka 相关项目",
+      "Financial Hub"
+    ],
+    [
+      "教育背景",
+      "教育背景"
+    ],
+    [
+      "你好",
+      "answer:你好！"
+    ],
+    [
+      "AI 经验",
+      "answer:有！"
+    ]
   ],
   "ru": [
-    ["Проекты с ИИ", "Проекты"],
-    ["Опыт с Kafka", "Financial Hub"],
-    ["работает удаленно?", "answer:UTC−4"]
+    [
+      "Проекты с ИИ",
+      "Проекты"
+    ],
+    [
+      "Опыт с Kafka",
+      "Financial Hub"
+    ],
+    [
+      "работает удаленно?",
+      "answer:UTC−4"
+    ],
+    [
+      "Опыт с ИИ",
+      "answer:специализируется на ИИ"
+    ],
+    [
+      "Кто такой Emanuel?",
+      "answer:Senior-инженер"
+    ]
   ],
   "fr": [
-    ["combien d'années d'expérience ?", "answer:Plus de 10 ans"],
-    ["travaille-t-il à distance ?", "answer:UTC−4"]
+    [
+      "combien d'années d'expérience ?",
+      "answer:Plus de 10 ans"
+    ],
+    [
+      "travaille-t-il à distance ?",
+      "answer:UTC−4"
+    ],
+    [
+      "Qui est Emanuel ?",
+      "answer:ingénieur logiciel senior"
+    ]
+  ],
+  "it": [
+    [
+      "Chi è Emanuel?",
+      "answer:ingegnere del software senior"
+    ],
+    [
+      "Esperienza con l’IA",
+      "answer:specializzando in IA"
+    ]
   ]
 }
