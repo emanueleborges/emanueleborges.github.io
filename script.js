@@ -3,8 +3,9 @@ const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)
 /* ---------- Idiomas ---------- */
 
 const translations = window.I18N || {};
-const supportedLangs = ["pt", "en", "es"];
-const htmlLang = { pt: "pt-BR", en: "en", es: "es" };
+const htmlLang = { en: "en", pt: "pt-BR", es: "es", fr: "fr", it: "it", zh: "zh-CN", ru: "ru" };
+const supportedLangs = Object.keys(htmlLang);
+const defaultLang = "en";
 let currentLang = "pt";
 
 const t = (key, vars = {}) => {
@@ -12,7 +13,7 @@ const t = (key, vars = {}) => {
   return text.replace(/\{(\w+)\}/g, (_, name) => vars[name] ?? "");
 };
 
-// Guarda o texto original (português) de cada elemento traduzível.
+// Guarda o texto original (português, escrito no HTML) de cada elemento traduzível.
 const i18nTargets = [
   ["data-i18n", (el) => el.innerHTML, (el, value) => (el.innerHTML = value)],
   ["data-i18n-aria", (el) => el.getAttribute("aria-label"), (el, value) => el.setAttribute("aria-label", value)],
@@ -45,11 +46,7 @@ const detectLang = () => {
   if (supportedLangs.includes(fromUrl)) return fromUrl;
   const stored = readStoredLang();
   if (supportedLangs.includes(stored)) return stored;
-  for (const lang of navigator.languages || [navigator.language]) {
-    const short = (lang || "").slice(0, 2).toLowerCase();
-    if (supportedLangs.includes(short)) return short;
-  }
-  return "pt";
+  return defaultLang;
 };
 
 const applyLanguage = (lang) => {
@@ -63,8 +60,9 @@ const applyLanguage = (lang) => {
     });
   });
 
-  document.querySelectorAll("[data-lang]").forEach((button) => {
-    button.setAttribute("aria-pressed", String(button.dataset.lang === lang));
+  langSelect.value = lang;
+  document.querySelectorAll("[data-cv-link]").forEach((link) => {
+    link.href = `cv/curriculo-emanuel-borges-${lang}.pdf`;
   });
 
   updateMenuLabel();
@@ -72,11 +70,10 @@ const applyLanguage = (lang) => {
   document.dispatchEvent(new CustomEvent("languagechange"));
 };
 
-document.querySelector(".lang-switch").addEventListener("click", (event) => {
-  const button = event.target.closest("[data-lang]");
-  if (!button || button.dataset.lang === currentLang) return;
-  storeLang(button.dataset.lang);
-  applyLanguage(button.dataset.lang);
+const langSelect = document.querySelector("[data-lang-select]");
+langSelect.addEventListener("change", () => {
+  storeLang(langSelect.value);
+  applyLanguage(langSelect.value);
 });
 
 /* ---------- Menu mobile ---------- */

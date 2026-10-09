@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex" />
+    <title>Emanuel Borges — CV</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <script src="i18n.js"></script>
+    <style>
+      @page { size: A4; margin: 13mm 14mm; }
+      :root { --ink: #1c1830; --muted: #5d5873; --accent: #6a3df0; --line: #e4def5; }
+      * { box-sizing: border-box; }
+      body { margin: 0; background: #fff; color: var(--ink); font: 10pt/1.5 "Manrope", "PingFang SC", "Noto Sans SC", "Microsoft YaHei", sans-serif; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      main { max-width: 182mm; margin: 0 auto; }
+      a { color: inherit; text-decoration: none; }
+      header { display: flex; gap: 20px; align-items: center; padding-bottom: 14px; border-bottom: 2px solid var(--accent); }
+      .photo { flex: 0 0 82px; height: 102px; border-radius: 50%; overflow: hidden; border: 2px solid #d9ccff; }
+      .photo img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 35%; }
+      h1 { margin: 0; font-size: 24pt; line-height: 1.1; letter-spacing: -.03em; }
+      .role { margin: 4px 0 8px; color: var(--accent); font-size: 11pt; font-weight: 700; }
+      .contacts { display: flex; flex-wrap: wrap; gap: 2px 14px; color: var(--muted); font-size: 8.6pt; }
+      h2 { margin: 16px 0 7px; color: var(--accent); font-size: 9.5pt; letter-spacing: .12em; text-transform: uppercase; }
+      section { break-inside: auto; }
+      p { margin: 0; }
+      .summary { color: #2e2944; }
+      .item { margin-bottom: 9px; break-inside: avoid; }
+      .item-head { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; }
+      .item-head strong { font-size: 10.2pt; }
+      .period { flex: none; color: var(--muted); font-size: 8.4pt; font-weight: 600; white-space: nowrap; }
+      .company { color: var(--accent); font-size: 9pt; font-weight: 600; }
+      ul { margin: 3px 0 0; padding-left: 15px; }
+      li { margin: 1px 0; }
+      .stack { color: var(--muted); font-size: 7.8pt; letter-spacing: .06em; text-transform: uppercase; }
+      .projects { display: grid; grid-template-columns: 1fr 1fr; gap: 0 18px; }
+      .projects .item p { font-size: 9pt; color: #2e2944; }
+      .skills { display: grid; grid-template-columns: max-content 1fr; gap: 3px 14px; font-size: 9.2pt; }
+      .skills dt { font-weight: 700; }
+      .skills dd { margin: 0; color: #2e2944; }
+      .edu li { list-style: none; margin-left: -15px; }
+      .edu span { color: var(--muted); }
+      .muted { color: #2e2944; font-size: 9.2pt; }
+      @media screen { body { padding: 32px 16px; background: #f1eef9; } main { background: #fff; padding: 14mm; box-shadow: 0 10px 40px rgba(28,24,48,.12); } }
+    </style>
+  </head>
+  <body>
+    <main id="cv"></main>
+    <script>
+      const all = window.I18N;
+      const params = new URLSearchParams(location.search);
+      const lang = all[params.get("lang")] ? params.get("lang") : "en";
+      const dict = all[lang];
+      const tr = (key) => dict[key] ?? all.pt[key] ?? "";
+      const plain = (key) => tr(key).replace(/<br\s*\/?>/g, " ").replace(/<span>[↗↘↓]<\/span>/g, "").trim();
+      const htmlLang = { en: "en", pt: "pt-BR", es: "es", fr: "fr", it: "it", zh: "zh-CN", ru: "ru" };
+
+      document.documentElement.lang = htmlLang[lang];
+      document.title = plain("cv.pageTitle");
+
+      const jobs = [
+        { period: "job1.period", title: "job1.title", company: "INDT — Instituto de Desenvolvimento Tecnológico", bullets: ["job1.b1", "job1.b2", "job1.b3"] },
+        { period: "job2.period", title: "job2.title", company: "ICCT — Instituto CAL-COMP de Tecnologia", bullets: ["job2.b1", "job2.b2", "job2.b3"] },
+        { period: "job3.period", title: "job3.title", companyKey: "job3.company", bullets: ["job3.b1", "job3.b2", "job3.b3"] },
+      ];
+
+      const projects = [
+        { title: "p1.title", stack: "RAG · LangChain · Ollama · OWASP LLM", desc: "p1.desc" },
+        { title: "p2.title", stack: "Scikit-learn · XGBoost · Docker", desc: "p2.desc" },
+        { title: "p3.title", stack: "TensorFlow · LSTM · Flask · Swagger", desc: "p3.desc" },
+        { title: "p4.title", stack: "LangChain · ChromaDB · FastAPI · Streamlit", desc: "p4.desc" },
+        { title: "p5.title", stack: "Java 17 · Spring Boot · Kafka · Redis", desc: "p5.desc" },
+        { name: "Products API", stack: "NestJS · TypeORM · Kafka · Redis", desc: "p6.desc" },
+      ];
+
+      const skills = [
+        ["skills.tab.backend", "Java, Kotlin, Spring Boot, Node.js, NestJS, Express, PHP/Laravel, Python, Flask, FastAPI"],
+        ["skills.tab.frontend", "TypeScript, JavaScript, React, React Native, Vue.js, Angular, HTML & CSS"],
+        ["skills.tab.ia", "NLP, LLM, RAG, LangChain, TensorFlow, Scikit-learn, Pandas, Hugging Face"],
+        ["skills.tab.dados", "PostgreSQL, Oracle, MySQL, MongoDB, SQL Server, Redis"],
+        ["skills.tab.devops", "Docker, Kubernetes, AWS, Kafka, RabbitMQ, CI/CD, GitLab"],
+        ["skills.tab.praticas", `Clean Architecture, Clean Code, TDD, ${tr("skill.unit")}, Code Review, SonarQube, Scrum`],
+      ];
+
+      const education = [
+        ["edu.d1", "Universidade Federal de Goiás (UFG) · 2025 — 2026"],
+        ["edu.d2", "FIAP · 2025 — 2026"],
+        ["edu.d3", "Descomplica · 2024 — 2025"],
+        ["edu.d4", "FUCAPI · 2000 — 2010"],
+      ];
+
+      const escapeText = (text) => text.replace(/&(?!amp;|lt;|gt;)/g, "&amp;");
+
+      document.querySelector("#cv").innerHTML = `
+        <header>
+          <div class="photo"><img src="emanuel-borges.jpg" alt="${tr("about.photoAlt")}" /></div>
+          <div>
+            <h1>Emanuel Borges</h1>
+            <p class="role">${tr("cv.role")}</p>
+            <div class="contacts">
+              <a href="mailto:emanuel.eborges@gmail.com">emanuel.eborges@gmail.com</a>
+              <a href="https://wa.me/5592999771376">+55 92 99977-1376</a>
+              <span>${tr("cv.location")}</span>
+              <a href="https://www.linkedin.com/in/borgesemmanuell">linkedin.com/in/borgesemmanuell</a>
+              <a href="https://github.com/emanueleborges">github.com/emanueleborges</a>
+              <a href="https://emanueleborges.github.io">${tr("cv.portfolio")}: emanueleborges.github.io</a>
+            </div>
+          </div>
+        </header>
+
+        <section>
+          <h2>${tr("cv.summary")}</h2>
+          <p class="summary">${tr("about.lead")} ${tr("about.body")}</p>
+        </section>
+
+        <section>
+          <h2>${tr("cv.experience")}</h2>
+          ${jobs.map((job) => `
+            <div class="item">
+              <div class="item-head"><strong>${tr(job.title)}</strong><span class="period">${tr(job.period)}</span></div>
+              <div class="company">${job.companyKey ? tr(job.companyKey) : job.company}</div>
+              <ul>${job.bullets.map((b) => `<li>${tr(b)}</li>`).join("")}</ul>
+            </div>`).join("")}
+        </section>
+
+        <section>
+          <h2>${tr("cv.projects")}</h2>
+          <div class="projects">
+            ${projects.map((p) => `
+              <div class="item">
+                <strong>${p.name ?? tr(p.title)}</strong>
+                <div class="stack">${p.stack}</div>
+                <p>${tr(p.desc)}</p>
+              </div>`).join("")}
+          </div>
+        </section>
+
+        <section>
+          <h2>${tr("cv.skills")}</h2>
+          <dl class="skills">
+            ${skills.map(([key, list]) => `<dt>${tr(key)}</dt><dd>${escapeText(list)}</dd>`).join("")}
+          </dl>
+        </section>
+
+        <section>
+          <h2>${tr("cv.education")}</h2>
+          <ul class="edu">
+            ${education.map(([key, meta]) => `<li><strong>${tr(key)}</strong> — <span>${meta}</span></li>`).join("")}
+          </ul>
+        </section>
+
+        <section>
+          <h2>${tr("cv.certifications")}</h2>
+          <p class="muted">${tr("edu.certList")}</p>
+        </section>
+
+        <section>
+          <h2>${tr("cv.languages")}</h2>
+          <p class="muted">${tr("edu.langList")}</p>
+        </section>
+      `;
+    </script>
+  </body>
+</html>
