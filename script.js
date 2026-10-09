@@ -241,6 +241,7 @@ const resizeCanvas = () => {
     vx: (Math.random() - 0.5) * 0.35,
     vy: (Math.random() - 0.5) * 0.35,
     r: Math.random() * 1.6 + 0.6,
+    cyan: Math.random() < 0.35,
   }));
   if (prefersReducedMotion) drawParticles();
 };
@@ -267,14 +268,15 @@ function drawParticles() {
 
     ctx.beginPath();
     ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-    ctx.fillStyle = "rgba(195, 165, 255, 0.7)";
+    ctx.fillStyle = p.cyan ? "rgba(103, 232, 249, 0.75)" : "rgba(195, 165, 255, 0.7)";
     ctx.fill();
 
     for (let j = i + 1; j < particles.length; j += 1) {
       const q = particles[j];
       const d = Math.hypot(p.x - q.x, p.y - q.y);
       if (d < linkDistance) {
-        ctx.strokeStyle = `rgba(155, 112, 255, ${0.22 * (1 - d / linkDistance)})`;
+        const alpha = 0.22 * (1 - d / linkDistance);
+        ctx.strokeStyle = p.cyan && q.cyan ? `rgba(34, 211, 238, ${alpha})` : `rgba(155, 112, 255, ${alpha})`;
         ctx.lineWidth = 0.7;
         ctx.beginPath();
         ctx.moveTo(p.x, p.y);
