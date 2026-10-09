@@ -14,7 +14,13 @@
     ["Projects with AI", "Intelligent Legal Critic"],
     ["how to contact him?", "answer:WhatsApp"],
     ["download resume", "answer:résumé"],
-    ["Kafka", "answer:“Kafka”"]
+    ["Kafka", "answer:“Kafka”"],
+    ["how many years of experience?", "answer:Over 10 years"],
+    ["does he work remotely?", "answer:UTC−4"],
+    ["is he open to international jobs?", "answer:internationally"],
+    ["what languages does he speak?", "answer:basic English (A2)"],
+    ["programming languages", "Backend"],
+    ["salary expectations", "answer:talk to Emanuel"]
   ],
   "pt": [
     ["Projetos com IA", "Crítico Jurídico"],
@@ -22,7 +28,13 @@
     ["onde estudou?", "Formação"],
     ["sabe Oracle?", "ICCT"],
     ["banco de dados", "Dados"],
-    ["experiência com React Native", "INDT"]
+    ["experiência com React Native", "INDT"],
+    ["quantos anos de experiência?", "answer:Mais de 10 anos"],
+    ["trabalha remoto? CLT ou PJ?", "answer:CLT ou PJ"],
+    ["qual o fuso horário?", "answer:UTC−4"],
+    ["fala inglês?", "answer:inglês básico (A2)"],
+    ["pretensão salarial", "answer:conversar direto"],
+    ["quais linguagens de programação?", "Backend"]
   ],
   "es": [
     ["¿dónde estudió?", "Formación"],
@@ -34,6 +46,11 @@
   ],
   "ru": [
     ["Проекты с ИИ", "Проекты"],
-    ["Опыт с Kafka", "Financial Hub"]
+    ["Опыт с Kafka", "Financial Hub"],
+    ["работает удаленно?", "answer:UTC−4"]
+  ],
+  "fr": [
+    ["combien d'années d'expérience ?", "answer:Plus de 10 ans"],
+    ["travaille-t-il à distance ?", "answer:UTC−4"]
   ]
 }

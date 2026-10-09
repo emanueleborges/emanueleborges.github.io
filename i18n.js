@@ -26,7 +26,7 @@ window.I18N = {
     "fact.focus": "Foco",
     "fact.focusValue": "Full Stack · Mobile · IA",
     "fact.location": "Localização",
-    "fact.locationValue": "Manaus, AM · aberto ao remoto",
+    "fact.locationValue": "Manaus (UTC−4) · 100% remoto",
     "fact.experience": "Experiência",
     "fact.experienceValue": "10+ anos em desenvolvimento",
     "fact.specialization": "Especialização",
@@ -147,7 +147,12 @@ window.I18N = {
     "chat.hint": "Dúvidas sobre minha experiência? Pergunte aqui 👋",
     "chat.hintClose": "Fechar aviso",
     "chat.summary": "Sobre {q}, encontrei:",
-    "chat.related": "Também posso buscar:"
+    "chat.related": "Também posso buscar:",
+    "chat.faq.years": "Mais de 10 anos de experiência em desenvolvimento: começou em 2015 na Prefeitura de Manaus, passou pelo ICCT e hoje é Desenvolvedor Full Stack Sênior no INDT.",
+    "chat.faq.work": "Trabalha 100% remoto, a partir de Manaus (fuso UTC−4). Aceita contratação CLT ou PJ e está aberto a vagas no Brasil e internacionais.",
+    "chat.faq.languages": "Português nativo, espanhol intermediário (B2) e inglês básico (A2), em estudo.",
+    "chat.faq.salary": "Pretensão salarial e valores dependem do formato e do escopo da vaga — é melhor conversar direto com o Emanuel:",
+    "cv.availability": "Remoto (UTC−4) · CLT ou PJ · Brasil e exterior"
   },
   "en": {
     "menu.open": "Open menu",
@@ -181,7 +186,7 @@ window.I18N = {
     "fact.focus": "Focus",
     "fact.focusValue": "Full Stack · Mobile · AI",
     "fact.location": "Location",
-    "fact.locationValue": "Manaus, AM · open to remote",
+    "fact.locationValue": "Manaus (UTC−4) · 100% remote",
     "fact.experience": "Experience",
     "fact.experienceValue": "10+ years in development",
     "fact.specialization": "Specialization",
@@ -286,7 +291,12 @@ window.I18N = {
     "chat.hint": "Questions about my experience? Ask here 👋",
     "chat.hintClose": "Dismiss",
     "chat.summary": "About {q}, here's what I found:",
-    "chat.related": "You could also ask about:"
+    "chat.related": "You could also ask about:",
+    "chat.faq.years": "Over 10 years of development experience: he started in 2015 at Manaus City Hall, then worked at ICCT, and is now a Senior Full Stack Developer at INDT.",
+    "chat.faq.work": "He works 100% remotely from Manaus, Brazil (UTC−4). Open to both employment (CLT) and contractor (PJ) arrangements, in Brazil or internationally.",
+    "chat.faq.languages": "Native Portuguese, intermediate Spanish (B2) and basic English (A2), currently studying.",
+    "chat.faq.salary": "Salary expectations depend on the role’s format and scope — best to talk to Emanuel directly:",
+    "cv.availability": "Remote (UTC−4) · Employee or contractor · Brazil & international"
   },
   "es": {
     "menu.open": "Abrir menú",
@@ -320,7 +330,7 @@ window.I18N = {
     "fact.focus": "Enfoque",
     "fact.focusValue": "Full Stack · Mobile · IA",
     "fact.location": "Ubicación",
-    "fact.locationValue": "Manaus, AM · abierto a remoto",
+    "fact.locationValue": "Manaus (UTC−4) · 100 % remoto",
     "fact.experience": "Experiencia",
     "fact.experienceValue": "+10 años en desarrollo",
     "fact.specialization": "Especialización",
@@ -417,7 +427,12 @@ window.I18N = {
     "chat.hint": "¿Dudas sobre mi experiencia? Pregunta aquí 👋",
     "chat.hintClose": "Cerrar aviso",
     "chat.summary": "Sobre {q}, encontré:",
-    "chat.related": "También puedo buscar:"
+    "chat.related": "También puedo buscar:",
+    "chat.faq.years": "Más de 10 años de experiencia en desarrollo: comenzó en 2015 en la Alcaldía de Manaus, pasó por el ICCT y hoy es Desarrollador Full Stack Sénior en el INDT.",
+    "chat.faq.work": "Trabaja 100 % en remoto desde Manaus, Brasil (UTC−4). Acepta contratación como empleado (CLT) o como contratista (PJ), y está abierto a vacantes en Brasil e internacionales.",
+    "chat.faq.languages": "Portugués nativo, español intermedio (B2) e inglés básico (A2), en estudio.",
+    "chat.faq.salary": "La pretensión salarial depende del formato y el alcance de la vacante; lo mejor es hablar directamente con Emanuel:",
+    "cv.availability": "Remoto (UTC−4) · Empleado o contratista · Brasil e internacional"
   },
   "fr": {
     "menu.open": "Ouvrir le menu",
@@ -452,7 +467,7 @@ window.I18N = {
     "fact.focus": "Domaine",
     "fact.focusValue": "Full Stack · Mobile · IA",
     "fact.location": "Localisation",
-    "fact.locationValue": "Manaus, AM · ouvert au télétravail",
+    "fact.locationValue": "Manaus (UTC−4) · 100 % à distance",
     "fact.experience": "Expérience",
     "fact.experienceValue": "Plus de 10 ans en développement",
     "fact.specialization": "Spécialisation",
@@ -565,7 +580,12 @@ window.I18N = {
     "chat.hint": "Des questions sur mon parcours ? Demandez ici 👋",
     "chat.hintClose": "Fermer",
     "chat.summary": "À propos de {q}, voici ce que j’ai trouvé :",
-    "chat.related": "Je peux aussi chercher :"
+    "chat.related": "Je peux aussi chercher :",
+    "chat.faq.years": "Plus de 10 ans d’expérience en développement : il a commencé en 2015 à la mairie de Manaus, est passé par l’ICCT et est aujourd’hui Développeur Full Stack Senior à l’INDT.",
+    "chat.faq.work": "Il travaille 100 % à distance depuis Manaus, au Brésil (UTC−4). Ouvert au salariat (CLT) comme au statut de prestataire (PJ), au Brésil ou à l’international.",
+    "chat.faq.languages": "Portugais natif, espagnol intermédiaire (B2) et anglais élémentaire (A2), en cours d’apprentissage.",
+    "chat.faq.salary": "Les prétentions salariales dépendent du format et du périmètre du poste — le mieux est d’en parler directement avec Emanuel :",
+    "cv.availability": "À distance (UTC−4) · Salarié ou prestataire · Brésil et international"
   },
   "it": {
     "menu.open": "Apri il menu",
@@ -600,7 +620,7 @@ window.I18N = {
     "fact.focus": "Focus",
     "fact.focusValue": "Full Stack · Mobile · IA",
     "fact.location": "Sede",
-    "fact.locationValue": "Manaus, AM · disponibile da remoto",
+    "fact.locationValue": "Manaus (UTC−4) · 100% da remoto",
     "fact.experience": "Esperienza",
     "fact.experienceValue": "Oltre 10 anni nello sviluppo",
     "fact.specialization": "Specializzazione",
@@ -713,7 +733,12 @@ window.I18N = {
     "chat.hint": "Domande sulla mia esperienza? Chiedi qui 👋",
     "chat.hintClose": "Chiudi",
     "chat.summary": "Su {q} ho trovato:",
-    "chat.related": "Posso cercare anche:"
+    "chat.related": "Posso cercare anche:",
+    "chat.faq.years": "Oltre 10 anni di esperienza nello sviluppo: ha iniziato nel 2015 al Comune di Manaus, è passato per l’ICCT e oggi è Sviluppatore Full Stack Senior all’INDT.",
+    "chat.faq.work": "Lavora al 100% da remoto da Manaus, in Brasile (UTC−4). Disponibile sia come dipendente (CLT) sia come collaboratore (PJ), in Brasile o all’estero.",
+    "chat.faq.languages": "Portoghese madrelingua, spagnolo intermedio (B2) e inglese elementare (A2), in fase di studio.",
+    "chat.faq.salary": "Le aspettative economiche dipendono dal formato e dal ruolo: meglio parlarne direttamente con Emanuel:",
+    "cv.availability": "Da remoto (UTC−4) · Dipendente o collaboratore · Brasile ed estero"
   },
   "zh": {
     "menu.open": "打开菜单",
@@ -748,7 +773,7 @@ window.I18N = {
     "fact.focus": "方向",
     "fact.focusValue": "全栈 · 移动 · AI",
     "fact.location": "所在地",
-    "fact.locationValue": "巴西马瑙斯 · 可远程工作",
+    "fact.locationValue": "马瑙斯（UTC−4）· 100% 远程",
     "fact.experience": "经验",
     "fact.experienceValue": "10 年以上开发经验",
     "fact.specialization": "深造方向",
@@ -861,7 +886,12 @@ window.I18N = {
     "chat.hint": "想了解我的经历？在这里提问 👋",
     "chat.hintClose": "关闭提示",
     "chat.summary": "关于 {q}，找到以下内容：",
-    "chat.related": "也可以问："
+    "chat.related": "也可以问：",
+    "chat.faq.years": "拥有 10 年以上开发经验：2015 年在马瑙斯市政府起步，之后就职于 ICCT，目前在 INDT 担任高级全栈开发工程师。",
+    "chat.faq.work": "常驻巴西马瑙斯（UTC−4），100% 远程工作。可接受全职雇佣（CLT）或合同制（PJ），欢迎巴西及国际职位。",
+    "chat.faq.languages": "葡萄牙语为母语，西班牙语中级（B2），英语初级（A2），正在学习中。",
+    "chat.faq.salary": "薪资期望取决于职位形式和工作范围，建议直接与 Emanuel 沟通：",
+    "cv.availability": "远程（UTC−4）· 全职或合同制 · 巴西及国际"
   },
   "ru": {
     "menu.open": "Открыть меню",
@@ -896,7 +926,7 @@ window.I18N = {
     "fact.focus": "Направление",
     "fact.focusValue": "Full Stack · Mobile · ИИ",
     "fact.location": "Местоположение",
-    "fact.locationValue": "Манаус, AM · готов к удалённой работе",
+    "fact.locationValue": "Манаус (UTC−4) · 100% удалённо",
     "fact.experience": "Опыт",
     "fact.experienceValue": "Более 10 лет в разработке",
     "fact.specialization": "Специализация",
@@ -1009,6 +1039,11 @@ window.I18N = {
     "chat.hint": "Вопросы о моём опыте? Спросите здесь 👋",
     "chat.hintClose": "Закрыть подсказку",
     "chat.summary": "По запросу {q} найдено:",
-    "chat.related": "Можно также спросить о:"
+    "chat.related": "Можно также спросить о:",
+    "chat.faq.years": "Более 10 лет опыта в разработке: начинал в 2015 году в мэрии Манауса, затем работал в ICCT, сейчас — Senior Full Stack-разработчик в INDT.",
+    "chat.faq.work": "Работает полностью удалённо из Манауса, Бразилия (UTC−4). Рассматривает как штатную занятость (CLT), так и работу по контракту (PJ) — в Бразилии и за рубежом.",
+    "chat.faq.languages": "Португальский — родной, испанский — средний (B2), английский — базовый (A2), продолжает изучать.",
+    "chat.faq.salary": "Ожидания по зарплате зависят от формата и объёма работы — лучше обсудить напрямую с Emanuel:",
+    "cv.availability": "Удалённо (UTC−4) · Штат или контракт · Бразилия и другие страны"
   }
 };

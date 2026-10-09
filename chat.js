@@ -33,7 +33,9 @@
 
   /* ---------- Sinônimos: expressões que viram termos existentes no site ---------- */
 
+  const programmingContext = /program|programac|编程|программ/;
   const synonyms = [
+    [programmingContext, ["java", "kotlin", "python", "typescript", "javascript", "php"]],
     [/banco de dados|database|base de datos|base de donnees|banca dati|数据库|баз[аы] данных|\bsql\b|\bdb\b/, ["postgresql", "oracle", "mysql", "mongodb", "sql server"]],
     [/celular|mobile|movil|cellulare|手机|移动|мобил|\bapps?\b|android|\bios\b/, ["react native", "kotlin", "mobile"]],
     [/nuvem|cloud|nube|nuage|nuvola|云|облак/, ["aws", "serverless", "lambda"]],
@@ -63,6 +65,33 @@
     contact: /contat|contact|contacto|contatto|e-?mail|whats|telefon|phone|linkedin|github|falar|hablar|parler|parlare|联系|邮箱|电话|связ|почт|телефон|контакт/,
     cv: /curricul|\bcv\b|resum|pdf|download|baixar|descargar|telecharg|scaric|简历|резюме/,
   };
+
+  /* ---------- Respostas prontas (perguntas frequentes) ---------- */
+
+  // `unless`: evita confundir, por ex., "linguagens de programação" com idiomas falados.
+  const faqs = [
+    {
+      key: "salary",
+      pattern: /salari|salary|sueldo|remunera|pretens|quanto (cobra|ganha)|how much|cuanto cobra|tarif|hourly|薪|工资|зарплат|оплат/,
+      contacts: true,
+    },
+    {
+      key: "years",
+      pattern: /quantos anos|anos de experiencia|how many years|years of experience|how long|cuantos anos|combien d.?annees|annees d.?experience|quanti anni|anni di esperienza|多少年|几年|сколько лет|лет опыта/,
+      target: "#experiencia",
+    },
+    {
+      key: "work",
+      pattern: /remot|home ?office|presencial|hibrid|hybrid|on-?site|fuso|timezone|time zone|zona horaria|fuseau|fuso orario|utc|gmt|onde mora|where .*(live|based|located)|donde vive|ou habite|dove vive|internaciona|internationa|exterior|abroad|estero|etranger|relocat|visa|clt|pj|contrat|freelanc|autonom|disponib|availab|远程|时区|国际|合同|удален|пояс|междунар|контракт|релокац/,
+      contacts: true,
+    },
+    {
+      key: "languages",
+      pattern: /idioma|lingua|language|langue|lengua|ingles|english|espanhol|spanish|espanol|frances|anglais|inglese|fala|speak|habla|parle|parla|语言|英语|язык|английск/,
+      unless: /program|codigo|code|codice|编程|программ|tecnolog|technolog/,
+      target: ".education-extra",
+    },
+  ];
 
   /* ---------- Índice do conteúdo (no idioma atual) ---------- */
 
@@ -194,7 +223,9 @@
 
     // Palavras de assunto ("projetos", "estudou"…) contam só como assunto, não como termo.
     const topicLabels = topics.filter(([, pattern]) => pattern.test(q)).map(([key]) => normalize(sectionLabel(key)));
-    const main = [...mainTerms].filter((term) => !isTopicWord(term));
+    // Em "linguagens de programação", "linguagens"/"programação" não são termos de busca.
+    const programmingWords = /^(languag|langag|lingu|lengu|язык|语言|编程|program)/;
+    const main = [...mainTerms].filter((term) => !isTopicWord(term) && !(programmingContext.test(q) && programmingWords.test(term)));
     const extra = [...extraTerms].filter((term) => !mainTerms.has(term));
     const terms = [...main, ...extra];
     if (!terms.length && !topicLabels.length) return { results: [], main: [] };
@@ -407,6 +438,19 @@
       const box = el("div", "chat-links");
       box.append(linkButton(text(document.querySelector('[data-i18n="cv.download"]')).replace(/[↓]/g, "").trim(), `cv/curriculo-emanuel-borges-${currentLang}.pdf`));
       return [el("p", null, tc("cv")), box];
+    }
+    const faq = faqs.find(({ pattern, unless }) => pattern.test(q) && !(unless && unless.test(q)));
+    if (faq) {
+      const nodes = [el("p", null, tc(`faq.${faq.key}`))];
+      if (faq.contacts) nodes.push(contactLinks());
+      const target = faq.target && document.querySelector(faq.target);
+      if (target) {
+        const button = el("button", "chat-goto", `${tc("goTo")} →`);
+        button.type = "button";
+        button.addEventListener("click", () => goTo(target));
+        nodes.push(button);
+      }
+      return nodes;
     }
     if (intents.contact.test(q)) return [el("p", null, tc("contact")), contactLinks()];
 
