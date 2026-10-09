@@ -152,7 +152,8 @@ window.I18N = {
     "chat.faq.work": "Trabalha 100% remoto, a partir de Manaus (fuso UTC−4). Aceita contratação CLT ou PJ e está aberto a vagas no Brasil e internacionais.",
     "chat.faq.languages": "Português nativo, espanhol intermediário (B2) e inglês básico (A2), em estudo.",
     "chat.faq.salary": "Pretensão salarial e valores dependem do formato e do escopo da vaga — é melhor conversar direto com o Emanuel:",
-    "cv.availability": "Remoto (UTC−4) · CLT ou PJ · Brasil e exterior"
+    "cv.availability": "Remoto (UTC−4) · CLT ou PJ · Brasil e exterior",
+    "chat.faq.seeking": "Procura vagas de Desenvolvedor Full Stack Sênior, Backend (Java/Kotlin, Node.js) ou Mobile (React Native), e posições que envolvam IA, Machine Learning e NLP. Prefere trabalho 100% remoto (Manaus, UTC−4), aceita CLT ou PJ e está aberto a vagas no Brasil e internacionais."
   },
   "en": {
     "menu.open": "Open menu",
@@ -296,7 +297,8 @@ window.I18N = {
     "chat.faq.work": "He works 100% remotely from Manaus, Brazil (UTC−4). Open to both employment (CLT) and contractor (PJ) arrangements, in Brazil or internationally.",
     "chat.faq.languages": "Native Portuguese, intermediate Spanish (B2) and basic English (A2), currently studying.",
     "chat.faq.salary": "Salary expectations depend on the role’s format and scope — best to talk to Emanuel directly:",
-    "cv.availability": "Remote (UTC−4) · Employee or contractor · Brazil & international"
+    "cv.availability": "Remote (UTC−4) · Employee or contractor · Brazil & international",
+    "chat.faq.seeking": "He is looking for Senior Full Stack, Backend (Java/Kotlin, Node.js) or Mobile (React Native) developer roles, as well as positions involving AI, Machine Learning and NLP. Prefers 100% remote work (Manaus, UTC−4) and is open to employee (CLT) or contractor (PJ) arrangements, in Brazil or internationally."
   },
   "es": {
     "menu.open": "Abrir menú",
@@ -432,7 +434,8 @@ window.I18N = {
     "chat.faq.work": "Trabaja 100 % en remoto desde Manaus, Brasil (UTC−4). Acepta contratación como empleado (CLT) o como contratista (PJ), y está abierto a vacantes en Brasil e internacionales.",
     "chat.faq.languages": "Portugués nativo, español intermedio (B2) e inglés básico (A2), en estudio.",
     "chat.faq.salary": "La pretensión salarial depende del formato y el alcance de la vacante; lo mejor es hablar directamente con Emanuel:",
-    "cv.availability": "Remoto (UTC−4) · Empleado o contratista · Brasil e internacional"
+    "cv.availability": "Remoto (UTC−4) · Empleado o contratista · Brasil e internacional",
+    "chat.faq.seeking": "Busca vacantes de Desarrollador Full Stack Sénior, Backend (Java/Kotlin, Node.js) o Mobile (React Native), y puestos que involucren IA, Machine Learning y NLP. Prefiere trabajo 100 % remoto (Manaus, UTC−4) y acepta contratación como empleado (CLT) o contratista (PJ), en Brasil o a nivel internacional."
   },
   "fr": {
     "menu.open": "Ouvrir le menu",
@@ -585,7 +588,8 @@ window.I18N = {
     "chat.faq.work": "Il travaille 100 % à distance depuis Manaus, au Brésil (UTC−4). Ouvert au salariat (CLT) comme au statut de prestataire (PJ), au Brésil ou à l’international.",
     "chat.faq.languages": "Portugais natif, espagnol intermédiaire (B2) et anglais élémentaire (A2), en cours d’apprentissage.",
     "chat.faq.salary": "Les prétentions salariales dépendent du format et du périmètre du poste — le mieux est d’en parler directement avec Emanuel :",
-    "cv.availability": "À distance (UTC−4) · Salarié ou prestataire · Brésil et international"
+    "cv.availability": "À distance (UTC−4) · Salarié ou prestataire · Brésil et international",
+    "chat.faq.seeking": "Il recherche des postes de Développeur Full Stack Senior, Backend (Java/Kotlin, Node.js) ou Mobile (React Native), ainsi que des postes liés à l’IA, au Machine Learning et au NLP. Il privilégie le 100 % à distance (Manaus, UTC−4), en tant que salarié (CLT) ou prestataire (PJ), au Brésil ou à l’international."
   },
   "it": {
     "menu.open": "Apri il menu",
@@ -738,7 +742,8 @@ window.I18N = {
     "chat.faq.work": "Lavora al 100% da remoto da Manaus, in Brasile (UTC−4). Disponibile sia come dipendente (CLT) sia come collaboratore (PJ), in Brasile o all’estero.",
     "chat.faq.languages": "Portoghese madrelingua, spagnolo intermedio (B2) e inglese elementare (A2), in fase di studio.",
     "chat.faq.salary": "Le aspettative economiche dipendono dal formato e dal ruolo: meglio parlarne direttamente con Emanuel:",
-    "cv.availability": "Da remoto (UTC−4) · Dipendente o collaboratore · Brasile ed estero"
+    "cv.availability": "Da remoto (UTC−4) · Dipendente o collaboratore · Brasile ed estero",
+    "chat.faq.seeking": "Cerca posizioni come Sviluppatore Full Stack Senior, Backend (Java/Kotlin, Node.js) o Mobile (React Native), oltre a ruoli legati a IA, Machine Learning e NLP. Preferisce il lavoro al 100% da remoto (Manaus, UTC−4), come dipendente (CLT) o collaboratore (PJ), in Brasile o all’estero."
   },
   "zh": {
     "menu.open": "打开菜单",
@@ -891,7 +896,8 @@ window.I18N = {
     "chat.faq.work": "常驻巴西马瑙斯（UTC−4），100% 远程工作。可接受全职雇佣（CLT）或合同制（PJ），欢迎巴西及国际职位。",
     "chat.faq.languages": "葡萄牙语为母语，西班牙语中级（B2），英语初级（A2），正在学习中。",
     "chat.faq.salary": "薪资期望取决于职位形式和工作范围，建议直接与 Emanuel 沟通：",
-    "cv.availability": "远程（UTC−4）· 全职或合同制 · 巴西及国际"
+    "cv.availability": "远程（UTC−4）· 全职或合同制 · 巴西及国际",
+    "chat.faq.seeking": "正在寻找高级全栈、后端（Java/Kotlin、Node.js）或移动端（React Native）开发职位，以及涉及 AI、机器学习和自然语言处理的岗位。倾向 100% 远程工作（马瑙斯，UTC−4），可接受全职雇佣（CLT）或合同制（PJ），欢迎巴西及国际职位。"
   },
   "ru": {
     "menu.open": "Открыть меню",
@@ -1044,6 +1050,7 @@ window.I18N = {
     "chat.faq.work": "Работает полностью удалённо из Манауса, Бразилия (UTC−4). Рассматривает как штатную занятость (CLT), так и работу по контракту (PJ) — в Бразилии и за рубежом.",
     "chat.faq.languages": "Португальский — родной, испанский — средний (B2), английский — базовый (A2), продолжает изучать.",
     "chat.faq.salary": "Ожидания по зарплате зависят от формата и объёма работы — лучше обсудить напрямую с Emanuel:",
-    "cv.availability": "Удалённо (UTC−4) · Штат или контракт · Бразилия и другие страны"
+    "cv.availability": "Удалённо (UTC−4) · Штат или контракт · Бразилия и другие страны",
+    "chat.faq.seeking": "Ищет позиции Senior Full Stack-, Backend- (Java/Kotlin, Node.js) или Mobile-разработчика (React Native), а также роли, связанные с ИИ, машинным обучением и NLP. Предпочитает полностью удалённую работу (Манаус, UTC−4), рассматривает штатную занятость (CLT) или контракт (PJ) — в Бразилии и за рубежом."
   }
 };

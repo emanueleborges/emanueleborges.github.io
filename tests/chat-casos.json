@@ -20,7 +20,8 @@
     ["is he open to international jobs?", "answer:internationally"],
     ["what languages does he speak?", "answer:basic English (A2)"],
     ["programming languages", "Backend"],
-    ["salary expectations", "answer:talk to Emanuel"]
+    ["salary expectations", "answer:talk to Emanuel"],
+    ["what kind of role is he looking for?", "answer:He is looking for"]
   ],
   "pt": [
     ["Projetos com IA", "Crítico Jurídico"],
@@ -34,11 +35,14 @@
     ["qual o fuso horário?", "answer:UTC−4"],
     ["fala inglês?", "answer:inglês básico (A2)"],
     ["pretensão salarial", "answer:conversar direto"],
-    ["quais linguagens de programação?", "Backend"]
+    ["quais linguagens de programação?", "Backend"],
+    ["Procura qual tipo de vaga ?", "answer:Procura vagas de Desenvolvedor"],
+    ["que vaga você procura?", "answer:Procura vagas de Desenvolvedor"]
   ],
   "es": [
     ["¿dónde estudió?", "Formación"],
-    ["proyectos con Kafka", "Financial Hub"]
+    ["proyectos con Kafka", "Financial Hub"],
+    ["¿qué tipo de puesto busca?", "answer:Busca vacantes"]
   ],
   "zh": [
     ["Kafka 相关项目", "Financial Hub"],

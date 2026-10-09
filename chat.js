@@ -81,6 +81,11 @@
       target: "#experiencia",
     },
     {
+      key: "seeking",
+      pattern: /tipo de vaga|qual vaga|que vaga|quais vagas|vaga (que|de) (procura|busca)|procura (qual|que|vaga|emprego|trabalho|oportunidade|posi)|busca (vaga|vacante|empleo|trabajo|puesto)|tipo de (puesto|vacante|empleo|trabajo|cargo)|looking for|seeking|what (kind of |type of )?(roles?|jobs?|positions?)|open to (roles|positions|jobs)|quel (type de )?poste|cherche (un )?(poste|emploi)|che tipo di (lavoro|posizione|ruolo)|cerca (lavoro|posizion)|寻找|什么职位|求职|ищет|какую (работу|вакансию|должность)|ваканс/,
+      contacts: true,
+    },
+    {
       key: "work",
       pattern: /remot|home ?office|presencial|hibrid|hybrid|on-?site|fuso|timezone|time zone|zona horaria|fuseau|fuso orario|utc|gmt|onde mora|where .*(live|based|located)|donde vive|ou habite|dove vive|internaciona|internationa|exterior|abroad|estero|etranger|relocat|visa|clt|pj|contrat|freelanc|autonom|disponib|availab|远程|时区|国际|合同|удален|пояс|междунар|контракт|релокац/,
       contacts: true,
