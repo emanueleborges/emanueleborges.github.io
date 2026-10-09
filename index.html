@@ -4,11 +4,12 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
+      data-i18n-content="meta.description"
       name="description"
       content="Portfólio de Emanuel Borges — Desenvolvedor Full Stack Sênior com mais de 10 anos de experiência, especializando-se em Machine Learning e NLP."
     />
     <meta name="theme-color" content="#090811" />
-    <title>Emanuel Borges — Portfólio</title>
+    <title data-i18n="meta.title">Emanuel Borges — Portfólio</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -16,12 +17,16 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="styles.css" />
+    <script src="i18n.js" defer></script>
     <script src="script.js" defer></script>
   </head>
   <body>
+    <div class="bg-aurora" aria-hidden="true"><span></span><span></span><span></span></div>
+    <canvas class="bg-canvas" aria-hidden="true"></canvas>
     <header class="site-header">
-      <nav class="nav shell" aria-label="Navegação principal">
-        <a class="brand" href="#inicio" aria-label="Emanuel Borges — início">
+      <div class="scroll-progress" aria-hidden="true"></div>
+      <nav class="nav shell" aria-label="Navegação principal" data-i18n-aria="nav.aria">
+        <a class="brand" href="#inicio" aria-label="Emanuel Borges — início" data-i18n-aria="brand.aria">
           <span class="brand-mark">E<span>.</span></span>
           <span>Emanuel Borges</span>
         </a>
@@ -35,101 +40,111 @@
           <span></span><span></span>
         </button>
         <div class="nav-links" id="nav-links">
-          <a href="#sobre">Sobre</a>
-          <a href="#experiencia">Experiência</a>
-          <a href="#projetos">Projetos</a>
-          <a href="#habilidades">Habilidades</a>
-          <a href="#formacao">Formação</a>
-          <a class="nav-contact" href="#contato">Vamos conversar <span>↗</span></a>
+          <a href="#sobre" data-i18n="nav.about">Sobre</a>
+          <a href="#experiencia" data-i18n="nav.experience">Experiência</a>
+          <a href="#projetos" data-i18n="nav.projects">Projetos</a>
+          <a href="#habilidades" data-i18n="nav.skills">Habilidades</a>
+          <a href="#formacao" data-i18n="nav.education">Formação</a>
+          <a class="nav-contact" href="#contato" data-i18n="nav.contact">Vamos conversar <span>↗</span></a>
+        </div>
+        <div class="lang-switch" role="group" aria-label="Idioma" data-i18n-aria="lang.aria">
+          <button type="button" data-lang="pt" lang="pt-BR" title="Português" aria-pressed="true">PT</button>
+          <button type="button" data-lang="en" lang="en" title="English" aria-pressed="false">EN</button>
+          <button type="button" data-lang="es" lang="es" title="Español" aria-pressed="false">ES</button>
         </div>
       </nav>
     </header>
 
     <main>
       <section class="hero shell" id="inicio">
-        <div class="hero-image" aria-hidden="true"></div>
+        <div class="hero-image" aria-hidden="true">
+          <div class="hero-slide is-active" style="background-image: url('https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1500&q=80')"></div>
+          <div class="hero-slide" style="background-image: url('https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=1500&q=80')"></div>
+          <div class="hero-slide" style="background-image: url('https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1500&q=80')"></div>
+          <div class="hero-slide" style="background-image: url('https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=1500&q=80')"></div>
+        </div>
         <div class="hero-copy">
-          <p class="eyebrow"><span class="status-dot"></span> DISPONÍVEL PARA NOVOS DESAFIOS</p>
-          <p class="mono intro">// OI, EU SOU</p>
+          <p class="eyebrow"><span class="status-dot"></span> <span data-i18n="hero.eyebrow">DISPONÍVEL PARA NOVOS DESAFIOS</span></p>
+          <p class="mono intro" data-i18n="hero.intro">// OI, EU SOU</p>
           <h1>Emanuel<br /><span>Borges.</span></h1>
-          <h2>Full Stack Sênior,<br class="desktop-break" /> construindo com IA.</h2>
-          <p class="hero-description">
+          <h2 data-i18n="hero.title">Full Stack Sênior,<br class="desktop-break" /> construindo com IA.</h2>
+          <p class="hero-description" data-i18n="hero.description">
             Mais de 10 anos desenvolvendo sistemas com Java, Kotlin, Node.js, React e React Native —
             hoje aplicando Machine Learning e NLP para criar produtos inteligentes.
           </p>
           <div class="hero-actions">
-            <a class="button button-primary" href="#projetos">Explorar projetos <span>↘</span></a>
-            <a class="button button-quiet" href="#contato">Entre em contato <span>↗</span></a>
+            <a class="button button-primary" href="#projetos" data-i18n="hero.cta1">Explorar projetos <span>↘</span></a>
+            <a class="button button-quiet" href="#contato" data-i18n="hero.cta2">Entre em contato <span>↗</span></a>
           </div>
           <div class="hero-meta">
-            <span><span class="pin">⌖</span> Manaus, AM · Brasil</span>
-            <span class="mono">10+ ANOS DE EXPERIÊNCIA</span>
+            <span><span class="pin">⌖</span> <span data-i18n="hero.location">Manaus, AM · Brasil</span></span>
+            <span class="mono" data-i18n="hero.years">10+ ANOS DE EXPERIÊNCIA</span>
           </div>
         </div>
-        <a class="scroll-cue mono" href="#sobre"><span>↓</span> ROLE PARA EXPLORAR</a>
+        <a class="scroll-cue mono" href="#sobre" data-i18n="hero.scroll"><span>↓</span> ROLE PARA EXPLORAR</a>
         <div class="hero-index mono">01 — 06</div>
       </section>
 
       <section class="section shell about-section" id="sobre">
         <div class="section-heading">
-          <p class="mono section-kicker">// 01. SOBRE MIM</p>
-          <h2>Código sólido,<br />agora com <span class="gradient-text">IA.</span></h2>
+          <p class="mono section-kicker" data-i18n="about.kicker">// 01. SOBRE MIM</p>
+          <h2 data-i18n="about.title">Código sólido,<br />agora com <span class="gradient-text">IA.</span></h2>
         </div>
         <div class="about-content">
-          <p class="about-lead">
+          <p class="about-lead" data-i18n="about.lead">
             Engenheiro de Software Sênior especializado em full stack, mobile e arquitetura de
             sistemas escaláveis.
           </p>
-          <p class="muted">
+          <p class="muted" data-i18n="about.body">
             Atuei em projetos de grande porte nos setores público e privado — INDT, ICCT e Prefeitura
             de Manaus — com foco em Clean Architecture, testes e práticas DevOps. Hoje aplico
             Inteligência Artificial e NLP para resolver problemas complexos, especialmente em busca
             semântica, RAG e recuperação de informação.
           </p>
           <div class="about-facts">
-            <div class="fact"><span class="fact-icon">✳</span><span><strong>Foco</strong><small>Full Stack · Mobile · IA</small></span></div>
-            <div class="fact"><span class="fact-icon">⌖</span><span><strong>Localização</strong><small>Manaus, AM · aberto ao remoto</small></span></div>
-            <div class="fact"><span class="fact-icon">◷</span><span><strong>Experiência</strong><small>10+ anos em desenvolvimento</small></span></div>
-            <div class="fact"><span class="fact-icon">↗</span><span><strong>Especialização</strong><small>ML Engineering (FIAP) · NLP (UFG)</small></span></div>
+            <div class="fact"><span class="fact-icon">✳</span><span><strong data-i18n="fact.focus">Foco</strong><small data-i18n="fact.focusValue">Full Stack · Mobile · IA</small></span></div>
+            <div class="fact"><span class="fact-icon">⌖</span><span><strong data-i18n="fact.location">Localização</strong><small data-i18n="fact.locationValue">Manaus, AM · aberto ao remoto</small></span></div>
+            <div class="fact"><span class="fact-icon">◷</span><span><strong data-i18n="fact.experience">Experiência</strong><small data-i18n="fact.experienceValue">10+ anos em desenvolvimento</small></span></div>
+            <div class="fact"><span class="fact-icon">↗</span><span><strong data-i18n="fact.specialization">Especialização</strong><small>ML Engineering (FIAP) · NLP (UFG)</small></span></div>
           </div>
-          <blockquote>“Arquitetura limpa, testes e código revisado — com IA onde ela faz diferença.”</blockquote>
+          <blockquote data-i18n="about.quote">“Arquitetura limpa, testes e código revisado — com IA onde ela faz diferença.”</blockquote>
         </div>
       </section>
 
       <section class="section shell experience-section" id="experiencia">
         <div class="section-heading">
-          <p class="mono section-kicker">// 02. EXPERIÊNCIA</p>
-          <h2>Uma década<br /><span class="gradient-text">entregando.</span></h2>
+          <p class="mono section-kicker" data-i18n="exp.kicker">// 02. EXPERIÊNCIA</p>
+          <h2 data-i18n="exp.title">Uma década<br /><span class="gradient-text">entregando.</span></h2>
         </div>
         <ol class="timeline">
           <li class="job">
-            <p class="mono job-period">ABR 2023 — ATUAL</p>
-            <h3>Desenvolvedor Full Stack Sênior</h3>
+            <p class="mono job-period" data-i18n="job1.period">ABR 2023 — ATUAL</p>
+            <h3 data-i18n="job1.title">Desenvolvedor Full Stack Sênior</h3>
             <p class="job-company">INDT — Instituto de Desenvolvimento Tecnológico</p>
             <ul class="muted">
-              <li>Aplicações full stack com Node.js (NestJS), React, Java Spring Boot e React Native, seguindo Clean Architecture.</li>
-              <li>Pipelines CI/CD com GitLab, Docker e Kubernetes; qualidade garantida com SonarQube e code review.</li>
-              <li>Soluções escaláveis com AWS Serverless (Lambda, S3) e mensageria com RabbitMQ.</li>
+              <li data-i18n="job1.b1">Aplicações full stack com Node.js (NestJS), React, Java Spring Boot e React Native, seguindo Clean Architecture.</li>
+              <li data-i18n="job1.b2">Pipelines CI/CD com GitLab, Docker e Kubernetes; qualidade garantida com SonarQube e code review.</li>
+              <li data-i18n="job1.b3">Soluções escaláveis com AWS Serverless (Lambda, S3) e mensageria com RabbitMQ.</li>
             </ul>
           </li>
           <li class="job">
             <p class="mono job-period">JUL 2021 — MAR 2023</p>
-            <h3>Desenvolvedor Full Stack Pleno</h3>
+            <h3 data-i18n="job2.title">Desenvolvedor Full Stack Pleno</h3>
             <p class="job-company">ICCT — Instituto CAL-COMP de Tecnologia</p>
             <ul class="muted">
-              <li>Sistemas web com PHP/Laravel, Node.js (NestJS), React, Vue.js e Angular.</li>
-              <li>Procedures, functions e triggers em Oracle para otimizar consultas e processos de negócio.</li>
-              <li>Testes unitários e Clean Architecture em times ágeis multidisciplinares.</li>
+              <li data-i18n="job2.b1">Sistemas web com PHP/Laravel, Node.js (NestJS), React, Vue.js e Angular.</li>
+              <li data-i18n="job2.b2">Procedures, functions e triggers em Oracle para otimizar consultas e processos de negócio.</li>
+              <li data-i18n="job2.b3">Testes unitários e Clean Architecture em times ágeis multidisciplinares.</li>
             </ul>
           </li>
           <li class="job">
-            <p class="mono job-period">AGO 2015 — JUN 2021</p>
-            <h3>Desenvolvedor Web</h3>
-            <p class="job-company">Prefeitura de Manaus — SEMEF / SEMAD</p>
+            <p class="mono job-period" data-i18n="job3.period">AGO 2015 — JUN 2021</p>
+            <h3 data-i18n="job3.title">Desenvolvedor Web</h3>
+            <p class="job-company" data-i18n="job3.company">Prefeitura de Manaus — SEMEF / SEMAD</p>
             <ul class="muted">
-              <li>Desenvolvimento dos portais <a href="https://compras.manaus.am.gov.br/" target="_blank" rel="noopener">ComprasManaus</a> e <a href="https://contratos.manaus.am.gov.br" target="_blank" rel="noopener">ContratosManaus</a>, de licitações e contratos.</li>
-              <li>Sistemas governamentais com PHP, ASP Classic, VB.NET, jQuery e Oracle.</li>
-              <li>Views, functions e procedures em Oracle para relatórios e automação de processos.</li>
+              <li data-i18n="job3.b1">Desenvolvimento dos portais <a href="https://compras.manaus.am.gov.br/" target="_blank" rel="noopener">ComprasManaus</a> e <a href="https://contratos.manaus.am.gov.br" target="_blank" rel="noopener">ContratosManaus</a>, de licitações e contratos.</li>
+              <li data-i18n="job3.b2">Sistemas governamentais com PHP, ASP Classic, VB.NET, jQuery e Oracle.</li>
+              <li data-i18n="job3.b3">Views, functions e procedures em Oracle para relatórios e automação de processos.</li>
             </ul>
           </li>
         </ol>
@@ -138,23 +153,23 @@
       <section class="section shell projects-section" id="projetos">
         <div class="section-topline">
           <div class="section-heading">
-            <p class="mono section-kicker">// 03. PROJETOS SELECIONADOS</p>
-            <h2>Ideias em<br /><span class="gradient-text">movimento.</span></h2>
+            <p class="mono section-kicker" data-i18n="proj.kicker">// 03. PROJETOS SELECIONADOS</p>
+            <h2 data-i18n="proj.title">Ideias em<br /><span class="gradient-text">movimento.</span></h2>
           </div>
-          <p class="muted section-aside">IA aplicada, APIs e arquitetura.<br />Mais no meu GitHub.</p>
+          <p class="muted section-aside" data-i18n="proj.aside">IA aplicada, APIs e arquitetura.<br />Mais no meu GitHub.</p>
         </div>
-        <div class="filter-tabs" data-filter-group="projetos" aria-label="Filtrar projetos">
-          <button type="button" class="filter-tab is-active" data-filter="todos" aria-pressed="true">Todos</button>
-          <button type="button" class="filter-tab" data-filter="ia" aria-pressed="false">IA / ML</button>
+        <div class="filter-tabs" data-filter-group="projetos" aria-label="Filtrar projetos" data-i18n-aria="proj.filterAria">
+          <button type="button" class="filter-tab is-active" data-filter="todos" aria-pressed="true" data-i18n="proj.tab.all">Todos</button>
+          <button type="button" class="filter-tab" data-filter="ia" aria-pressed="false" data-i18n="proj.tab.ia">IA / ML</button>
           <button type="button" class="filter-tab" data-filter="backend" aria-pressed="false">Backend &amp; APIs</button>
           <button type="button" class="filter-tab" data-filter="apps" aria-pressed="false">Web &amp; Apps</button>
         </div>
         <div class="projects-grid" data-filter-items="projetos">
           <article data-category="ia" class="project-card project-featured">
             <span class="art-number mono">01 / TCC · UFG</span>
-            <p class="mono project-type">RAG · LANGCHAIN · OLLAMA · SEGURANÇA DE LLM</p>
-            <h3>Crítico Jurídico Inteligente</h3>
-            <p class="muted">
+            <p class="mono project-type" data-i18n="p1.type">RAG · LANGCHAIN · OLLAMA · SEGURANÇA DE LLM</p>
+            <h3 data-i18n="p1.title">Crítico Jurídico Inteligente</h3>
+            <p class="muted" data-i18n="p1.desc">
               Chatbot jurídico baseado em RAG que analisa petições iniciais em PDF, sugere melhorias,
               detecta tentativas de prompt injection (OWASP LLM01) e gera relatórios em Markdown/PDF.
               Orquestra respostas entre base RAG interna, Ollama local e busca na web.
@@ -163,8 +178,8 @@
           <article data-category="ia" class="project-card">
             <span class="art-number mono">02 / DATATHON</span>
             <p class="mono project-type">MACHINE LEARNING · SCIKIT-LEARN · DOCKER</p>
-            <h3>Risco de Defasagem Escolar</h3>
-            <p class="muted">
+            <h3 data-i18n="p2.title">Risco de Defasagem Escolar</h3>
+            <p class="muted" data-i18n="p2.desc">
               Modelo de classificação (Random Forest, XGBoost) com 87% de precisão para o case Passos
               Mágicos, com API e dashboard de monitoramento de drift. Top 5% no datathon.
             </p>
@@ -172,8 +187,8 @@
           <article data-category="ia" class="project-card">
             <span class="art-number mono">03 / FIAP</span>
             <p class="mono project-type">DEEP LEARNING · LSTM · TENSORFLOW · FLASK</p>
-            <h3>Previsão de Ações com LSTM</h3>
-            <p class="muted">
+            <h3 data-i18n="p3.title">Previsão de Ações com LSTM</h3>
+            <p class="muted" data-i18n="p3.desc">
               Modelo de deep learning com 89% de acurácia para predição de preços, com pipeline de
               coleta via Yahoo Finance, pré-processamento e API REST documentada com Swagger.
             </p>
@@ -181,8 +196,8 @@
           <article data-category="ia" class="project-card">
             <span class="art-number mono">04 / IA</span>
             <p class="mono project-type">RAG · CHROMADB · FASTAPI · STREAMLIT</p>
-            <h3>RAG Agent — Sistema Q&amp;A</h3>
-            <p class="muted">
+            <h3 data-i18n="p4.title">RAG Agent — Sistema Q&amp;A</h3>
+            <p class="muted" data-i18n="p4.desc">
               Aplicação de perguntas e respostas com LangChain, ChromaDB e LLMs (Ollama/Deepseek), com
               ingestão de documentos, chat via WebSocket e feedback contínuo.
             </p>
@@ -190,8 +205,8 @@
           <article data-category="backend" class="project-card">
             <span class="art-number mono">05 / BACKEND</span>
             <p class="mono project-type">JAVA 17 · SPRING BOOT · KAFKA · REDIS</p>
-            <h3>Financial Hub — Plataforma P2P</h3>
-            <p class="muted">
+            <h3 data-i18n="p5.title">Financial Hub — Plataforma P2P</h3>
+            <p class="muted" data-i18n="p5.desc">
               Arquitetura hexagonal com PostgreSQL (lock pessimista), Redis (cache-aside), Kafka com
               DLQ e MongoDB, além de frontends em Angular 19 e Next.js 15.
             </p>
@@ -200,7 +215,7 @@
             <span class="art-number mono">06 / BACKEND</span>
             <p class="mono project-type">NESTJS · TYPEORM · KAFKA · REDIS</p>
             <h3>Products API</h3>
-            <p class="muted">
+            <p class="muted" data-i18n="p6.desc">
               API de produtos com cache em Redis, eventos no Kafka, rate limiting por rota e
               documentação Swagger, sobre PostgreSQL.
             </p>
@@ -209,7 +224,7 @@
             <span class="art-number mono">07 / WEB</span>
             <p class="mono project-type">FASTAPI · POSTGRESQL · SCIKIT-LEARN</p>
             <h3>Movie Recommender System</h3>
-            <p class="muted">
+            <p class="muted" data-i18n="p7.desc">
               Sistema de recomendação de filmes baseado em TF-IDF e similaridade de cossenos, com
               interface web responsiva e banco PostgreSQL.
             </p>
@@ -218,7 +233,7 @@
             <span class="art-number mono">08 / POC</span>
             <p class="mono project-type">FACE-API.JS · NODE.JS · SQLITE</p>
             <h3>Face Recognition POC</h3>
-            <p class="muted">
+            <p class="muted" data-i18n="p8.desc">
               Reconhecimento facial em tempo real pela webcam: captura, geração de embeddings e
               verificação a partir de vetores salvos via API REST.
             </p>
@@ -227,30 +242,30 @@
             <span class="art-number mono">09 / DESKTOP</span>
             <p class="mono project-type">KOTLIN · JETPACK COMPOSE · RETROFIT</p>
             <h3>Kotlin Desktop CRUD</h3>
-            <p class="muted">
+            <p class="muted" data-i18n="p9.desc">
               Aplicativo desktop moderno com Jetpack Compose for Desktop, consumindo um backend REST
               em Kotlin e Spring Boot.
             </p>
           </article>
         </div>
-        <a class="button button-quiet projects-more" href="https://github.com/emanueleborges" target="_blank" rel="noopener">Ver todos no GitHub <span>↗</span></a>
+        <a class="button button-quiet projects-more" href="https://github.com/emanueleborges" target="_blank" rel="noopener" data-i18n="proj.more">Ver todos no GitHub <span>↗</span></a>
       </section>
 
       <section class="section shell skills-section" id="habilidades">
         <div class="skills-intro">
-          <p class="mono section-kicker">// 04. CAIXA DE FERRAMENTAS</p>
-          <h2>Ferramentas para<br /><span class="gradient-text">tirar do papel.</span></h2>
-          <p class="muted">Tecnologias e práticas que uso no dia a dia — do backend ao modelo de IA em produção.</p>
+          <p class="mono section-kicker" data-i18n="skills.kicker">// 04. CAIXA DE FERRAMENTAS</p>
+          <h2 data-i18n="skills.title">Ferramentas para<br /><span class="gradient-text">tirar do papel.</span></h2>
+          <p class="muted" data-i18n="skills.intro">Tecnologias e práticas que uso no dia a dia — do backend ao modelo de IA em produção.</p>
         </div>
         <div class="skills-panel">
-          <div class="filter-tabs" data-filter-group="habilidades" aria-label="Filtrar habilidades">
-            <button type="button" class="filter-tab is-active" data-filter="todos" aria-pressed="true">Todas</button>
+          <div class="filter-tabs" data-filter-group="habilidades" aria-label="Filtrar habilidades" data-i18n-aria="skills.filterAria">
+            <button type="button" class="filter-tab is-active" data-filter="todos" aria-pressed="true" data-i18n="skills.tab.all">Todas</button>
             <button type="button" class="filter-tab" data-filter="backend" aria-pressed="false">Backend</button>
             <button type="button" class="filter-tab" data-filter="frontend" aria-pressed="false">Frontend &amp; Mobile</button>
-            <button type="button" class="filter-tab" data-filter="ia" aria-pressed="false">IA &amp; ML</button>
-            <button type="button" class="filter-tab" data-filter="dados" aria-pressed="false">Dados</button>
+            <button type="button" class="filter-tab" data-filter="ia" aria-pressed="false" data-i18n="skills.tab.ia">IA &amp; ML</button>
+            <button type="button" class="filter-tab" data-filter="dados" aria-pressed="false" data-i18n="skills.tab.dados">Dados</button>
             <button type="button" class="filter-tab" data-filter="devops" aria-pressed="false">DevOps</button>
-            <button type="button" class="filter-tab" data-filter="praticas" aria-pressed="false">Práticas</button>
+            <button type="button" class="filter-tab" data-filter="praticas" aria-pressed="false" data-i18n="skills.tab.praticas">Práticas</button>
           </div>
           <p class="filter-count mono" data-filter-count="habilidades" aria-live="polite"></p>
           <ul class="skills-grid" data-filter-items="habilidades">
@@ -271,20 +286,20 @@
             <li data-category="frontend" class="skill-chip"><strong>Vue.js</strong><span class="mono">FRONTEND &amp; MOBILE</span></li>
             <li data-category="frontend" class="skill-chip"><strong>Angular</strong><span class="mono">FRONTEND &amp; MOBILE</span></li>
             <li data-category="frontend" class="skill-chip"><strong>HTML &amp; CSS</strong><span class="mono">FRONTEND &amp; MOBILE</span></li>
-            <li data-category="ia" class="skill-chip"><strong>NLP</strong><span class="mono">IA &amp; ML</span></li>
-            <li data-category="ia" class="skill-chip"><strong>LLM</strong><span class="mono">IA &amp; ML</span></li>
-            <li data-category="ia" class="skill-chip"><strong>RAG</strong><span class="mono">IA &amp; ML</span></li>
-            <li data-category="ia" class="skill-chip"><strong>LangChain</strong><span class="mono">IA &amp; ML</span></li>
-            <li data-category="ia" class="skill-chip"><strong>TensorFlow</strong><span class="mono">IA &amp; ML</span></li>
-            <li data-category="ia" class="skill-chip"><strong>Scikit-learn</strong><span class="mono">IA &amp; ML</span></li>
-            <li data-category="ia" class="skill-chip"><strong>Pandas</strong><span class="mono">IA &amp; ML</span></li>
-            <li data-category="ia" class="skill-chip"><strong>Hugging Face</strong><span class="mono">IA &amp; ML</span></li>
-            <li data-category="dados" class="skill-chip"><strong>PostgreSQL</strong><span class="mono">DADOS</span></li>
-            <li data-category="dados" class="skill-chip"><strong>Oracle</strong><span class="mono">DADOS</span></li>
-            <li data-category="dados" class="skill-chip"><strong>MySQL</strong><span class="mono">DADOS</span></li>
-            <li data-category="dados" class="skill-chip"><strong>MongoDB</strong><span class="mono">DADOS</span></li>
-            <li data-category="dados" class="skill-chip"><strong>SQL Server</strong><span class="mono">DADOS</span></li>
-            <li data-category="dados" class="skill-chip"><strong>Redis</strong><span class="mono">DADOS</span></li>
+            <li data-category="ia" class="skill-chip"><strong>NLP</strong><span class="mono" data-i18n="cat.ia">IA &amp; ML</span></li>
+            <li data-category="ia" class="skill-chip"><strong>LLM</strong><span class="mono" data-i18n="cat.ia">IA &amp; ML</span></li>
+            <li data-category="ia" class="skill-chip"><strong>RAG</strong><span class="mono" data-i18n="cat.ia">IA &amp; ML</span></li>
+            <li data-category="ia" class="skill-chip"><strong>LangChain</strong><span class="mono" data-i18n="cat.ia">IA &amp; ML</span></li>
+            <li data-category="ia" class="skill-chip"><strong>TensorFlow</strong><span class="mono" data-i18n="cat.ia">IA &amp; ML</span></li>
+            <li data-category="ia" class="skill-chip"><strong>Scikit-learn</strong><span class="mono" data-i18n="cat.ia">IA &amp; ML</span></li>
+            <li data-category="ia" class="skill-chip"><strong>Pandas</strong><span class="mono" data-i18n="cat.ia">IA &amp; ML</span></li>
+            <li data-category="ia" class="skill-chip"><strong>Hugging Face</strong><span class="mono" data-i18n="cat.ia">IA &amp; ML</span></li>
+            <li data-category="dados" class="skill-chip"><strong>PostgreSQL</strong><span class="mono" data-i18n="cat.dados">DADOS</span></li>
+            <li data-category="dados" class="skill-chip"><strong>Oracle</strong><span class="mono" data-i18n="cat.dados">DADOS</span></li>
+            <li data-category="dados" class="skill-chip"><strong>MySQL</strong><span class="mono" data-i18n="cat.dados">DADOS</span></li>
+            <li data-category="dados" class="skill-chip"><strong>MongoDB</strong><span class="mono" data-i18n="cat.dados">DADOS</span></li>
+            <li data-category="dados" class="skill-chip"><strong>SQL Server</strong><span class="mono" data-i18n="cat.dados">DADOS</span></li>
+            <li data-category="dados" class="skill-chip"><strong>Redis</strong><span class="mono" data-i18n="cat.dados">DADOS</span></li>
             <li data-category="devops" class="skill-chip"><strong>Docker</strong><span class="mono">DEVOPS</span></li>
             <li data-category="devops" class="skill-chip"><strong>Kubernetes</strong><span class="mono">DEVOPS</span></li>
             <li data-category="devops" class="skill-chip"><strong>AWS</strong><span class="mono">DEVOPS</span></li>
@@ -292,41 +307,41 @@
             <li data-category="devops" class="skill-chip"><strong>RabbitMQ</strong><span class="mono">DEVOPS</span></li>
             <li data-category="devops" class="skill-chip"><strong>CI/CD</strong><span class="mono">DEVOPS</span></li>
             <li data-category="devops" class="skill-chip"><strong>GitLab</strong><span class="mono">DEVOPS</span></li>
-            <li data-category="praticas" class="skill-chip"><strong>Clean Architecture</strong><span class="mono">PRÁTICAS</span></li>
-            <li data-category="praticas" class="skill-chip"><strong>Clean Code</strong><span class="mono">PRÁTICAS</span></li>
-            <li data-category="praticas" class="skill-chip"><strong>TDD</strong><span class="mono">PRÁTICAS</span></li>
-            <li data-category="praticas" class="skill-chip"><strong>Testes unitários</strong><span class="mono">PRÁTICAS</span></li>
-            <li data-category="praticas" class="skill-chip"><strong>Code Review</strong><span class="mono">PRÁTICAS</span></li>
-            <li data-category="praticas" class="skill-chip"><strong>SonarQube</strong><span class="mono">PRÁTICAS</span></li>
-            <li data-category="praticas" class="skill-chip"><strong>Scrum</strong><span class="mono">PRÁTICAS</span></li>
+            <li data-category="praticas" class="skill-chip"><strong>Clean Architecture</strong><span class="mono" data-i18n="cat.praticas">PRÁTICAS</span></li>
+            <li data-category="praticas" class="skill-chip"><strong>Clean Code</strong><span class="mono" data-i18n="cat.praticas">PRÁTICAS</span></li>
+            <li data-category="praticas" class="skill-chip"><strong>TDD</strong><span class="mono" data-i18n="cat.praticas">PRÁTICAS</span></li>
+            <li data-category="praticas" class="skill-chip"><strong data-i18n="skill.unit">Testes unitários</strong><span class="mono" data-i18n="cat.praticas">PRÁTICAS</span></li>
+            <li data-category="praticas" class="skill-chip"><strong>Code Review</strong><span class="mono" data-i18n="cat.praticas">PRÁTICAS</span></li>
+            <li data-category="praticas" class="skill-chip"><strong>SonarQube</strong><span class="mono" data-i18n="cat.praticas">PRÁTICAS</span></li>
+            <li data-category="praticas" class="skill-chip"><strong>Scrum</strong><span class="mono" data-i18n="cat.praticas">PRÁTICAS</span></li>
           </ul>
         </div>
       </section>
 
       <section class="section shell education-section" id="formacao">
         <div class="section-heading">
-          <p class="mono section-kicker">// 05. FORMAÇÃO</p>
-          <h2>Aprendizado<br /><span class="gradient-text">contínuo.</span></h2>
+          <p class="mono section-kicker" data-i18n="edu.kicker">// 05. FORMAÇÃO</p>
+          <h2 data-i18n="edu.title">Aprendizado<br /><span class="gradient-text">contínuo.</span></h2>
         </div>
         <div class="education-content">
           <ul class="education-list">
-            <li><strong>Pós-graduação em Natural Language Processing</strong><span>Universidade Federal de Goiás (UFG) · 2025 — 2026</span></li>
-            <li><strong>Pós-graduação em Machine Learning Engineering</strong><span>FIAP · 2025 — 2026</span></li>
-            <li><strong>Pós-graduação em Aplicativos Móveis Multiplataforma</strong><span>Descomplica · 2024 — 2025</span></li>
-            <li><strong>Bacharelado em Análise de Sistemas</strong><span>FUCAPI · 2000 — 2010</span></li>
+            <li><strong data-i18n="edu.d1">Pós-graduação em Natural Language Processing</strong><span>Universidade Federal de Goiás (UFG) · 2025 — 2026</span></li>
+            <li><strong data-i18n="edu.d2">Pós-graduação em Machine Learning Engineering</strong><span>FIAP · 2025 — 2026</span></li>
+            <li><strong data-i18n="edu.d3">Pós-graduação em Aplicativos Móveis Multiplataforma</strong><span>Descomplica · 2024 — 2025</span></li>
+            <li><strong data-i18n="edu.d4">Bacharelado em Análise de Sistemas</strong><span>FUCAPI · 2000 — 2010</span></li>
           </ul>
           <div class="education-extra">
             <div>
-              <p class="mono section-kicker">CERTIFICAÇÕES</p>
-              <p class="muted">
+              <p class="mono section-kicker" data-i18n="edu.cert">CERTIFICAÇÕES</p>
+              <p class="muted" data-i18n="edu.certList">
                 Introduction to Node.js — Linux Foundation · Introduction to Cybersecurity — Cisco ·
                 Scrum Foundation — Certiprof · Full Cycle: Docker, Kubernetes, GitOps, RabbitMQ ·
                 Alura: LangChain com RAG, TypeScript, NestJS, React, CI/CD
               </p>
             </div>
             <div>
-              <p class="mono section-kicker">IDIOMAS</p>
-              <p class="muted">Português — nativo · Espanhol — intermediário (B2) · Inglês (A2) — em estudo</p>
+              <p class="mono section-kicker" data-i18n="edu.lang">IDIOMAS</p>
+              <p class="muted" data-i18n="edu.langList">Português — nativo · Espanhol — intermediário (B2) · Inglês (A2) — em estudo</p>
             </div>
           </div>
         </div>
@@ -335,9 +350,9 @@
       <section class="contact-section" id="contato">
         <div class="contact-glow"></div>
         <div class="shell contact-inner">
-          <p class="mono section-kicker">// 06. CONTATO</p>
-          <h2>Tem um projeto?<br /><span class="gradient-text">Vamos conversar.</span></h2>
-          <p class="muted">Aberto a oportunidades em desenvolvimento full stack, mobile e IA.</p>
+          <p class="mono section-kicker" data-i18n="contact.kicker">// 06. CONTATO</p>
+          <h2 data-i18n="contact.title">Tem um projeto?<br /><span class="gradient-text">Vamos conversar.</span></h2>
+          <p class="muted" data-i18n="contact.text">Aberto a oportunidades em desenvolvimento full stack, mobile e IA.</p>
           <a class="button button-primary contact-button" href="mailto:emanuel.eborges@gmail.com">emanuel.eborges@gmail.com <span>↗</span></a>
           <div class="contact-social">
             <a href="https://github.com/emanueleborges" target="_blank" rel="noopener">GitHub <span>↗</span></a>
@@ -349,8 +364,8 @@
 
     <footer class="footer shell">
       <a class="brand" href="#inicio"><span class="brand-mark">E<span>.</span></span><span>Emanuel Borges</span></a>
-      <span class="footer-copy mono">DESENHADO E CONSTRUÍDO COM CUIDADO · <span id="year">2026</span></span>
-      <a class="back-top mono" href="#inicio">VOLTAR AO TOPO ↑</a>
+      <span class="footer-copy mono"><span data-i18n="footer.copy">DESENHADO E CONSTRUÍDO COM CUIDADO</span> · <span id="year">2026</span></span>
+      <a class="back-top mono" href="#inicio" data-i18n="footer.top">VOLTAR AO TOPO ↑</a>
     </footer>
   </body>
 </html>

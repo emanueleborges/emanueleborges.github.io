@@ -1,0 +1,249 @@
+// Traduções do site. O português vem do próprio index.html; aqui ficam
+// apenas EN e ES, além dos textos gerados pelo script.js.
+// Chave ausente em um idioma = mantém o texto original em português.
+window.I18N = {
+  pt: {
+    "menu.open": "Abrir menu",
+    "menu.close": "Fechar menu",
+    "filter.count": "MOSTRANDO {n} DE {total}",
+  },
+
+  en: {
+    "menu.open": "Open menu",
+    "menu.close": "Close menu",
+    "filter.count": "SHOWING {n} OF {total}",
+
+    "meta.title": "Emanuel Borges — Portfolio",
+    "meta.description":
+      "Portfolio of Emanuel Borges — Senior Full Stack Developer with 10+ years of experience, specializing in Machine Learning and NLP.",
+    "nav.aria": "Main navigation",
+    "brand.aria": "Emanuel Borges — home",
+    "lang.aria": "Language",
+    "nav.about": "About",
+    "nav.experience": "Experience",
+    "nav.projects": "Projects",
+    "nav.skills": "Skills",
+    "nav.education": "Education",
+    "nav.contact": "Let's talk <span>↗</span>",
+
+    "hero.eyebrow": "OPEN TO NEW CHALLENGES",
+    "hero.intro": "// HI, I'M",
+    "hero.title": 'Senior Full Stack,<br class="desktop-break" /> building with AI.',
+    "hero.description":
+      "10+ years building systems with Java, Kotlin, Node.js, React and React Native — now applying Machine Learning and NLP to create intelligent products.",
+    "hero.cta1": "Explore projects <span>↘</span>",
+    "hero.cta2": "Get in touch <span>↗</span>",
+    "hero.location": "Manaus, AM · Brazil",
+    "hero.years": "10+ YEARS OF EXPERIENCE",
+    "hero.scroll": "<span>↓</span> SCROLL TO EXPLORE",
+
+    "about.kicker": "// 01. ABOUT ME",
+    "about.title": 'Solid code,<br />now with <span class="gradient-text">AI.</span>',
+    "about.lead": "Senior Software Engineer specialized in full stack, mobile and scalable systems architecture.",
+    "about.body":
+      "I've worked on large-scale projects in the public and private sectors — INDT, ICCT and Manaus City Hall — focusing on Clean Architecture, testing and DevOps practices. Today I apply Artificial Intelligence and NLP to solve complex problems, especially in semantic search, RAG and information retrieval.",
+    "fact.focus": "Focus",
+    "fact.focusValue": "Full Stack · Mobile · AI",
+    "fact.location": "Location",
+    "fact.locationValue": "Manaus, AM · open to remote",
+    "fact.experience": "Experience",
+    "fact.experienceValue": "10+ years in development",
+    "fact.specialization": "Specialization",
+    "about.quote": "“Clean architecture, tests and reviewed code — with AI where it makes a difference.”",
+
+    "exp.kicker": "// 02. EXPERIENCE",
+    "exp.title": 'A decade<br /><span class="gradient-text">delivering.</span>',
+    "job1.period": "APR 2023 — PRESENT",
+    "job1.title": "Senior Full Stack Developer",
+    "job1.b1": "Full stack applications with Node.js (NestJS), React, Java Spring Boot and React Native, following Clean Architecture.",
+    "job1.b2": "CI/CD pipelines with GitLab, Docker and Kubernetes; quality ensured with SonarQube and code review.",
+    "job1.b3": "Scalable solutions with AWS Serverless (Lambda, S3) and messaging with RabbitMQ.",
+    "job2.title": "Mid-level Full Stack Developer",
+    "job2.b1": "Web systems with PHP/Laravel, Node.js (NestJS), React, Vue.js and Angular.",
+    "job2.b2": "Oracle procedures, functions and triggers to optimize queries and business processes.",
+    "job2.b3": "Unit testing and Clean Architecture in multidisciplinary agile teams.",
+    "job3.period": "AUG 2015 — JUN 2021",
+    "job3.title": "Web Developer",
+    "job3.company": "Manaus City Hall — SEMEF / SEMAD",
+    "job3.b1":
+      'Development of the <a href="https://compras.manaus.am.gov.br/" target="_blank" rel="noopener">ComprasManaus</a> and <a href="https://contratos.manaus.am.gov.br" target="_blank" rel="noopener">ContratosManaus</a> portals for public procurement and contracts.',
+    "job3.b2": "Government systems with PHP, ASP Classic, VB.NET, jQuery and Oracle.",
+    "job3.b3": "Oracle views, functions and procedures for reports and process automation.",
+
+    "proj.kicker": "// 03. SELECTED PROJECTS",
+    "proj.title": 'Ideas in<br /><span class="gradient-text">motion.</span>',
+    "proj.aside": "Applied AI, APIs and architecture.<br />More on my GitHub.",
+    "proj.filterAria": "Filter projects",
+    "proj.tab.all": "All",
+    "proj.tab.ia": "AI / ML",
+    "p1.type": "RAG · LANGCHAIN · OLLAMA · LLM SECURITY",
+    "p1.title": "Intelligent Legal Critic",
+    "p1.desc":
+      "RAG-based legal chatbot that analyzes initial petitions in PDF, suggests improvements, detects prompt injection attempts (OWASP LLM01) and generates Markdown/PDF reports. Orchestrates answers across an internal RAG base, local Ollama and web search.",
+    "p2.title": "School Dropout Risk",
+    "p2.desc":
+      "Classification model (Random Forest, XGBoost) with 87% precision for the Passos Mágicos case, with an API and a drift-monitoring dashboard. Top 5% in the datathon.",
+    "p3.title": "Stock Forecasting with LSTM",
+    "p3.desc":
+      "Deep learning model with 89% accuracy for price prediction, with a Yahoo Finance data pipeline, preprocessing and a REST API documented with Swagger.",
+    "p4.title": "RAG Agent — Q&amp;A System",
+    "p4.desc":
+      "Question-answering app with LangChain, ChromaDB and LLMs (Ollama/Deepseek), with document ingestion, WebSocket chat and continuous feedback.",
+    "p5.title": "Financial Hub — P2P Platform",
+    "p5.desc":
+      "Hexagonal architecture with PostgreSQL (pessimistic locking), Redis (cache-aside), Kafka with DLQ and MongoDB, plus Angular 19 and Next.js 15 frontends.",
+    "p6.desc": "Products API with Redis caching, Kafka events, per-route rate limiting and Swagger docs, on PostgreSQL.",
+    "p7.desc":
+      "Movie recommendation system based on TF-IDF and cosine similarity, with a responsive web interface and a PostgreSQL database.",
+    "p8.desc":
+      "Real-time facial recognition via webcam: capture, embedding generation and verification against vectors stored through a REST API.",
+    "p9.desc": "Modern desktop app built with Jetpack Compose for Desktop, consuming a REST backend in Kotlin and Spring Boot.",
+    "proj.more": "See all on GitHub <span>↗</span>",
+
+    "skills.kicker": "// 04. TOOLBOX",
+    "skills.title": 'Tools to<br /><span class="gradient-text">make it real.</span>',
+    "skills.intro": "Technologies and practices I use every day — from the backend to AI models in production.",
+    "skills.filterAria": "Filter skills",
+    "skills.tab.all": "All",
+    "skills.tab.ia": "AI &amp; ML",
+    "skills.tab.dados": "Data",
+    "skills.tab.praticas": "Practices",
+    "cat.ia": "AI &amp; ML",
+    "cat.dados": "DATA",
+    "cat.praticas": "PRACTICES",
+    "skill.unit": "Unit testing",
+
+    "edu.kicker": "// 05. EDUCATION",
+    "edu.title": 'Continuous<br /><span class="gradient-text">learning.</span>',
+    "edu.d1": "Postgraduate in Natural Language Processing",
+    "edu.d2": "Postgraduate in Machine Learning Engineering",
+    "edu.d3": "Postgraduate in Cross-Platform Mobile Apps",
+    "edu.d4": "Bachelor's in Systems Analysis",
+    "edu.cert": "CERTIFICATIONS",
+    "edu.certList":
+      "Introduction to Node.js — Linux Foundation · Introduction to Cybersecurity — Cisco · Scrum Foundation — Certiprof · Full Cycle: Docker, Kubernetes, GitOps, RabbitMQ · Alura: LangChain with RAG, TypeScript, NestJS, React, CI/CD",
+    "edu.lang": "LANGUAGES",
+    "edu.langList": "Portuguese — native · Spanish — intermediate (B2) · English (A2) — studying",
+
+    "contact.kicker": "// 06. CONTACT",
+    "contact.title": 'Have a project?<br /><span class="gradient-text">Let\'s talk.</span>',
+    "contact.text": "Open to opportunities in full stack, mobile and AI development.",
+    "footer.copy": "DESIGNED AND BUILT WITH CARE",
+    "footer.top": "BACK TO TOP ↑",
+  },
+
+  es: {
+    "menu.open": "Abrir menú",
+    "menu.close": "Cerrar menú",
+    "filter.count": "MOSTRANDO {n} DE {total}",
+
+    "meta.title": "Emanuel Borges — Portafolio",
+    "meta.description":
+      "Portafolio de Emanuel Borges — Desarrollador Full Stack Sénior con más de 10 años de experiencia, especializándose en Machine Learning y NLP.",
+    "nav.aria": "Navegación principal",
+    "brand.aria": "Emanuel Borges — inicio",
+    "lang.aria": "Idioma",
+    "nav.about": "Sobre mí",
+    "nav.experience": "Experiencia",
+    "nav.projects": "Proyectos",
+    "nav.skills": "Habilidades",
+    "nav.education": "Formación",
+    "nav.contact": "Hablemos <span>↗</span>",
+
+    "hero.eyebrow": "DISPONIBLE PARA NUEVOS DESAFÍOS",
+    "hero.intro": "// HOLA, SOY",
+    "hero.title": 'Full Stack Sénior,<br class="desktop-break" /> construyendo con IA.',
+    "hero.description":
+      "Más de 10 años desarrollando sistemas con Java, Kotlin, Node.js, React y React Native — hoy aplicando Machine Learning y NLP para crear productos inteligentes.",
+    "hero.cta1": "Explorar proyectos <span>↘</span>",
+    "hero.cta2": "Contáctame <span>↗</span>",
+    "hero.location": "Manaus, AM · Brasil",
+    "hero.years": "+10 AÑOS DE EXPERIENCIA",
+    "hero.scroll": "<span>↓</span> DESPLÁZATE PARA EXPLORAR",
+
+    "about.kicker": "// 01. SOBRE MÍ",
+    "about.title": 'Código sólido,<br />ahora con <span class="gradient-text">IA.</span>',
+    "about.lead": "Ingeniero de Software Sénior especializado en full stack, mobile y arquitectura de sistemas escalables.",
+    "about.body":
+      "He trabajado en proyectos de gran escala en los sectores público y privado — INDT, ICCT y la Alcaldía de Manaus — con foco en Clean Architecture, pruebas y prácticas DevOps. Hoy aplico Inteligencia Artificial y NLP para resolver problemas complejos, especialmente en búsqueda semántica, RAG y recuperación de información.",
+    "fact.focus": "Enfoque",
+    "fact.focusValue": "Full Stack · Mobile · IA",
+    "fact.location": "Ubicación",
+    "fact.locationValue": "Manaus, AM · abierto a remoto",
+    "fact.experience": "Experiencia",
+    "fact.experienceValue": "+10 años en desarrollo",
+    "fact.specialization": "Especialización",
+    "about.quote": "“Arquitectura limpia, pruebas y código revisado — con IA donde marca la diferencia.”",
+
+    "exp.kicker": "// 02. EXPERIENCIA",
+    "exp.title": 'Una década<br /><span class="gradient-text">entregando.</span>',
+    "job1.period": "ABR 2023 — ACTUAL",
+    "job1.title": "Desarrollador Full Stack Sénior",
+    "job1.b1": "Aplicaciones full stack con Node.js (NestJS), React, Java Spring Boot y React Native, siguiendo Clean Architecture.",
+    "job1.b2": "Pipelines CI/CD con GitLab, Docker y Kubernetes; calidad garantizada con SonarQube y code review.",
+    "job1.b3": "Soluciones escalables con AWS Serverless (Lambda, S3) y mensajería con RabbitMQ.",
+    "job2.title": "Desarrollador Full Stack Semi Sénior",
+    "job2.b1": "Sistemas web con PHP/Laravel, Node.js (NestJS), React, Vue.js y Angular.",
+    "job2.b2": "Procedures, functions y triggers en Oracle para optimizar consultas y procesos de negocio.",
+    "job2.b3": "Pruebas unitarias y Clean Architecture en equipos ágiles multidisciplinarios.",
+    "job3.title": "Desarrollador Web",
+    "job3.company": "Alcaldía de Manaus — SEMEF / SEMAD",
+    "job3.b1":
+      'Desarrollo de los portales <a href="https://compras.manaus.am.gov.br/" target="_blank" rel="noopener">ComprasManaus</a> y <a href="https://contratos.manaus.am.gov.br" target="_blank" rel="noopener">ContratosManaus</a>, de licitaciones y contratos.',
+    "job3.b2": "Sistemas gubernamentales con PHP, ASP Classic, VB.NET, jQuery y Oracle.",
+    "job3.b3": "Views, functions y procedures en Oracle para informes y automatización de procesos.",
+
+    "proj.kicker": "// 03. PROYECTOS DESTACADOS",
+    "proj.title": 'Ideas en<br /><span class="gradient-text">movimiento.</span>',
+    "proj.aside": "IA aplicada, APIs y arquitectura.<br />Más en mi GitHub.",
+    "proj.filterAria": "Filtrar proyectos",
+    "p1.type": "RAG · LANGCHAIN · OLLAMA · SEGURIDAD DE LLM",
+    "p1.desc":
+      "Chatbot jurídico basado en RAG que analiza demandas iniciales en PDF, sugiere mejoras, detecta intentos de prompt injection (OWASP LLM01) y genera informes en Markdown/PDF. Orquesta respuestas entre una base RAG interna, Ollama local y búsqueda web.",
+    "p2.title": "Riesgo de Rezago Escolar",
+    "p2.desc":
+      "Modelo de clasificación (Random Forest, XGBoost) con 87% de precisión para el caso Passos Mágicos, con API y dashboard de monitoreo de drift. Top 5% en el datathon.",
+    "p3.title": "Predicción de Acciones con LSTM",
+    "p3.desc":
+      "Modelo de deep learning con 89% de exactitud para predicción de precios, con pipeline de recolección vía Yahoo Finance, preprocesamiento y API REST documentada con Swagger.",
+    "p4.desc":
+      "Aplicación de preguntas y respuestas con LangChain, ChromaDB y LLMs (Ollama/Deepseek), con ingesta de documentos, chat vía WebSocket y feedback continuo.",
+    "p5.desc":
+      "Arquitectura hexagonal con PostgreSQL (bloqueo pesimista), Redis (cache-aside), Kafka con DLQ y MongoDB, además de frontends en Angular 19 y Next.js 15.",
+    "p6.desc": "API de productos con caché en Redis, eventos en Kafka, rate limiting por ruta y documentación Swagger, sobre PostgreSQL.",
+    "p7.desc":
+      "Sistema de recomendación de películas basado en TF-IDF y similitud de coseno, con interfaz web responsiva y base de datos PostgreSQL.",
+    "p8.desc":
+      "Reconocimiento facial en tiempo real por webcam: captura, generación de embeddings y verificación a partir de vectores guardados vía API REST.",
+    "p9.desc": "Aplicación de escritorio moderna con Jetpack Compose for Desktop, que consume un backend REST en Kotlin y Spring Boot.",
+    "proj.more": "Ver todos en GitHub <span>↗</span>",
+
+    "skills.kicker": "// 04. CAJA DE HERRAMIENTAS",
+    "skills.title": 'Herramientas para<br /><span class="gradient-text">hacerlo realidad.</span>',
+    "skills.intro": "Tecnologías y prácticas que uso a diario — del backend al modelo de IA en producción.",
+    "skills.filterAria": "Filtrar habilidades",
+    "skills.tab.dados": "Datos",
+    "skills.tab.praticas": "Prácticas",
+    "cat.dados": "DATOS",
+    "cat.praticas": "PRÁCTICAS",
+    "skill.unit": "Pruebas unitarias",
+
+    "edu.kicker": "// 05. FORMACIÓN",
+    "edu.title": 'Aprendizaje<br /><span class="gradient-text">continuo.</span>',
+    "edu.d1": "Posgrado en Natural Language Processing",
+    "edu.d2": "Posgrado en Machine Learning Engineering",
+    "edu.d3": "Posgrado en Aplicaciones Móviles Multiplataforma",
+    "edu.d4": "Licenciatura en Análisis de Sistemas",
+    "edu.cert": "CERTIFICACIONES",
+    "edu.certList":
+      "Introduction to Node.js — Linux Foundation · Introduction to Cybersecurity — Cisco · Scrum Foundation — Certiprof · Full Cycle: Docker, Kubernetes, GitOps, RabbitMQ · Alura: LangChain con RAG, TypeScript, NestJS, React, CI/CD",
+    "edu.lang": "IDIOMAS",
+    "edu.langList": "Portugués — nativo · Español — intermedio (B2) · Inglés (A2) — en estudio",
+
+    "contact.kicker": "// 06. CONTACTO",
+    "contact.title": '¿Tienes un proyecto?<br /><span class="gradient-text">Hablemos.</span>',
+    "contact.text": "Abierto a oportunidades en desarrollo full stack, mobile e IA.",
+    "footer.copy": "DISEÑADO Y CONSTRUIDO CON CUIDADO",
+    "footer.top": "VOLVER ARRIBA ↑",
+  },
+};
