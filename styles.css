@@ -144,10 +144,16 @@ blockquote { margin: 32px 0 0; padding: 12px 0 12px 16px; border-left: 2px solid
 
 .education-section { display: grid; grid-template-columns: .8fr 1.2fr; gap: 90px; border-top: 1px solid var(--line); }
 .education-list { margin: 0; padding: 0; list-style: none; }
-.education-list li { display: grid; gap: 5px; padding: 18px 0; border-bottom: 1px solid var(--line); }
+.education-list li { display: grid; grid-template-columns: 96px 1fr; gap: 20px; align-items: center; padding: 18px 0; border-bottom: 1px solid var(--line); }
+.edu-logo { display: grid; place-items: center; height: 52px; padding: 8px 10px; border: 1px solid var(--line); border-radius: 12px; background: rgba(26,23,38,.55); transition: border-color .2s; }
+.edu-logo img { max-width: 100%; max-height: 30px; object-fit: contain; filter: brightness(0) invert(1); opacity: .85; transition: opacity .2s; }
+.edu-logo img.logo-keep { filter: none; }
+.education-list li:hover .edu-logo { border-color: rgba(184,149,255,.4); }
+.education-list li:hover .edu-logo img { opacity: 1; }
+.edu-text { display: grid; gap: 5px; }
 .education-list li:first-child { border-top: 1px solid var(--line); }
-.education-list strong { font-size: 15px; }
-.education-list span { color: var(--muted); font-size: 13px; }
+.edu-text strong { font-size: 15px; }
+.edu-text > span { color: var(--muted); font-size: 13px; }
 .education-extra { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-top: 34px; }
 .education-extra .section-kicker { margin-bottom: 10px; }
 .education-extra .muted { margin: 0; font-size: 13px; }
@@ -218,6 +224,8 @@ main, .footer { position: relative; z-index: 1; }
   .section { padding-block: 85px; }
   .about-section, .skills-section, .experience-section, .education-section { grid-template-columns: 1fr; gap: 30px; }
   .education-extra { grid-template-columns: 1fr; gap: 22px; }
+  .education-list li { grid-template-columns: 74px 1fr; gap: 14px; }
+  .edu-logo { height: 44px; padding: 6px 8px; }
   .section-heading h2, .skills-intro h2 { font-size: 46px; }
   .about-lead { font-size: 18px; }
   .about-photo { width: min(240px, 70%); margin-top: 32px; }

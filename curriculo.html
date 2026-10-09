@@ -42,7 +42,10 @@
       .skills { display: grid; grid-template-columns: max-content 1fr; gap: 3px 14px; font-size: 9.2pt; }
       .skills dt { font-weight: 700; }
       .skills dd { margin: 0; color: #2e2944; }
-      .edu li { list-style: none; margin-left: -15px; }
+      .edu li { display: flex; gap: 12px; align-items: center; list-style: none; margin: 0 0 7px -15px; }
+      .edu-logo { flex: 0 0 64px; display: grid; place-items: center; height: 30px; }
+      .edu-logo img { max-width: 64px; max-height: 22px; object-fit: contain; filter: brightness(0); opacity: .7; }
+      .edu-logo img.logo-keep { filter: none; opacity: .85; }
       .edu span { color: var(--muted); }
       .muted { color: #2e2944; font-size: 9.2pt; }
       @media screen { body { padding: 32px 16px; background: #f1eef9; } main { background: #fff; padding: 14mm; box-shadow: 0 10px 40px rgba(28,24,48,.12); } }
@@ -87,10 +90,10 @@
       ];
 
       const education = [
-        ["edu.d1", "Universidade Federal de Goiás (UFG) · 2025 — 2026"],
-        ["edu.d2", "FIAP · 2025 — 2026"],
-        ["edu.d3", "Descomplica · 2024 — 2025"],
-        ["edu.d4", "FUCAPI · 2000 — 2010"],
+        ["edu.d1", "Universidade Federal de Goiás (UFG) · 2025 — 2026", "logos/ufg.svg"],
+        ["edu.d2", "FIAP · 2025 — 2026", "logos/fiap.svg"],
+        ["edu.d3", "Descomplica · 2024 — 2025", "logos/descomplica-dark.svg"],
+        ["edu.d4", "FUCAPI · 2000 — 2010", "logos/fucapi.png"],
       ];
 
       const escapeText = (text) => text.replace(/&(?!amp;|lt;|gt;)/g, "&amp;");
@@ -149,7 +152,7 @@
         <section>
           <h2>${tr("cv.education")}</h2>
           <ul class="edu">
-            ${education.map(([key, meta]) => `<li><strong>${tr(key)}</strong> — <span>${meta}</span></li>`).join("")}
+            ${education.map(([key, meta, logo]) => `<li><span class="edu-logo"><img src="${logo}" alt=""${logo.includes("descomplica") ? ' class="logo-keep"' : ""} /></span><span><strong>${tr(key)}</strong><br /><span>${meta}</span></span></li>`).join("")}
           </ul>
         </section>
 
