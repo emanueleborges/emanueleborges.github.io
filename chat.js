@@ -73,8 +73,8 @@
 
   const buildIndex = () => {
     const docs = [];
-    const add = (label, body, target, title = "") =>
-      docs.push({ label, body, target, title: normalize(title), haystack: normalize(`${label} ${title} ${body}`) });
+    const add = (label, body, target, title = "", hidden = "") =>
+      docs.push({ label, body, target, title: normalize(title), haystack: normalize(`${label} ${title} ${body} ${hidden}`) });
 
     const about = sectionLabel("nav.about");
     add(about, text(document.querySelector(".hero-description")), document.querySelector("#inicio"));
@@ -93,7 +93,9 @@
     const projects = sectionLabel("nav.projects");
     document.querySelectorAll(".project-card").forEach((card) => {
       const title = text(card.querySelector("h3"));
-      add(`${projects} · ${title}`, `${text(card.querySelector(".project-type"))} — ${text(card.querySelector(".muted"))}`, card, title);
+      // Projetos da categoria "IA / ML" também respondem a buscas por IA.
+      const hidden = card.dataset.category.split(" ").includes("ia") ? "ia ai machine learning nlp ии 人工智能" : "";
+      add(`${projects} · ${title}`, `${text(card.querySelector(".project-type"))} — ${text(card.querySelector(".muted"))}`, card, title, hidden);
     });
 
     const skills = sectionLabel("nav.skills");
@@ -122,9 +124,10 @@
       : haystack.includes(term);
 
   const search = (query) => {
-    const terms = queryTerms(query);
     const q = normalize(query);
     const topicLabels = topics.filter(([, pattern]) => pattern.test(q)).map(([key]) => normalize(sectionLabel(key)));
+    // Palavras de assunto ("projetos", "estudou"…) contam só como assunto, não como termo.
+    const terms = queryTerms(query).filter((term) => !topics.some(([, pattern]) => pattern.test(term)));
     if (!terms.length && !topicLabels.length) return [];
 
     const docs = buildIndex();
@@ -151,7 +154,7 @@
     const best = scored[0]?.score ?? 0;
     return scored
       .filter(({ score }) => score >= best * 0.5)
-      .slice(0, 3)
+      .slice(0, 4)
       .map(({ doc }) => ({ ...doc, terms }));
   };
 
