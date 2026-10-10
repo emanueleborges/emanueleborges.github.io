@@ -55,6 +55,13 @@ Legenda: ✅ concluída · ⏳ pendente · 💡 ideia
 - ✅ **T30** README e documentos SDD (spec, plan, tasks) em português e inglês
 - ✅ **T38** Aviso de nova mensagem por e-mail (Resend, gratuito) — RF-06.5
 - ✅ **T36** Avaliação 👍/👎 das respostas da IA salva no D1 + `ver-avaliacoes.sh` — RNF-08
+- ✅ **T34** Prévia de link (Open Graph/Twitter), `hreflang`, JSON-LD `Person`, `sitemap.xml` e `robots.txt` — RNF-02
+- ✅ **T39** README em inglês (principal) + português — documentação
+- ✅ **T40** GitHub Actions: sintaxe, SEO, conhecimento da IA e 79 testes a cada push — Critérios de aceite
+- ✅ **T41** Lighthouse: imagens sob demanda e responsivas, fontes sem bloqueio, contraste (desempenho 69 → ~80; acessibilidade, boas práticas e SEO 100) — RNF-02, RNF-06
+- ✅ **T42** Resumo semanal por e-mail (Cron) com saúde da IA, Vectorize e D1 — RF-08
+- ✅ **T43** Página 404 personalizada e link `#chat` que abre o assistente
+- ✅ **T44** Confirmação automática ao visitante no idioma da mensagem (Google Apps Script) — RF-06.6
 
 ---
 
@@ -65,14 +72,14 @@ Legenda: ✅ concluída · ⏳ pendente · 💡 ideia
 | ⏳ **T31** | Links "Código" e "Demo" nos cards de projetos | Links dos repositórios | RF-01 |
 | ⏳ **T32** | Cards de projetos com dados do GitHub (estrelas, último commit) via Cron Trigger | T31 | RF-01 |
 | ⏳ **T33** | Números de impacto nas experiências (ex.: tempo de deploy, % de bugs) | Dados do Emanuel | RF-01 |
-| ⏳ **T34** | Imagem de prévia para compartilhamento (Open Graph) e metadados de SEO por idioma | — | RNF-02 |
 | ⏳ **T35** | Revisão das traduções por falantes nativos (prioridade: chinês e russo) | Revisor | RF-02 |
 | ⏳ **T37** | Testar em produção o limite de 3 mensagens por minuto do formulário | — | RNF-04 |
+| ⏳ **T45** | Verificar o site no Google Search Console e enviar o `sitemap.xml` | Código de verificação do Emanuel | RNF-02 |
+| ⏳ **T46** | Liberar o App da Web do Apps Script para "Qualquer pessoa" e testar a confirmação | Emanuel | RF-06.6 |
+| ⏳ **T47** | Token do GoatCounter (`GOATCOUNTER_TOKEN`) para incluir visitas no resumo semanal | Emanuel | RF-08 |
 
 ## Ideias
 
 - 💡 Card do próprio portfólio na seção Projetos.
 - 💡 Recomendações de colegas (LinkedIn).
 - 💡 Domínio próprio (pago) — endereço mais profissional e e-mails com remetente próprio.
-- 💡 Versão do README em inglês.
-- 💡 Teste de desempenho (Lighthouse) e otimização das imagens de fundo.

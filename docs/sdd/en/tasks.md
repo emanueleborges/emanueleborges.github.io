@@ -55,6 +55,13 @@ Legend: ✅ done · ⏳ pending · 💡 idea
 - ✅ **T30** README and SDD documents (spec, plan, tasks) in Portuguese and English
 - ✅ **T38** Email notification for new messages (Resend, free) — FR-06.5
 - ✅ **T36** 👍/👎 rating of AI answers stored in D1 + `ver-avaliacoes.sh` — NFR-08
+- ✅ **T34** Link previews (Open Graph/Twitter), `hreflang`, `Person` JSON-LD, `sitemap.xml` and `robots.txt` — NFR-02
+- ✅ **T39** English README (main) + Portuguese — documentation
+- ✅ **T40** GitHub Actions: syntax, SEO, AI knowledge build and 79 tests on every push — Acceptance criteria
+- ✅ **T41** Lighthouse: on-demand responsive images, non-blocking fonts, contrast (performance 69 → ~80; accessibility, best practices and SEO 100) — NFR-02, NFR-06
+- ✅ **T42** Weekly summary email (Cron) with AI, Vectorize and D1 health check — FR-08
+- ✅ **T43** Custom 404 page and `#chat` link that opens the assistant
+- ✅ **T44** Automatic confirmation to the visitor in the message's language (Google Apps Script) — FR-06.6
 
 ---
 
@@ -65,14 +72,14 @@ Legend: ✅ done · ⏳ pending · 💡 idea
 | ⏳ **T31** | "Code" and "Demo" links on project cards | Repository links | FR-01 |
 | ⏳ **T32** | Project cards with GitHub data (stars, last commit) via a Cron Trigger | T31 | FR-01 |
 | ⏳ **T33** | Impact numbers in the experience section (e.g. deployment time, % fewer bugs) | Data from Emanuel | FR-01 |
-| ⏳ **T34** | Social preview image (Open Graph) and per-language SEO metadata | — | NFR-02 |
 | ⏳ **T35** | Translation review by native speakers (priority: Chinese and Russian) | Reviewer | FR-02 |
 | ⏳ **T37** | Test the contact form's 3-per-minute limit in production | — | NFR-04 |
+| ⏳ **T45** | Verify the site in Google Search Console and submit `sitemap.xml` | Verification code from Emanuel | NFR-02 |
+| ⏳ **T46** | Set the Apps Script web app access to "Anyone" and test the confirmation | Emanuel | FR-06.6 |
+| ⏳ **T47** | GoatCounter token (`GOATCOUNTER_TOKEN`) to include visits in the weekly summary | Emanuel | FR-08 |
 
 ## Ideas
 
 - 💡 A card for the portfolio itself in the Projects section.
 - 💡 Recommendations from colleagues (LinkedIn).
 - 💡 Custom domain (paid) — more professional address and emails from your own sender.
-- 💡 English version of the README.
-- 💡 Performance audit (Lighthouse) and background image optimization.

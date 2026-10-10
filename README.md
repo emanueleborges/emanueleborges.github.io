@@ -1,151 +1,166 @@
-# Emanuel Borges — Portfólio
+# Emanuel Borges — Portfolio
 
-Portfólio profissional de **Emanuel Borges**, Desenvolvedor Full Stack Sênior (Java/Kotlin, Node.js, React, React Native) especializando-se em **IA aplicada (Machine Learning e NLP)**.
+🌐 **English** · [Português](README.pt-BR.md)
 
-🔗 **Site:** https://emanueleborges.github.io
+[![Tests](https://github.com/emanueleborges/emanueleborges.github.io/actions/workflows/testes.yml/badge.svg)](https://github.com/emanueleborges/emanueleborges.github.io/actions/workflows/testes.yml)
 
-O projeto é um site estático, sem framework, com um backend *serverless* no Cloudflare para o chat com IA e o formulário de contato. **Toda a infraestrutura roda em planos gratuitos.**
+Professional portfolio of **Emanuel Borges**, Senior Full Stack Developer (Java/Kotlin, Node.js, React, React Native) specializing in **applied AI (Machine Learning and NLP)**.
 
----
+🔗 **Live site:** https://emanueleborges.github.io · 💬 **Ask the assistant:** https://emanueleborges.github.io/#chat
 
-## Sumário
-
-- [Funcionalidades](#funcionalidades)
-- [Arquitetura](#arquitetura)
-- [Tecnologias](#tecnologias)
-- [Estrutura do projeto](#estrutura-do-projeto)
-- [Como rodar localmente](#como-rodar-localmente)
-- [Publicação](#publicação)
-- [Tarefas comuns](#tarefas-comuns)
-- [Testes](#testes)
-- [Segurança e privacidade](#segurança-e-privacidade)
-- [Custos](#custos)
-- [Documentação de especificação (SDD)](#documentação-de-especificação-sdd)
-- [Créditos](#créditos)
+A framework-free static site with a serverless backend on Cloudflare for the AI chat and the contact form. **The whole infrastructure runs on free tiers.**
 
 ---
 
-## Funcionalidades
+## Contents
 
-| Área | O que faz |
+- [Features](#features)
+- [Architecture](#architecture)
+- [Tech stack](#tech-stack)
+- [Project structure](#project-structure)
+- [Running locally](#running-locally)
+- [Deployment](#deployment)
+- [Common tasks](#common-tasks)
+- [Quality and testing](#quality-and-testing)
+- [Security and privacy](#security-and-privacy)
+- [Costs](#costs)
+- [Specification (SDD)](#specification-sdd)
+- [Credits](#credits)
+
+---
+
+## Features
+
+| Area | What it does |
 |---|---|
-| **7 idiomas** | Inglês (padrão), português, espanhol, francês, italiano, chinês e russo. O visitante escolhe no cabeçalho; a escolha fica salva e pode vir no link (`?lang=pt`). |
-| **Seções** | Sobre (com foto), Experiência, Projetos (com filtros), Habilidades (45 tecnologias com ícones e filtros), Formação (com logos das instituições) e Contato. |
-| **Visual** | Tema escuro roxo + ciano, imagens de fundo em movimento (duotone), rede de partículas em Canvas, animações ao rolar e cabeçalho fixo com barra de progresso. Respeita a preferência "reduzir movimento". |
-| **Assistente (chat)** | Respostas da IA com avaliação 👍/👎. Híbrido: **respostas prontas** locais para perguntas frequentes, **IA generativa com RAG** para o resto e **busca local** como reserva. Mais detalhes em [Arquitetura](#arquitetura). |
-| **Currículo em PDF** | Um PDF por idioma, gerado da mesma fonte de traduções do site; o botão baixa o PDF do idioma atual. |
-| **Formulário de contato** | Mensagens salvas num banco D1, com proteção anti-robô invisível e **aviso por e-mail** a cada mensagem nova (Resend, gratuito). |
-| **Contatos diretos** | E-mail, WhatsApp, LinkedIn e GitHub. |
-| **Estatísticas** | Visitas e eventos (abertura do chat, downloads do currículo, cliques em contatos, envios do formulário) com GoatCounter, sem cookies. |
+| **7 languages** | English (default), Portuguese, Spanish, French, Italian, Chinese and Russian. Visitors pick one in the header; the choice is remembered and can come in the link (`?lang=pt`). |
+| **Sections** | About (with photo), Experience, Projects (with filters), Skills (45 technologies with icons and filters), Education (with institution logos) and Contact. |
+| **Visuals** | Dark purple + cyan theme, moving duotone background images, Canvas particle network, scroll animations and a sticky header with reading progress. Respects "reduce motion". |
+| **AI assistant** | Hybrid: local **ready-made answers** for frequent questions, **generative AI with RAG** for everything else and **local search** as a fallback. AI answers can be rated 👍/👎. See [Architecture](#architecture). |
+| **PDF résumé** | One PDF per language, generated from the same text source as the site; the button downloads the PDF for the current language. |
+| **Contact form** | Messages stored in D1, invisible bot protection, **email notification** to the owner and an **automatic confirmation** to the visitor in the language of their message. |
+| **Direct contacts** | Email, WhatsApp, LinkedIn and GitHub. |
+| **SEO** | Link previews (Open Graph/Twitter), `hreflang` for 7 languages, `Person` structured data (JSON-LD), `sitemap.xml` and `robots.txt`. |
+| **Analytics** | Visits and events (chat opened, résumé downloads, contact clicks, form submissions, ratings) with GoatCounter, cookieless. |
+| **Weekly summary** | Every Monday an email with the week's messages, chat ratings and a health check of the AI, vector index and database. |
+| **404 page** | Custom page in the site's style with links to the portfolio and the assistant. |
 
 ---
 
-## Arquitetura
+## Architecture
 
 ```mermaid
 flowchart LR
-  V[Visitante] -->|HTTPS| GP[GitHub Pages<br/>site estático]
-  GP -->|chat / contato<br/>+ token Turnstile| W[Cloudflare Worker]
-  W -->|valida token| TS[Turnstile]
-  W -->|embeddings + geração| GW[AI Gateway<br/>cache 24 h]
-  GW --> AI[Workers AI<br/>BGE-M3 e Qwen3 30B]
-  W -->|busca semântica| VZ[Vectorize<br/>32 trechos do perfil]
-  W -->|INSERT| D1[(D1<br/>mensagens)]
-  GP -->|eventos sem cookies| GC[GoatCounter]
+  V[Visitor] -->|HTTPS| GP[GitHub Pages<br/>static site]
+  GP -->|chat / contact / rating<br/>+ Turnstile token| W[Cloudflare Worker]
+  W -->|validates token| TS[Turnstile]
+  W -->|embeddings + generation| GW[AI Gateway<br/>24 h cache]
+  GW --> AI[Workers AI<br/>BGE-M3 and Qwen3 30B]
+  W -->|semantic search| VZ[Vectorize<br/>32 profile excerpts]
+  W -->|INSERT| D1[(D1<br/>messages + ratings)]
+  W -->|notification + weekly summary| RS[Resend → owner's Gmail]
+  W -->|confirmation| GAS[Google Apps Script → visitor]
+  GP -->|cookieless events| GC[GoatCounter]
 ```
 
-### Como o chat decide a resposta
+### How the assistant answers
 
-1. **Contato e currículo** → botões de contato ou link do PDF (local).
-2. **Respostas prontas** (19 temas, nos 7 idiomas) → saudação, agradecimento, salário, data de início e **formação** respondem **sempre localmente**, sem custo e com texto conferido. Os demais temas prontos (tipo de vaga, remoto, IA, tecnologias…) são respondidos pela IA quando ela está disponível.
-3. **IA com RAG** → o Worker:
-   1. confere o token do **Turnstile**;
-   2. gera o vetor da pergunta com **BGE-M3** (multilíngue);
-   3. busca no **Vectorize** os 6 trechos do perfil mais parecidos em significado;
-   4. envia ao **Qwen3 30B** um resumo fixo do perfil + esses trechos, com regras para responder só sobre o perfil e não inventar dados;
-   5. guarda a resposta no **AI Gateway** por 24 h (chave = versão do conhecimento + idioma + pergunta normalizada).
-4. **Busca local** (reserva) → se a IA falhar ou a cota do dia acabar, o chat procura no próprio conteúdo da página: ranking estilo TF-IDF, correção de digitação (Damerau-Levenshtein), sinônimos e tratamento de chinês.
+1. **Contact and résumé** → contact buttons or the PDF link (local).
+2. **Ready-made answers** (19 topics, 7 languages) → greetings, thanks, salary, start date and **education** are **always answered locally**, at no cost and with verified text. Other ready-made topics (roles sought, remote work, AI, technologies…) are answered by the AI when it is available.
+3. **AI with RAG** → the Worker:
+   1. validates the **Turnstile** token;
+   2. embeds the question with **BGE-M3** (multilingual);
+   3. retrieves from **Vectorize** the 6 profile excerpts closest in meaning;
+   4. sends **Qwen3 30B** a fixed profile summary + those excerpts, with rules to answer only about the profile and never invent facts;
+   5. caches the answer in **AI Gateway** for 24 h (key = knowledge version + language + normalized question).
+4. **Local search** (fallback) → if the AI fails or the daily quota runs out, the chat searches the page content itself: TF-IDF-style ranking, typo tolerance (Damerau-Levenshtein), synonyms and Chinese handling.
 
-O conhecimento da IA é **gerado das próprias traduções do site** (`i18n.js`): ao mudar o site e publicar o Worker, a IA e o índice vetorial acompanham.
-
----
-
-## Tecnologias
-
-**Front-end:** HTML5 semântico · CSS3 (sem framework) · JavaScript puro (ES2020+) · Canvas 2D · IntersectionObserver · Fetch API · `Intl` · `localStorage`
-
-**Backend serverless (Cloudflare, plano gratuito):** Workers · Workers AI (`@cf/qwen/qwen3-30b-a3b-fp8`, `@cf/baai/bge-m3`) · Vectorize · AI Gateway · D1 (SQLite) · Turnstile · Rate Limiting · Wrangler
-
-**Ferramentas:** Git + GitHub · GitHub Pages · GitHub CLI · Chrome headless (PDFs e testes) · Node.js · Python · Shell · GoatCounter
-
-**Recursos externos:** Google Fonts (Manrope, DM Mono) · Simple Icons (CC0) · Unsplash
+The AI knowledge is **generated from the site's own translations** (`i18n.js`): when the site changes and the Worker is deployed, the AI and the vector index follow.
 
 ---
 
-## Estrutura do projeto
+## Tech stack
+
+**Front-end:** semantic HTML5 · CSS3 (no framework) · vanilla JavaScript (ES2020+) · Canvas 2D · IntersectionObserver · Fetch API · `Intl` · `localStorage`
+
+**Serverless backend (Cloudflare free tier):** Workers · Cron Triggers · Workers AI (`@cf/qwen/qwen3-30b-a3b-fp8`, `@cf/baai/bge-m3`) · Vectorize · AI Gateway · D1 (SQLite) · Turnstile · Rate Limiting · Wrangler
+
+**Email:** Resend (owner notifications and weekly summary) · Google Apps Script (visitor confirmations from Gmail)
+
+**Tooling:** Git + GitHub · GitHub Pages · GitHub Actions · GitHub CLI · headless Chrome (PDFs and tests) · Lighthouse · Node.js · Python · Shell · GoatCounter
+
+**External assets:** Google Fonts (Manrope, DM Mono) · Simple Icons (CC0) · Unsplash
+
+---
+
+## Project structure
 
 ```
 .
-├── index.html              # Página única do portfólio
-├── styles.css              # Todo o visual (tema, layout, animações, chat, formulário)
-├── i18n.js                 # Textos dos 7 idiomas (site, chat, formulário e currículo)
-├── script.js               # Idiomas, menu, filtros, animações, partículas, estatísticas
-├── api.js                  # Conexão com o Worker e o Turnstile (compartilhada)
-├── chat.js                 # Assistente: respostas prontas, busca local e IA
-├── contact.js              # Formulário de contato
-├── curriculo.html          # Modelo do currículo (A4) usado para gerar os PDFs
-├── gerar-curriculos.sh     # Gera os 7 PDFs em cv/ com Chrome headless
-├── cv/                     # Currículos em PDF (um por idioma)
-├── logos/                  # Logos das instituições e ícones das habilidades
-├── tests/                  # Testes automáticos do chat (79 casos, 7 idiomas)
-├── scripts/pre-commit      # Hook do git: data de atualização e versão dos arquivos
-├── docs/sdd/               # Especificação (SDD) em português; docs/sdd/en/ em inglês
-└── worker/                 # Cloudflare Worker (chat com IA + formulário)
-    ├── src/index.js            # Rotas POST / (chat) e POST /contact
-    ├── src/conhecimento.js     # Gerado: resumo, trechos e perfil completo
-    ├── gerar-conhecimento.mjs  # Gera o conhecimento da IA a partir do i18n.js
-    ├── indexar-vectorize.mjs   # Gera embeddings e atualiza o índice Vectorize
-    ├── migrations/             # Esquema do banco D1
-    ├── ver-mensagens.sh        # Lista as mensagens do formulário
-    ├── ver-avaliacoes.sh       # Resumo das avaliações 👍/👎 do chat
-    └── wrangler.jsonc          # Configuração (IA, Vectorize, D1, limites, origem)
+├── index.html              # Single-page portfolio (SEO, Open Graph, JSON-LD)
+├── 404.html                # Custom "page not found"
+├── styles.css              # All styling (theme, layout, animations, chat, form)
+├── i18n.js                 # Text in 7 languages (site, chat, form and résumé)
+├── script.js               # Languages, menu, filters, animations, particles, analytics
+├── api.js                  # Shared connection to the Worker and Turnstile
+├── chat.js                 # Assistant: ready-made answers, local search, AI and ratings
+├── contact.js              # Contact form
+├── curriculo.html          # A4 résumé template used to generate the PDFs
+├── gerar-curriculos.sh     # Generates the 7 PDFs in cv/ with headless Chrome
+├── sitemap.xml · robots.txt · og-image.jpg
+├── cv/                     # PDF résumés (one per language)
+├── logos/                  # Institution logos and skill icons
+├── tests/                  # Automated chat tests (79 cases, 7 languages)
+├── .github/workflows/      # GitHub Actions: tests on every push
+├── scripts/pre-commit      # Git hook: last-updated date and file versioning
+├── apps-script/Codigo.gs   # Visitor confirmation (Google Apps Script) — template without the secret
+├── docs/sdd/               # Specification (SDD) in Portuguese; docs/sdd/en/ in English
+└── worker/                 # Cloudflare Worker
+    ├── src/index.js            # POST / (chat), /contact, /feedback + weekly Cron
+    ├── src/conhecimento.js     # Generated: summary, excerpts, full profile, version
+    ├── gerar-conhecimento.mjs  # Builds the AI knowledge from i18n.js
+    ├── indexar-vectorize.mjs   # Generates embeddings and updates the Vectorize index
+    ├── migrations/             # D1 schema (messages, feedback)
+    ├── ver-mensagens.sh        # Lists contact-form messages
+    ├── ver-avaliacoes.sh       # 👍/👎 summary of chat answers
+    └── wrangler.jsonc          # Config (AI, Vectorize, D1, limits, origin, cron)
 ```
 
 ---
 
-## Como rodar localmente
+## Running locally
 
-O site não tem etapa de build: basta servir a pasta.
+There is no build step: just serve the folder.
 
 ```bash
 git clone https://github.com/emanueleborges/emanueleborges.github.io.git
 cd emanueleborges.github.io
-python3 -m http.server 8000      # ou qualquer servidor estático
-# abra http://localhost:8000
+python3 -m http.server 8000      # or any static server
+# open http://localhost:8000
 ```
 
-> Em ambiente local, o chat funciona com **respostas prontas e busca local**. A IA e o formulário só aceitam pedidos vindos de `https://emanueleborges.github.io` (CORS + Turnstile), por segurança.
+> Locally, the chat works with **ready-made answers and local search**. The AI, the contact form and ratings only accept requests from `https://emanueleborges.github.io` (CORS + Turnstile), by design.
 
-Para instalar o hook do git (atualiza a data do rodapé e a versão dos arquivos a cada commit):
+Install the git hook (updates the footer date and the `?v=` version of CSS/JS on every commit):
 
 ```bash
 cp scripts/pre-commit .git/hooks/pre-commit && chmod +x .git/hooks/pre-commit
 ```
 
-### Worker (opcional)
+### Worker (optional)
 
 ```bash
 cd worker
 npm install
 npx wrangler login
-npm run dev          # gera o conhecimento e roda o Worker localmente
+npm run dev          # builds the knowledge and runs the Worker locally
 ```
 
 ---
 
-## Publicação
+## Deployment
 
-**Site:** cada `git push` na branch `main` publica no GitHub Pages em 1–2 minutos.
+**Site:** every `git push` to `main` deploys to GitHub Pages in 1–2 minutes (and runs the tests in GitHub Actions).
 
 **Worker:**
 
@@ -154,92 +169,99 @@ cd worker
 npm run deploy
 ```
 
-Esse comando (1) gera o conhecimento a partir do `i18n.js`, (2) publica o Worker e (3) atualiza o índice do Vectorize.
+This (1) builds the knowledge from `i18n.js`, (2) deploys the Worker and (3) updates the Vectorize index.
 
-**Recursos do Cloudflare usados** (criados uma vez):
+**Cloudflare resources** (created once):
 
-| Recurso | Nome |
+| Resource | Name |
 |---|---|
-| Worker | `emanuel-portfolio-chat` |
-| Banco D1 | `portfolio-contact` (tabela `messages`) |
-| Índice Vectorize | `portfolio-profile` (1024 dimensões, cosseno) |
+| Worker | `emanuel-portfolio-chat` (weekly cron: Mondays 12:00 UTC) |
+| D1 database | `portfolio-contact` (tables `messages` and `feedback`) |
+| Vectorize index | `portfolio-profile` (1024 dimensions, cosine) |
 | AI Gateway | `default` |
-| Widget Turnstile | invisível, domínio `emanueleborges.github.io` |
-| Secrets do Worker | `TURNSTILE_SECRET`, `RESEND_API_KEY` |
+| Turnstile widget | invisible, domain `emanueleborges.github.io` |
+| Worker secrets | `TURNSTILE_SECRET`, `RESEND_API_KEY`, `APPS_SCRIPT_URL`, `APPS_SCRIPT_SECRET`, optional `GOATCOUNTER_TOKEN` |
+
+**Visitor confirmation (Google Apps Script):** paste `apps-script/Codigo.gs` into a new Apps Script project with the same value as `APPS_SCRIPT_SECRET`, deploy it as a **Web app** (*Execute as: Me*, *Who has access: Anyone*) and store its `/exec` URL in the `APPS_SCRIPT_URL` secret.
 
 ---
 
-## Tarefas comuns
+## Common tasks
 
-| Quero… | Faça |
+| I want to… | Do this |
 |---|---|
-| Mudar um texto do site | Edite `index.html` (português) e `i18n.js` (demais idiomas). Depois publique o Worker (`npm run deploy` em `worker/`) para a IA aprender. |
-| Atualizar os currículos em PDF | `./gerar-curriculos.sh` |
-| Ver as avaliações 👍/👎 do chat | `cd worker && ./ver-avaliacoes.sh` (resumo + últimas respostas com 👎) |
-| Ler as mensagens do formulário | `cd worker && ./ver-mensagens.sh` (ou `./ver-mensagens.sh 50`) — ou no painel: D1 → `portfolio-contact` → Console |
-| Ver uso da IA e do cache | Painel do Cloudflare → **AI → AI Gateway → default** |
-| Ver visitas e eventos | https://emanueleborges.goatcounter.com |
-| Rodar os testes do chat | `./tests/rodar-testes-chat.sh` |
+| Change site text | Edit `index.html` (Portuguese) and `i18n.js` (other languages), then run `npm run deploy` in `worker/` so the AI learns it. |
+| Update the PDF résumés | `./gerar-curriculos.sh` |
+| Read contact-form messages | `cd worker && ./ver-mensagens.sh` (or `./ver-mensagens.sh 50`) — or Cloudflare dashboard: D1 → `portfolio-contact` → Console |
+| See chat ratings 👍/👎 | `cd worker && ./ver-avaliacoes.sh` |
+| See AI usage and cache | Cloudflare dashboard → **AI → AI Gateway → default** |
+| See visits and events | https://emanueleborges.goatcounter.com |
+| Run the chat tests | `./tests/rodar-testes-chat.sh` |
 
 ---
 
-## Testes
+## Quality and testing
 
-- **Chat (79 casos, 7 idiomas):** `./tests/rodar-testes-chat.sh` abre o site no Chrome headless e confere respostas prontas, busca local, correção de digitação, sinônimos e prioridade entre temas.
-- **Worker:** validado com testes de origem, campos inválidos, limite por minuto, Turnstile ausente ou falso e campo-armadilha.
-- **Ponta a ponta:** perguntas e envio do formulário no site publicado, numa janela real do Chrome (o Turnstile bloqueia navegadores automatizados invisíveis, como esperado).
-
----
-
-## Segurança e privacidade
-
-- **CORS:** o Worker só aceita pedidos de `https://emanueleborges.github.io`.
-- **Turnstile:** toda pergunta à IA e todo envio do formulário exigem um token anti-robô válido.
-- **Limites por IP:** 10 perguntas/minuto no chat e 3 mensagens/minuto no formulário.
-- **Validação:** pergunta ≤ 500 caracteres; nome 2–100, e-mail válido ≤ 200, mensagem 5–2.000.
-- **Campo-armadilha** no formulário: envios de robôs são descartados sem salvar.
-- **IA restrita ao perfil:** instruções para responder só sobre o perfil profissional, não inventar dados e ignorar tentativas de mudar as regras.
-- **Sem segredos no código:** a chave secreta do Turnstile fica como *secret* no Cloudflare; a chave pública (site key) é pública por natureza.
-- **LGPD:** o formulário guarda apenas nome, e-mail, mensagem, idioma e data (o IP não é salvo); as estatísticas não usam cookies; o chat avisa quando a pergunta é enviada à IA; pergunta e resposta só são salvas se o visitante avaliar (👍/👎), com aviso ao lado dos botões.
-
----
-
-## Custos
-
-**Zero.** Tudo roda em planos gratuitos:
-
-| Serviço | Uso no projeto |
+| Check | Result |
 |---|---|
-| GitHub Pages | Hospedagem do site |
-| Cloudflare Workers | Backend (~100 mil requisições/dia grátis) |
-| Workers AI | IA e embeddings (10.000 "neurônios"/dia grátis; ~centenas de perguntas/dia) |
-| Vectorize, D1, AI Gateway, Turnstile | Planos gratuitos |
-| Resend | Aviso por e-mail (3.000/mês grátis) |
-| GoatCounter | Plano gratuito para uso pessoal |
-
-Se a cota diária da IA acabar, o chat continua funcionando com a busca local até a renovação (00:00 UTC).
+| **GitHub Actions** on every push | JavaScript syntax, `sitemap.xml` and JSON-LD validation, AI knowledge build and the **79 chat tests** |
+| **Lighthouse (mobile)** | Performance ~80 · Accessibility 100 · Best practices 100 · SEO 100 |
+| **Worker** | Wrong origin, invalid fields, missing/fake token, unknown route, per-minute limits and honeypot |
+| **End-to-end** | Questions, ratings and form submissions on the live site in a real Chrome window (Turnstile rejects invisible automated browsers, as expected) |
 
 ---
 
-## Documentação de especificação (SDD)
+## Security and privacy
 
-O projeto segue **Spec-Driven Development**: a especificação descreve o *quê* e o *porquê* antes do *como*.
+- **CORS:** the Worker only accepts requests from `https://emanueleborges.github.io`.
+- **Turnstile:** every AI question, form submission and rating requires a valid bot-protection token.
+- **Per-IP limits:** 10 questions/min (chat), 3 messages/min (form), 20 ratings/min.
+- **Validation:** question ≤ 500 characters; name 2–100, valid email ≤ 200, message 5–2,000.
+- **Honeypot** field in the form: bot submissions are dropped without being saved.
+- **AI restricted to the profile:** instructions to answer only about the professional profile, never invent facts and ignore attempts to change the rules.
+- **Visitor confirmation can't be abused as spam:** no message text echoed, first name only (letters), at most one confirmation per email address every 24 h.
+- **No secrets in the code:** all keys are Worker secrets; the Turnstile site key is public by design.
+- **Privacy (LGPD/GDPR-style):** the form stores only name, email, message, language and date (no IP address); analytics are cookieless; the chat discloses when a question goes to the AI; questions and answers are stored only if the visitor rates them, with a notice next to the buttons.
 
-| Documento | Português | English |
+---
+
+## Costs
+
+**Zero.** Everything runs on free tiers:
+
+| Service | Use |
+|---|---|
+| GitHub Pages · GitHub Actions | Hosting and CI (public repository) |
+| Cloudflare Workers | Backend and weekly cron (~100k requests/day free) |
+| Workers AI | AI and embeddings (10,000 "neurons"/day free; hundreds of questions/day) |
+| Vectorize, D1, AI Gateway, Turnstile | Free tiers |
+| Resend | Notifications and weekly summary (3,000 emails/month free) |
+| Google Apps Script | Visitor confirmations from Gmail (~100/day) |
+| GoatCounter | Free for personal use |
+
+If the daily AI quota runs out, the chat keeps working with local search until it resets (00:00 UTC).
+
+---
+
+## Specification (SDD)
+
+The project follows **Spec-Driven Development**: the specification describes the *what* and *why* before the *how*.
+
+| Document | English | Português |
 |---|---|---|
-| Especificação — visão, requisitos e critérios de aceite | [spec.md](docs/sdd/spec.md) | [spec.md](docs/sdd/en/spec.md) |
-| Plano técnico — arquitetura, contratos de API, dados e decisões (ADRs) | [plan.md](docs/sdd/plan.md) | [plan.md](docs/sdd/en/plan.md) |
-| Tarefas — concluídas e pendentes | [tasks.md](docs/sdd/tasks.md) | [tasks.md](docs/sdd/en/tasks.md) |
+| Specification — vision, requirements and acceptance criteria | [spec.md](docs/sdd/en/spec.md) | [spec.md](docs/sdd/spec.md) |
+| Technical plan — architecture, API contracts, data and decisions (ADRs) | [plan.md](docs/sdd/en/plan.md) | [plan.md](docs/sdd/plan.md) |
+| Tasks — done and pending | [tasks.md](docs/sdd/en/tasks.md) | [tasks.md](docs/sdd/tasks.md) |
 
 ---
 
-## Créditos
+## Credits
 
-- Ícones das tecnologias: [Simple Icons](https://simpleicons.org) (CC0) — ver `logos/skills/LICENSE-simple-icons.md`. Oracle, SQL Server e AWS usam ícones genéricos por diretriz de marca.
-- Logos de UFG, FIAP, Descomplica e FUCAPI: obtidos dos sites oficiais, usados apenas para identificar a formação.
-- Imagens de fundo: [Unsplash](https://unsplash.com).
-- Fontes: Manrope e DM Mono (Google Fonts).
+- Technology icons: [Simple Icons](https://simpleicons.org) (CC0) — see `logos/skills/LICENSE-simple-icons.md`. Oracle, SQL Server and AWS use generic icons per brand guidelines.
+- UFG, FIAP, Descomplica and FUCAPI logos: taken from the official websites, used only to identify the education.
+- Background images: [Unsplash](https://unsplash.com).
+- Fonts: Manrope and DM Mono (Google Fonts).
 
 ---
 
-**Autor:** Emanuel Borges · [LinkedIn](https://www.linkedin.com/in/borgesemmanuell) · [GitHub](https://github.com/emanueleborges) · emanuel.eborges@gmail.com
+**Author:** Emanuel Borges · [LinkedIn](https://www.linkedin.com/in/borgesemmanuell) · [GitHub](https://github.com/emanueleborges) · emanuel.eborges@gmail.com
