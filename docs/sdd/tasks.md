@@ -53,7 +53,7 @@ Legenda: ✅ concluída · ⏳ pendente · 💡 ideia
 
 ### Documentação
 - ✅ **T30** README e documentos SDD (spec, plan, tasks) em português e inglês
-- ✅ **T38** Aviso de nova mensagem por e-mail (Resend, gratuito) — RF-06.5 *(ativo após cadastrar `RESEND_API_KEY`)*
+- ✅ **T38** Aviso de nova mensagem por e-mail (Resend, gratuito) — RF-06.5
 - ✅ **T36** Avaliação 👍/👎 das respostas da IA salva no D1 + `ver-avaliacoes.sh` — RNF-08
 
 ---
