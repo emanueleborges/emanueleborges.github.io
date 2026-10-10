@@ -4,7 +4,7 @@
 
 (() => {
   // Endereço do Cloudflare Worker com a IA (pasta worker/). Vazio = só busca local.
-  const AI_ENDPOINT = "";
+  const AI_ENDPOINT = "https://emanuel-portfolio-chat.emanuel-portfolio-chat.workers.dev";
   // Estes temas sempre usam a resposta pronta local (rápida, sem custo e controlada).
   const LOCAL_ONLY = new Set(["greeting", "thanks", "salary", "start"]);
 
