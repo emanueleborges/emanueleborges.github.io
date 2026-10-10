@@ -3,6 +3,11 @@
 // Usa `t`, `currentLang`, `prefersReducedMotion` e `track`, definidos em script.js.
 
 (() => {
+  // Endereço do Cloudflare Worker com a IA (pasta worker/). Vazio = só busca local.
+  const AI_ENDPOINT = "";
+  // Estes temas sempre usam a resposta pronta local (rápida, sem custo e controlada).
+  const LOCAL_ONLY = new Set(["greeting", "thanks", "salary", "start"]);
+
   /* ---------- Normalização e termos de busca ---------- */
 
   const normalize = (text) =>
@@ -375,7 +380,7 @@
         <input type="text" autocomplete="off" maxlength="200" />
         <button type="submit" data-chat-aria="send">↑</button>
       </form>
-      <p class="chat-note" data-chat="disclaimer"></p>
+      <p class="chat-note" data-chat="${AI_ENDPOINT ? "disclaimerAi" : "disclaimer"}"></p>
     </section>
     <div class="chat-hint" hidden>
       <button class="chat-hint-text" type="button" data-chat="hint"></button>
@@ -591,27 +596,74 @@
     suggestions.replaceChildren(...["s1", "s2", "s3", "s4"].map((key) => chipButton(tc(key))));
   };
 
-  // Mostra "digitando…" por um instante antes da resposta.
-  const ask = (query) => {
-    const trimmed = query.trim();
-    if (trimmed) respond(trimmed, () => answer(trimmed));
+  // Pergunta à IA (Worker). Em qualquer falha, devolve null e o chat usa a busca local.
+  let previousQuestion = "";
+  const askAi = async (question) => {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 25000);
+    try {
+      const response = await fetch(AI_ENDPOINT, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ question, lang: currentLang, previous: previousQuestion }),
+        signal: controller.signal,
+      });
+      if (!response.ok) return null;
+      const { answer: text } = await response.json();
+      return typeof text === "string" && text.trim() ? text.trim() : null;
+    } catch {
+      return null;
+    } finally {
+      clearTimeout(timer);
+    }
   };
 
-  function respond(userText, makeReply) {
-    addMessage("user", el("p", null, userText));
-    const reply = makeReply();
-    if (prefersReducedMotion) {
-      addMessage("bot", ...reply);
-      return;
+  // Resposta da IA + atalho "Ver na página" para o trecho mais relevante do site.
+  const aiReply = async (question) => {
+    const text = await askAi(question);
+    previousQuestion = question;
+    if (!text) return answer(question);
+    track("chat-ia", "Pergunta respondida pela IA");
+    const nodes = [el("span", "chat-ai-label", tc("aiLabel"))];
+    text.split(/\n{2,}/).forEach((paragraph) => nodes.push(el("p", null, paragraph)));
+    const { results } = search(question);
+    const best = results.find((result) => result.item) ?? results[0];
+    if (best) {
+      const button = el("button", "chat-goto", `${tc("goTo")}: ${best.label} →`);
+      button.type = "button";
+      button.addEventListener("click", () => goTo(best.target));
+      nodes.push(button);
     }
+    return nodes;
+  };
+
+  // Usa a IA quando configurada, exceto em contato, currículo e temas locais.
+  const usesAi = (query) => {
+    if (!AI_ENDPOINT) return false;
+    const q = normalize(query);
+    if (intents.cv.test(q) || intents.contact.test(q)) return false;
+    const faq = faqs.find(({ pattern, unless }) => pattern.test(q) && !(unless && unless.test(q)));
+    return !(faq && LOCAL_ONLY.has(faq.key));
+  };
+
+  const ask = (query) => {
+    const trimmed = query.trim();
+    if (!trimmed) return;
+    if (usesAi(trimmed)) respond(trimmed, () => aiReply(trimmed));
+    else respond(trimmed, () => answer(trimmed));
+  };
+
+  // Mostra "digitando…" enquanto a resposta (local ou da IA) é preparada.
+  async function respond(userText, makeReply) {
+    addMessage("user", el("p", null, userText));
     const typing = addMessage("bot", el("span", "chat-typing", ""));
     typing.querySelector(".chat-typing").append(el("i"), el("i"), el("i"));
     typing.setAttribute("aria-hidden", "true");
-    setTimeout(() => {
-      typing.removeAttribute("aria-hidden");
-      typing.replaceChildren(...reply);
-      messages.scrollTop = messages.scrollHeight;
-    }, 550);
+    const minimumDelay = prefersReducedMotion ? 0 : 550;
+    const [reply] = await Promise.all([makeReply(), new Promise((resolve) => setTimeout(resolve, minimumDelay))]);
+    typing.removeAttribute("aria-hidden");
+    typing.replaceChildren(...reply);
+    messages.scrollTop = messages.scrollHeight;
   }
 
   /* ---------- Balão de convite (uma vez por visitante) ---------- */

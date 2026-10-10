@@ -1,0 +1,20 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "emanuel-portfolio-chat",
+  "main": "src/index.js",
+  "compatibility_date": "2026-09-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "vars": {
+    // Só o portfólio publicado pode chamar este Worker.
+    "ALLOWED_ORIGIN": "https://emanueleborges.github.io"
+  },
+  // Até 10 perguntas por minuto por visitante (IP).
+  "ratelimits": [
+    {
+      "name": "CHAT_LIMITER",
+      "namespace_id": "1001",
+      "simple": { "limit": 10, "period": 60 }
+    }
+  ],
+  "observability": { "enabled": true }
+}
