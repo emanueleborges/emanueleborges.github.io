@@ -107,7 +107,7 @@ Unknown addresses show a 404 page in the site's style, with links to the portfol
 
 | ID | Category | Requirement |
 |---|---|---|
-| NFR-01 | **Cost** | Zero-cost infrastructure (free tiers). |
+| NFR-01 | **Cost** | Zero-cost infrastructure: free tiers only, **with no payment method on file** (the owner cannot incur costs). When a free limit is reached, the feature must pause and the site keep working (graceful degradation), never generate a charge. New services are added only if they have a free plan with no card required. |
 | NFR-02 | **Performance** | Static site with no build step; first image preloaded (smaller on mobile) and the rest on demand; non-blocking fonts; third-party scripts (Turnstile) loaded on demand; repeated AI answers served from cache. Target: Lighthouse (mobile) ≥ 75 performance and 100 accessibility, best practices and SEO. |
 | NFR-03 | **Availability** | The chat must remain useful without AI (local search); the form fails with a clear message. |
 | NFR-04 | **Security** | The backend only accepts the site's origin; bot protection on every backend call; per-IP limits; input validation; no secrets in the repository. |

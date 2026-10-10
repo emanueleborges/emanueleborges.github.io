@@ -242,6 +242,16 @@ This (1) builds the knowledge from `i18n.js`, (2) deploys the Worker and (3) upd
 
 If the daily AI quota runs out, the chat keeps working with local search until it resets (00:00 UTC).
 
+### Zero-cost rules
+
+> ⚠️ This project **must not generate any cost**. Verified on 2026-10-10: Cloudflare on the **Workers Free** plan and **no card on file** in any service.
+
+1. **Never add a card** or any other payment method (Cloudflare, Resend, Google, GitHub, GoatCounter).
+2. **Ignore** "Upgrade", "Workers Paid", "Add payment method" and similar buttons.
+3. Without a payment method, **no service can charge**: when a free limit is reached, the feature **pauses** (e.g. Workers AI returns error 3036 and the chat falls back to local search) and resumes the next day.
+4. Before adding any new service, confirm it has a **free plan with no card required** and what happens when the limit is exceeded.
+5. Check occasionally: Cloudflare → **Billing** (*Workers Free* plan, no payment method) and Resend → **Settings → Billing** (*Free* plan).
+
 ---
 
 ## Specification (SDD)

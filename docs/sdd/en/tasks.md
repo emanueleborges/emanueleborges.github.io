@@ -65,6 +65,7 @@ Legend: ✅ done · ⏳ pending · 💡 idea
 - ✅ **T48** New "E." logo (gradient + AI node) in favicon, header, footer, chat, 404 and iPhone icon
 - ✅ **T49** Assistant highlight: "Ask my AI" bar in the hero (auto-typed example question) and labeled chat button on desktop — FR-05
 - ✅ **T50** Responsiveness validated on smartphone (390 px), tablet (768 px), laptop (1366 px) and desktop (1920 px): ☰ menu up to 1,100 px, no horizontal scroll — NFR-07
+- ✅ **T51** Zero-cost rules documented (README and NFR-01); verified: Workers Free, no card in any service — NFR-01
 - ✅ **T44** Automatic confirmation to the visitor in the message's language (Google Apps Script) — FR-06.6
 
 ---

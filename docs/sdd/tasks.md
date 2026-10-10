@@ -65,6 +65,7 @@ Legenda: ✅ concluída · ⏳ pendente · 💡 ideia
 - ✅ **T48** Novo logo "E." (gradiente + nó de IA) em favicon, cabeçalho, rodapé, chat, 404 e ícone do iPhone
 - ✅ **T49** Destaque do assistente: barra "Pergunte à minha IA" no topo (pergunta de exemplo digitada) e botão do chat com texto no desktop — RF-05
 - ✅ **T50** Responsividade validada em smartphone (390 px), tablet (768 px), laptop (1366 px) e desktop (1920 px): menu ☰ até 1.100 px, sem rolagem lateral — RNF-07
+- ✅ **T51** Regras de custo zero documentadas (README e RNF-01); verificado: Workers Free, sem cartão em nenhum serviço — RNF-01
 - ✅ **T44** Confirmação automática ao visitante no idioma da mensagem (Google Apps Script) — RF-06.6
 
 ---

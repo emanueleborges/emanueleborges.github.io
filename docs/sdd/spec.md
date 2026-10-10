@@ -107,7 +107,7 @@ Endereços inexistentes mostram uma página 404 no estilo do site, com links par
 
 | ID | Categoria | Requisito |
 |---|---|---|
-| RNF-01 | **Custo** | Infraestrutura com custo zero (planos gratuitos). |
+| RNF-01 | **Custo** | Infraestrutura com custo zero: apenas planos gratuitos **sem forma de pagamento cadastrada** (o dono não pode ter custos). Ao atingir um limite grátis, o recurso deve pausar e o site seguir funcionando (degradação graciosa), nunca gerar cobrança. Serviços novos só entram se tiverem plano gratuito sem cartão. |
 | RNF-02 | **Desempenho** | Site estático sem build; primeira imagem pré-carregada (menor no celular) e demais sob demanda; fontes sem bloquear a exibição; scripts de terceiros (Turnstile) carregados sob demanda; respostas repetidas da IA servidas do cache. Meta: Lighthouse (celular) ≥ 75 em desempenho e 100 em acessibilidade, boas práticas e SEO. |
 | RNF-03 | **Disponibilidade** | O chat deve continuar útil mesmo sem IA (busca local); o formulário falha com mensagem clara. |
 | RNF-04 | **Segurança** | Backend aceita só a origem do site; anti-robô em toda chamada ao backend; limites por IP; validação de entrada; nenhum segredo no repositório. |

@@ -242,6 +242,16 @@ Esse comando (1) gera o conhecimento a partir do `i18n.js`, (2) publica o Worker
 
 Se a cota diária da IA acabar, o chat continua com a busca local até a renovação (00:00 UTC).
 
+### Regras para manter o custo zero
+
+> ⚠️ O projeto **não pode gerar custo**. Verificado em 10/10/2026: Cloudflare no plano **Workers Free** e **nenhum cartão cadastrado** em nenhum serviço.
+
+1. **Nunca cadastrar cartão** ou outra forma de pagamento (Cloudflare, Resend, Google, GitHub, GoatCounter).
+2. **Ignorar** botões de "Upgrade", "Workers Paid", "Add payment method" ou similares.
+3. Sem forma de pagamento, **nenhum serviço consegue cobrar**: ao atingir um limite grátis, o recurso **pausa** (ex.: Workers AI responde com erro 3036 e o chat usa a busca local) e volta no dia seguinte.
+4. Antes de adicionar qualquer serviço novo, confirmar que ele tem **plano gratuito sem cartão** e o que acontece ao passar do limite.
+5. Conferir de vez em quando: Cloudflare → **Billing** (plano *Workers Free*, sem forma de pagamento) e Resend → **Settings → Billing** (plano *Free*).
+
 ---
 
 ## Especificação (SDD)
