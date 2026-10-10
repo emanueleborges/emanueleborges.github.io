@@ -64,7 +64,7 @@
       const dict = all[lang];
       const tr = (key) => dict[key] ?? all.pt[key] ?? "";
       const plain = (key) => tr(key).replace(/<br\s*\/?>/g, " ").replace(/<span>[↗↘↓]<\/span>/g, "").trim();
-      const htmlLang = { en: "en", pt: "pt-BR", es: "es", fr: "fr", it: "it", zh: "zh-CN", ru: "ru" };
+      const htmlLang = { en: "en", pt: "pt-BR", es: "es", fr: "fr", it: "it", de: "de", zh: "zh-CN", ru: "ru" };
 
       document.documentElement.lang = htmlLang[lang];
       document.title = plain("cv.pageTitle");

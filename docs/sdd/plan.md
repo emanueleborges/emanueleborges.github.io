@@ -54,7 +54,7 @@ flowchart TB
 | Arquivo | Responsabilidade |
 |---|---|
 | `index.html` | Estrutura e conteúdo em português (idioma de origem). Elementos traduzíveis marcados com `data-i18n`, `data-i18n-aria`, `data-i18n-placeholder`, `data-i18n-title`, `data-i18n-alt`, `data-i18n-content`. |
-| `i18n.js` | `window.I18N[lang][chave]` para os 7 idiomas: site, chat (respostas prontas, rótulos), formulário e currículo. |
+| `i18n.js` | `window.I18N[lang][chave]` para os 8 idiomas: site, chat (respostas prontas, rótulos), formulário e currículo. |
 | `script.js` | Aplica o idioma (guarda o original em português), seletor de idioma, menu mobile, filtros, data de atualização (`Intl`), animações ao rolar, partículas (Canvas), progresso de leitura e eventos do GoatCounter (`track`). |
 | `api.js` | `window.PortfolioApi`: URL do Worker, carregamento sob demanda do Turnstile, geração de token por envio e `post(path, body)`. |
 | `chat.js` | Assistente: respostas prontas (regras por expressão regular), busca local, chamada à IA e interface. |
@@ -70,7 +70,7 @@ flowchart TB
 ### 2.2 Busca local do assistente
 1. **Índice:** construído a partir do DOM no idioma atual (Sobre, cada emprego, cada projeto + categoria e marca do card, grupos de habilidades, formação, certificações, idiomas).
 2. **Normalização:** minúsculas, remoção de acentos (NFD), `ё→е`; as regras passam pela mesma normalização.
-3. **Termos:** remoção de *stopwords* (7 idiomas), radical simples (corta 2 letras em palavras ≥ 6), pares de caracteres para chinês, sinônimos (ex.: "banco de dados" → PostgreSQL, Oracle…).
+3. **Termos:** remoção de *stopwords* (8 idiomas), radical simples (corta 2 letras em palavras ≥ 6), pares de caracteres para chinês, sinônimos (ex.: "banco de dados" → PostgreSQL, Oracle…).
 4. **Correção de digitação:** distância de Damerau-Levenshtein contra o vocabulário do site (≤ 1 para palavras de 4–6 letras, ≤ 2 para ≥ 7).
 5. **Ranking:** peso tipo IDF por termo, ×2 se o termo está no título, +1,5 se a seção corresponde ao assunto (formação, experiência, habilidades, projetos); corta resultados abaixo de 50% do melhor; até 4 resultados.
 6. **Resposta:** frase-resumo agrupada por seção, cartões com trecho destacado e "Ver na página", sugestões de tecnologias relacionadas.
@@ -92,7 +92,7 @@ pergunta
 - **Prévia de link:** tags Open Graph e Twitter Card estáticas (em inglês) com `og-image.jpg` (1200×630).
 - **Idiomas:** `<link rel="alternate" hreflang>` para `?lang=en|pt|es|fr|it|zh|ru` + `x-default`. Sem `canonical` (conflitaria com as alternativas por idioma).
 - **Dados estruturados:** JSON-LD `Person` (cargo, empregador, cidade, formação, tecnologias, idiomas, LinkedIn e GitHub).
-- **Rastreamento:** `sitemap.xml` (página em 7 idiomas + 7 PDFs) e `robots.txt` (bloqueia `worker/`, `tests/`, `scripts/`, `apps-script/`, `docs/`, `curriculo.html`).
+- **Rastreamento:** `sitemap.xml` (página em 8 idiomas + 8 PDFs) e `robots.txt` (bloqueia `worker/`, `tests/`, `scripts/`, `apps-script/`, `docs/`, `curriculo.html`).
 - **Google Search Console:** verificado por tag HTML (`google-site-verification`); sitemap enviado.
 - **404:** `404.html` (GitHub Pages responde HTTP 404 com essa página); `/#chat` abre o assistente.
 
@@ -220,7 +220,7 @@ Vetor de 1024 dimensões por trecho; `id` estável (ex.: `job1`, `p5`, `edu4`); 
 
 - **Integração contínua:** GitHub Actions roda sintaxe dos scripts, validação do `sitemap.xml` e do JSON-LD, geração do conhecimento da IA e os testes do chat (o script detecta o Chrome do macOS ou do Linux).
 - **Lighthouse:** desempenho ~80 · acessibilidade 100 · boas práticas 100 · SEO 100 (celular).
-- **Testes do chat:** `tests/rodar-testes-chat.sh` (Chrome headless + `tests/runner.js` + `tests/chat-casos.json`, 79 casos).
+- **Testes do chat:** `tests/rodar-testes-chat.sh` (Chrome headless + `tests/runner.js` + `tests/chat-casos.json`, 92 casos).
 - **Testes do Worker:** chamadas com origem errada, campos inválidos, token ausente/falso, rota inexistente, limite por minuto e campo-armadilha.
 - **Ponta a ponta:** Chrome DevTools Protocol numa janela real (o Turnstile recusa navegadores headless, erro 600010 — comportamento esperado).
 

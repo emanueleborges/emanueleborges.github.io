@@ -12,7 +12,7 @@ const MODEL = "@cf/qwen/qwen3-30b-a3b-fp8";
 const EMBEDDING_MODEL = "@cf/baai/bge-m3";
 const TOP_K = 6;
 const MAX_QUESTION_LENGTH = 500;
-const LANGUAGES = { en: "English", pt: "Brazilian Portuguese", es: "Spanish", fr: "French", it: "Italian", zh: "Simplified Chinese", ru: "Russian" };
+const LANGUAGES = { en: "English", pt: "Brazilian Portuguese", es: "Spanish", fr: "French", it: "Italian", de: "German", zh: "Simplified Chinese", ru: "Russian" };
 
 const INSTRUCTIONS = `You are the assistant on Emanuel Borges's portfolio website. Recruiters and visitors ask you about his professional profile.
 
@@ -154,6 +154,7 @@ const LANGUAGE_HINTS = {
   fr: { words: "le la les de des et en un une pour avec pas est vous nous je bonjour merci poste entreprise votre suis avez sur aussi", marks: /œ|è|ê|ù|ç|\bvous\b|\bnous\b|\bj'|\bc'est\b/g },
   it: { words: "il la le di che e un una per con non è sono ciao grazie buongiorno azienda posizione vorrei mi ho anche sul gli", marks: /zione|\bgli\b|\bè\b|\bciao\b|\bgrazie\b/g },
   en: { words: "the and to of a in is you for with we i are hello hi thanks thank position role company would your have about also", marks: /\bthe\b|\bwould\b|\byour\b|\bthanks?\b/g },
+  de: { words: "der die das und ist ich sie wir ihr mit für von zu den dem ein eine nicht auch bitte danke hallo stelle unternehmen haben würde gerne ihre ihnen", marks: /ß|ä|ö|ü|\bich\b|\bund\b|\bnicht\b|\bihnen\b/g },
 };
 
 function detectLanguage(text, fallback) {

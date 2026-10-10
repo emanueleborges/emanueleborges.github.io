@@ -33,14 +33,14 @@ A framework-free static site with a serverless backend on Cloudflare for the AI 
 
 | Area | What it does |
 |---|---|
-| **7 languages** | English (default), Portuguese, Spanish, French, Italian, Chinese and Russian. Visitors pick one in the header; the choice is remembered and can come in the link (`?lang=pt`). |
+| **8 languages** | English (default), Portuguese, Spanish, French, Italian, German, Chinese and Russian. Visitors pick one in the header; the choice is remembered and can come in the link (`?lang=pt`). |
 | **Sections** | About (with photo), Experience, Projects (with filters), Skills (45 technologies with icons and filters), Education (with institution logos) and Contact. |
 | **Visuals** | Dark purple + cyan theme, moving duotone background images, Canvas particle network, scroll animations and a sticky header with reading progress. Respects "reduce motion". |
 | **AI assistant** | Hybrid: local **ready-made answers** for frequent questions, **generative AI with RAG** for everything else and **local search** as a fallback. AI answers can be rated 👍/👎. See [Architecture](#architecture). |
 | **PDF résumé** | One PDF per language, generated from the same text source as the site; the button downloads the PDF for the current language. |
 | **Contact form** | Messages stored in D1, invisible bot protection, **email notification** to the owner and an **automatic confirmation** to the visitor in the language of their message. |
 | **Direct contacts** | Email, WhatsApp, LinkedIn and GitHub. |
-| **SEO** | Link previews (Open Graph/Twitter), `hreflang` for 7 languages, `Person` structured data (JSON-LD), `sitemap.xml` and `robots.txt`; verified in Google Search Console. |
+| **SEO** | Link previews (Open Graph/Twitter), `hreflang` for 8 languages, `Person` structured data (JSON-LD), `sitemap.xml` and `robots.txt`; verified in Google Search Console. |
 | **Analytics** | Visits and events (chat opened, résumé downloads, contact clicks, form submissions, ratings) with GoatCounter, cookieless. |
 | **Weekly summary** | Every Monday an email with the week's messages, chat ratings and a health check of the AI, vector index and database. |
 | **404 page** | Custom page in the site's style with links to the portfolio and the assistant. |
@@ -66,7 +66,7 @@ flowchart LR
 ### How the assistant answers
 
 1. **Contact and résumé** → contact buttons or the PDF link (local).
-2. **Ready-made answers** (19 topics, 7 languages) → greetings, thanks, salary, start date and **education** are **always answered locally**, at no cost and with verified text. Other ready-made topics (roles sought, remote work, AI, technologies…) are answered by the AI when it is available.
+2. **Ready-made answers** (19 topics, 8 languages) → greetings, thanks, salary, start date and **education** are **always answered locally**, at no cost and with verified text. Other ready-made topics (roles sought, remote work, AI, technologies…) are answered by the AI when it is available.
 3. **AI with RAG** → the Worker:
    1. validates the **Turnstile** token;
    2. embeds the question with **BGE-M3** (multilingual);
@@ -100,17 +100,17 @@ The AI knowledge is **generated from the site's own translations** (`i18n.js`): 
 ├── index.html              # Single-page portfolio (SEO, Open Graph, JSON-LD)
 ├── 404.html                # Custom "page not found"
 ├── styles.css              # All styling (theme, layout, animations, chat, form)
-├── i18n.js                 # Text in 7 languages (site, chat, form and résumé)
+├── i18n.js                 # Text in 8 languages (site, chat, form and résumé)
 ├── script.js               # Languages, menu, filters, animations, particles, analytics
 ├── api.js                  # Shared connection to the Worker and Turnstile
 ├── chat.js                 # Assistant: ready-made answers, local search, AI and ratings
 ├── contact.js              # Contact form
 ├── curriculo.html          # A4 résumé template used to generate the PDFs
-├── gerar-curriculos.sh     # Generates the 7 PDFs in cv/ with headless Chrome
+├── gerar-curriculos.sh     # Generates the 8 PDFs in cv/ with headless Chrome
 ├── sitemap.xml · robots.txt · og-image.jpg
 ├── cv/                     # PDF résumés (one per language)
 ├── logos/                  # Institution logos and skill icons
-├── tests/                  # Automated chat tests (79 cases, 7 languages)
+├── tests/                  # Automated chat tests (92 cases, 8 languages)
 ├── .github/workflows/      # GitHub Actions: tests on every push
 ├── scripts/pre-commit      # Git hook: last-updated date and file versioning
 ├── apps-script/Codigo.gs   # Visitor confirmation (Google Apps Script) — template without the secret
@@ -205,7 +205,7 @@ This (1) builds the knowledge from `i18n.js`, (2) deploys the Worker and (3) upd
 
 | Check | Result |
 |---|---|
-| **GitHub Actions** on every push | JavaScript syntax, `sitemap.xml` and JSON-LD validation, AI knowledge build and the **79 chat tests** |
+| **GitHub Actions** on every push | JavaScript syntax, `sitemap.xml` and JSON-LD validation, AI knowledge build and the **92 chat tests** |
 | **Lighthouse (mobile)** | Performance ~80 · Accessibility 100 · Best practices 100 · SEO 100 |
 | **Worker** | Wrong origin, invalid fields, missing/fake token, unknown route, per-minute limits and honeypot |
 | **End-to-end** | Questions, ratings and form submissions on the live site in a real Chrome window (Turnstile rejects invisible automated browsers, as expected) |

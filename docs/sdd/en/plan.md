@@ -54,7 +54,7 @@ flowchart TB
 | File | Responsibility |
 |---|---|
 | `index.html` | Structure and content in Portuguese (source language). Translatable elements are marked with `data-i18n`, `data-i18n-aria`, `data-i18n-placeholder`, `data-i18n-title`, `data-i18n-alt` and `data-i18n-content`. |
-| `i18n.js` | `window.I18N[lang][key]` for the 7 languages: site, chat (ready-made answers, labels), contact form and résumé. |
+| `i18n.js` | `window.I18N[lang][key]` for the 8 languages: site, chat (ready-made answers, labels), contact form and résumé. |
 | `script.js` | Applies the language (keeping the Portuguese original), language selector, mobile menu, filters, last-updated date (`Intl`), scroll animations, particles (Canvas), reading progress and GoatCounter events (`track`). |
 | `api.js` | `window.PortfolioApi`: Worker URL, on-demand Turnstile loading, one token per submission and `post(path, body)`. |
 | `chat.js` | Assistant: ready-made answers (regex rules), local search, AI call and UI. |
@@ -70,7 +70,7 @@ flowchart TB
 ### 2.2 Assistant local search
 1. **Index:** built from the DOM in the current language (About, each job, each project + category and card badge, skill groups, education, certifications, languages).
 2. **Normalization:** lowercase, accent removal (NFD), `ё→е`; rules go through the same normalization.
-3. **Terms:** stopword removal (7 languages), simple stemming (drops 2 letters from words ≥ 6 letters), character bigrams for Chinese, synonyms (e.g. "database" → PostgreSQL, Oracle…).
+3. **Terms:** stopword removal (8 languages), simple stemming (drops 2 letters from words ≥ 6 letters), character bigrams for Chinese, synonyms (e.g. "database" → PostgreSQL, Oracle…).
 4. **Typo tolerance:** Damerau-Levenshtein distance against the site vocabulary (≤ 1 for 4–6-letter words, ≤ 2 for ≥ 7).
 5. **Ranking:** IDF-like weight per term, ×2 when the term is in the title, +1.5 when the section matches the topic (education, experience, skills, projects); results below 50% of the best are dropped; up to 4 results.
 6. **Answer:** summary sentence grouped by section, cards with highlighted excerpt and "View on page", related-technology suggestions.
@@ -92,7 +92,7 @@ question
 - **Link previews:** static Open Graph and Twitter Card tags (in English) with `og-image.jpg` (1200×630).
 - **Languages:** `<link rel="alternate" hreflang>` for `?lang=en|pt|es|fr|it|zh|ru` + `x-default`. No `canonical` (it would conflict with the per-language alternates).
 - **Structured data:** `Person` JSON-LD (role, employer, city, education, technologies, languages, LinkedIn and GitHub).
-- **Crawling:** `sitemap.xml` (page in 7 languages + 7 PDFs) and `robots.txt` (blocks `worker/`, `tests/`, `scripts/`, `apps-script/`, `docs/`, `curriculo.html`).
+- **Crawling:** `sitemap.xml` (page in 8 languages + 8 PDFs) and `robots.txt` (blocks `worker/`, `tests/`, `scripts/`, `apps-script/`, `docs/`, `curriculo.html`).
 - **Google Search Console:** verified with an HTML tag (`google-site-verification`); sitemap submitted.
 - **404:** `404.html` (GitHub Pages returns HTTP 404 with this page); `/#chat` opens the assistant.
 
@@ -220,7 +220,7 @@ One 1024-dimension vector per excerpt; stable `id` (e.g. `job1`, `p5`, `edu4`); 
 
 - **Continuous integration:** GitHub Actions runs script syntax checks, `sitemap.xml` and JSON-LD validation, the AI knowledge build and the chat tests (the script finds Chrome on macOS or Linux).
 - **Lighthouse:** performance ~80 · accessibility 100 · best practices 100 · SEO 100 (mobile).
-- **Chat tests:** `tests/rodar-testes-chat.sh` (headless Chrome + `tests/runner.js` + `tests/chat-casos.json`, 79 cases).
+- **Chat tests:** `tests/rodar-testes-chat.sh` (headless Chrome + `tests/runner.js` + `tests/chat-casos.json`, 92 cases).
 - **Worker tests:** calls with a wrong origin, invalid fields, missing/fake token, unknown route, per-minute limit and honeypot.
 - **End-to-end:** Chrome DevTools Protocol in a real browser window (Turnstile rejects headless browsers with error 600010 — expected behavior).
 

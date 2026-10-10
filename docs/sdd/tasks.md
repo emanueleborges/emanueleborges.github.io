@@ -26,10 +26,10 @@ Legenda: ✅ concluída · ⏳ pendente · 💡 ideia
 - ✅ **T11** Ícones das 45 habilidades (Simple Icons + genéricos) — RF-01
 
 ### Idiomas
-- ✅ **T12** i18n em 7 idiomas, seletor no cabeçalho, `?lang=`, inglês por padrão — RF-02
+- ✅ **T12** i18n em 8 idiomas, seletor no cabeçalho, `?lang=`, inglês por padrão — RF-02
 
 ### Currículo
-- ✅ **T13** `curriculo.html` + `gerar-curriculos.sh` → 7 PDFs — RF-04
+- ✅ **T13** `curriculo.html` + `gerar-curriculos.sh` → 8 PDFs — RF-04
 - ✅ **T14** Botão de download por idioma — RF-04.2
 
 ### Assistente
@@ -42,7 +42,7 @@ Legenda: ✅ concluída · ⏳ pendente · 💡 ideia
 - ✅ **T21** Turnstile invisível — RNF-04
 - ✅ **T22** RAG com Vectorize + BGE-M3 (32 trechos) — RF-05.4, RNF-09
 - ✅ **T23** Formação com resposta pronta conferida — RNF-08
-- ✅ **T24** 79 testes automáticos do chat — Critérios de aceite
+- ✅ **T24** 92 testes automáticos do chat — Critérios de aceite
 
 ### Contato e métricas
 - ✅ **T25** WhatsApp, e-mail, LinkedIn, GitHub — RF-07
@@ -57,7 +57,7 @@ Legenda: ✅ concluída · ⏳ pendente · 💡 ideia
 - ✅ **T36** Avaliação 👍/👎 das respostas da IA salva no D1 + `ver-avaliacoes.sh` — RNF-08
 - ✅ **T34** Prévia de link (Open Graph/Twitter), `hreflang`, JSON-LD `Person`, `sitemap.xml` e `robots.txt` — RNF-02
 - ✅ **T39** README em inglês (principal) + português — documentação
-- ✅ **T40** GitHub Actions: sintaxe, SEO, conhecimento da IA e 79 testes a cada push — Critérios de aceite
+- ✅ **T40** GitHub Actions: sintaxe, SEO, conhecimento da IA e 92 testes a cada push — Critérios de aceite
 - ✅ **T41** Lighthouse: imagens sob demanda e responsivas, fontes sem bloqueio, contraste (desempenho 69 → ~80; acessibilidade, boas práticas e SEO 100) — RNF-02, RNF-06
 - ✅ **T42** Resumo semanal por e-mail (Cron) com saúde da IA, Vectorize e D1 — RF-08
 - ✅ **T43** Página 404 personalizada e link `#chat` que abre o assistente
@@ -67,6 +67,7 @@ Legenda: ✅ concluída · ⏳ pendente · 💡 ideia
 - ✅ **T50** Responsividade validada em smartphone (390 px), tablet (768 px), laptop (1366 px) e desktop (1920 px): menu ☰ até 1.100 px, sem rolagem lateral — RNF-07
 - ✅ **T51** Regras de custo zero documentadas (README e RNF-01); verificado: Workers Free, sem cartão em nenhum serviço — RNF-01
 - ✅ **T44** Confirmação automática ao visitante no idioma da mensagem (Google Apps Script) — RF-06.6
+- ✅ **T52** Alemão como 8º idioma: site, chat (respostas prontas e busca), currículo PDF, IA, confirmação por e-mail e 13 testes — RF-02
 
 ---
 

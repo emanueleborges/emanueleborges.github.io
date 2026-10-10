@@ -45,6 +45,12 @@ const TEXTS = {
     body: "Grazie per avermi contattato tramite il mio portfolio. Ho ricevuto il tuo messaggio e ti risponderò presto a questo indirizzo.",
     bye: "Un saluto,",
   },
+  de: {
+    subject: "Ich habe deine Nachricht erhalten — Emanuel Borges",
+    hello: (n) => (n ? `Hallo ${n},` : "Hallo,"),
+    body: "Danke, dass du mich über mein Portfolio kontaktiert hast. Ich habe deine Nachricht erhalten und antworte bald an diese E-Mail-Adresse.",
+    bye: "Viele Grüße,",
+  },
   zh: {
     subject: "已收到你的留言 — Emanuel Borges",
     hello: (n) => (n ? `${n}，你好！` : "你好！"),

@@ -26,10 +26,10 @@ Legend: ✅ done · ⏳ pending · 💡 idea
 - ✅ **T11** Icons for the 45 skills (Simple Icons + generic icons) — FR-01
 
 ### Languages
-- ✅ **T12** i18n in 7 languages, header selector, `?lang=`, English by default — FR-02
+- ✅ **T12** i18n in 8 languages, header selector, `?lang=`, English by default — FR-02
 
 ### Résumé
-- ✅ **T13** `curriculo.html` + `gerar-curriculos.sh` → 7 PDFs — FR-04
+- ✅ **T13** `curriculo.html` + `gerar-curriculos.sh` → 8 PDFs — FR-04
 - ✅ **T14** Download button per language — FR-04.2
 
 ### Assistant
@@ -42,7 +42,7 @@ Legend: ✅ done · ⏳ pending · 💡 idea
 - ✅ **T21** Invisible Turnstile — NFR-04
 - ✅ **T22** RAG with Vectorize + BGE-M3 (32 excerpts) — FR-05.4, NFR-09
 - ✅ **T23** Education with a verified ready-made answer — NFR-08
-- ✅ **T24** 79 automated chat tests — Acceptance criteria
+- ✅ **T24** 92 automated chat tests — Acceptance criteria
 
 ### Contact and analytics
 - ✅ **T25** WhatsApp, email, LinkedIn, GitHub — FR-07
@@ -57,7 +57,7 @@ Legend: ✅ done · ⏳ pending · 💡 idea
 - ✅ **T36** 👍/👎 rating of AI answers stored in D1 + `ver-avaliacoes.sh` — NFR-08
 - ✅ **T34** Link previews (Open Graph/Twitter), `hreflang`, `Person` JSON-LD, `sitemap.xml` and `robots.txt` — NFR-02
 - ✅ **T39** English README (main) + Portuguese — documentation
-- ✅ **T40** GitHub Actions: syntax, SEO, AI knowledge build and 79 tests on every push — Acceptance criteria
+- ✅ **T40** GitHub Actions: syntax, SEO, AI knowledge build and 92 tests on every push — Acceptance criteria
 - ✅ **T41** Lighthouse: on-demand responsive images, non-blocking fonts, contrast (performance 69 → ~80; accessibility, best practices and SEO 100) — NFR-02, NFR-06
 - ✅ **T42** Weekly summary email (Cron) with AI, Vectorize and D1 health check — FR-08
 - ✅ **T43** Custom 404 page and `#chat` link that opens the assistant
@@ -67,6 +67,7 @@ Legend: ✅ done · ⏳ pending · 💡 idea
 - ✅ **T50** Responsiveness validated on smartphone (390 px), tablet (768 px), laptop (1366 px) and desktop (1920 px): ☰ menu up to 1,100 px, no horizontal scroll — NFR-07
 - ✅ **T51** Zero-cost rules documented (README and NFR-01); verified: Workers Free, no card in any service — NFR-01
 - ✅ **T44** Automatic confirmation to the visitor in the message's language (Google Apps Script) — FR-06.6
+- ✅ **T52** German as the 8th language: site, chat (ready-made answers and search), PDF résumé, AI, email confirmation and 13 tests — FR-02
 
 ---
 

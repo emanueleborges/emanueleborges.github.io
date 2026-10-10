@@ -10,7 +10,7 @@ const track = (path, title = path) => {
 /* ---------- Idiomas ---------- */
 
 const translations = window.I18N || {};
-const htmlLang = { en: "en", pt: "pt-BR", es: "es", fr: "fr", it: "it", zh: "zh-CN", ru: "ru" };
+const htmlLang = { en: "en", pt: "pt-BR", es: "es", fr: "fr", it: "it", de: "de", zh: "zh-CN", ru: "ru" };
 const supportedLangs = Object.keys(htmlLang);
 const defaultLang = "en";
 let currentLang = "pt";

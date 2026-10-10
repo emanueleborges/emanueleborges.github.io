@@ -328,5 +328,59 @@
       "Esperienza con l’IA",
       "answer:specializzando in IA"
     ]
+  ],
+  "de": [
+    [
+      "hallo",
+      "answer:Ich beantworte Fragen"
+    ],
+    [
+      "Wer ist Emanuel?",
+      "answer:Senior Software Engineer aus Manaus"
+    ],
+    [
+      "Welche Art von Stelle sucht er?",
+      "answer:Er sucht Stellen"
+    ],
+    [
+      "Arbeitet er remote?",
+      "answer:100 % remote"
+    ],
+    [
+      "Wo hat er studiert?",
+      "answer:Bachelor in Systemanalyse"
+    ],
+    [
+      "Gehaltsvorstellung?",
+      "answer:Gehaltsvorstellungen"
+    ],
+    [
+      "Spricht er Englisch?",
+      "answer:Grundkenntnisse (A2)"
+    ],
+    [
+      "Lebenslauf herunterladen",
+      "answer:Lebenslauf als PDF"
+    ],
+    [
+      "danke",
+      "answer:Gern geschehen"
+    ],
+    [
+      "Hat er Erfahrung mit Kafka?",
+      "Financial Hub"
+    ],
+    [
+      "kafak",
+      "Financial Hub"
+    ],
+    [
+      "Welche KI-Projekte hat er umgesetzt?",
+      "Rechtskritiker"
+    ],
+    [
+      "Erfahrung mit KI?",
+      "answer:spezialisiert sich auf KI"
+    ]
   ]
 }

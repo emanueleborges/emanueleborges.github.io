@@ -5,7 +5,7 @@ set -e
 cd "$(dirname "$0")"
 CHROME="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
 mkdir -p cv
-for lang in en pt es fr it zh ru; do
+for lang in en pt es fr it de zh ru; do
   "$CHROME" --headless=new --disable-gpu --no-pdf-header-footer \
     --virtual-time-budget=8000 \
     --print-to-pdf="cv/curriculo-emanuel-borges-$lang.pdf" \

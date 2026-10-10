@@ -26,6 +26,7 @@
       "le les des du et avec pour quel quelle quels comment est il son sa une ou sur connait " +
       "il lo gli di del con per che quale quali come ha lui suo un una dove sul conosce " +
       "и в на с по что как какой какие у он его есть ли о для знает " +
+      "der die das den dem des und ist er sie es hat mit fur von zu ein eine einen einer was wie wo welche welcher welches auf im an auch nicht als bei oder aus wer kann kennt gibt hast schon " +
       "emanuel borges"
     ).split(" "),
   );
@@ -39,11 +40,11 @@
 
   /* ---------- Sinônimos: expressões que viram termos existentes no site ---------- */
 
-  const programmingContext = /program|programac|编程|программ/;
+  const programmingContext = /program|programac|programmier|编程|программ/;
   const synonyms = [
     [programmingContext, ["java", "kotlin", "python", "typescript", "javascript", "php"]],
-    [/banco de dados|database|base de datos|base de donnees|banca dati|数据库|баз[аы] данных|\bsql\b|\bdb\b/, ["postgresql", "oracle", "mysql", "mongodb", "sql server"]],
-    [/celular|mobile|movil|cellulare|手机|移动|мобил|\bapps?\b|android|\bios\b/, ["react native", "kotlin", "mobile"]],
+    [/banco de dados|database|datenbank|base de datos|base de donnees|banca dati|数据库|баз[аы] данных|\bsql\b|\bdb\b/, ["postgresql", "oracle", "mysql", "mongodb", "sql server"]],
+    [/celular|mobile|mobil|handy|movil|cellulare|手机|移动|мобил|\bapps?\b|android|\bios\b/, ["react native", "kotlin", "mobile"]],
     [/nuvem|cloud|nube|nuage|nuvola|云|облак/, ["aws", "serverless", "lambda"]],
     [/front|interface|\bui\b|\bux\b|前端|фронт/, ["react", "angular", "vue", "frontend"]],
     [/chat ?bot|\bllm|gpt|genai|generativ|生成式|聊天机器人|чат-?бот/, ["rag", "langchain", "llm", "ollama"]],
@@ -59,17 +60,17 @@
   /* ---------- Assuntos que apontam para uma seção ---------- */
 
   const topics = [
-    ["nav.education", /estud|study|studied|estudi|etudi|studi|universi|faculd|facult|colleg|gradua|diplom|degree|学|教育|毕业|учил|образов|универс|вуз/],
-    ["nav.experience", /trabalh|work|trabaj|travail|lavor|job|emprego|empleo|empresa|company|career|carreira|carrera|工作|经历|公司|работ|опыт|компан/],
-    ["nav.skills", /tecnolog|technolog|stack|skill|habilid|competen|ferrament|tool|herramient|outil|strument|技能|技术|навык|технолог/],
-    ["nav.projects", /projet|project|proyect|progett|portf|作品|项目|проект/],
+    ["nav.education", /ausbildung|hochschule|abschluss|estud|study|studied|estudi|etudi|studi|universi|faculd|facult|colleg|gradua|diplom|degree|学|教育|毕业|учил|образов|универс|вуз/],
+    ["nav.experience", /arbeit|firma|unternehmen|beruf|karriere|trabalh|work|trabaj|travail|lavor|job|emprego|empleo|empresa|company|career|carreira|carrera|工作|经历|公司|работ|опыт|компан/],
+    ["nav.skills", /fahigkeit|kenntnis|werkzeug|tecnolog|technolog|stack|skill|habilid|competen|ferrament|tool|herramient|outil|strument|技能|技术|навык|технолог/],
+    ["nav.projects", /projekt|projet|project|proyect|progett|portf|作品|项目|проект/],
   ];
 
   /* ---------- Intenções especiais ---------- */
 
   const intents = {
-    contact: /contat|contact|contacto|contatto|e-?mail|whats|telefon|phone|linkedin|github|falar|hablar|parler|parlare|联系|邮箱|电话|связ|почт|телефон|контакт/,
-    cv: /curricul|\bcv\b|resum|pdf|download|baixar|descargar|telecharg|scaric|简历|резюме/,
+    contact: /kontakt|erreich|anrufen|contat|contact|contacto|contatto|e-?mail|whats|telefon|phone|linkedin|github|falar|hablar|parler|parlare|联系|邮箱|电话|связ|почт|телефон|контакт/,
+    cv: /lebenslauf|curricul|\bcv\b|resum|pdf|download|baixar|descargar|telecharg|scaric|简历|резюме/,
   };
 
   /* ---------- Respostas prontas (perguntas frequentes) ---------- */
@@ -80,110 +81,110 @@
   const faqs = [
     {
       key: "greeting",
-      pattern: /^\s*(oi+|ola|opa|hello|hi|hey|hola|bonjour|salut|ciao|buongiorno|buenas|bom dia|boa tarde|boa noite|good (morning|afternoon|evening)|buenos dias|你好|您好|привет|здравствуйте|добрый день)[\s!.,?！。]*$/,
+      pattern: /^\s*(oi+|ola|opa|hello|hi|hey|hola|bonjour|salut|ciao|buongiorno|buenas|bom dia|boa tarde|boa noite|good (morning|afternoon|evening)|buenos dias|hallo|guten (tag|morgen|abend)|moin|servus|你好|您好|привет|здравствуйте|добрый день)[\s!.,?！。]*$/,
       related: ["about", "seeking", "ai", "stack"],
     },
     {
       key: "thanks",
-      pattern: /^\s*((muito )?obrigad[oa]|valeu|thanks|thank you|thx|gracias|merci|grazie|谢谢|多谢|спасибо)[\s!.,?！。]*$/,
+      pattern: /^\s*((muito )?obrigad[oa]|valeu|thanks|thank you|thx|danke( schon| sehr)?|vielen dank|gracias|merci|grazie|谢谢|多谢|спасибо)[\s!.,?！。]*$/,
       contacts: true,
     },
     {
       key: "salary",
-      pattern: /salari|salary|sueldo|remunera|pretens|quanto (cobra|ganha)|how much|cuanto cobra|tarif|hourly|薪|工资|зарплат|оплат/,
+      pattern: /gehalt|vergutung|lohn|salari|salary|sueldo|remunera|pretens|quanto (cobra|ganha)|how much|cuanto cobra|tarif|hourly|薪|工资|зарплат|оплат/,
       contacts: true,
     },
     {
       key: "start",
-      pattern: /quando (ele )?(pode )?(comecar|iniciar)|data de inicio|start date|notice period|aviso previo|when can (he|you) start|cuando puede (empezar|comenzar)|preavis|quand .*commencer|quando (puo|potrebbe) iniziare|preavviso|何时.*入职|什么时候.*(开始|入职)|когда .*(начать|выйти)/,
+      pattern: /wann .*(anfangen|starten|beginnen)|eintrittsdatum|kundigungsfrist|quando (ele )?(pode )?(comecar|iniciar)|data de inicio|start date|notice period|aviso previo|when can (he|you) start|cuando puede (empezar|comenzar)|preavis|quand .*commencer|quando (puo|potrebbe) iniziare|preavviso|何时.*入职|什么时候.*(开始|入职)|когда .*(начать|выйти)/,
       contacts: true,
     },
     {
       key: "seeking",
-      pattern: /tipo de vaga|qual vaga|que vaga|quais vagas|vaga (que|de) (procura|busca)|procura (qual|que|vaga|emprego|trabalho|oportunidade|posi)|busca (vaga|vacante|empleo|trabajo|puesto)|tipo de (puesto|vacante|empleo|trabajo|cargo)|looking for|seeking|what (kind of |type of )?(roles?|jobs?|positions?)|open to (roles|positions|jobs)|quel (type de )?poste|cherche (un )?(poste|emploi)|che tipo di (lavoro|posizione|ruolo)|cerca (lavoro|posizion)|寻找|什么职位|求职|ищет|какую (работу|вакансию|должность)|ваканс/,
+      pattern: /(welche|was fur eine|art von) stelle|sucht er|stellensuche|jobsuche|tipo de vaga|qual vaga|que vaga|quais vagas|vaga (que|de) (procura|busca)|procura (qual|que|vaga|emprego|trabalho|oportunidade|posi)|busca (vaga|vacante|empleo|trabajo|puesto)|tipo de (puesto|vacante|empleo|trabajo|cargo)|looking for|seeking|what (kind of |type of )?(roles?|jobs?|positions?)|open to (roles|positions|jobs)|quel (type de )?poste|cherche (un )?(poste|emploi)|che tipo di (lavoro|posizione|ruolo)|cerca (lavoro|posizion)|寻找|什么职位|求职|ищет|какую (работу|вакансию|должность)|ваканс/,
       contacts: true,
       related: ["work", "differential", "stack"],
     },
     {
       key: "differential",
-      pattern: /diferencia|por que contrat|porque contrat|why (should (we|i) )?hire|why him|strength|ponto forte|pontos fortes|fortaleza|point fort|pourquoi (le |l.)?(embaucher|recruter)|punti di forza|perche (assumer|sceglier)|优势|为什么.*(选择|雇|招)|сильн\w* сторон|почему (он|его|нанять)|преимуществ/,
+      pattern: /warum .*(einstellen|ihn)|starken|vorteil|alleinstellung|diferencia|por que contrat|porque contrat|why (should (we|i) )?hire|why him|strength|ponto forte|pontos fortes|fortaleza|point fort|pourquoi (le |l.)?(embaucher|recruter)|punti di forza|perche (assumer|sceglier)|优势|为什么.*(选择|雇|招)|сильн\w* сторон|почему (он|его|нанять)|преимуществ/,
       related: ["ai", "soft", "seeking"],
     },
     {
       key: "work",
-      pattern: /remot|home ?office|presencial|hibrid|hybrid|on-?site|fuso|timezone|time zone|zona horaria|fuseau|fuso orario|\butc\b|\bgmt\b|onde mora|where .*(live|based|located)|donde vive|ou habite|dove vive|internaciona|internationa|exterior|abroad|estero|etranger|relocat|\bvisa\b|\bclt\b|\bpj\b|contrat|freelanc|autonom|disponib|availab|远程|时区|国际|合同|удален|пояс|междунар|контракт|релокац/,
+      pattern: /zeitzone|festanstellung|freiberuf|ausland|vertrag|remot|home ?office|presencial|hibrid|hybrid|on-?site|fuso|timezone|time zone|zona horaria|fuseau|fuso orario|\butc\b|\bgmt\b|onde mora|where .*(live|based|located)|donde vive|ou habite|dove vive|internaciona|internationa|exterior|abroad|estero|etranger|relocat|\bvisa\b|\bclt\b|\bpj\b|contrat|freelanc|autonom|disponib|availab|远程|时区|国际|合同|удален|пояс|междунар|контракт|релокац/,
       contacts: true,
       related: ["seeking", "years"],
     },
     {
       key: "education",
-      pattern: /graduac|faculdade|universidade|formacao|formacao academica|estudou|bacharel|pos-graduac|pos graduac|degree|graduat|universit|college|studied|study|education|postgrad|carrera|licenciatura|universidad|estudio|formacion|diplome|licence|etudes|formation|laurea|universita|studi|formazione|学历|大学|毕业院校|学位|教育背景|образовани|университет|учил|степен/,
-      unless: /tcc|capstone|thesis|projeto|project|proyecto|projet|progett|项目|проект/,
+      pattern: /ausbildung|studium|studiert|hochschule|abschluss|graduac|faculdade|universidade|formacao|formacao academica|estudou|bacharel|pos-graduac|pos graduac|degree|graduat|universit|college|studied|study|education|postgrad|carrera|licenciatura|universidad|estudio|formacion|diplome|licence|etudes|formation|laurea|universita|studi|formazione|学历|大学|毕业院校|学位|教育背景|образовани|университет|учил|степен/,
+      unless: /tcc|capstone|thesis|abschlussarbeit|projekt|projeto|project|proyecto|projet|progett|项目|проект/,
       target: ".education-list",
       related: ["ai", "years", "stack"],
     },
     {
       key: "years",
-      pattern: /quantos anos|anos de experiencia|how many years|years of experience|how long|cuantos anos|combien d.?annees|annees d.?experience|quanti anni|anni di esperienza|多少年|几年|工作年限|сколько лет|лет опыта|опыт в годах/,
+      pattern: /wie viele jahre|jahre (berufs)?erfahrung|berufsjahre|quantos anos|anos de experiencia|how many years|years of experience|how long|cuantos anos|combien d.?annees|annees d.?experience|quanti anni|anni di esperienza|多少年|几年|工作年限|сколько лет|лет опыта|опыт в годах/,
       target: "#experiencia",
       related: ["current", "stack", "ai"],
     },
     {
       key: "current",
-      pattern: /trabalha (hoje|atualmente|agora)|(onde|aonde) (ele )?trabalha (hoje|atualmente|agora)|emprego atual|empresa atual|cargo atual|current(ly)? (job|company|role|position|employer)|where does he (currently )?work|works? (now|currently)|trabajo actual|empresa actual|donde trabaja (ahora|actualmente)|poste actuel|ou travaille-t-il|lavoro attuale|dove lavora (ora|adesso|attualmente)|目前.*(工作|公司)|现在.*工作|где (он )?(сейчас )?работает|текущ\w* (работ|компан|должност)/,
+      pattern: /wo arbeitet er|arbeitet er (jetzt|derzeit|aktuell)|aktuelle[rns]? (arbeitgeber|stelle|firma|position)|trabalha (hoje|atualmente|agora)|(onde|aonde) (ele )?trabalha (hoje|atualmente|agora)|emprego atual|empresa atual|cargo atual|current(ly)? (job|company|role|position|employer)|where does he (currently )?work|works? (now|currently)|trabajo actual|empresa actual|donde trabaja (ahora|actualmente)|poste actuel|ou travaille-t-il|lavoro attuale|dove lavora (ora|adesso|attualmente)|目前.*(工作|公司)|现在.*工作|где (он )?(сейчас )?работает|текущ\w* (работ|компан|должност)/,
       target: ".job",
       related: ["years", "stack"],
     },
     {
       key: "languages",
-      pattern: /idioma|lingua|language|langue|lengua|ingles|english|espanhol|spanish|espanol|frances|anglais|inglese|\bfala\b|speak|habla|parle|parla|语言|英语|язык|английск/,
-      unless: /program|codigo|code|codice|编程|программ|tecnolog|technolog/,
+      pattern: /sprache|spricht|englisch|spanisch|portugiesisch|idioma|lingua|language|langue|lengua|ingles|english|espanhol|spanish|espanol|frances|anglais|inglese|\bfala\b|speak|habla|parle|parla|语言|英语|язык|английск/,
+      unless: /programmier|program|codigo|code|codice|编程|программ|tecnolog|technolog/,
       target: ".education-extra",
     },
     {
       key: "soft",
-      pattern: /soft ?skills?|lideranca|leadership|liderazgo|trabalho em equipe|teamwork|trabajo en equipo|comunicac|communication|comportament|habilidades blandas|savoir-etre|competenze trasversali|软技能|领导力|沟通|гибк\w* навык|лидерств|коммуникац/,
+      pattern: /fuhrung|teamarbeit|kommunikation|soft ?skills?|lideranca|leadership|liderazgo|trabalho em equipe|teamwork|trabajo en equipo|comunicac|communication|comportament|habilidades blandas|savoir-etre|competenze trasversali|软技能|领导力|沟通|гибк\w* навык|лидерств|коммуникац/,
       related: ["differential", "years"],
     },
     {
       key: "ai",
-      pattern: /(experien|esperienz|trabalha|works?|sabe|know|conhec|conoce|connait|conosce)\w*\s.{0,20}\b(ia|ai|inteligencia artificial|artificial intelligence|machine learning|nlp|llm)\b|опыт.{0,8}(ии|ai|машинн)|ai.{0,6}经验|人工智能.{0,4}经验/,
+      pattern: /(experien|erfahrung|esperienz|trabalha|arbeitet|works?|sabe|kennt|know|conhec|conoce|connait|conosce)\w*\s.{0,20}\b(ia|ai|ki|kunstliche intelligenz|inteligencia artificial|artificial intelligence|machine learning|nlp|llm)\b|опыт.{0,8}(ии|ai|машинн)|ai.{0,6}经验|人工智能.{0,4}经验/,
       target: ".project-card",
       related: ["differential", "stack", "seeking"],
     },
     {
       key: "mobile",
-      pattern: /mobile|celular|aplicativ|\bapps?\b|android|\bios\b|movil|cellulare|мобил|移动|手机/,
+      pattern: /mobil|handy|mobile|celular|aplicativ|\bapps?\b|android|\bios\b|movil|cellulare|мобил|移动|手机/,
       target: "#habilidades",
       related: ["stack", "ai"],
     },
     {
       key: "devops",
-      pattern: /devops|infraestrutura|infrastructure|infraestructura|infrastruttura|\bcloud\b|nuvem|\bnube\b|nuage|nuvola|облак|云|девопс/,
+      pattern: /infrastruktur|devops|infraestrutura|infrastructure|infraestructura|infrastruttura|\bcloud\b|nuvem|\bnube\b|nuage|nuvola|облак|云|девопс/,
       target: ".job",
       related: ["stack", "current"],
     },
     {
       key: "databases",
-      pattern: /banco de dados|database|bases? de datos|base de donnees|banca dati|数据库|баз[аы] данных/,
+      pattern: /datenbank|banco de dados|database|bases? de datos|base de donnees|banca dati|数据库|баз[аы] данных/,
       target: "#habilidades",
       related: ["stack", "years"],
     },
     {
       key: "public",
-      pattern: /setor publico|governo|prefeitura|public sector|government|sector publico|gobierno|secteur public|gouvernement|settore pubblico|政府|госсектор|государств/,
+      pattern: /offentlich|behorde|stadtverwaltung|regierung|setor publico|governo|prefeitura|public sector|government|sector publico|gobierno|secteur public|gouvernement|settore pubblico|政府|госсектор|государств/,
       target: "#experiencia",
       related: ["years", "current"],
     },
     {
       key: "stack",
-      pattern: /principais (tecnologias|habilidades|competencias|skills|ferramentas)|\bstack\b|tecnologias (que )?(ele )?(usa|domina)|main (technolog|skills|stack)|core (skills|stack)|what technolog|which technolog|tecnologias principales|technologies principales|tecnologie principali|主要技术|技术栈|основн\w* (технолог|навык)|стек/,
+      pattern: /wichtigste[n]? technologie|welche technologien|principais (tecnologias|habilidades|competencias|skills|ferramentas)|\bstack\b|tecnologias (que )?(ele )?(usa|domina)|main (technolog|skills|stack)|core (skills|stack)|what technolog|which technolog|tecnologias principales|technologies principales|tecnologie principali|主要技术|技术栈|основн\w* (технолог|навык)|стек/,
       target: "#habilidades",
       related: ["ai", "years", "differential"],
     },
     {
       key: "about",
-      pattern: /quem e (voce|ele|o emanuel|emanuel)|(fale|conte|fala) (mais )?sobre (ele|voce|o emanuel|emanuel)|resumo (dele|profissional)|who is (he|emanuel)|tell me about (him|emanuel|yourself)|about (him|emanuel)|quien es|hablame (de|sobre) (el|emanuel)|qui est|parlez-moi (de lui|d.emanuel)|chi e|parlami (di lui|di emanuel)|他是谁|是谁|介绍一下|кто (он|такой)|расскажи о (нем|себе|emanuel)/,
+      pattern: /wer ist (er|emanuel)|erzahl.* uber (ihn|emanuel)|uber ihn|quem e (voce|ele|o emanuel|emanuel)|(fale|conte|fala) (mais )?sobre (ele|voce|o emanuel|emanuel)|resumo (dele|profissional)|who is (he|emanuel)|tell me about (him|emanuel|yourself)|about (him|emanuel)|quien es|hablame (de|sobre) (el|emanuel)|qui est|parlez-moi (de lui|d.emanuel)|chi e|parlami (di lui|di emanuel)|他是谁|是谁|介绍一下|кто (он|такой)|расскажи о (нем|себе|emanuel)/,
       target: "#sobre",
       related: ["seeking", "differential", "ai"],
     },
@@ -236,7 +237,7 @@
       const title = text(card.querySelector("h3"));
       // Projetos da categoria "IA / ML" também respondem a buscas por IA.
       // A marca do card (ex.: "01 / TCC · UFG") também é pesquisável.
-      const hidden = `${text(card.querySelector(".art-number"))} ${card.dataset.category.split(" ").includes("ia") ? "ia ai machine learning nlp ии 人工智能" : ""}`;
+      const hidden = `${text(card.querySelector(".art-number"))} ${card.dataset.category.split(" ").includes("ia") ? "ia ai ki machine learning nlp ии 人工智能" : ""}`;
       add({ section: projects, item: title, body: `${text(card.querySelector(".project-type"))} — ${text(card.querySelector(".muted"))}`, target: card, title, hidden });
     });
 
@@ -323,7 +324,7 @@
         mainTerms.add(stem(clean));
       }
     }
-    if (mainTerms.has("ai") || mainTerms.has("ии")) mainTerms.add("ia");
+    if (mainTerms.has("ai") || mainTerms.has("ki") || mainTerms.has("ии")) mainTerms.add("ia");
     const extraTerms = new Set();
     if (mainTerms.has("ia")) ["ai", "machine learning", "nlp"].forEach((term) => extraTerms.add(term));
     for (const [pattern, expansion] of synonyms) if (pattern.test(q)) expansion.forEach((term) => extraTerms.add(term));

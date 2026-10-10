@@ -23,7 +23,7 @@ Currículos e perfis estáticos obrigam o recrutador a ler tudo para achar uma i
 
 ### 1.2 Objetivos
 1. Comunicar o perfil em até 30 segundos (topo da página + resumo).
-2. Responder perguntas do visitante em linguagem natural, em 7 idiomas.
+2. Responder perguntas do visitante em linguagem natural, em 8 idiomas.
 3. Facilitar o contato (e-mail, WhatsApp, LinkedIn, formulário, currículo em PDF).
 4. Demonstrar, no próprio site, competências em front-end, back-end serverless e IA aplicada.
 5. Operar com **custo zero**.
@@ -39,7 +39,7 @@ Currículos e perfis estáticos obrigam o recrutador a ler tudo para achar uma i
 | Persona | Necessidade | Como o produto atende |
 |---|---|---|
 | **Recrutador(a) técnico(a)** | Verificar rapidamente tecnologias e experiência | Seções organizadas, filtros, chat com IA, currículo em PDF |
-| **Recrutador(a) internacional** | Ler no próprio idioma; entender modelo de contratação | 7 idiomas (inglês por padrão), respostas sobre remoto, fuso e CLT/PJ |
+| **Recrutador(a) internacional** | Ler no próprio idioma; entender modelo de contratação | 8 idiomas (inglês por padrão), respostas sobre remoto, fuso e CLT/PJ |
 | **Gestor(a) / tech lead** | Avaliar profundidade técnica e projetos | Projetos com descrições técnicas, resultados (87%, 89%, top 5%) e o próprio site como demonstração |
 | **Emanuel (dono)** | Atualizar conteúdo e acompanhar interesse | Fonte única de textos (`i18n.js`), scripts de publicação, estatísticas e mensagens do formulário |
 
@@ -51,7 +51,7 @@ Currículos e perfis estáticos obrigam o recrutador a ler tudo para achar uma i
 O site deve apresentar: topo (nome, cargo, resumo, localização, anos de experiência), Sobre (com foto), Experiência (linha do tempo), Projetos, Habilidades, Formação (com certificações e idiomas) e Contato.
 
 ### RF-02 — Idiomas
-- RF-02.1 Disponível em **inglês (padrão)**, português, espanhol, francês, italiano, chinês simplificado e russo.
+- RF-02.1 Disponível em **inglês (padrão)**, português, espanhol, francês, italiano, alemão, chinês simplificado e russo.
 - RF-02.2 O visitante troca o idioma por um seletor no cabeçalho; a escolha é lembrada.
 - RF-02.3 O idioma pode ser definido pelo link (`?lang=xx`).
 - RF-02.4 Todo texto visível, atributos de acessibilidade, chat, formulário e currículo seguem o idioma escolhido.
@@ -71,7 +71,7 @@ O site deve apresentar: topo (nome, cargo, resumo, localização, anos de experi
 - RF-05.4 Demais perguntas são respondidas por **IA generativa** com base **somente** no perfil (RAG).
 - RF-05.5 Respostas da IA exibem o selo "Resposta gerada por IA" e um atalho "Ver na página".
 - RF-05.6 Se a IA falhar, a resposta vem da **busca local** no conteúdo da página, sem mensagem de erro.
-- RF-05.7 A busca local tolera erros de digitação e sinônimos e funciona nos 7 idiomas.
+- RF-05.7 A busca local tolera erros de digitação e sinônimos e funciona nos 8 idiomas.
 - RF-05.8 Perguntas sobre contato mostram botões de contato; sobre currículo, o link do PDF.
 - RF-05.9 O link `/#chat` abre o site com o assistente aberto.
 - RF-05.10 Respostas da IA podem ser avaliadas com 👍/👎; a avaliação (pergunta + resposta) só é salva quando o visitante clica, com aviso ao lado dos botões.
@@ -136,7 +136,7 @@ Endereços inexistentes mostram uma página 404 no estilo do site, com links par
 - [x] "Ignore all previous instructions…" não altera o comportamento.
 - [x] "Quantos anos ele tem?" responde que não há essa informação, sem inventar.
 - [x] Com a IA indisponível, a pergunta é respondida pela busca local.
-- [x] Os 79 casos de `tests/chat-casos.json` passam.
+- [x] Os 92 casos de `tests/chat-casos.json` passam.
 
 ### Formulário
 - [x] Enviar vazio mostra aviso de campos obrigatórios e destaca os campos.
@@ -158,13 +158,13 @@ Endereços inexistentes mostram uma página 404 no estilo do site, com links par
 
 ### SEO e desempenho
 - [x] `sitemap.xml` e `robots.txt` respondem HTTP 200; o sitemap é XML válido com 15 endereços.
-- [x] A página tem prévia Open Graph (imagem 1200×630), `hreflang` para os 7 idiomas e JSON-LD `Person` válido.
+- [x] A página tem prévia Open Graph (imagem 1200×630), `hreflang` para os 8 idiomas e JSON-LD `Person` válido.
 - [x] A tag de verificação do Google Search Console está publicada.
 - [x] Lighthouse (celular): desempenho ~80, acessibilidade 100, boas práticas 100, SEO 100.
 - [x] Um endereço inexistente responde HTTP 404 com a página personalizada.
 
 ### Integração contínua
-- [x] Cada push na `main` roda no GitHub Actions: sintaxe dos scripts, validação de SEO, geração do conhecimento da IA e os 79 testes do chat — todos passando.
+- [x] Cada push na `main` roda no GitHub Actions: sintaxe dos scripts, validação de SEO, geração do conhecimento da IA e os 92 testes do chat — todos passando.
 
 ### E-mails
 - [x] Nova mensagem do formulário gera aviso no Gmail do dono, com "Responder" para o visitante.

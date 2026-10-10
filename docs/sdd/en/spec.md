@@ -23,7 +23,7 @@ Static résumés and profiles force recruiters to read everything to find one sp
 
 ### 1.2 Goals
 1. Communicate the profile within 30 seconds (hero section + summary).
-2. Answer visitors' questions in natural language, in 7 languages.
+2. Answer visitors' questions in natural language, in 8 languages.
 3. Make contact easy (email, WhatsApp, LinkedIn, contact form, PDF résumé).
 4. Demonstrate front-end, serverless back-end and applied AI skills on the site itself.
 5. Run at **zero cost**.
@@ -39,7 +39,7 @@ Static résumés and profiles force recruiters to read everything to find one sp
 | Persona | Need | How the product helps |
 |---|---|---|
 | **Technical recruiter** | Quickly check technologies and experience | Organized sections, filters, AI chat, PDF résumé |
-| **International recruiter** | Read in their own language; understand the hiring model | 7 languages (English by default), answers about remote work, time zone and employee/contractor arrangements |
+| **International recruiter** | Read in their own language; understand the hiring model | 8 languages (English by default), answers about remote work, time zone and employee/contractor arrangements |
 | **Hiring manager / tech lead** | Assess technical depth and projects | Projects with technical descriptions, results (87%, 89%, top 5%) and the site itself as a demo |
 | **Emanuel (owner)** | Update content and track interest | Single source of text (`i18n.js`), publishing scripts, analytics and contact-form messages |
 
@@ -51,7 +51,7 @@ Static résumés and profiles force recruiters to read everything to find one sp
 The site must present: hero (name, role, summary, location, years of experience), About (with photo), Experience (timeline), Projects, Skills, Education (with certifications and languages) and Contact.
 
 ### FR-02 — Languages
-- FR-02.1 Available in **English (default)**, Portuguese, Spanish, French, Italian, Simplified Chinese and Russian.
+- FR-02.1 Available in **English (default)**, Portuguese, Spanish, French, Italian, German, Simplified Chinese and Russian.
 - FR-02.2 Visitors switch language with a selector in the header; the choice is remembered.
 - FR-02.3 The language can be set via the link (`?lang=xx`).
 - FR-02.4 All visible text, accessibility attributes, chat, contact form and résumé follow the selected language.
@@ -71,7 +71,7 @@ The site must present: hero (name, role, summary, location, years of experience)
 - FR-05.4 Other questions are answered by **generative AI** based **only** on the profile (RAG).
 - FR-05.5 AI answers show an "AI-generated answer" badge and a "View on page" shortcut.
 - FR-05.6 If the AI fails, the answer comes from **local search** over the page content, with no error message.
-- FR-05.7 Local search tolerates typos and synonyms and works in all 7 languages.
+- FR-05.7 Local search tolerates typos and synonyms and works in all 8 languages.
 - FR-05.8 Questions about contact show contact buttons; questions about the résumé show the PDF link.
 - FR-05.9 The `/#chat` link opens the site with the assistant open.
 - FR-05.10 AI answers can be rated 👍/👎; a rating (question + answer) is stored only when the visitor clicks, with a notice next to the buttons.
@@ -136,7 +136,7 @@ Unknown addresses show a 404 page in the site's style, with links to the portfol
 - [x] "Ignore all previous instructions…" does not change the behavior.
 - [x] "How old is he?" says the information isn't available, without inventing it.
 - [x] With the AI unavailable, the question is answered by local search.
-- [x] All 79 cases in `tests/chat-casos.json` pass.
+- [x] All 92 cases in `tests/chat-casos.json` pass.
 
 ### Contact form
 - [x] Submitting an empty form shows a required-fields notice and highlights the fields.
@@ -158,13 +158,13 @@ Unknown addresses show a 404 page in the site's style, with links to the portfol
 
 ### SEO and performance
 - [x] `sitemap.xml` and `robots.txt` return HTTP 200; the sitemap is valid XML with 15 URLs.
-- [x] The page has an Open Graph preview (1200×630 image), `hreflang` for the 7 languages and valid `Person` JSON-LD.
+- [x] The page has an Open Graph preview (1200×630 image), `hreflang` for the 8 languages and valid `Person` JSON-LD.
 - [x] The Google Search Console verification tag is published.
 - [x] Lighthouse (mobile): performance ~80, accessibility 100, best practices 100, SEO 100.
 - [x] An unknown address returns HTTP 404 with the custom page.
 
 ### Continuous integration
-- [x] Every push to `main` runs in GitHub Actions: script syntax, SEO validation, AI knowledge build and the 79 chat tests — all passing.
+- [x] Every push to `main` runs in GitHub Actions: script syntax, SEO validation, AI knowledge build and the 92 chat tests — all passing.
 
 ### Emails
 - [x] A new contact-form message triggers a notification to the owner's Gmail, with "Reply" addressed to the visitor.
