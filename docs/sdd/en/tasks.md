@@ -54,6 +54,7 @@ Legend: ✅ done · ⏳ pending · 💡 idea
 ### Documentation
 - ✅ **T30** README and SDD documents (spec, plan, tasks) in Portuguese and English
 - ✅ **T38** Email notification for new messages (Resend, free) — FR-06.5 *(active once `RESEND_API_KEY` is set)*
+- ✅ **T36** 👍/👎 rating of AI answers stored in D1 + `ver-avaliacoes.sh` — NFR-08
 
 ---
 
@@ -66,7 +67,6 @@ Legend: ✅ done · ⏳ pending · 💡 idea
 | ⏳ **T33** | Impact numbers in the experience section (e.g. deployment time, % fewer bugs) | Data from Emanuel | FR-01 |
 | ⏳ **T34** | Social preview image (Open Graph) and per-language SEO metadata | — | NFR-02 |
 | ⏳ **T35** | Translation review by native speakers (priority: Chinese and Russian) | Reviewer | FR-02 |
-| ⏳ **T36** | 👍/👎 rating of AI answers (D1) to measure quality | — | NFR-08 |
 | ⏳ **T37** | Test the contact form's 3-per-minute limit in production | — | NFR-04 |
 
 ## Ideas

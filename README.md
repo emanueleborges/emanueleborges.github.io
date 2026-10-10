@@ -32,7 +32,7 @@ O projeto é um site estático, sem framework, com um backend *serverless* no Cl
 | **7 idiomas** | Inglês (padrão), português, espanhol, francês, italiano, chinês e russo. O visitante escolhe no cabeçalho; a escolha fica salva e pode vir no link (`?lang=pt`). |
 | **Seções** | Sobre (com foto), Experiência, Projetos (com filtros), Habilidades (45 tecnologias com ícones e filtros), Formação (com logos das instituições) e Contato. |
 | **Visual** | Tema escuro roxo + ciano, imagens de fundo em movimento (duotone), rede de partículas em Canvas, animações ao rolar e cabeçalho fixo com barra de progresso. Respeita a preferência "reduzir movimento". |
-| **Assistente (chat)** | Híbrido: **respostas prontas** locais para perguntas frequentes, **IA generativa com RAG** para o resto e **busca local** como reserva. Mais detalhes em [Arquitetura](#arquitetura). |
+| **Assistente (chat)** | Respostas da IA com avaliação 👍/👎. Híbrido: **respostas prontas** locais para perguntas frequentes, **IA generativa com RAG** para o resto e **busca local** como reserva. Mais detalhes em [Arquitetura](#arquitetura). |
 | **Currículo em PDF** | Um PDF por idioma, gerado da mesma fonte de traduções do site; o botão baixa o PDF do idioma atual. |
 | **Formulário de contato** | Mensagens salvas num banco D1, com proteção anti-robô invisível e **aviso por e-mail** a cada mensagem nova (Resend, gratuito). |
 | **Contatos diretos** | E-mail, WhatsApp, LinkedIn e GitHub. |
@@ -107,6 +107,7 @@ O conhecimento da IA é **gerado das próprias traduções do site** (`i18n.js`)
     ├── indexar-vectorize.mjs   # Gera embeddings e atualiza o índice Vectorize
     ├── migrations/             # Esquema do banco D1
     ├── ver-mensagens.sh        # Lista as mensagens do formulário
+    ├── ver-avaliacoes.sh       # Resumo das avaliações 👍/👎 do chat
     └── wrangler.jsonc          # Configuração (IA, Vectorize, D1, limites, origem)
 ```
 
@@ -174,6 +175,7 @@ Esse comando (1) gera o conhecimento a partir do `i18n.js`, (2) publica o Worker
 |---|---|
 | Mudar um texto do site | Edite `index.html` (português) e `i18n.js` (demais idiomas). Depois publique o Worker (`npm run deploy` em `worker/`) para a IA aprender. |
 | Atualizar os currículos em PDF | `./gerar-curriculos.sh` |
+| Ver as avaliações 👍/👎 do chat | `cd worker && ./ver-avaliacoes.sh` (resumo + últimas respostas com 👎) |
 | Ler as mensagens do formulário | `cd worker && ./ver-mensagens.sh` (ou `./ver-mensagens.sh 50`) — ou no painel: D1 → `portfolio-contact` → Console |
 | Ver uso da IA e do cache | Painel do Cloudflare → **AI → AI Gateway → default** |
 | Ver visitas e eventos | https://emanueleborges.goatcounter.com |
@@ -198,7 +200,7 @@ Esse comando (1) gera o conhecimento a partir do `i18n.js`, (2) publica o Worker
 - **Campo-armadilha** no formulário: envios de robôs são descartados sem salvar.
 - **IA restrita ao perfil:** instruções para responder só sobre o perfil profissional, não inventar dados e ignorar tentativas de mudar as regras.
 - **Sem segredos no código:** a chave secreta do Turnstile fica como *secret* no Cloudflare; a chave pública (site key) é pública por natureza.
-- **LGPD:** o formulário guarda apenas nome, e-mail, mensagem, idioma e data (o IP não é salvo); as estatísticas não usam cookies; o chat avisa quando a pergunta é enviada à IA.
+- **LGPD:** o formulário guarda apenas nome, e-mail, mensagem, idioma e data (o IP não é salvo); as estatísticas não usam cookies; o chat avisa quando a pergunta é enviada à IA; pergunta e resposta só são salvas se o visitante avaliar (👍/👎), com aviso ao lado dos botões.
 
 ---
 

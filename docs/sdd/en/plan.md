@@ -115,6 +115,15 @@ question
 
 **Flow:** origin → rate limit (3/min/IP) → honeypot filled ⇒ `200` without saving → validation → Turnstile → `INSERT` into D1 → email notification via **Resend** in the background (`ctx.waitUntil`), with `reply_to` = the visitor's email.
 
+#### `POST /feedback` — AI answer rating
+**Request**
+```json
+{ "rating": 1, "question": "1–500", "answer": "1–3000", "lang": "…", "turnstileToken": "string" }
+```
+`rating`: `1` (👍) or `-1` (👎). **200 response:** `{ "ok": true }` · **Errors:** `400 invalid_fields` · `403` · `429 rate_limited` (20/min/IP) · `503 unavailable`
+
+Stored only when the visitor clicks; the chat panel notes that the question and answer will be saved.
+
 ### 3.2 Configuration (`wrangler.jsonc`)
 
 | Binding | Resource |
@@ -124,6 +133,7 @@ question
 | `DB` | D1 `portfolio-contact` |
 | `CHAT_LIMITER` | 10 req / 60 s |
 | `CONTACT_LIMITER` | 3 req / 60 s |
+| `FEEDBACK_LIMITER` | 20 req / 60 s |
 | `ALLOWED_ORIGIN` | `https://emanueleborges.github.io` |
 | `TURNSTILE_SECRET` | secret (outside the repository) |
 | `RESEND_API_KEY` | secret — Resend key (free plan) |
@@ -157,6 +167,18 @@ Answer **only** from the provided profile · if the information isn't there, say
 | `read` | INTEGER | 0/1 (reserved) |
 
 Index: `idx_messages_created_at`. Migration: `worker/migrations/0001_criar_mensagens.sql`.
+
+### D1 — `feedback`
+| Column | Type | Notes |
+|---|---|---|
+| `id` | INTEGER PK AUTOINCREMENT | |
+| `created_at` | TEXT | UTC |
+| `rating` | INTEGER | `1` or `-1` |
+| `lang` | TEXT | site language |
+| `question` | TEXT | ≤ 500 |
+| `answer` | TEXT | ≤ 3000 |
+
+Migration: `worker/migrations/0002_criar_avaliacoes.sql`.
 
 ### Vectorize — `portfolio-profile`
 One 1024-dimension vector per excerpt; stable `id` (e.g. `job1`, `p5`, `edu4`); metadata `{ title, text }`.

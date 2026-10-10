@@ -54,6 +54,7 @@ Legenda: ✅ concluída · ⏳ pendente · 💡 ideia
 ### Documentação
 - ✅ **T30** README e documentos SDD (spec, plan, tasks) em português e inglês
 - ✅ **T38** Aviso de nova mensagem por e-mail (Resend, gratuito) — RF-06.5 *(ativo após cadastrar `RESEND_API_KEY`)*
+- ✅ **T36** Avaliação 👍/👎 das respostas da IA salva no D1 + `ver-avaliacoes.sh` — RNF-08
 
 ---
 
@@ -66,7 +67,6 @@ Legenda: ✅ concluída · ⏳ pendente · 💡 ideia
 | ⏳ **T33** | Números de impacto nas experiências (ex.: tempo de deploy, % de bugs) | Dados do Emanuel | RF-01 |
 | ⏳ **T34** | Imagem de prévia para compartilhamento (Open Graph) e metadados de SEO por idioma | — | RNF-02 |
 | ⏳ **T35** | Revisão das traduções por falantes nativos (prioridade: chinês e russo) | Revisor | RF-02 |
-| ⏳ **T36** | Avaliação 👍/👎 das respostas da IA (D1) para medir qualidade | — | RNF-08 |
 | ⏳ **T37** | Testar em produção o limite de 3 mensagens por minuto do formulário | — | RNF-04 |
 
 ## Ideias

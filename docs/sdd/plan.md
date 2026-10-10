@@ -115,6 +115,15 @@ pergunta
 
 **Fluxo:** origem → limite (3/min/IP) → campo-armadilha preenchido ⇒ `200` sem salvar → validação → Turnstile → `INSERT` no D1 → aviso por e-mail via **Resend** em segundo plano (`ctx.waitUntil`), com `reply_to` = e-mail do visitante.
 
+#### `POST /feedback` — avaliação da resposta da IA
+**Requisição**
+```json
+{ "rating": 1, "question": "1–500", "answer": "1–3000", "lang": "…", "turnstileToken": "string" }
+```
+`rating`: `1` (👍) ou `-1` (👎). **Resposta 200:** `{ "ok": true }` · **Erros:** `400 invalid_fields` · `403` · `429 rate_limited` (20/min/IP) · `503 unavailable`
+
+Gravado só quando o visitante clica; o painel do chat avisa que a pergunta e a resposta serão salvas.
+
 ### 3.2 Configuração (`wrangler.jsonc`)
 
 | Binding | Recurso |
@@ -124,6 +133,7 @@ pergunta
 | `DB` | D1 `portfolio-contact` |
 | `CHAT_LIMITER` | 10 req / 60 s |
 | `CONTACT_LIMITER` | 3 req / 60 s |
+| `FEEDBACK_LIMITER` | 20 req / 60 s |
 | `ALLOWED_ORIGIN` | `https://emanueleborges.github.io` |
 | `TURNSTILE_SECRET` | *secret* (fora do repositório) |
 | `RESEND_API_KEY` | *secret* — chave do Resend (plano gratuito) |
@@ -157,6 +167,18 @@ Responder **só** com base no perfil fornecido · se a informação não existir
 | `read` | INTEGER | 0/1 (reservado) |
 
 Índice: `idx_messages_created_at`. Migração: `worker/migrations/0001_criar_mensagens.sql`.
+
+### D1 — `feedback`
+| Coluna | Tipo | Observação |
+|---|---|---|
+| `id` | INTEGER PK AUTOINCREMENT | |
+| `created_at` | TEXT | UTC |
+| `rating` | INTEGER | `1` ou `-1` |
+| `lang` | TEXT | idioma do site |
+| `question` | TEXT | ≤ 500 |
+| `answer` | TEXT | ≤ 3000 |
+
+Migração: `worker/migrations/0002_criar_avaliacoes.sql`.
 
 ### Vectorize — `portfolio-profile`
 Vetor de 1024 dimensões por trecho; `id` estável (ex.: `job1`, `p5`, `edu4`); metadados `{ title, text }`.
