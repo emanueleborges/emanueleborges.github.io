@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="dot" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#9b70ff"/>
+      <stop offset="1" stop-color="#22d3ee"/>
+    </linearGradient>
+    <linearGradient id="edge" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#a57dff"/>
+      <stop offset="1" stop-color="#3fb8f0"/>
+    </linearGradient>
+  </defs>
+  <rect x="2" y="2" width="60" height="60" rx="15" fill="#100c1f" stroke="url(#edge)" stroke-width="2.5"/>
+  <g fill="#f9f7ff">
+    <rect x="15" y="15" width="8" height="34" rx="2"/>
+    <rect x="15" y="15" width="25" height="7.5" rx="2"/>
+    <rect x="15" y="28.25" width="21" height="7.5" rx="2"/>
+    <rect x="15" y="41.5" width="25" height="7.5" rx="2"/>
+  </g>
+  <circle cx="48.5" cy="45.25" r="4.75" fill="url(#dot)"/>
+</svg>
