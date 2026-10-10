@@ -113,7 +113,7 @@ question
 **200 response:** `{ "ok": true }`
 **Errors:** `400 invalid_fields` · `403 forbidden_origin` · `403 turnstile_failed` · `429 rate_limited` · `503 unavailable`
 
-**Flow:** origin → rate limit (3/min/IP) → honeypot filled ⇒ `200` without saving → validation → Turnstile → `INSERT` into D1 → email notification via **Resend** in the background (`ctx.waitUntil`), with `reply_to` = the visitor's email.
+**Flow:** origin → rate limit (3/min/IP) → honeypot filled ⇒ `200` without saving → validation → Turnstile → `INSERT` into D1 → email notification via **Resend** in the background (`ctx.waitUntil`), with `reply_to` = the visitor's email → **confirmation to the visitor** via Google Apps Script (from Emanuel's Gmail), in the language detected from the message text (or the site language when unsure), without echoing the text, first name only and at most 1 per email address every 24 h.
 
 #### `POST /feedback` — AI answer rating
 **Request**

@@ -80,6 +80,7 @@ The site must present: hero (name, role, summary, location, years of experience)
 - FR-06.3 Valid messages are stored; the visitor sees a confirmation ("Message sent!").
 - FR-06.4 The owner reads messages with a command or in the Cloudflare dashboard.
 - FR-06.5 For each new message, the owner receives an email notification, with "Reply" addressed to the visitor.
+- FR-06.6 The visitor receives an automatic confirmation in the language of the message.
 
 ### FR-07 — Direct contacts
 Email, WhatsApp, LinkedIn and GitHub visible in the contact section and in the assistant.

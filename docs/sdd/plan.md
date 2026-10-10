@@ -113,7 +113,7 @@ pergunta
 **Resposta 200:** `{ "ok": true }`
 **Erros:** `400 invalid_fields` · `403 forbidden_origin` · `403 turnstile_failed` · `429 rate_limited` · `503 unavailable`
 
-**Fluxo:** origem → limite (3/min/IP) → campo-armadilha preenchido ⇒ `200` sem salvar → validação → Turnstile → `INSERT` no D1 → aviso por e-mail via **Resend** em segundo plano (`ctx.waitUntil`), com `reply_to` = e-mail do visitante.
+**Fluxo:** origem → limite (3/min/IP) → campo-armadilha preenchido ⇒ `200` sem salvar → validação → Turnstile → `INSERT` no D1 → aviso por e-mail via **Resend** em segundo plano (`ctx.waitUntil`), com `reply_to` = e-mail do visitante → **confirmação ao visitante** via Google Apps Script (do Gmail do Emanuel), no idioma detectado no texto da mensagem (ou no do site, sem confiança), sem repetir o texto, só com o primeiro nome e no máximo 1 por e-mail a cada 24 h.
 
 #### `POST /feedback` — avaliação da resposta da IA
 **Requisição**
