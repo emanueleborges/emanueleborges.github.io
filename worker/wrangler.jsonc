@@ -41,6 +41,12 @@
       "name": "FEEDBACK_LIMITER",
       "namespace_id": "1003",
       "simple": { "limit": 20, "period": 60 }
+    },
+    // Até 30 consultas de preços (demo do LSTM) por minuto por visitante (IP).
+    {
+      "name": "PRICES_LIMITER",
+      "namespace_id": "1004",
+      "simple": { "limit": 30, "period": 60 }
     }
   ],
   // Resumo semanal por e-mail: toda segunda às 12:00 UTC (08:00 em Manaus).

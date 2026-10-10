@@ -247,8 +247,11 @@ This (1) builds the knowledge from `i18n.js`, (2) deploys the Worker and (3) upd
 
 - **CORS:** the Worker only accepts requests from `https://emanueleborges.github.io`.
 - **Turnstile:** every AI question, form submission and rating requires a valid bot-protection token.
-- **Prices route (`GET /prices`):** read-only; only accepts the site's origin and the demo's 3 stocks, with a 1 h cache.
-- **Per-IP limits:** 10 questions/min (chat), 3 messages/min (form), 20 ratings/min.
+- **Prices route (`GET /prices`):** read-only; only accepts the site's origin and the demo's 3 stocks, with a per-IP limit and a 1 h cache.
+- **External script integrity (SRI):** the face demo's face-api.js has an `integrity` (SHA-384) attribute; if the CDN file is altered, the browser won't run it.
+- **HTTPS enforced** with HSTS (GitHub Pages).
+- **Accounts:** the most important protection is two-factor authentication (2FA) on GitHub, Cloudflare, Google and Resend.
+- **Per-IP limits:** 10 questions/min (chat), 3 messages/min (form), 20 ratings/min, 30 price lookups/min. Cloudflare's limiter is permissive (counters lag slightly): it stops high-volume abuse, not an exact request count.
 - **Validation:** question ≤ 500 characters; name 2–100, valid email ≤ 200, message 5–2,000.
 - **Honeypot** field in the form: bot submissions are dropped without being saved.
 - **AI restricted to the profile:** instructions to answer only about the professional profile, never invent facts and ignore attempts to change the rules.

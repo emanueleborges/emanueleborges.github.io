@@ -341,10 +341,13 @@ async function sendWeeklySummary(env) {
 }
 
 // Fechamentos ajustados do último ano para a demo do LSTM (demos/lstm), via Yahoo Finance.
-// Só as ações da demo; resposta guardada por 1 hora no navegador e na borda do Cloudflare.
+// Só as ações da demo; até 30 pedidos por minuto por IP; resposta guardada por 1 hora no navegador e na borda do Cloudflare.
 const PRICE_SYMBOLS = new Set(["PETR4.SA", "VALE3.SA", "AAPL"]);
 
-async function handlePrices(request, origin) {
+async function handlePrices(request, ip, env, origin) {
+  const { success } = await env.PRICES_LIMITER.limit({ key: ip });
+  if (!success) return json({ error: "rate_limited" }, 429, origin);
+
   const symbol = new URL(request.url).searchParams.get("symbol");
   if (!PRICE_SYMBOLS.has(symbol)) return json({ error: "invalid_symbol" }, 400, origin);
   try {
@@ -382,7 +385,7 @@ export default {
     if (request.method === "OPTIONS") return new Response(null, { status: 204, headers: corsHeaders(origin) });
     if (request.method === "GET" && new URL(request.url).pathname === "/prices") {
       if (request.headers.get("Origin") !== origin) return json({ error: "forbidden_origin" }, 403, origin);
-      return handlePrices(request, origin);
+      return handlePrices(request, request.headers.get("CF-Connecting-IP") ?? "unknown", env, origin);
     }
     if (request.method !== "POST") return json({ error: "method_not_allowed" }, 405, origin);
     if (request.headers.get("Origin") !== origin) return json({ error: "forbidden_origin" }, 403, origin);

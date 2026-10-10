@@ -177,9 +177,9 @@ Gravado só quando o visitante clica; o painel do chat avisa que a pergunta e a 
 ```json
 { "symbol": "PETR4.SA", "dates": ["2026-10-09", "…"], "close": [56.0, "…"] }
 ```
-**Erros:** `400 invalid_symbol` · `403 forbidden_origin` · `502 upstream`
+**Erros:** `400 invalid_symbol` · `403 forbidden_origin` · `429 rate_limited` · `502 upstream`
 
-Só leitura e sem Turnstile; aceita apenas a origem do site e `PETR4.SA`, `VALE3.SA`, `AAPL`. Busca 1 ano de fechamentos ajustados no Yahoo Finance (`v8/finance/chart`), converte as datas para o fuso da bolsa e responde com `Cache-Control: max-age=3600`.
+Só leitura e sem Turnstile; limite de 30/min por IP; aceita apenas a origem do site e `PETR4.SA`, `VALE3.SA`, `AAPL`. Busca 1 ano de fechamentos ajustados no Yahoo Finance (`v8/finance/chart`), converte as datas para o fuso da bolsa e responde com `Cache-Control: max-age=3600`.
 
 #### Cron — resumo semanal (`0 12 * * 1`, segunda 12:00 UTC)
 Consulta no D1 as mensagens e avaliações dos últimos 7 dias, testa a saúde (geração com Qwen3, embedding BGE-M3, consulta no Vectorize e `SELECT 1` no D1), busca visitas no GoatCounter (se houver `GOATCOUNTER_TOKEN`) e envia um e-mail pelo Resend para `NOTIFY_EMAIL`. O assunto ganha ⚠️ se algum serviço falhar.
@@ -194,6 +194,7 @@ Consulta no D1 as mensagens e avaliações dos últimos 7 dias, testa a saúde (
 | `CHAT_LIMITER` | 10 req / 60 s |
 | `CONTACT_LIMITER` | 3 req / 60 s |
 | `FEEDBACK_LIMITER` | 20 req / 60 s |
+| `PRICES_LIMITER` | 30 req / 60 s |
 | `ALLOWED_ORIGIN` | `https://emanueleborges.github.io` |
 | `TURNSTILE_SECRET` | *secret* (fora do repositório) |
 | `RESEND_API_KEY` | *secret* — chave do Resend (plano gratuito) |

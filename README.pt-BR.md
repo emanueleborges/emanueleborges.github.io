@@ -247,8 +247,11 @@ Esse comando (1) gera o conhecimento a partir do `i18n.js`, (2) publica o Worker
 
 - **CORS:** o Worker só aceita pedidos de `https://emanueleborges.github.io`.
 - **Turnstile:** toda pergunta à IA, envio do formulário e avaliação exigem um token anti-robô válido.
-- **Rota de preços (`GET /prices`):** só leitura, aceita apenas a origem do site e as 3 ações da demo, com cache de 1 h.
-- **Limites por IP:** 10 perguntas/min (chat), 3 mensagens/min (formulário), 20 avaliações/min.
+- **Rota de preços (`GET /prices`):** só leitura, aceita apenas a origem do site e as 3 ações da demo, com limite por IP e cache de 1 h.
+- **Integridade de scripts externos (SRI):** o face-api.js da demo facial tem `integrity` (SHA-384); se o arquivo do CDN for alterado, o navegador não o executa.
+- **HTTPS obrigatório** com HSTS (GitHub Pages).
+- **Contas:** a proteção mais importante é a verificação em duas etapas (2FA) no GitHub, Cloudflare, Google e Resend.
+- **Limites por IP:** 10 perguntas/min (chat), 3 mensagens/min (formulário), 20 avaliações/min, 30 consultas de preços/min. O limitador do Cloudflare é permissivo (contadores com pequeno atraso): segura abusos em volume, não um pedido exato.
 - **Validação:** pergunta ≤ 500 caracteres; nome 2–100, e-mail válido ≤ 200, mensagem 5–2.000.
 - **Campo-armadilha** no formulário: envios de robôs são descartados sem salvar.
 - **IA restrita ao perfil:** instruções para responder só sobre o perfil profissional, nunca inventar dados e ignorar tentativas de mudar as regras.

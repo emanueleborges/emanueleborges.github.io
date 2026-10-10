@@ -161,6 +161,8 @@ O site pode ser instalado como app (manifest e ícones) e, depois da primeira vi
 - [x] Pedido ao backend vindo de outra origem → `403 forbidden_origin`.
 - [x] Pedido sem token Turnstile ou com token falso → `403 turnstile_failed`.
 - [x] 11º pedido de chat no mesmo minuto → `429 rate_limited`.
+- [x] Rajada de consultas de preços → `429 rate_limited` (200 pedidos em 4 s: 43 bloqueados; o limitador é permissivo).
+- [x] Script da demo facial adulterado no CDN → o navegador recusa executar (SRI).
 
 ### Cache
 - [x] Após um commit, o HTML referencia `styles.css?v=<nova versão>`.
