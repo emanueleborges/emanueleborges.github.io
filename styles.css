@@ -31,7 +31,7 @@ button { font: inherit; }
 .brand-mark span { color: var(--purple); }
 .nav-links { display: flex; align-items: center; gap: 28px; font-size: 14px; color: #c5c0d1; }
 .nav-links a { transition: color .2s; }
-.nav-links a:hover, .contact-social a:hover { color: white; }
+.nav-links a:hover { color: white; }
 .nav-contact { border: 1px solid var(--line); border-radius: 999px; padding: 11px 16px; color: white; }
 .nav-contact span { margin-left: 8px; color: var(--purple); }
 .menu-toggle { display: none; order: 4; }
@@ -219,8 +219,19 @@ blockquote { margin: 32px 0 0; padding: 12px 0 12px 16px; border-left: 2px solid
 .form-status { min-height: 1.4em; margin: 12px 0 0; font-size: 13px; }
 .form-status.is-success { color: #5eead4; }
 .form-status.is-error { color: #fca5a5; }
-.contact-social { display: flex; justify-content: center; gap: 29px; margin-top: 39px; font-size: 12px; color: #b8b1c5; }
-.contact-social span { color: #a87cff; margin-left: 5px; }
+.contact-social { display: flex; flex-wrap: wrap; justify-content: center; gap: 16px; margin-top: 36px; }
+.social-card { display: flex; align-items: center; gap: 14px; min-width: 240px; padding: 14px 20px; border: 1px solid rgba(222,212,255,.18); border-radius: 16px; background: rgba(255,255,255,.04); color: var(--text); text-align: left; backdrop-filter: blur(8px); transition: transform .25s, border-color .25s, background .25s, box-shadow .25s; }
+.social-card svg { flex: none; width: 30px; height: 30px; }
+.social-github svg { color: #fff; }
+.social-linkedin svg { color: #0a66c2; background: #fff; border-radius: 5px; }
+.social-text { display: flex; flex-direction: column; gap: 2px; flex: 1; }
+.social-text strong { font-size: 15px; font-weight: 700; }
+.social-text small { color: var(--muted); font-family: var(--mono); font-size: 11px; }
+.social-arrow { color: #a87cff; font-size: 16px; transition: transform .25s, color .25s; }
+.social-card:hover, .social-card:focus-visible { transform: translateY(-3px); border-color: rgba(155,112,255,.6); background: rgba(155,112,255,.1); box-shadow: 0 12px 32px rgba(109,92,255,.25); }
+.social-linkedin:hover, .social-linkedin:focus-visible { border-color: rgba(10,102,194,.8); background: rgba(10,102,194,.14); box-shadow: 0 12px 32px rgba(10,102,194,.3); }
+.social-card:hover .social-arrow { transform: translate(3px, -3px); color: var(--cyan-soft); }
+@media (max-width: 560px) { .social-card { flex: 1 1 100%; min-width: 0; } }
 .footer { min-height: 79px; display: flex; align-items: center; justify-content: space-between; gap: 18px; }
 .footer-copy, .footer-updated, .back-top { color: #837d8e; font-size: 10px; letter-spacing: .06em; }
 .footer-updated { text-transform: uppercase; }
