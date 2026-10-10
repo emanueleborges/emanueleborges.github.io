@@ -817,6 +817,12 @@
 
   // Link direto para o assistente: https://emanueleborges.github.io/#chat
   if (location.hash === "#chat") setOpen(true);
+  // Botões que abrem o assistente na própria página (ex.: "Ver demo" no card do assistente).
+  document.addEventListener("click", (event) => {
+    if (!event.target.closest("[data-open-chat]")) return;
+    event.preventDefault();
+    setOpen(true);
+  });
 
   // Usado pelos testes automáticos (tests/): devolve a resposta em texto.
   window.portfolioChat = {

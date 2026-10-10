@@ -34,7 +34,7 @@ A framework-free static site with a serverless backend on Cloudflare for the AI 
 | Area | What it does |
 |---|---|
 | **8 languages** | English (default), Portuguese, Spanish, French, Italian, German, Chinese and Russian. Visitors pick one in the header; the choice is remembered and can come in the link (`?lang=pt`). |
-| **Sections** | About (with photo), Experience, Projects (with filters, a link to the code and language/stars/last update from the GitHub API), Skills (45 technologies with icons and filters), Education (with institution logos) and Contact. |
+| **Sections** | About (with photo), Experience, Projects (10 cards, 4 with a live demo; filters, a link to the code and language/stars/last update from the GitHub API), Skills (45 technologies with icons and filters), Education (with institution logos) and Contact. |
 | **Visuals** | Dark purple + cyan theme, moving duotone background images, Canvas particle network, scroll animations and a sticky header with reading progress. Respects "reduce motion". |
 | **AI assistant** | Hybrid: local **ready-made answers** for frequent questions, **generative AI with RAG** for everything else and **local search** as a fallback. AI answers can be rated 👍/👎. See [Architecture](#architecture). |
 | **PDF résumé** | One PDF per language, generated from the same text source as the site; the button downloads the PDF for the current language. |
@@ -45,6 +45,8 @@ A framework-free static site with a serverless backend on Cloudflare for the AI 
 | **Weekly summary** | Every Monday an email with the week's messages, chat ratings and a health check of the AI, vector index and database. |
 | **404 page** | Custom page in the site's style with links to the portfolio and the assistant. |
 | **AI demo: LSTM stock forecasting** | `/demos/lstm/` page (8 languages) where the FIAP project's LSTM runs **in the browser, in plain JavaScript** (weights exported from Keras, same output to ~1e-8). Recent prices come from the Worker (Yahoo Finance), with a saved copy if it fails; test metrics compared against a naive baseline. |
+| **AI demo: face recognition** | `/demos/face/` page with face-api.js (TensorFlow.js): detection, 128-number embeddings and recognition via webcam or photo. **Nothing leaves** the visitor's device. |
+| **AI demo: movie recommender** | `/demos/filmes/` page: TF-IDF + cosine in plain JavaScript over ~1,500 films (Wikidata CC0 + Wikipedia CC BY-SA summaries), by film or free description, showing the terms behind each recommendation. |
 | **Installable app (PWA)** | Can be installed on a phone or computer (own icon) and opens offline: the page and its files are saved by a *service worker*. |
 
 ---
@@ -102,7 +104,11 @@ The AI knowledge is **generated from the site's own translations** (`i18n.js`): 
 ├── index.html              # Single-page portfolio (SEO, Open Graph, JSON-LD)
 ├── 404.html                # Custom "page not found"
 ├── manifest.webmanifest · sw.js · icon-*.png  # Installable, offline app (PWA)
-├── demos/lstm/             # In-browser LSTM demo: page, lstm.js (inference), weights and data
+├── demos/                  # In-browser AI demos (shared demos.css/demos.js)
+│   ├── lstm/               # Stock forecasting: lstm.js (inference), weights and data
+│   ├── face/               # Face recognition with face-api.js
+│   └── filmes/             # Movie recommender: tfidf.js and filmes.json
+├── scripts/gerar-dados-filmes.py  # Builds demos/filmes/filmes.json (Wikidata + Wikipedia)
 ├── styles.css              # All styling (theme, layout, animations, chat, form)
 ├── i18n.js                 # Text in 8 languages (site, chat, form and résumé)
 ├── script.js               # Languages, menu, filters, animations, particles, analytics

@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title data-t="meta.title">Movie Recommender with TF-IDF — Emanuel Borges</title>
+    <meta name="description" data-t-content="meta.description" content="Content-based movie recommendations with TF-IDF and cosine similarity over 1,500 films, computed in your browser, with the terms that explain each match." />
+    <meta name="theme-color" content="#090811" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="../demos.css" />
+    <style>
+      .modes { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+      .field { display: flex; gap: 8px; }
+      .field input { flex: 1; min-width: 0; min-height: 44px; padding: 0 14px; border: 1px solid var(--line); border-radius: 12px; background: rgba(26,23,38,.75); color: var(--text); font: 500 14px Manrope, sans-serif; }
+      .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+      .chip { padding: 6px 12px; border: 1px solid var(--line); border-radius: 999px; background: rgba(26,23,38,.55); color: var(--text); font: 600 12px Manrope, sans-serif; cursor: pointer; }
+      .chip:hover { border-color: rgba(184,149,255,.5); }
+      .picked { margin-top: 22px; padding: 16px 18px; border-left: 3px solid var(--cyan); border-radius: 0 12px 12px 0; background: rgba(34, 211, 238, .06); }
+      .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px; margin-top: 16px; }
+      .movie { display: flex; flex-direction: column; gap: 6px; padding: 16px; border: 1px solid var(--line); border-radius: 12px; background: rgba(26,23,38,.45); }
+      .movie h4 { margin: 0; font-size: 16px; letter-spacing: -.02em; }
+      .movie h4 small { color: var(--muted); font-weight: 500; }
+      .meta { font-size: 12px; color: var(--muted); }
+      .score { display: flex; align-items: center; gap: 8px; font: 500 12px "DM Mono", monospace; color: #a5f3fc; }
+      .bar { flex: 1; height: 4px; border-radius: 4px; background: rgba(255,255,255,.08); overflow: hidden; }
+      .bar span { display: block; height: 100%; background: linear-gradient(90deg, #8e50ff, #22d3ee); }
+      .terms { font-size: 12px; color: var(--muted); }
+      .terms b { color: #c3a5ff; font-weight: 600; }
+      .movie p { margin: 0; font-size: 13px; color: var(--muted); }
+      .movie .actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: auto; padding-top: 6px; font-size: 13px; }
+      .linklike { padding: 0; border: 0; background: none; color: #c3a5ff; font: 700 13px Manrope, sans-serif; cursor: pointer; }
+      .movie .actions a { color: var(--muted); }
+      .credits { margin: 40px 0 56px; font-size: 12px; color: var(--muted); }
+      @media (max-width: 720px) { .modes { grid-template-columns: 1fr; } }
+    </style>
+    <script src="../demos.js" defer></script>
+    <script src="tfidf.js" defer></script>
+    <script src="filmes.js" defer></script>
+    <script data-goatcounter="https://emanueleborges.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+  </head>
+  <body>
+    <div class="glow glow-1" aria-hidden="true"></div>
+    <div class="glow glow-2" aria-hidden="true"></div>
+    <div class="shell">
+      <header>
+        <a class="brand" href="/"><img src="/logo.svg" alt="" /> Emanuel Borges</a>
+        <label><span class="visually-hidden" data-t="lang">Language</span>
+          <select data-lang>
+            <option value="en" lang="en">English</option>
+            <option value="pt" lang="pt-BR">Português</option>
+            <option value="es" lang="es">Español</option>
+            <option value="fr" lang="fr">Français</option>
+            <option value="it" lang="it">Italiano</option>
+            <option value="de" lang="de">Deutsch</option>
+            <option value="zh" lang="zh-CN">中文</option>
+            <option value="ru" lang="ru">Русский</option>
+          </select>
+        </label>
+      </header>
+
+      <main>
+        <p class="kicker" data-t="kicker"></p>
+        <h1 data-t="title"></h1>
+        <p class="lead" data-t="lead"></p>
+        <div class="links">
+          <a class="button" href="/#projetos" data-t="back"></a>
+          <a class="button" href="https://github.com/emanueleborges/challenge-movies" target="_blank" rel="noopener" data-t="code"></a>
+        </div>
+
+        <section class="panel">
+          <div class="modes">
+            <form data-pick-form>
+              <label><span data-t="pickLabel"></span>
+                <span class="field">
+                  <input list="titles" data-pick data-t-placeholder="pickPh" autocomplete="off" />
+                  <button class="button primary" type="submit" data-t="recommend"></button>
+                </span>
+              </label>
+              <datalist id="titles"></datalist>
+              <div class="chips" data-examples></div>
+            </form>
+            <form data-search-form>
+              <label><span data-t="searchLabel"></span>
+                <span class="field">
+                  <input data-search data-t-placeholder="searchPh" autocomplete="off" maxlength="200" />
+                  <button class="button primary" type="submit" data-t="search"></button>
+                </span>
+              </label>
+              <div class="chips" data-queries></div>
+            </form>
+          </div>
+          <p class="status" data-status aria-live="polite"></p>
+          <div data-picked></div>
+          <div class="grid" data-results aria-live="polite"></div>
+        </section>
+
+        <p class="note" data-t="how"></p>
+        <p class="credits" data-t="credits"></p>
+      </main>
+    </div>
+  </body>
+</html>

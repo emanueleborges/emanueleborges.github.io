@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title data-t="meta.title">Face Recognition in the Browser — Emanuel Borges</title>
+    <meta name="description" data-t-content="meta.description" content="Real-time face recognition with face-api.js: detection, 128-dimension embeddings and matching, entirely in your browser — the camera never leaves your device." />
+    <meta name="theme-color" content="#090811" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="../demos.css" />
+    <style>
+      .stage { position: relative; display: grid; place-items: center; min-height: 260px; margin-top: 18px; overflow: hidden; border: 1px dashed var(--line); border-radius: 12px; background: #0b0a14; }
+      .stage video, .stage img { display: block; max-width: 100%; max-height: 520px; }
+      .stage video { transform: scaleX(-1); }
+      .stage canvas { position: absolute; pointer-events: none; }
+      .stage .empty { padding: 24px; text-align: center; color: var(--muted); font-size: 14px; }
+      .toolbar { display: flex; flex-wrap: wrap; gap: 10px; }
+      .enroll { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
+      .enroll input { flex: 1 1 200px; min-height: 42px; padding: 0 14px; border: 1px solid var(--line); border-radius: 12px; background: rgba(26,23,38,.75); color: var(--text); font: 500 14px Manrope, sans-serif; }
+      .button:disabled { opacity: .45; cursor: not-allowed; }
+      label.button { cursor: pointer; }
+      label.button:focus-within { outline: 2px solid #b895ff; outline-offset: 2px; }
+      .people { display: flex; flex-wrap: wrap; gap: 8px; margin: 8px 0 0; padding: 0; list-style: none; }
+      .people li { display: inline-flex; align-items: center; gap: 8px; padding: 6px 8px 6px 12px; border: 1px solid var(--line); border-radius: 999px; font-size: 13px; }
+      .people button { width: 22px; height: 22px; border: 0; border-radius: 50%; background: rgba(255,255,255,.08); color: var(--text); cursor: pointer; }
+      .privacy { margin-top: 22px; padding: 12px 16px; border: 1px solid rgba(34, 211, 238, .3); border-radius: 12px; background: rgba(34, 211, 238, .06); font-size: 13px; color: #a5f3fc; }
+      .results { margin: 12px 0 0; font-size: 14px; }
+    </style>
+    <script src="../demos.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/@vladmandic/face-api@1.7.15/dist/face-api.js" defer></script>
+    <script src="face.js" defer></script>
+    <script data-goatcounter="https://emanueleborges.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+  </head>
+  <body>
+    <div class="glow glow-1" aria-hidden="true"></div>
+    <div class="glow glow-2" aria-hidden="true"></div>
+    <div class="shell">
+      <header>
+        <a class="brand" href="/"><img src="/logo.svg" alt="" /> Emanuel Borges</a>
+        <label><span class="visually-hidden" data-t="lang">Language</span>
+          <select data-lang>
+            <option value="en" lang="en">English</option>
+            <option value="pt" lang="pt-BR">Português</option>
+            <option value="es" lang="es">Español</option>
+            <option value="fr" lang="fr">Français</option>
+            <option value="it" lang="it">Italiano</option>
+            <option value="de" lang="de">Deutsch</option>
+            <option value="zh" lang="zh-CN">中文</option>
+            <option value="ru" lang="ru">Русский</option>
+          </select>
+        </label>
+      </header>
+
+      <main>
+        <p class="kicker" data-t="kicker"></p>
+        <h1 data-t="title"></h1>
+        <p class="lead" data-t="lead"></p>
+        <div class="links">
+          <a class="button" href="/#projetos" data-t="back"></a>
+          <a class="button" href="https://github.com/emanueleborges/face-recognition-poc" target="_blank" rel="noopener" data-t="code"></a>
+        </div>
+        <p class="privacy" data-t="privacy"></p>
+
+        <section class="panel">
+          <div class="toolbar">
+            <button class="button primary" type="button" data-camera disabled data-t="camOn"></button>
+            <label class="button" style="display:inline-flex">
+              <span data-t="upload"></span>
+              <input type="file" accept="image/*" class="visually-hidden" data-upload disabled />
+            </label>
+            <button class="button" type="button" data-sample disabled data-t="sample"></button>
+          </div>
+          <p class="status" data-status aria-live="polite"></p>
+          <div class="stage" data-stage><p class="empty" data-t="empty"></p></div>
+          <p class="results" data-results aria-live="polite"></p>
+
+          <form class="enroll" data-enroll>
+            <input type="text" maxlength="40" data-name data-t-placeholder="namePh" data-t-aria="namePh" autocomplete="off" />
+            <button class="button primary" type="submit" data-enroll-button disabled data-t="enroll"></button>
+          </form>
+          <h3 style="margin-top:20px" data-t="people"></h3>
+          <ul class="people" data-people></ul>
+        </section>
+
+        <p class="note" data-t="hint"></p>
+        <p class="note" data-t="how"></p>
+      </main>
+    </div>
+  </body>
+</html>

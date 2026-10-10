@@ -3,7 +3,6 @@
 
 const PRICES_API = "https://emanuel-portfolio-chat.emanuel-portfolio-chat.workers.dev/prices";
 const HISTORY_DAYS = 30;
-const htmlLang = { en: "en", pt: "pt-BR", es: "es", fr: "fr", it: "it", de: "de", zh: "zh-CN", ru: "ru" };
 
 const T = {
   en: {
@@ -264,38 +263,12 @@ const T = {
   },
 };
 
-let lang = "en";
 let data = null;
 const models = {};
 const prices = {};
 
-const t = (key, vars = {}) => (T[lang][key] ?? T.en[key]).replace(/\{(\w+)\}/g, (_, name) => vars[name] ?? "");
+const { t, fmtDate, fmtNum, fmtPct, track } = Demo;
 const $ = (selector) => document.querySelector(selector);
-const fmtDate = (iso) => new Intl.DateTimeFormat(htmlLang[lang], { day: "2-digit", month: "short", year: "numeric" }).format(new Date(`${iso}T12:00:00`));
-const fmtNum = (value) => new Intl.NumberFormat(htmlLang[lang], { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(value);
-const fmtPct = (value, sign = false) =>
-  new Intl.NumberFormat(htmlLang[lang], { style: "percent", minimumFractionDigits: 2, maximumFractionDigits: 2, signDisplay: sign ? "exceptZero" : "auto" }).format(value / 100);
-
-const track = (path, title) => window.goatcounter?.count?.({ path, title, event: true });
-
-function detectLang() {
-  const fromUrl = new URLSearchParams(location.search).get("lang");
-  if (T[fromUrl]) return fromUrl;
-  try {
-    const stored = localStorage.getItem("lang");
-    if (T[stored]) return stored;
-  } catch {
-    /* navegação privada */
-  }
-  return "en";
-}
-
-function applyTexts() {
-  document.documentElement.lang = htmlLang[lang];
-  document.querySelectorAll("[data-t]").forEach((el) => (el.innerHTML = t(el.dataset.t)));
-  document.querySelectorAll("[data-t-content]").forEach((el) => el.setAttribute("content", t(el.dataset.tContent)));
-  $("[data-lang]").value = lang;
-}
 
 /* ---------- Gráfico de linhas em SVG ---------- */
 
@@ -321,7 +294,7 @@ function drawChart(svg, series, label, tickFormat) {
     out += `<text x="${pad.l - 8}" y="${y(v) + 4}" text-anchor="end">${fmtNum(v)}</text>`;
   }
   const ticks = W < 600 ? 3 : 5;
-  const tick = (d) => new Intl.DateTimeFormat(htmlLang[lang], tickFormat).format(new Date(`${d}T12:00:00`));
+  const tick = (d) => new Intl.DateTimeFormat(Demo.locale(), tickFormat).format(new Date(`${d}T12:00:00`));
   for (let i = 0; i < ticks; i += 1) {
     const d = dates[Math.round((i * (dates.length - 1)) / (ticks - 1))];
     const anchor = i === 0 ? "start" : i === ticks - 1 ? "end" : "middle";
@@ -426,14 +399,12 @@ function renderTest() {
 }
 
 function render() {
-  applyTexts();
   renderTest();
   runForecast();
 }
 
 async function init() {
-  lang = detectLang();
-  applyTexts();
+  Demo.setup(T, render);
   $("[data-status]").textContent = t("loading");
   try {
     data = await (await fetch("dados.json")).json();
@@ -445,15 +416,6 @@ async function init() {
   const select = $("[data-symbol]");
   select.innerHTML = Object.entries(data).map(([symbol, info]) => `<option value="${symbol}">${info.name} (${symbol})</option>`).join("");
 
-  $("[data-lang]").addEventListener("change", (event) => {
-    lang = event.target.value;
-    try {
-      localStorage.setItem("lang", lang);
-    } catch {
-      /* navegação privada */
-    }
-    render();
-  });
   select.addEventListener("change", () => {
     renderTest();
     runForecast();

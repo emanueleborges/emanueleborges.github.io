@@ -73,6 +73,9 @@ Legend: ✅ done · ⏳ pending · 💡 idea
 - ✅ **T53** Installable, offline app (PWA): manifest, 192/512/maskable icons and a service worker — NFR-02
 - ✅ **T54** Lighthouse in GitHub Actions with minimum scores (accessibility 95, best practices 90, SEO 95) — NFR-02, NFR-06
 - ✅ **T55** AI demo `/demos/lstm/`: LSTM retrained without leakage, plain-JavaScript inference in the browser, naive-baseline comparison, 8 languages and a `GET /prices` Worker route — FR-01
+- ✅ **T56** AI demo `/demos/face/`: in-browser face recognition with face-api.js (webcam or photo, nothing leaves the device), 8 languages — FR-01
+- ✅ **T57** AI demo `/demos/filmes/`: TF-IDF + cosine recommender in plain JS over ~1,500 freely licensed films, with the terms behind each result — FR-01
+- ✅ **T58** Card 10: the portfolio assistant as a project (RAG with Workers AI and Vectorize), with a button that opens the chat — FR-01
 
 ---
 

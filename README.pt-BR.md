@@ -34,7 +34,7 @@ Site estático, sem framework, com um backend *serverless* no Cloudflare para o 
 | Área | O que faz |
 |---|---|
 | **8 idiomas** | Inglês (padrão), português, espanhol, francês, italiano, alemão, chinês e russo. O visitante escolhe no cabeçalho; a escolha fica salva e pode vir no link (`?lang=pt`). |
-| **Seções** | Sobre (com foto), Experiência, Projetos (com filtros, link para o código e linguagem/estrelas/última atualização vindos da API do GitHub), Habilidades (45 tecnologias com ícones e filtros), Formação (com logos das instituições) e Contato. |
+| **Seções** | Sobre (com foto), Experiência, Projetos (10 cards, 4 com demo ao vivo; filtros, link para o código e linguagem/estrelas/última atualização vindos da API do GitHub), Habilidades (45 tecnologias com ícones e filtros), Formação (com logos das instituições) e Contato. |
 | **Visual** | Tema escuro roxo + ciano, imagens de fundo em movimento (duotone), rede de partículas em Canvas, animações ao rolar e cabeçalho fixo com barra de progresso. Respeita "reduzir movimento". |
 | **Assistente com IA** | Híbrido: **respostas prontas** locais para perguntas frequentes, **IA generativa com RAG** para o resto e **busca local** como reserva. Respostas da IA podem ser avaliadas com 👍/👎. Veja [Arquitetura](#arquitetura). |
 | **Currículo em PDF** | Um PDF por idioma, gerado da mesma fonte de textos do site; o botão baixa o PDF do idioma atual. |
@@ -45,6 +45,8 @@ Site estático, sem framework, com um backend *serverless* no Cloudflare para o 
 | **Resumo semanal** | Toda segunda, um e-mail com as mensagens da semana, as avaliações do chat e um teste de saúde da IA, do índice vetorial e do banco. |
 | **Página 404** | Página personalizada no estilo do site, com links para o portfólio e o assistente. |
 | **Demo de IA: previsão de ações com LSTM** | Página `/demos/lstm/` (8 idiomas) onde o LSTM do projeto FIAP roda **no navegador, em JavaScript puro** (pesos exportados do Keras, mesma saída até ~1e-8). Preços recentes pelo Worker (Yahoo Finance), com cópia salva se ele falhar; métricas do teste comparadas com um baseline ingênuo. |
+| **Demo de IA: reconhecimento facial** | Página `/demos/face/` com face-api.js (TensorFlow.js): detecção, embeddings de 128 números e reconhecimento pela webcam ou por foto. **Nada sai do aparelho** do visitante. |
+| **Demo de IA: recomendação de filmes** | Página `/demos/filmes/`: TF-IDF + cosseno em JavaScript puro sobre ~1.500 filmes (Wikidata CC0 + resumos da Wikipédia CC BY-SA), por filme ou por descrição livre, mostrando os termos que explicam cada recomendação. |
 | **App instalável (PWA)** | Pode ser instalado no celular ou computador (ícone próprio) e abre sem internet: a página e os arquivos ficam salvos pelo *service worker*. |
 
 ---
@@ -102,7 +104,11 @@ O conhecimento da IA é **gerado das próprias traduções do site** (`i18n.js`)
 ├── index.html              # Página única do portfólio (SEO, Open Graph, JSON-LD)
 ├── 404.html                # "Página não encontrada" personalizada
 ├── manifest.webmanifest · sw.js · icon-*.png  # App instalável e offline (PWA)
-├── demos/lstm/             # Demo do LSTM no navegador: página, lstm.js (inferência), pesos e dados
+├── demos/                  # Demos de IA no navegador (demos.css/demos.js compartilhados)
+│   ├── lstm/               # Previsão de ações: lstm.js (inferência), pesos e dados
+│   ├── face/               # Reconhecimento facial com face-api.js
+│   └── filmes/             # Recomendação de filmes: tfidf.js e filmes.json
+├── scripts/gerar-dados-filmes.py  # Gera demos/filmes/filmes.json (Wikidata + Wikipédia)
 ├── styles.css              # Todo o visual (tema, layout, animações, chat, formulário)
 ├── i18n.js                 # Textos dos 8 idiomas (site, chat, formulário e currículo)
 ├── script.js               # Idiomas, menu, filtros, animações, partículas, estatísticas

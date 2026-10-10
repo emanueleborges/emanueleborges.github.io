@@ -73,6 +73,9 @@ Legenda: ✅ concluída · ⏳ pendente · 💡 ideia
 - ✅ **T53** App instalável e offline (PWA): manifest, ícones 192/512/maskable e *service worker* — RNF-02
 - ✅ **T54** Lighthouse no GitHub Actions com notas mínimas (acessibilidade 95, boas práticas 90, SEO 95) — RNF-02, RNF-06
 - ✅ **T55** Demo de IA `/demos/lstm/`: LSTM retreinado sem vazamento, inferência em JavaScript puro no navegador, comparação com baseline ingênuo, 8 idiomas e rota `GET /prices` no Worker — RF-01
+- ✅ **T56** Demo de IA `/demos/face/`: reconhecimento facial com face-api.js no navegador (webcam ou foto, nada sai do aparelho), 8 idiomas — RF-01
+- ✅ **T57** Demo de IA `/demos/filmes/`: recomendação TF-IDF + cosseno em JS puro sobre ~1.500 filmes de licença livre, com termos que explicam cada resultado — RF-01
+- ✅ **T58** Card 10: o assistente do portfólio como projeto (RAG com Workers AI e Vectorize), com botão que abre o chat — RF-01
 
 ---
 
