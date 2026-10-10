@@ -1,0 +1,40 @@
+# Roda a cada push e pull request: sintaxe dos scripts, SEO e os testes do chat.
+name: Testes
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  testes:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Sintaxe dos scripts JavaScript
+        run: |
+          for f in *.js worker/src/index.js worker/gerar-conhecimento.mjs worker/indexar-vectorize.mjs; do
+            node --check "$f"
+          done
+
+      - name: SEO (sitemap.xml e dados estruturados)
+        run: |
+          python3 -c "import xml.dom.minidom; xml.dom.minidom.parse('sitemap.xml'); print('sitemap.xml válido')"
+          python3 - <<'PY'
+          import json, re
+          html = open("index.html", encoding="utf-8").read()
+          data = json.loads(re.search(r'<script type="application/ld\+json">(.*?)</script>', html, re.S).group(1))
+          assert data["@type"] == "Person", data["@type"]
+          print("JSON-LD válido:", data["name"])
+          PY
+
+      - name: Conhecimento da IA é gerado sem erros
+        run: node worker/gerar-conhecimento.mjs
+
+      - name: Testes do assistente (chat)
+        run: ./tests/rodar-testes-chat.sh
