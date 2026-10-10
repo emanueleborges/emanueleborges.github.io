@@ -8,7 +8,7 @@ TMP=$(mktemp -d)
 trap 'rm -rf "$TMP"' EXIT
 cp -R index.html styles.css script.js i18n.js api.js chat.js contact.js emanuel-borges.jpg logos tests/runner.js "$TMP"/
 # Sem o contador de visitas nos testes; injeta o executor dos testes.
-sed -i '' -e '/goatcounter/d' -e 's#<script src="chat.js" defer></script>#&<script src="runner.js" defer></script>#' "$TMP/index.html"
+sed -i '' -e '/goatcounter/d' -e 's#<script src="chat.js[^"]*" defer></script>#&<script src="runner.js" defer></script>#' "$TMP/index.html"
 python3 -I - "$TMP" "$CHROME" tests/chat-casos.json <<'PY'
 import json, subprocess, sys, urllib.parse, re, html
 tmp, chrome, cases_file = sys.argv[1:4]
