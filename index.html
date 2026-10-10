@@ -19,12 +19,12 @@
       href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="styles.css?v=20261009222708" />
-    <script src="i18n.js?v=20261009222708" defer></script>
-    <script src="script.js?v=20261009222708" defer></script>
-    <script src="api.js?v=20261009222708" defer></script>
-    <script src="chat.js?v=20261009222708" defer></script>
-    <script src="contact.js?v=20261009222708" defer></script>
+    <link rel="stylesheet" href="styles.css?v=20261009222920" />
+    <script src="i18n.js?v=20261009222920" defer></script>
+    <script src="script.js?v=20261009222920" defer></script>
+    <script src="api.js?v=20261009222920" defer></script>
+    <script src="chat.js?v=20261009222920" defer></script>
+    <script src="contact.js?v=20261009222920" defer></script>
     <script data-goatcounter="https://emanueleborges.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
   </head>
   <body>
@@ -381,17 +381,26 @@
             <a href="https://www.linkedin.com/in/borgesemmanuell" target="_blank" rel="noopener">LinkedIn <span>↗</span></a>
           </div>
           <form class="contact-form" novalidate hidden>
-            <h3 data-i18n="form.title">Ou deixe uma mensagem</h3>
-            <div class="form-row">
-              <label><span data-i18n="form.name">Nome</span><input name="name" type="text" autocomplete="name" maxlength="100" required /></label>
-              <label><span data-i18n="form.email">E-mail</span><input name="email" type="email" autocomplete="email" maxlength="200" required /></label>
+            <div class="form-body">
+              <h3 data-i18n="form.title">Ou deixe uma mensagem</h3>
+              <div class="form-row">
+                <label><span><span data-i18n="form.name">Nome</span> <abbr class="form-required" data-i18n-title="form.required" title="obrigatório">*</abbr></span><input name="name" type="text" autocomplete="name" maxlength="100" required data-i18n-placeholder="form.namePh" placeholder="Seu nome" /></label>
+                <label><span><span data-i18n="form.email">E-mail</span> <abbr class="form-required" data-i18n-title="form.required" title="obrigatório">*</abbr></span><input name="email" type="email" autocomplete="email" inputmode="email" maxlength="200" required data-i18n-placeholder="form.emailPh" placeholder="voce@empresa.com" /></label>
+              </div>
+              <label><span><span data-i18n="form.message">Mensagem</span> <abbr class="form-required" data-i18n-title="form.required" title="obrigatório">*</abbr></span><textarea name="message" rows="5" maxlength="2000" required data-i18n-placeholder="form.messagePh" placeholder="Conte sobre a vaga, o projeto ou a sua dúvida…"></textarea></label>
+              <p class="form-counter" aria-live="polite"><span class="form-count">0</span> / 2000</p>
+              <!-- Campo-armadilha: escondido para pessoas; robôs costumam preenchê-lo. -->
+              <div class="form-trap" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden"><label>Website<input name="website" type="text" tabindex="-1" autocomplete="off" /></label></div>
+              <p class="form-privacy" data-i18n="form.privacy">Seus dados são usados apenas para o Emanuel responder ao seu contato.</p>
+              <button class="button button-primary" type="submit"><span class="form-spinner" aria-hidden="true"></span><span class="form-send" data-i18n="form.send">Enviar mensagem</span> <span class="form-arrow" aria-hidden="true">↗</span></button>
+              <p class="form-status" role="status" aria-live="polite"></p>
             </div>
-            <label><span data-i18n="form.message">Mensagem</span><textarea name="message" rows="5" maxlength="2000" required></textarea></label>
-            <!-- Campo-armadilha: escondido para pessoas; robôs costumam preenchê-lo. -->
-            <div class="form-trap" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden"><label>Website<input name="website" type="text" tabindex="-1" autocomplete="off" /></label></div>
-            <p class="form-privacy" data-i18n="form.privacy">Seus dados são usados apenas para o Emanuel responder ao seu contato.</p>
-            <button class="button button-primary" type="submit"><span class="form-send" data-i18n="form.send">Enviar mensagem</span> <span aria-hidden="true">↗</span></button>
-            <p class="form-status" role="status" aria-live="polite"></p>
+            <div class="form-success" hidden>
+              <span class="form-success-icon" aria-hidden="true">✓</span>
+              <h3 data-i18n="form.successTitle">Mensagem enviada!</h3>
+              <p data-i18n="form.success">Obrigado pelo contato! O Emanuel vai responder em breve no e-mail informado.</p>
+              <button class="button button-quiet form-again" type="button" data-i18n="form.again">Enviar outra mensagem</button>
+            </div>
           </form>
         </div>
       </section>

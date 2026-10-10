@@ -10,6 +10,27 @@
   const label = form.querySelector(".form-send");
   const fields = ["name", "email", "message"].map((name) => form.elements[name]);
   const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+  const body = form.querySelector(".form-body");
+  const success = form.querySelector(".form-success");
+  const counter = form.querySelector(".form-counter");
+  const count = form.querySelector(".form-count");
+
+  // Contador de caracteres da mensagem (amarelo perto do limite).
+  const updateCounter = () => {
+    const length = form.elements.message.value.length;
+    count.textContent = String(length);
+    counter.classList.toggle("is-near", length > 1800);
+  };
+  form.elements.message.addEventListener("input", updateCounter);
+
+  // Corrige o destaque de erro assim que o campo é editado.
+  fields.forEach((field) => field.addEventListener("input", () => field.removeAttribute("aria-invalid")));
+
+  form.querySelector(".form-again").addEventListener("click", () => {
+    success.hidden = true;
+    body.hidden = false;
+    fields[0].focus();
+  });
 
   let lastStatus = null;
   const setStatus = (key, kind) => {
@@ -37,6 +58,7 @@
     }
 
     button.disabled = true;
+    button.setAttribute("aria-busy", "true");
     label.textContent = t("form.sending");
     setStatus("", "");
     const { ok, status: code } = await window.PortfolioApi.post("/contact", {
@@ -47,12 +69,17 @@
       website: form.elements.website.value,
     });
     button.disabled = false;
+    button.removeAttribute("aria-busy");
     label.textContent = t("form.send");
 
     if (ok) {
       form.reset();
+      updateCounter();
       fields.forEach((field) => field.removeAttribute("aria-invalid"));
-      setStatus("form.success", "success");
+      setStatus("", "");
+      body.hidden = true;
+      success.hidden = false;
+      success.querySelector(".form-again").focus();
       track("contato-formulario", "Enviou mensagem pelo formulário");
     } else if (code === 429) {
       setStatus("form.rate", "error");

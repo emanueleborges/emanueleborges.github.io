@@ -183,11 +183,17 @@ window.I18N = {
     "form.message": "Mensagem",
     "form.send": "Enviar mensagem",
     "form.sending": "Enviando…",
-    "form.success": "Mensagem enviada! O Emanuel vai responder em breve.",
+    "form.success": "Obrigado pelo contato! O Emanuel vai responder em breve no e-mail informado.",
     "form.error": "Não foi possível enviar agora. Tente de novo ou use o e-mail ou o WhatsApp acima.",
     "form.invalid": "Preencha seu nome, um e-mail válido e a mensagem (até 2.000 caracteres).",
     "form.rate": "Muitas mensagens seguidas. Tente novamente em alguns minutos.",
-    "form.privacy": "Seus dados são usados apenas para o Emanuel responder ao seu contato."
+    "form.privacy": "Seus dados são usados apenas para o Emanuel responder ao seu contato.",
+    "form.namePh": "Seu nome",
+    "form.emailPh": "voce@empresa.com",
+    "form.messagePh": "Conte sobre a vaga, o projeto ou a sua dúvida…",
+    "form.required": "obrigatório",
+    "form.again": "Enviar outra mensagem",
+    "form.successTitle": "Mensagem enviada!"
   },
   "en": {
     "menu.open": "Open menu",
@@ -362,11 +368,17 @@ window.I18N = {
     "form.message": "Message",
     "form.send": "Send message",
     "form.sending": "Sending…",
-    "form.success": "Message sent! Emanuel will get back to you soon.",
+    "form.success": "Thanks for reaching out! Emanuel will reply soon to the email you provided.",
     "form.error": "Couldn't send right now. Please try again or use the email or WhatsApp above.",
     "form.invalid": "Please enter your name, a valid email and your message (up to 2,000 characters).",
     "form.rate": "Too many messages in a row. Please try again in a few minutes.",
-    "form.privacy": "Your details are only used so Emanuel can reply to you."
+    "form.privacy": "Your details are only used so Emanuel can reply to you.",
+    "form.namePh": "Your name",
+    "form.emailPh": "you@company.com",
+    "form.messagePh": "Tell me about the role, the project or your question…",
+    "form.required": "required",
+    "form.again": "Send another message",
+    "form.successTitle": "Message sent!"
   },
   "es": {
     "menu.open": "Abrir menú",
@@ -533,11 +545,17 @@ window.I18N = {
     "form.message": "Mensaje",
     "form.send": "Enviar mensaje",
     "form.sending": "Enviando…",
-    "form.success": "¡Mensaje enviado! Emanuel te responderá pronto.",
+    "form.success": "¡Gracias por tu mensaje! Emanuel te responderá pronto al correo indicado.",
     "form.error": "No se pudo enviar ahora. Inténtalo de nuevo o usa el correo o WhatsApp de arriba.",
     "form.invalid": "Escribe tu nombre, un correo válido y tu mensaje (hasta 2.000 caracteres).",
     "form.rate": "Demasiados mensajes seguidos. Inténtalo de nuevo en unos minutos.",
-    "form.privacy": "Tus datos se usan solo para que Emanuel pueda responderte."
+    "form.privacy": "Tus datos se usan solo para que Emanuel pueda responderte.",
+    "form.namePh": "Tu nombre",
+    "form.emailPh": "tu@empresa.com",
+    "form.messagePh": "Cuéntame sobre la vacante, el proyecto o tu duda…",
+    "form.required": "obligatorio",
+    "form.again": "Enviar otro mensaje",
+    "form.successTitle": "¡Mensaje enviado!"
   },
   "fr": {
     "menu.open": "Ouvrir le menu",
@@ -721,11 +739,17 @@ window.I18N = {
     "form.message": "Message",
     "form.send": "Envoyer le message",
     "form.sending": "Envoi…",
-    "form.success": "Message envoyé ! Emanuel vous répondra bientôt.",
+    "form.success": "Merci pour votre message ! Emanuel vous répondra bientôt à l’adresse indiquée.",
     "form.error": "Impossible d’envoyer pour le moment. Réessayez ou utilisez l’e-mail ou WhatsApp ci-dessus.",
     "form.invalid": "Indiquez votre nom, un e-mail valide et votre message (2 000 caractères maximum).",
     "form.rate": "Trop de messages d’affilée. Réessayez dans quelques minutes.",
-    "form.privacy": "Vos données servent uniquement à ce qu’Emanuel puisse vous répondre."
+    "form.privacy": "Vos données servent uniquement à ce qu’Emanuel puisse vous répondre.",
+    "form.namePh": "Votre nom",
+    "form.emailPh": "vous@entreprise.com",
+    "form.messagePh": "Parlez-moi du poste, du projet ou de votre question…",
+    "form.required": "obligatoire",
+    "form.again": "Envoyer un autre message",
+    "form.successTitle": "Message envoyé !"
   },
   "it": {
     "menu.open": "Apri il menu",
@@ -909,11 +933,17 @@ window.I18N = {
     "form.message": "Messaggio",
     "form.send": "Invia messaggio",
     "form.sending": "Invio in corso…",
-    "form.success": "Messaggio inviato! Emanuel ti risponderà presto.",
+    "form.success": "Grazie per il messaggio! Emanuel ti risponderà presto all’e-mail indicata.",
     "form.error": "Impossibile inviare ora. Riprova o usa l’e-mail o WhatsApp qui sopra.",
     "form.invalid": "Inserisci il tuo nome, un’e-mail valida e il messaggio (massimo 2.000 caratteri).",
     "form.rate": "Troppi messaggi di seguito. Riprova tra qualche minuto.",
-    "form.privacy": "I tuoi dati vengono usati solo per permettere a Emanuel di risponderti."
+    "form.privacy": "I tuoi dati vengono usati solo per permettere a Emanuel di risponderti.",
+    "form.namePh": "Il tuo nome",
+    "form.emailPh": "tu@azienda.com",
+    "form.messagePh": "Raccontami della posizione, del progetto o della tua domanda…",
+    "form.required": "obbligatorio",
+    "form.again": "Invia un altro messaggio",
+    "form.successTitle": "Messaggio inviato!"
   },
   "zh": {
     "menu.open": "打开菜单",
@@ -1097,11 +1127,17 @@ window.I18N = {
     "form.message": "留言内容",
     "form.send": "发送留言",
     "form.sending": "发送中…",
-    "form.success": "留言已发送！Emanuel 会尽快回复你。",
+    "form.success": "感谢留言！Emanuel 会尽快回复到你填写的邮箱。",
     "form.error": "暂时无法发送。请重试，或使用上方的邮箱或 WhatsApp。",
     "form.invalid": "请填写姓名、有效的电子邮箱和留言内容（最多 2000 字）。",
     "form.rate": "发送过于频繁，请几分钟后再试。",
-    "form.privacy": "你的信息仅用于 Emanuel 回复你。"
+    "form.privacy": "你的信息仅用于 Emanuel 回复你。",
+    "form.namePh": "你的姓名",
+    "form.emailPh": "you@company.com",
+    "form.messagePh": "请介绍职位、项目或你的问题…",
+    "form.required": "必填",
+    "form.again": "再发一条留言",
+    "form.successTitle": "留言已发送！"
   },
   "ru": {
     "menu.open": "Открыть меню",
@@ -1285,10 +1321,16 @@ window.I18N = {
     "form.message": "Сообщение",
     "form.send": "Отправить сообщение",
     "form.sending": "Отправка…",
-    "form.success": "Сообщение отправлено! Emanuel скоро ответит.",
+    "form.success": "Спасибо за сообщение! Emanuel скоро ответит на указанный e-mail.",
     "form.error": "Не удалось отправить. Попробуйте ещё раз или используйте e-mail или WhatsApp выше.",
     "form.invalid": "Укажите имя, корректный e-mail и сообщение (до 2000 символов).",
     "form.rate": "Слишком много сообщений подряд. Попробуйте через несколько минут.",
-    "form.privacy": "Ваши данные используются только для того, чтобы Emanuel мог вам ответить."
+    "form.privacy": "Ваши данные используются только для того, чтобы Emanuel мог вам ответить.",
+    "form.namePh": "Ваше имя",
+    "form.emailPh": "you@company.com",
+    "form.messagePh": "Расскажите о вакансии, проекте или вашем вопросе…",
+    "form.required": "обязательно",
+    "form.again": "Отправить ещё одно сообщение",
+    "form.successTitle": "Сообщение отправлено!"
   }
 };

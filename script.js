@@ -26,6 +26,8 @@ const i18nTargets = [
   ["data-i18n-aria", (el) => el.getAttribute("aria-label"), (el, value) => el.setAttribute("aria-label", value)],
   ["data-i18n-content", (el) => el.getAttribute("content"), (el, value) => el.setAttribute("content", value)],
   ["data-i18n-alt", (el) => el.getAttribute("alt"), (el, value) => el.setAttribute("alt", value)],
+  ["data-i18n-placeholder", (el) => el.getAttribute("placeholder"), (el, value) => el.setAttribute("placeholder", value)],
+  ["data-i18n-title", (el) => el.getAttribute("title"), (el, value) => el.setAttribute("title", value)],
 ].map(([attr, read, write]) => ({
   attr,
   write,
