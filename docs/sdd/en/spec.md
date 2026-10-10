@@ -161,6 +161,8 @@ The site can be installed as an app (manifest and icons) and, after the first vi
 - [x] A backend request from another origin → `403 forbidden_origin`.
 - [x] A request without a Turnstile token or with a fake one → `403 turnstile_failed`.
 - [x] The 11th chat request within the same minute → `429 rate_limited`.
+- [x] A burst of price lookups → `429 rate_limited` (200 requests in 4 s: 43 blocked; the limiter is permissive).
+- [x] A tampered face-demo script on the CDN → the browser refuses to run it (SRI).
 
 ### Caching
 - [x] After a commit, the HTML references `styles.css?v=<new version>`.
