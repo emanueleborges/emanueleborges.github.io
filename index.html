@@ -126,12 +126,12 @@
     <!-- Primeira imagem do topo: pré-carregada, menor no celular -->
     <link rel="preload" as="image" href="https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=800&q=70" media="(max-width: 760px)" fetchpriority="high" />
     <link rel="preload" as="image" href="https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1400&q=70" media="(min-width: 761px)" fetchpriority="high" />
-    <link rel="stylesheet" href="styles.css?v=20261009235525" />
-    <script src="i18n.js?v=20261009235525" defer></script>
-    <script src="script.js?v=20261009235525" defer></script>
-    <script src="api.js?v=20261009235525" defer></script>
-    <script src="chat.js?v=20261009235525" defer></script>
-    <script src="contact.js?v=20261009235525" defer></script>
+    <link rel="stylesheet" href="styles.css?v=20261010000440" />
+    <script src="i18n.js?v=20261010000440" defer></script>
+    <script src="script.js?v=20261010000440" defer></script>
+    <script src="api.js?v=20261010000440" defer></script>
+    <script src="chat.js?v=20261010000440" defer></script>
+    <script src="contact.js?v=20261010000440" defer></script>
     <script data-goatcounter="https://emanueleborges.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
   </head>
   <body>
@@ -141,7 +141,7 @@
       <div class="scroll-progress" aria-hidden="true"></div>
       <nav class="nav shell" aria-label="Navegação principal" data-i18n-aria="nav.aria">
         <a class="brand" href="#inicio" aria-label="Emanuel Borges — início" data-i18n-aria="brand.aria">
-          <span class="brand-mark">E<span>.</span></span>
+          <img class="brand-logo" src="logo.svg" alt="" width="34" height="34" />
           <span>Emanuel Borges</span>
         </a>
         <button
@@ -198,6 +198,13 @@
             <a class="button button-quiet" href="#contato" data-i18n="hero.cta2">Entre em contato <span>↗</span></a>
             <a class="button button-quiet" href="cv/curriculo-emanuel-borges-en.pdf" download data-cv-link data-i18n="cv.download">Baixar currículo <span>↓</span></a>
           </div>
+          <!-- Convite ao assistente: a pergunta de exemplo se digita sozinha; ao clicar, o chat responde. -->
+          <button class="hero-ask" type="button" data-hero-ask hidden>
+            <span class="hero-ask-icon" aria-hidden="true">✨</span>
+            <span class="hero-ask-label" data-i18n="hero.askLabel">Pergunte à minha IA</span>
+            <span class="hero-ask-text"><span class="hero-ask-typed"></span><span class="hero-ask-caret" aria-hidden="true"></span></span>
+            <span class="hero-ask-go" aria-hidden="true">↗</span>
+          </button>
           <div class="hero-meta">
             <span><span class="pin">⌖</span> <span data-i18n="hero.location">Manaus, AM · Brasil</span></span>
             <span class="mono" data-i18n="hero.years">10+ ANOS DE EXPERIÊNCIA</span>
@@ -514,9 +521,9 @@
     </main>
 
     <footer class="footer shell">
-      <a class="brand" href="#inicio"><span class="brand-mark">E<span>.</span></span><span>Emanuel Borges</span></a>
+      <a class="brand" href="#inicio"><img class="brand-logo" src="logo.svg" alt="" width="34" height="34" /><span>Emanuel Borges</span></a>
       <span class="footer-copy mono"><span data-i18n="footer.copy">DESENHADO E CONSTRUÍDO COM CUIDADO</span> · <span id="year">2026</span></span>
-      <span class="footer-updated mono"><span data-i18n="footer.updated">ATUALIZADO EM</span> <time id="updated" datetime="2026-10-09">09/10/2026</time></span>
+      <span class="footer-updated mono"><span data-i18n="footer.updated">ATUALIZADO EM</span> <time id="updated" datetime="2026-10-10">10/10/2026</time></span>
       <a class="back-top mono" href="#inicio" data-i18n="footer.top">VOLTAR AO TOPO ↑</a>
     </footer>
   </body>

@@ -201,7 +201,10 @@ window.I18N = {
     "chat.rateDown": "Não ajudou",
     "chat.rateNote": "Ao avaliar, a pergunta e a resposta são salvas para melhorar o assistente.",
     "chat.rateThanks": "Obrigado pela avaliação!",
-    "chat.rateError": "Não foi possível registrar agora."
+    "chat.rateError": "Não foi possível registrar agora.",
+    "hero.askLabel": "Pergunte à minha IA",
+    "hero.askExamples": "Ele tem experiência com Kafka?|Que tipo de vaga ele procura?|Quais projetos de IA ele fez?|Ele trabalha remoto?",
+    "chat.toggleLabel": "Pergunte à IA"
   },
   "en": {
     "menu.open": "Open menu",
@@ -394,7 +397,10 @@ window.I18N = {
     "chat.rateDown": "Not helpful",
     "chat.rateNote": "If you rate, the question and answer are saved to improve the assistant.",
     "chat.rateThanks": "Thanks for your feedback!",
-    "chat.rateError": "Couldn't save your rating right now."
+    "chat.rateError": "Couldn't save your rating right now.",
+    "hero.askLabel": "Ask my AI",
+    "hero.askExamples": "Does he have Kafka experience?|What kind of role is he looking for?|What AI projects has he built?|Does he work remotely?",
+    "chat.toggleLabel": "Ask AI"
   },
   "es": {
     "menu.open": "Abrir menú",
@@ -579,7 +585,10 @@ window.I18N = {
     "chat.rateDown": "No me ayudó",
     "chat.rateNote": "Al valorar, la pregunta y la respuesta se guardan para mejorar el asistente.",
     "chat.rateThanks": "¡Gracias por tu valoración!",
-    "chat.rateError": "No se pudo registrar ahora."
+    "chat.rateError": "No se pudo registrar ahora.",
+    "hero.askLabel": "Pregúntale a mi IA",
+    "hero.askExamples": "¿Tiene experiencia con Kafka?|¿Qué tipo de puesto busca?|¿Qué proyectos de IA ha hecho?|¿Trabaja en remoto?",
+    "chat.toggleLabel": "Pregunta a la IA"
   },
   "fr": {
     "menu.open": "Ouvrir le menu",
@@ -781,7 +790,10 @@ window.I18N = {
     "chat.rateDown": "Pas utile",
     "chat.rateNote": "En notant, la question et la réponse sont enregistrées pour améliorer l’assistant.",
     "chat.rateThanks": "Merci pour votre avis !",
-    "chat.rateError": "Impossible d’enregistrer pour le moment."
+    "chat.rateError": "Impossible d’enregistrer pour le moment.",
+    "hero.askLabel": "Demandez à mon IA",
+    "hero.askExamples": "A-t-il de l’expérience avec Kafka ?|Quel type de poste recherche-t-il ?|Quels projets d’IA a-t-il réalisés ?|Travaille-t-il à distance ?",
+    "chat.toggleLabel": "Demandez à l’IA"
   },
   "it": {
     "menu.open": "Apri il menu",
@@ -983,7 +995,10 @@ window.I18N = {
     "chat.rateDown": "Non utile",
     "chat.rateNote": "Valutando, la domanda e la risposta vengono salvate per migliorare l’assistente.",
     "chat.rateThanks": "Grazie per il feedback!",
-    "chat.rateError": "Impossibile registrare ora."
+    "chat.rateError": "Impossibile registrare ora.",
+    "hero.askLabel": "Chiedi alla mia IA",
+    "hero.askExamples": "Ha esperienza con Kafka?|Che tipo di ruolo cerca?|Quali progetti di IA ha realizzato?|Lavora da remoto?",
+    "chat.toggleLabel": "Chiedi all’IA"
   },
   "zh": {
     "menu.open": "打开菜单",
@@ -1185,7 +1200,10 @@ window.I18N = {
     "chat.rateDown": "没有帮助",
     "chat.rateNote": "评价时，问题和回答会被保存，用于改进助手。",
     "chat.rateThanks": "感谢你的反馈！",
-    "chat.rateError": "暂时无法提交评价。"
+    "chat.rateError": "暂时无法提交评价。",
+    "hero.askLabel": "问问我的 AI",
+    "hero.askExamples": "他有 Kafka 经验吗？|他在找什么样的职位？|他做过哪些 AI 项目？|他可以远程工作吗？",
+    "chat.toggleLabel": "问 AI"
   },
   "ru": {
     "menu.open": "Открыть меню",
@@ -1387,6 +1405,9 @@ window.I18N = {
     "chat.rateDown": "Не помог",
     "chat.rateNote": "При оценке вопрос и ответ сохраняются для улучшения ассистента.",
     "chat.rateThanks": "Спасибо за оценку!",
-    "chat.rateError": "Не удалось сохранить оценку."
+    "chat.rateError": "Не удалось сохранить оценку.",
+    "hero.askLabel": "Спросите мой ИИ",
+    "hero.askExamples": "Есть ли у него опыт с Kafka?|Какую работу он ищет?|Какие проекты с ИИ он сделал?|Работает ли он удалённо?",
+    "chat.toggleLabel": "Спросить ИИ"
   }
 };

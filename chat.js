@@ -372,11 +372,12 @@
   root.className = "chat";
   root.innerHTML = `
     <button class="chat-toggle" type="button" aria-expanded="false" aria-controls="chat-panel">
+      <span class="chat-toggle-label" data-chat="toggleLabel"></span>
       <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 3C6.5 3 2 6.8 2 11.5c0 2.4 1.2 4.6 3.1 6.1L4.4 21l4-2c1.1.3 2.3.5 3.6.5 5.5 0 10-3.8 10-8.5S17.5 3 12 3Zm-4 9.7a1.2 1.2 0 1 1 0-2.4 1.2 1.2 0 0 1 0 2.4Zm4 0a1.2 1.2 0 1 1 0-2.4 1.2 1.2 0 0 1 0 2.4Zm4 0a1.2 1.2 0 1 1 0-2.4 1.2 1.2 0 0 1 0 2.4Z"/></svg>
     </button>
     <section class="chat-panel" id="chat-panel" role="dialog" aria-labelledby="chat-title" hidden>
       <header class="chat-header">
-        <span class="chat-avatar" aria-hidden="true">E<span>.</span></span>
+        <img class="chat-avatar" src="logo.svg" alt="" width="38" height="38" />
         <div>
           <h2 id="chat-title" data-chat="title"></h2>
           <p data-chat="subtitle"></p>
@@ -766,11 +767,59 @@
   });
   renderTexts();
 
+  /* ---------- Barra "Pergunte à minha IA" no topo ---------- */
+
+  const heroAsk = document.querySelector("[data-hero-ask]");
+  if (heroAsk) {
+    heroAsk.hidden = false;
+    const typed = heroAsk.querySelector(".hero-ask-typed");
+    let examples = [];
+    let current = "";
+    let timer = null;
+
+    const setCurrent = (text) => {
+      current = text;
+      typed.textContent = text;
+      heroAsk.setAttribute("aria-label", `${t("hero.askLabel")}: ${text}`);
+    };
+
+    // Digita a pergunta, espera, apaga e passa para a próxima.
+    const cycle = (index = 0) => {
+      clearTimeout(timer);
+      examples = t("hero.askExamples").split("|");
+      const text = examples[index % examples.length];
+      if (prefersReducedMotion) return setCurrent(text);
+      let length = 0;
+      const typeNext = () => {
+        setCurrent(text.slice(0, ++length));
+        if (length < text.length) timer = setTimeout(typeNext, 45);
+        else timer = setTimeout(() => erase(text.length), 2600);
+      };
+      const erase = (n) => {
+        setCurrent(text.slice(0, n));
+        if (n > 0) timer = setTimeout(() => erase(n - 1), 18);
+        else timer = setTimeout(() => cycle(index + 1), 300);
+      };
+      typeNext();
+    };
+
+    heroAsk.addEventListener("click", () => {
+      const index = Math.max(0, examples.findIndex((example) => example.startsWith(current) && current));
+      const question = examples[index] ?? examples[0];
+      track("chat-barra-topo", "Clicou na barra Pergunte à IA");
+      setOpen(true);
+      ask(question);
+    });
+    document.addEventListener("languagechange", () => cycle(0));
+    cycle(0);
+  }
+
   // Link direto para o assistente: https://emanueleborges.github.io/#chat
   if (location.hash === "#chat") setOpen(true);
 
   // Usado pelos testes automáticos (tests/): devolve a resposta em texto.
   window.portfolioChat = {
+    open: () => setOpen(true),
     answerText: (query) =>
       answer(query)
         .map((node) => node.textContent)

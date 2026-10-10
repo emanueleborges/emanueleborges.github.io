@@ -62,6 +62,9 @@ Legend: ✅ done · ⏳ pending · 💡 idea
 - ✅ **T42** Weekly summary email (Cron) with AI, Vectorize and D1 health check — FR-08
 - ✅ **T43** Custom 404 page and `#chat` link that opens the assistant
 - ✅ **T45** Google Search Console: HTML-tag verification and `sitemap.xml` submission — FR-09.3
+- ✅ **T48** New "E." logo (gradient + AI node) in favicon, header, footer, chat, 404 and iPhone icon
+- ✅ **T49** Assistant highlight: "Ask my AI" bar in the hero (auto-typed example question) and labeled chat button on desktop — FR-05
+- ✅ **T50** Responsiveness validated on smartphone (390 px), tablet (768 px), laptop (1366 px) and desktop (1920 px): ☰ menu up to 1,100 px, no horizontal scroll — NFR-07
 - ✅ **T44** Automatic confirmation to the visitor in the message's language (Google Apps Script) — FR-06.6
 
 ---

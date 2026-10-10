@@ -62,6 +62,9 @@ Legenda: ✅ concluída · ⏳ pendente · 💡 ideia
 - ✅ **T42** Resumo semanal por e-mail (Cron) com saúde da IA, Vectorize e D1 — RF-08
 - ✅ **T43** Página 404 personalizada e link `#chat` que abre o assistente
 - ✅ **T45** Google Search Console: verificação por tag HTML e envio do `sitemap.xml` — RF-09.3
+- ✅ **T48** Novo logo "E." (gradiente + nó de IA) em favicon, cabeçalho, rodapé, chat, 404 e ícone do iPhone
+- ✅ **T49** Destaque do assistente: barra "Pergunte à minha IA" no topo (pergunta de exemplo digitada) e botão do chat com texto no desktop — RF-05
+- ✅ **T50** Responsividade validada em smartphone (390 px), tablet (768 px), laptop (1366 px) e desktop (1920 px): menu ☰ até 1.100 px, sem rolagem lateral — RNF-07
 - ✅ **T44** Confirmação automática ao visitante no idioma da mensagem (Google Apps Script) — RF-06.6
 
 ---
