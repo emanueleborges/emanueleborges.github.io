@@ -1,6 +1,7 @@
 // Cloudflare Worker do portfólio (tudo no plano gratuito do Cloudflare):
 //   POST /         → chat com IA (Workers AI), usando só o perfil do Emanuel (src/conhecimento.js)
 //   POST /contact  → formulário de contato, salvo no banco D1 + aviso por e-mail (Resend)
+//                    + confirmação ao visitante (Google Apps Script)
 //   POST /feedback → avaliação 👍/👎 das respostas da IA, salva no banco D1
 import { CORE, PROFILE, VERSION } from "./conhecimento.js";
 
@@ -145,6 +146,28 @@ async function notifyByEmail({ name, email, message, lang }, env) {
   }
 }
 
+// Confirmação automática para o visitante, enviada do Gmail do Emanuel por um
+// Google Apps Script (gratuito). Para não virar canal de spam: sem o texto da
+// mensagem, só o primeiro nome (sem símbolos) e no máximo 1 confirmação por e-mail a cada 24 h.
+async function sendConfirmation({ name, email, lang }, env) {
+  if (!env.APPS_SCRIPT_URL || !env.APPS_SCRIPT_SECRET) return;
+  try {
+    const { count } = await env.DB.prepare(
+      "SELECT COUNT(*) AS count FROM messages WHERE email = ? AND created_at > datetime('now', '-1 day')",
+    ).bind(email).first();
+    if (count > 1) return;
+    const firstName = (name.split(/\s+/)[0] ?? "").replace(/[^\p{L}'-]/gu, "").slice(0, 30);
+    const response = await fetch(env.APPS_SCRIPT_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ secret: env.APPS_SCRIPT_SECRET, to: email, firstName, lang }),
+    });
+    if (!response.ok) console.error(`Apps Script respondeu ${response.status}`);
+  } catch (error) {
+    console.error("Falha ao enviar a confirmação ao visitante:", error?.message ?? error);
+  }
+}
+
 async function handleContact(payload, ip, env, origin, ctx) {
   const { success } = await env.CONTACT_LIMITER.limit({ key: ip });
   if (!success) return json({ error: "rate_limited" }, 429, origin);
@@ -170,6 +193,7 @@ async function handleContact(payload, ip, env, origin, ctx) {
       .run();
     // A mensagem já está salva; o aviso por e-mail segue em segundo plano.
     ctx.waitUntil(notifyByEmail({ name, email, message, lang }, env));
+    ctx.waitUntil(sendConfirmation({ name, email, lang }, env));
     return json({ ok: true }, 200, origin);
   } catch (error) {
     console.error("Erro ao salvar mensagem:", error?.message ?? error);
