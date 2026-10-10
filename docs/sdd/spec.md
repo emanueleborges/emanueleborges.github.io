@@ -40,7 +40,7 @@ Currículos e perfis estáticos obrigam o recrutador a ler tudo para achar uma i
 |---|---|---|
 | **Recrutador(a) técnico(a)** | Verificar rapidamente tecnologias e experiência | Seções organizadas, filtros, chat com IA, currículo em PDF |
 | **Recrutador(a) internacional** | Ler no próprio idioma; entender modelo de contratação | 8 idiomas (inglês por padrão), respostas sobre remoto, fuso e CLT/PJ |
-| **Gestor(a) / tech lead** | Avaliar profundidade técnica e projetos | Projetos com descrições técnicas, resultados (87%, 89%, top 5%) e o próprio site como demonstração |
+| **Gestor(a) / tech lead** | Avaliar profundidade técnica e projetos | Projetos com descrições técnicas, resultados medidos (87%, top 5%, MAPE 1,1–1,4% contra baseline), **demos de IA ao vivo** e o próprio site como demonstração |
 | **Emanuel (dono)** | Atualizar conteúdo e acompanhar interesse | Fonte única de textos (`i18n.js`), scripts de publicação, estatísticas e mensagens do formulário |
 
 ---
@@ -49,6 +49,9 @@ Currículos e perfis estáticos obrigam o recrutador a ler tudo para achar uma i
 
 ### RF-01 — Conteúdo do perfil
 O site deve apresentar: topo (nome, cargo, resumo, localização, anos de experiência), Sobre (com foto), Experiência (linha do tempo), Projetos, Habilidades, Formação (com certificações e idiomas) e Contato.
+- RF-01.1 Cada card de projeto tem o link "Ver código" para o repositório e mostra linguagem, estrelas (se houver) e data da última atualização, vindos da API pública do GitHub.
+- RF-01.2 Projetos com demo ao vivo têm o botão "Ver demo" (LSTM, reconhecimento facial, recomendação de filmes e o próprio assistente).
+- RF-01.3 Resultados citados nos cards devem ser verificáveis (mesmo número mostrado na demo ou no repositório).
 
 ### RF-02 — Idiomas
 - RF-02.1 Disponível em **inglês (padrão)**, português, espanhol, francês, italiano, alemão, chinês simplificado e russo.
@@ -88,12 +91,12 @@ O site deve apresentar: topo (nome, cargo, resumo, localização, anos de experi
 E-mail, WhatsApp, LinkedIn e GitHub visíveis na seção de contato e no assistente.
 
 ### RF-08 — Estatísticas
-Registrar visitas e eventos (chat aberto, pergunta respondida pela IA, download de currículo por idioma, cliques em contatos, troca de idioma, envio do formulário, avaliações) **sem cookies e sem o texto das perguntas**.
+Registrar visitas e eventos (chat aberto, pergunta respondida pela IA, download de currículo por idioma, cliques em contatos, troca de idioma, envio do formulário, avaliações, clique em "Ver código" e "Ver demo", uso das demos) **sem cookies e sem o texto das perguntas**.
 
 ### RF-09 — SEO e compartilhamento
 - RF-09.1 Ao compartilhar o link (LinkedIn, WhatsApp, X), exibir prévia com imagem, título e descrição.
-- RF-09.2 Indicar ao Google as 7 versões de idioma (`hreflang`) e quem é a pessoa do site (dados estruturados `Person`).
-- RF-09.3 Publicar `sitemap.xml` e `robots.txt`; o site é verificado no Google Search Console.
+- RF-09.2 Indicar ao Google as 8 versões de idioma (`hreflang`) e quem é a pessoa do site (dados estruturados `Person`).
+- RF-09.3 Publicar `sitemap.xml` (página em 8 idiomas, 8 PDFs e 3 demos) e `robots.txt`; o site é verificado no Google Search Console.
 
 ### RF-10 — Resumo semanal
 Toda segunda-feira, o dono recebe por e-mail: mensagens da semana, avaliações do chat (com as respostas mal avaliadas) e a saúde da IA, do índice vetorial e do banco; visitas, se houver token do GoatCounter.
@@ -101,17 +104,27 @@ Toda segunda-feira, o dono recebe por e-mail: mensagens da semana, avaliações 
 ### RF-11 — Página não encontrada
 Endereços inexistentes mostram uma página 404 no estilo do site, com links para o portfólio e o assistente.
 
+### RF-12 — Demos de IA
+Páginas próprias (`/demos/…`), nos 8 idiomas, no estilo do site, com link de volta ao portfólio e ao código:
+- RF-12.1 **Previsão de ações (LSTM):** o visitante escolhe PETR4, VALE3 ou AAPL e 1–10 dias úteis; vê a previsão (gráfico e tabela), as métricas do teste fora da amostra **comparadas a um baseline ingênuo** e o gráfico real × previsto. Preços atualizados quando possível; sem eles, a última cópia salva, com a data indicada. Aviso "não é recomendação de investimento".
+- RF-12.2 **Reconhecimento facial:** pela webcam ou por foto; o visitante cadastra rostos com um nome e vê o reconhecimento com a distância. **Nenhuma imagem sai do aparelho** e nada é salvo; a página informa isso.
+- RF-12.3 **Recomendação de filmes:** por um filme escolhido ou por descrição livre (em inglês), mostrando para cada resultado a similaridade e **os termos que explicam a recomendação**. Base de filmes de licença livre, com crédito às fontes.
+- RF-12.4 As demos rodam no navegador do visitante; nenhuma exige conta, cadastro ou servidor pago.
+
+### RF-13 — App instalável e offline
+O site pode ser instalado como app (manifest e ícones) e, depois da primeira visita, abre sem internet com a última versão salva; o chat usa a busca local quando offline.
+
 ---
 
 ## 4. Requisitos não funcionais
 
 | ID | Categoria | Requisito |
 |---|---|---|
-| RNF-01 | **Custo** | Infraestrutura com custo zero: apenas planos gratuitos **sem forma de pagamento cadastrada** (o dono não pode ter custos). Ao atingir um limite grátis, o recurso deve pausar e o site seguir funcionando (degradação graciosa), nunca gerar cobrança. Serviços novos só entram se tiverem plano gratuito sem cartão. |
+| RNF-01 | **Custo** | Infraestrutura com custo zero: apenas planos gratuitos **sem forma de pagamento cadastrada** (o dono não pode ter custos). Ao atingir um limite grátis, o recurso deve pausar e o site seguir funcionando (degradação graciosa), nunca gerar cobrança. Serviços novos só entram se tiverem plano gratuito sem cartão. As demos de IA rodam no navegador do visitante (sem custo de servidor). |
 | RNF-02 | **Desempenho** | Site estático sem build; primeira imagem pré-carregada (menor no celular) e demais sob demanda; fontes sem bloquear a exibição; scripts de terceiros (Turnstile) carregados sob demanda; respostas repetidas da IA servidas do cache. Meta: Lighthouse (celular) ≥ 75 em desempenho e 100 em acessibilidade, boas práticas e SEO. |
 | RNF-03 | **Disponibilidade** | O chat deve continuar útil mesmo sem IA (busca local); o formulário falha com mensagem clara. |
-| RNF-04 | **Segurança** | Backend aceita só a origem do site; anti-robô em toda chamada ao backend; limites por IP; validação de entrada; nenhum segredo no repositório. |
-| RNF-05 | **Privacidade (LGPD)** | Sem cookies de rastreamento; formulário guarda o mínimo (sem IP); aviso de uso de IA e de finalidade dos dados. |
+| RNF-04 | **Segurança** | Backend aceita só a origem do site; anti-robô em toda chamada que grava dados ou usa IA; limites por IP; validação de entrada; nenhum segredo no repositório. A rota de preços (só leitura) aceita apenas a origem do site e as 3 ações da demo, com cache. |
+| RNF-05 | **Privacidade (LGPD)** | Sem cookies de rastreamento; formulário guarda o mínimo (sem IP); aviso de uso de IA e de finalidade dos dados. Na demo de reconhecimento facial, câmera e fotos são processadas só no aparelho. |
 | RNF-06 | **Acessibilidade** | HTML semântico, rótulos ARIA traduzidos, foco visível, navegação por teclado, respeito a `prefers-reduced-motion`. |
 | RNF-07 | **Responsividade** | Funcional e legível de 360 px a desktop largo. |
 | RNF-08 | **Confiabilidade da IA** | A IA não pode inventar fatos; deve recusar temas fora do perfil e resistir a instruções do visitante que tentem mudar as regras. |
@@ -157,14 +170,26 @@ Endereços inexistentes mostram uma página 404 no estilo do site, com links par
 - [x] Clicar em 👎 numa resposta da IA mostra "Obrigado pela avaliação!" e grava o registro no banco.
 
 ### SEO e desempenho
-- [x] `sitemap.xml` e `robots.txt` respondem HTTP 200; o sitemap é XML válido com 15 endereços.
+- [x] `sitemap.xml` e `robots.txt` respondem HTTP 200; o sitemap é XML válido com 20 endereços.
 - [x] A página tem prévia Open Graph (imagem 1200×630), `hreflang` para os 8 idiomas e JSON-LD `Person` válido.
 - [x] A tag de verificação do Google Search Console está publicada.
 - [x] Lighthouse (celular): desempenho ~80, acessibilidade 100, boas práticas 100, SEO 100.
 - [x] Um endereço inexistente responde HTTP 404 com a página personalizada.
 
 ### Integração contínua
-- [x] Cada push na `main` roda no GitHub Actions: sintaxe dos scripts, validação de SEO, geração do conhecimento da IA e os 92 testes do chat — todos passando.
+- [x] Cada push na `main` roda no GitHub Actions: sintaxe dos scripts (site, demos e Worker), validação de SEO, geração do conhecimento da IA e os 92 testes do chat — todos passando.
+- [x] Cada push roda o Lighthouse (3 medições); falha se acessibilidade < 95, boas práticas < 90 ou SEO < 95.
+
+### Projetos e demos
+- [x] Os 10 cards têm "Ver código"; linguagem e data de atualização aparecem com dados do GitHub (sem eles, só o link).
+- [x] O LSTM em JavaScript dá o mesmo resultado do Keras (diferença ~1e-8) e a demo mostra "Yahoo Finance (atualizado)" em produção.
+- [x] No teste fora da amostra, o MAPE do LSTM (1,1–1,4%) é exibido ao lado do baseline ingênuo; o card cita o mesmo número.
+- [x] Demo facial: uma foto cadastrada é reconhecida numa versão espelhada e girada (distância 0,19 < 0,55); a câmera liga e analisa o vídeo.
+- [x] Demo de filmes: ~1.500 filmes indexados em < 50 ms; "The Godfather" recomenda as continuações, Scarface e Goodfellas, com os termos que explicam cada resultado.
+- [x] O botão "Ver demo" do card do assistente abre o chat na própria página.
+
+### App instalável
+- [x] Depois da primeira visita, o site recarrega sem internet, com o visual e os projetos.
 
 ### E-mails
 - [x] Nova mensagem do formulário gera aviso no Gmail do dono, com "Responder" para o visitante.

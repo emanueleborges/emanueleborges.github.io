@@ -3,3 +3,5 @@ worker/node_modules/
 worker/.wrangler/
 worker/.dev.vars
 .lighthouseci/
+scripts/lstm/models/
+scripts/lstm/data/

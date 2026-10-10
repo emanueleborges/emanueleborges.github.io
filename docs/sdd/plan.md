@@ -17,9 +17,11 @@ flowchart TB
     API[api.js]
     CHAT[chat.js]
     CONTACT[contact.js]
+    SW[sw.js — offline]
+    DEMOS["demos/ — LSTM, facial, filmes<br/>(inferência no navegador)"]
   end
   subgraph "GitHub Pages"
-    STATIC[Arquivos estáticos + PDFs]
+    STATIC[Arquivos estáticos + PDFs + pesos e dados das demos]
   end
   subgraph "Cloudflare (plano gratuito)"
     WORKER[Worker emanuel-portfolio-chat]
@@ -31,8 +33,13 @@ flowchart TB
     RL[Rate Limiting]
   end
   GOAT[GoatCounter]
+  GH[API pública do GitHub]
+  YF[Yahoo Finance]
+  CDN[jsDelivr — face-api.js e modelos]
 
   STATIC --> HTML
+  STATIC --> DEMOS
+  SW -. cache .-> STATIC
   CHAT --> API
   CONTACT --> API
   API -->|POST / e /contact| WORKER
@@ -43,6 +50,10 @@ flowchart TB
   WORKER --> VEC
   WORKER --> DB
   SCRIPT --> GOAT
+  SCRIPT -->|repositórios| GH
+  DEMOS -->|GET /prices| WORKER
+  WORKER -->|fechamentos| YF
+  DEMOS -->|facial| CDN
 ```
 
 **Princípios:** site estático sem build · backend mínimo e *serverless* · fonte única de textos · degradação graciosa (tudo funciona, com menos recursos, se o backend falhar) · custo zero.
@@ -60,6 +71,11 @@ flowchart TB
 | `chat.js` | Assistente: respostas prontas (regras por expressão regular), busca local, chamada à IA e interface. |
 | `contact.js` | Validação, envio, contador, estados de carregamento/sucesso do formulário. |
 | `curriculo.html` | Modelo A4 do currículo, renderizado por idioma a partir do `i18n.js`. |
+| `manifest.webmanifest` · `sw.js` · `icon-*.png` | App instalável e offline (PWA). |
+| `demos/demos.css` · `demos/demos.js` | Base compartilhada das demos: visual, idioma (`?lang` → `localStorage` → inglês), formatação (`Intl`) e eventos do GoatCounter. |
+| `demos/lstm/` | `lstm.js` (inferência do LSTM em JS puro), `demo.js` (tela e gráficos SVG), pesos `*.json` e `dados.json` (métricas, backtest, preços salvos). |
+| `demos/face/` | `face.js`: reconhecimento facial com face-api.js (CDN jsDelivr). |
+| `demos/filmes/` | `tfidf.js` (TF-IDF + cosseno), `filmes.js` (tela) e `filmes.json` (~1.500 filmes). |
 
 ### 2.1 Internacionalização
 - O HTML contém o português; ao trocar o idioma, `script.js` aplica `I18N[lang]` e restaura o original para `pt`.
@@ -90,9 +106,9 @@ pergunta
 
 ### 2.4 SEO e compartilhamento
 - **Prévia de link:** tags Open Graph e Twitter Card estáticas (em inglês) com `og-image.jpg` (1200×630).
-- **Idiomas:** `<link rel="alternate" hreflang>` para `?lang=en|pt|es|fr|it|zh|ru` + `x-default`. Sem `canonical` (conflitaria com as alternativas por idioma).
+- **Idiomas:** `<link rel="alternate" hreflang>` para `?lang=en|pt|es|fr|it|de|zh|ru` + `x-default`. Sem `canonical` (conflitaria com as alternativas por idioma).
 - **Dados estruturados:** JSON-LD `Person` (cargo, empregador, cidade, formação, tecnologias, idiomas, LinkedIn e GitHub).
-- **Rastreamento:** `sitemap.xml` (página em 8 idiomas + 8 PDFs) e `robots.txt` (bloqueia `worker/`, `tests/`, `scripts/`, `apps-script/`, `docs/`, `curriculo.html`).
+- **Rastreamento:** `sitemap.xml` (página em 8 idiomas + 8 PDFs + 3 demos) e `robots.txt` (bloqueia `worker/`, `tests/`, `scripts/`, `apps-script/`, `docs/`, `curriculo.html`).
 - **Google Search Console:** verificado por tag HTML (`google-site-verification`); sitemap enviado.
 - **404:** `404.html` (GitHub Pages responde HTTP 404 com essa página); `/#chat` abre o assistente.
 
@@ -102,6 +118,24 @@ pergunta
 - Google Fonts com `preload` + `onload` (não bloqueia a exibição) e `<noscript>` de reserva.
 - Resultado (Lighthouse, celular): desempenho 69 → ~80; acessibilidade, boas práticas e SEO 100; peso inicial ~237 KB.
 
+### 2.6 Dados dos repositórios (GitHub)
+Uma chamada a `api.github.com/users/emanueleborges/repos?per_page=100` (sem chave) preenche, em cada card com `data-repo-meta`, linguagem, estrelas (só se > 0) e "atualizado há…" (`Intl.RelativeTimeFormat`). O resultado fica no `sessionStorage`; se a API falhar, o card mostra só o link. Não roda em `file://` (testes).
+
+### 2.7 App instalável e offline (PWA)
+- `manifest.webmanifest` com ícones 192, 512 e *maskable*; `sw.js` registrado só em HTTPS ou `localhost`.
+- **Página:** rede primeiro; sem rede, a última cópia salva.
+- **CSS/JS/imagens do próprio site:** cópia salva primeiro, atualizada em segundo plano; ao salvar uma nova versão (`?v=`), apaga as anteriores do mesmo arquivo.
+- Outros domínios (Worker, GitHub, fontes, CDN) não passam pelo cache.
+
+### 2.8 Demos de IA
+Todas rodam **no navegador do visitante**, sem servidor de IA.
+
+**Previsão de ações (LSTM)** — `scripts/lstm/train.py` treina localmente (Keras) a mesma arquitetura do projeto FIAP (3 camadas LSTM de 50 unidades, janela de 60 pregões) com 5 anos de fechamentos ajustados do Yahoo Finance; cada janela é dividida pelo seu último preço e o modelo prevê a variação do dia seguinte. Teste = últimos 20%, comparado ao baseline ingênuo (amanhã = hoje). `exportar_web.py` grava os pesos em JSON e `dados.json` (métricas, backtest, 250 fechamentos e um caso de referência do Keras). `lstm.js` reproduz as contas da camada LSTM do Keras (portões i, f, c, o) e das camadas densas; a previsão de vários dias é recursiva. Preços atuais: `GET /prices` no Worker; sem ele, os de `dados.json`.
+
+**Reconhecimento facial** — face-api.js 1.7.15 (TensorFlow.js, WebGL) e modelos do jsDelivr: TinyFaceDetector (entrada 416) → 68 pontos → embedding de 128 números; mesma pessoa quando a distância euclidiana é < 0,55. Rostos cadastrados ficam só na memória da página. Pela câmera, analisa ~8 quadros/s; o vídeo é espelhado e as caixas são desenhadas num `canvas` por cima.
+
+**Recomendação de filmes** — `scripts/gerar-dados-filmes.py` monta `filmes.json` com o Wikidata (filmes, animações e longas com ≥ 45 artigos na Wikipédia; ano, gêneros, direção) e a introdução de cada filme na Wikipédia em inglês (até 700 caracteres). `tfidf.js` usa a fórmula do `TfidfVectorizer` do scikit-learn (tf × idf suavizado, normalização L2), *stopwords* em inglês e de "ficha técnica", gêneros com peso dobrado e direção como uma palavra só; recomenda pelo cosseno e mostra os 4 termos que mais contribuíram.
+
 ## 3. Backend — Cloudflare Worker
 
 ### 3.1 Rotas
@@ -109,7 +143,7 @@ pergunta
 #### `POST /` — chat com IA
 **Requisição**
 ```json
-{ "question": "string (1–500)", "lang": "en|pt|es|fr|it|zh|ru", "turnstileToken": "string" }
+{ "question": "string (1–500)", "lang": "en|pt|es|fr|it|de|zh|ru", "turnstileToken": "string" }
 ```
 **Resposta 200**
 ```json
@@ -137,6 +171,15 @@ pergunta
 `rating`: `1` (👍) ou `-1` (👎). **Resposta 200:** `{ "ok": true }` · **Erros:** `400 invalid_fields` · `403` · `429 rate_limited` (20/min/IP) · `503 unavailable`
 
 Gravado só quando o visitante clica; o painel do chat avisa que a pergunta e a resposta serão salvas.
+
+#### `GET /prices?symbol=` — preços da demo do LSTM
+**Resposta 200**
+```json
+{ "symbol": "PETR4.SA", "dates": ["2026-10-09", "…"], "close": [56.0, "…"] }
+```
+**Erros:** `400 invalid_symbol` · `403 forbidden_origin` · `502 upstream`
+
+Só leitura e sem Turnstile; aceita apenas a origem do site e `PETR4.SA`, `VALE3.SA`, `AAPL`. Busca 1 ano de fechamentos ajustados no Yahoo Finance (`v8/finance/chart`), converte as datas para o fuso da bolsa e responde com `Cache-Control: max-age=3600`.
 
 #### Cron — resumo semanal (`0 12 * * 1`, segunda 12:00 UTC)
 Consulta no D1 as mensagens e avaliações dos últimos 7 dias, testa a saúde (geração com Qwen3, embedding BGE-M3, consulta no Vectorize e `SELECT 1` no D1), busca visitas no GoatCounter (se houver `GOATCOUNTER_TOKEN`) e envia um e-mail pelo Resend para `NOTIFY_EMAIL`. O assunto ganha ⚠️ se algum serviço falhar.
@@ -211,7 +254,9 @@ Vetor de 1024 dimensões por trecho; `id` estável (ex.: `job1`, `p5`, `edu4`); 
 | Currículos | `./gerar-curriculos.sh` (Chrome headless → `cv/*.pdf`) |
 | Worker + conhecimento + índice | `cd worker && npm run deploy` |
 | Banco | `npx wrangler d1 migrations apply portfolio-contact --remote` |
-| Testes automáticos | GitHub Actions (`.github/workflows/testes.yml`) a cada push e pull request |
+| Testes automáticos | GitHub Actions (`.github/workflows/testes.yml`) a cada push e pull request: testes + Lighthouse (`lighthouserc.json`) |
+| Base da demo de filmes | `python3 scripts/gerar-dados-filmes.py` |
+| Modelos da demo do LSTM | `pip install -r scripts/lstm/requirements.txt` → `python scripts/lstm/train.py` → `python scripts/lstm/exportar_web.py demos/lstm` |
 | SEO | `sitemap.xml` + Google Search Console |
 
 ---
@@ -221,6 +266,8 @@ Vetor de 1024 dimensões por trecho; `id` estável (ex.: `job1`, `p5`, `edu4`); 
 - **Integração contínua:** GitHub Actions roda sintaxe dos scripts, validação do `sitemap.xml` e do JSON-LD, geração do conhecimento da IA e os testes do chat (o script detecta o Chrome do macOS ou do Linux).
 - **Lighthouse:** desempenho ~80 · acessibilidade 100 · boas práticas 100 · SEO 100 (celular).
 - **Testes do chat:** `tests/rodar-testes-chat.sh` (Chrome headless + `tests/runner.js` + `tests/chat-casos.json`, 92 casos).
+- **Lighthouse CI:** 3 medições por push; falha se acessibilidade < 95, boas práticas < 90 ou SEO < 95 (desempenho < 70 só avisa).
+- **Demos:** o LSTM em JS é conferido contra a saída do Keras (diferença ~1e-8); as três demos foram testadas no Chrome (desktop e 390 px, vários idiomas) e em produção.
 - **Testes do Worker:** chamadas com origem errada, campos inválidos, token ausente/falso, rota inexistente, limite por minuto e campo-armadilha.
 - **Ponta a ponta:** Chrome DevTools Protocol numa janela real (o Turnstile recusa navegadores headless, erro 600010 — comportamento esperado).
 
@@ -253,3 +300,6 @@ Vetor de 1024 dimensões por trecho; `id` estável (ex.: `job1`, `p5`, `edu4`); 
 | ADR-21 | *Service worker* próprio: rede primeiro para a página, cópia salva primeiro para CSS/JS/imagens | Workbox, cache-first em tudo | Sem dependência nem build; a página nunca fica desatualizada e o site abre offline. Outros domínios (IA, GitHub, fontes) não passam pelo cache. |
 | ADR-22 | Lighthouse CI (`@lhci/cli`) com relatório em armazenamento público temporário | Rodar só manualmente | Gratuito; impede regressões de acessibilidade e SEO. Desempenho só avisa, porque varia nos servidores do CI. |
 | ADR-23 | Demos de IA rodando no navegador (pesos exportados, inferência em JS puro) no GitHub Pages | Hugging Face Spaces (Gradio), TensorFlow.js | Custo zero: Spaces em Gradio passaram a exigir plano pago; sem biblioteca (~0 KB extra) e sem servidor. Preços via Worker com cópia salva como reserva. |
+| ADR-24 | Reconhecimento facial com face-api.js no navegador | API de reconhecimento em servidor | Privacidade (a imagem nunca sai do aparelho) e custo zero; é a mesma biblioteca do POC original. |
+| ADR-25 | Base de filmes do Wikidata (CC0) + resumos da Wikipédia (CC BY-SA) | Base do TMDB/Kaggle do projeto original | O TMDB tem restrições de redistribuição; Wikidata e Wikipédia permitem publicar com crédito. |
+| ADR-26 | LSTM com janela normalizada pelo último preço e comparação com baseline ingênuo | `MinMaxScaler` na série inteira (original) | O original vazava dados do teste e não extrapolava preços fora da faixa do treino (MAPE de 12% na PETR4); o card passou a citar o número verificável. |

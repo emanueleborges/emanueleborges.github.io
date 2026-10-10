@@ -76,6 +76,7 @@ Legenda: ✅ concluída · ⏳ pendente · 💡 ideia
 - ✅ **T56** Demo de IA `/demos/face/`: reconhecimento facial com face-api.js no navegador (webcam ou foto, nada sai do aparelho), 8 idiomas — RF-01
 - ✅ **T57** Demo de IA `/demos/filmes/`: recomendação TF-IDF + cosseno em JS puro sobre ~1.500 filmes de licença livre, com termos que explicam cada resultado — RF-01
 - ✅ **T58** Card 10: o assistente do portfólio como projeto (RAG com Workers AI e Vectorize), com botão que abre o chat — RF-01
+- ✅ **T59** Documentação atualizada (README, especificação RF-12/RF-13, plano §2.6–2.8, `GET /prices`, ADR-24 a 26) e scripts de treino do LSTM trazidos para `scripts/lstm/` — RNF-09
 
 ---
 
@@ -91,6 +92,7 @@ Legenda: ✅ concluída · ⏳ pendente · 💡 ideia
 
 ## Ideias
 
-- 💡 Card do próprio portfólio na seção Projetos.
+- 💡 Demo do RAG Agent / Crítico Jurídico (perguntas sobre um PDF) com Workers AI, dentro da cota grátis.
+- 💡 Mover `scripts/lstm/` também para o repositório `fiaptech4`, junto do projeto original.
 - 💡 Recomendações de colegas (LinkedIn).
 - 💡 Domínio próprio (pago) — endereço mais profissional e e-mails com remetente próprio.

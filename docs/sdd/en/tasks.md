@@ -76,6 +76,7 @@ Legend: ✅ done · ⏳ pending · 💡 idea
 - ✅ **T56** AI demo `/demos/face/`: in-browser face recognition with face-api.js (webcam or photo, nothing leaves the device), 8 languages — FR-01
 - ✅ **T57** AI demo `/demos/filmes/`: TF-IDF + cosine recommender in plain JS over ~1,500 freely licensed films, with the terms behind each result — FR-01
 - ✅ **T58** Card 10: the portfolio assistant as a project (RAG with Workers AI and Vectorize), with a button that opens the chat — FR-01
+- ✅ **T59** Documentation updated (README, spec FR-12/FR-13, plan §2.6–2.8, `GET /prices`, ADR-24 to 26) and LSTM training scripts brought into `scripts/lstm/` — NFR-09
 
 ---
 
@@ -91,6 +92,7 @@ Legend: ✅ done · ⏳ pending · 💡 idea
 
 ## Ideas
 
-- 💡 A card for the portfolio itself in the Projects section.
+- 💡 RAG Agent / Legal Critic demo (questions about a PDF) with Workers AI, within the free quota.
+- 💡 Also move `scripts/lstm/` to the `fiaptech4` repository, next to the original project.
 - 💡 Recommendations from colleagues (LinkedIn).
 - 💡 Custom domain (paid) — more professional address and emails from your own sender.

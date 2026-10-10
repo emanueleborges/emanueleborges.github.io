@@ -17,9 +17,11 @@ flowchart TB
     API[api.js]
     CHAT[chat.js]
     CONTACT[contact.js]
+    SW[sw.js — offline]
+    DEMOS["demos/ — LSTM, face, movies<br/>(in-browser inference)"]
   end
   subgraph "GitHub Pages"
-    STATIC[Static files + PDFs]
+    STATIC[Static files + PDFs + demo weights and data]
   end
   subgraph "Cloudflare (free tier)"
     WORKER[Worker emanuel-portfolio-chat]
@@ -31,8 +33,13 @@ flowchart TB
     RL[Rate Limiting]
   end
   GOAT[GoatCounter]
+  GH[Public GitHub API]
+  YF[Yahoo Finance]
+  CDN[jsDelivr — face-api.js and models]
 
   STATIC --> HTML
+  STATIC --> DEMOS
+  SW -. cache .-> STATIC
   CHAT --> API
   CONTACT --> API
   API -->|POST / and /contact| WORKER
@@ -43,6 +50,10 @@ flowchart TB
   WORKER --> VEC
   WORKER --> DB
   SCRIPT --> GOAT
+  SCRIPT -->|repositories| GH
+  DEMOS -->|GET /prices| WORKER
+  WORKER -->|closing prices| YF
+  DEMOS -->|face| CDN
 ```
 
 **Principles:** static site with no build step · minimal serverless backend · single source of text · graceful degradation (everything keeps working, with fewer features, if the backend fails) · zero cost.
@@ -60,6 +71,11 @@ flowchart TB
 | `chat.js` | Assistant: ready-made answers (regex rules), local search, AI call and UI. |
 | `contact.js` | Contact form validation, submission, counter and loading/success states. |
 | `curriculo.html` | A4 résumé template, rendered per language from `i18n.js`. |
+| `manifest.webmanifest` · `sw.js` · `icon-*.png` | Installable, offline app (PWA). |
+| `demos/demos.css` · `demos/demos.js` | Shared demo base: look, language (`?lang` → `localStorage` → English), formatting (`Intl`) and GoatCounter events. |
+| `demos/lstm/` | `lstm.js` (plain-JS LSTM inference), `demo.js` (UI and SVG charts), `*.json` weights and `dados.json` (metrics, backtest, saved prices). |
+| `demos/face/` | `face.js`: face recognition with face-api.js (jsDelivr CDN). |
+| `demos/filmes/` | `tfidf.js` (TF-IDF + cosine), `filmes.js` (UI) and `filmes.json` (~1,500 films). |
 
 ### 2.1 Internationalization
 - The HTML holds the Portuguese text; when the language changes, `script.js` applies `I18N[lang]` and restores the original for `pt`.
@@ -90,9 +106,9 @@ question
 
 ### 2.4 SEO and sharing
 - **Link previews:** static Open Graph and Twitter Card tags (in English) with `og-image.jpg` (1200×630).
-- **Languages:** `<link rel="alternate" hreflang>` for `?lang=en|pt|es|fr|it|zh|ru` + `x-default`. No `canonical` (it would conflict with the per-language alternates).
+- **Languages:** `<link rel="alternate" hreflang>` for `?lang=en|pt|es|fr|it|de|zh|ru` + `x-default`. No `canonical` (it would conflict with the per-language alternates).
 - **Structured data:** `Person` JSON-LD (role, employer, city, education, technologies, languages, LinkedIn and GitHub).
-- **Crawling:** `sitemap.xml` (page in 8 languages + 8 PDFs) and `robots.txt` (blocks `worker/`, `tests/`, `scripts/`, `apps-script/`, `docs/`, `curriculo.html`).
+- **Crawling:** `sitemap.xml` (page in 8 languages + 8 PDFs + 3 demos) and `robots.txt` (blocks `worker/`, `tests/`, `scripts/`, `apps-script/`, `docs/`, `curriculo.html`).
 - **Google Search Console:** verified with an HTML tag (`google-site-verification`); sitemap submitted.
 - **404:** `404.html` (GitHub Pages returns HTTP 404 with this page); `/#chat` opens the assistant.
 
@@ -102,6 +118,24 @@ question
 - Google Fonts with `preload` + `onload` (non-blocking) and a `<noscript>` fallback.
 - Result (Lighthouse, mobile): performance 69 → ~80; accessibility, best practices and SEO 100; initial weight ~237 KB.
 
+### 2.6 Repository data (GitHub)
+One call to `api.github.com/users/emanueleborges/repos?per_page=100` (no key) fills, on each card with `data-repo-meta`, the language, stars (only if > 0) and "updated … ago" (`Intl.RelativeTimeFormat`). The result is kept in `sessionStorage`; if the API fails, the card shows just the link. It doesn't run on `file://` (tests).
+
+### 2.7 Installable, offline app (PWA)
+- `manifest.webmanifest` with 192, 512 and *maskable* icons; `sw.js` registered only on HTTPS or `localhost`.
+- **Page:** network first; offline, the last saved copy.
+- **The site's own CSS/JS/images:** saved copy first, refreshed in the background; saving a new version (`?v=`) deletes older copies of the same file.
+- Other domains (Worker, GitHub, fonts, CDN) bypass the cache.
+
+### 2.8 AI demos
+All run **in the visitor's browser**, with no AI server.
+
+**Stock forecasting (LSTM)** — `scripts/lstm/train.py` trains locally (Keras) the same architecture as the FIAP project (3 LSTM layers of 50 units, 60-session window) on 5 years of adjusted Yahoo Finance closes; each window is divided by its last price and the model predicts the next day's change. Test = last 20%, compared with the naive baseline (tomorrow = today). `exportar_web.py` writes the weights as JSON and `dados.json` (metrics, backtest, 250 closes and a Keras reference case). `lstm.js` reproduces the Keras LSTM layer math (i, f, c, o gates) and the dense layers; multi-day forecasts are recursive. Current prices: the Worker's `GET /prices`; without it, those in `dados.json`.
+
+**Face recognition** — face-api.js 1.7.15 (TensorFlow.js, WebGL) and models from jsDelivr: TinyFaceDetector (input 416) → 68 landmarks → 128-number embedding; same person when the Euclidean distance is < 0.55. Registered faces live only in the page's memory. With the camera it analyzes ~8 frames/s; the video is mirrored and boxes are drawn on a `canvas` on top.
+
+**Movie recommender** — `scripts/gerar-dados-filmes.py` builds `filmes.json` from Wikidata (films, animated films and features with ≥ 45 Wikipedia articles; year, genres, director) and each film's English Wikipedia introduction (up to 700 characters). `tfidf.js` uses scikit-learn's `TfidfVectorizer` formula (tf × smoothed idf, L2 normalization), English and "film credits" stopwords, double-weighted genres and the director as a single word; it recommends by cosine and shows the 4 top-contributing terms.
+
 ## 3. Backend — Cloudflare Worker
 
 ### 3.1 Routes
@@ -109,7 +143,7 @@ question
 #### `POST /` — AI chat
 **Request**
 ```json
-{ "question": "string (1–500)", "lang": "en|pt|es|fr|it|zh|ru", "turnstileToken": "string" }
+{ "question": "string (1–500)", "lang": "en|pt|es|fr|it|de|zh|ru", "turnstileToken": "string" }
 ```
 **200 response**
 ```json
@@ -137,6 +171,15 @@ question
 `rating`: `1` (👍) or `-1` (👎). **200 response:** `{ "ok": true }` · **Errors:** `400 invalid_fields` · `403` · `429 rate_limited` (20/min/IP) · `503 unavailable`
 
 Stored only when the visitor clicks; the chat panel notes that the question and answer will be saved.
+
+#### `GET /prices?symbol=` — LSTM demo prices
+**200 response**
+```json
+{ "symbol": "PETR4.SA", "dates": ["2026-10-09", "…"], "close": [56.0, "…"] }
+```
+**Errors:** `400 invalid_symbol` · `403 forbidden_origin` · `502 upstream`
+
+Read-only and without Turnstile; it only accepts the site's origin and `PETR4.SA`, `VALE3.SA`, `AAPL`. It fetches 1 year of adjusted closes from Yahoo Finance (`v8/finance/chart`), converts dates to the exchange's time zone and responds with `Cache-Control: max-age=3600`.
 
 #### Cron — weekly summary (`0 12 * * 1`, Mondays 12:00 UTC)
 Queries D1 for the last 7 days of messages and ratings, runs a health check (Qwen3 generation, BGE-M3 embedding, Vectorize query and `SELECT 1` on D1), fetches visits from GoatCounter (if `GOATCOUNTER_TOKEN` is set) and sends an email through Resend to `NOTIFY_EMAIL`. The subject gets a ⚠️ when any service fails.
@@ -211,7 +254,9 @@ One 1024-dimension vector per excerpt; stable `id` (e.g. `job1`, `p5`, `edu4`); 
 | Résumés | `./gerar-curriculos.sh` (headless Chrome → `cv/*.pdf`) |
 | Worker + knowledge + index | `cd worker && npm run deploy` |
 | Database | `npx wrangler d1 migrations apply portfolio-contact --remote` |
-| Automated tests | GitHub Actions (`.github/workflows/testes.yml`) on every push and pull request |
+| Automated tests | GitHub Actions (`.github/workflows/testes.yml`) on every push and pull request: tests + Lighthouse (`lighthouserc.json`) |
+| Movie demo data | `python3 scripts/gerar-dados-filmes.py` |
+| LSTM demo models | `pip install -r scripts/lstm/requirements.txt` → `python scripts/lstm/train.py` → `python scripts/lstm/exportar_web.py demos/lstm` |
 | SEO | `sitemap.xml` + Google Search Console |
 
 ---
@@ -221,6 +266,8 @@ One 1024-dimension vector per excerpt; stable `id` (e.g. `job1`, `p5`, `edu4`); 
 - **Continuous integration:** GitHub Actions runs script syntax checks, `sitemap.xml` and JSON-LD validation, the AI knowledge build and the chat tests (the script finds Chrome on macOS or Linux).
 - **Lighthouse:** performance ~80 · accessibility 100 · best practices 100 · SEO 100 (mobile).
 - **Chat tests:** `tests/rodar-testes-chat.sh` (headless Chrome + `tests/runner.js` + `tests/chat-casos.json`, 92 cases).
+- **Lighthouse CI:** 3 runs per push; fails if accessibility < 95, best practices < 90 or SEO < 95 (performance < 70 only warns).
+- **Demos:** the JS LSTM is checked against Keras output (difference ~1e-8); all three demos were tested in Chrome (desktop and 390 px, several languages) and in production.
 - **Worker tests:** calls with a wrong origin, invalid fields, missing/fake token, unknown route, per-minute limit and honeypot.
 - **End-to-end:** Chrome DevTools Protocol in a real browser window (Turnstile rejects headless browsers with error 600010 — expected behavior).
 
@@ -253,3 +300,6 @@ One 1024-dimension vector per excerpt; stable `id` (e.g. `job1`, `p5`, `edu4`); 
 | ADR-21 | Hand-written service worker: network-first for the page, cache-first for CSS/JS/images | Workbox, cache-first for everything | No dependency or build; the page is never stale and the site opens offline. Other domains (AI, GitHub, fonts) bypass the cache. |
 | ADR-22 | Lighthouse CI (`@lhci/cli`) with reports in temporary public storage | Running it only by hand | Free; blocks accessibility and SEO regressions. Performance only warns, since it varies on CI servers. |
 | ADR-23 | AI demos running in the browser (exported weights, plain-JS inference) on GitHub Pages | Hugging Face Spaces (Gradio), TensorFlow.js | Zero cost: Gradio Spaces now require a paid plan; no library (~0 KB extra) and no server. Prices via the Worker with a saved copy as fallback. |
+| ADR-24 | In-browser face recognition with face-api.js | Server-side recognition API | Privacy (the image never leaves the device) and zero cost; same library as the original POC. |
+| ADR-25 | Movie data from Wikidata (CC0) + Wikipedia summaries (CC BY-SA) | The original project's TMDB/Kaggle data | TMDB has redistribution restrictions; Wikidata and Wikipedia allow publishing with credit. |
+| ADR-26 | LSTM with windows normalized by the last price and a naive-baseline comparison | `MinMaxScaler` over the whole series (original) | The original leaked test data and couldn't extrapolate prices outside the training range (12% MAPE on PETR4); the card now cites the verifiable number. |

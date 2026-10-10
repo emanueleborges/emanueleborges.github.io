@@ -8,7 +8,9 @@ Professional portfolio of **Emanuel Borges**, Senior Full Stack Developer (Java/
 
 🔗 **Live site:** https://emanueleborges.github.io · 💬 **Ask the assistant:** https://emanueleborges.github.io/#chat
 
-A framework-free static site with a serverless backend on Cloudflare for the AI chat and the contact form. **The whole infrastructure runs on free tiers.**
+🧪 **Live AI demos:** [stock forecasting (LSTM)](https://emanueleborges.github.io/demos/lstm/) · [face recognition](https://emanueleborges.github.io/demos/face/) · [movie recommender](https://emanueleborges.github.io/demos/filmes/)
+
+A framework-free static site with a serverless backend on Cloudflare for the AI chat and the contact form, plus **3 AI demos that run in the visitor's browser**. **The whole infrastructure runs on free tiers.**
 
 ---
 
@@ -65,7 +67,13 @@ flowchart LR
   W -->|notification + weekly summary| RS[Resend → owner's Gmail]
   W -->|confirmation| GAS[Google Apps Script → visitor]
   GP -->|cookieless events| GC[GoatCounter]
+  GP -->|language, stars, last update| GH[Public GitHub API]
+  GP -->|LSTM demo: GET /prices| W
+  W -->|adjusted closes| YF[Yahoo Finance]
+  GP -->|face demo: face-api.js + models| CDN[jsDelivr]
 ```
+
+The **AI demos** run inference in the browser: the LSTM runs in plain JavaScript with weights exported from Keras, face recognition uses face-api.js (TensorFlow.js) and the movie recommender computes TF-IDF + cosine in JS. The service worker (`sw.js`) keeps the site available offline.
 
 ### How the assistant answers
 
@@ -89,11 +97,15 @@ The AI knowledge is **generated from the site's own translations** (`i18n.js`): 
 
 **Serverless backend (Cloudflare free tier):** Workers · Cron Triggers · Workers AI (`@cf/qwen/qwen3-30b-a3b-fp8`, `@cf/baai/bge-m3`) · Vectorize · AI Gateway · D1 (SQLite) · Turnstile · Rate Limiting · Wrangler
 
+**AI in the demos:** Keras/TensorFlow (LSTM training) · plain-JavaScript LSTM (inference) · face-api.js 1.7.15 / TensorFlow.js (WebGL) · TF-IDF + cosine similarity in JS · SVG charts
+
+**PWA:** Web App Manifest · Service Worker (network first for the page, cache for files)
+
 **Email:** Resend (owner notifications and weekly summary) · Google Apps Script (visitor confirmations from Gmail)
 
-**Tooling:** Git + GitHub · GitHub Pages · GitHub Actions · GitHub CLI · headless Chrome (PDFs and tests) · Lighthouse · Node.js · Python · Shell · GoatCounter
+**Tooling:** Git + GitHub · GitHub Pages · GitHub Actions · GitHub CLI · headless Chrome (PDFs and tests) · Lighthouse and Lighthouse CI · Node.js · Python · Shell · GoatCounter
 
-**External assets:** Google Fonts (Manrope, DM Mono) · Simple Icons (CC0) · Unsplash
+**External assets:** Google Fonts (Manrope, DM Mono) · Simple Icons (CC0) · Unsplash · public GitHub API · Yahoo Finance · Wikidata and Wikipedia · jsDelivr
 
 ---
 
@@ -109,6 +121,7 @@ The AI knowledge is **generated from the site's own translations** (`i18n.js`): 
 │   ├── face/               # Face recognition with face-api.js
 │   └── filmes/             # Movie recommender: tfidf.js and filmes.json
 ├── scripts/gerar-dados-filmes.py  # Builds demos/filmes/filmes.json (Wikidata + Wikipedia)
+├── scripts/lstm/           # Training (train.py) and export (exportar_web.py) of the demo's LSTM
 ├── styles.css              # All styling (theme, layout, animations, chat, form)
 ├── i18n.js                 # Text in 8 languages (site, chat, form and résumé)
 ├── script.js               # Languages, menu, filters, animations, particles, analytics
@@ -209,6 +222,10 @@ This (1) builds the knowledge from `i18n.js`, (2) deploys the Worker and (3) upd
 | See visits and events | https://emanueleborges.goatcounter.com |
 | See Google searches and indexing | [Google Search Console](https://search.google.com/search-console) → property `https://emanueleborges.github.io/` |
 | Run the chat tests | `./tests/rodar-testes-chat.sh` |
+| Run Lighthouse like CI does | `npx @lhci/cli@0.15.1 autorun` (uses `lighthouserc.json`) |
+| Refresh the movie data | `python3 scripts/gerar-dados-filmes.py` (~2 min) |
+| Retrain the demo's LSTM | `pip install -r scripts/lstm/requirements.txt` → `python scripts/lstm/train.py` → `python scripts/lstm/exportar_web.py demos/lstm` |
+| Add a stock to the LSTM demo | Add the ticker to `TICKERS` (`scripts/lstm/train.py`) and `PRICE_SYMBOLS` (`worker/src/index.js`); retrain, export and run `npm run deploy` in `worker/` |
 
 ---
 
@@ -219,7 +236,9 @@ This (1) builds the knowledge from `i18n.js`, (2) deploys the Worker and (3) upd
 | **GitHub Actions** on every push | JavaScript syntax, `sitemap.xml` and JSON-LD validation, AI knowledge build and the **92 chat tests** |
 | **Lighthouse (mobile)** | Performance ~80 · Accessibility 100 · Best practices 100 · SEO 100 |
 | **Lighthouse in CI** on every push | 3 runs; fails if accessibility < 95, best practices < 90 or SEO < 95 (performance < 70 only warns). The report link appears in the GitHub Actions log. |
-| **Worker** | Wrong origin, invalid fields, missing/fake token, unknown route, per-minute limits and honeypot |
+| **Worker** | Wrong origin, invalid fields, missing/fake token, unknown route, per-minute limits, honeypot and `GET /prices` (unlisted stock and other origins rejected) |
+| **AI demos** | JS LSTM checked against Keras (difference ~1e-8); the face demo recognizes a mirrored, rotated photo (distance 0.19); the movie demo indexes ~1,500 films in < 50 ms; all three tested in Chrome (desktop and mobile, several languages) and on the live site |
+| **Offline** | With the service worker active, the page reloads offline, with its look and projects |
 | **End-to-end** | Questions, ratings and form submissions on the live site in a real Chrome window (Turnstile rejects invisible automated browsers, as expected) |
 
 ---
@@ -228,6 +247,7 @@ This (1) builds the knowledge from `i18n.js`, (2) deploys the Worker and (3) upd
 
 - **CORS:** the Worker only accepts requests from `https://emanueleborges.github.io`.
 - **Turnstile:** every AI question, form submission and rating requires a valid bot-protection token.
+- **Prices route (`GET /prices`):** read-only; only accepts the site's origin and the demo's 3 stocks, with a 1 h cache.
 - **Per-IP limits:** 10 questions/min (chat), 3 messages/min (form), 20 ratings/min.
 - **Validation:** question ≤ 500 characters; name 2–100, valid email ≤ 200, message 5–2,000.
 - **Honeypot** field in the form: bot submissions are dropped without being saved.
@@ -235,6 +255,7 @@ This (1) builds the knowledge from `i18n.js`, (2) deploys the Worker and (3) upd
 - **Visitor confirmation can't be abused as spam:** no message text echoed, first name only (letters), at most one confirmation per email address every 24 h.
 - **No secrets in the code:** all keys are Worker secrets; the Turnstile site key is public by design.
 - **Privacy (LGPD/GDPR-style):** the form stores only name, email, message, language and date (no IP address); analytics are cookieless; the chat discloses when a question goes to the AI; questions and answers are stored only if the visitor rates them, with a notice next to the buttons.
+- **Face demo:** camera and photos are processed only on the visitor's device; nothing is sent or stored, and registered faces disappear when the page closes.
 
 ---
 
@@ -251,6 +272,8 @@ This (1) builds the knowledge from `i18n.js`, (2) deploys the Worker and (3) upd
 | Resend | Notifications and weekly summary (3,000 emails/month free) |
 | Google Apps Script | Visitor confirmations from Gmail (~100/day) |
 | GoatCounter | Free for personal use |
+| AI demos | Run in the visitor's browser; face-api.js models via jsDelivr (free CDN); prices via the Worker; static movie data |
+| GitHub API · Yahoo Finance · Wikidata/Wikipedia | Public and free (no key) |
 
 If the daily AI quota runs out, the chat keeps working with local search until it resets (00:00 UTC).
 
@@ -284,6 +307,9 @@ The project follows **Spec-Driven Development**: the specification describes the
 - UFG, FIAP, Descomplica and FUCAPI logos: taken from the official websites, used only to identify the education.
 - Background images: [Unsplash](https://unsplash.com).
 - Fonts: Manrope and DM Mono (Google Fonts).
+- Face demo: [face-api.js](https://github.com/vladmandic/face-api) (MIT), by Vladimir Mandic.
+- Movie demo: data from [Wikidata](https://www.wikidata.org) (CC0) and shortened English [Wikipedia](https://en.wikipedia.org) summaries (CC BY-SA 4.0).
+- LSTM demo: prices from [Yahoo Finance](https://finance.yahoo.com), used for demonstration only.
 
 ---
 

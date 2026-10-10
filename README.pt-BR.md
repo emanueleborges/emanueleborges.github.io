@@ -8,7 +8,9 @@ Portfólio profissional de **Emanuel Borges**, Desenvolvedor Full Stack Sênior 
 
 🔗 **Site:** https://emanueleborges.github.io · 💬 **Pergunte ao assistente:** https://emanueleborges.github.io/#chat
 
-Site estático, sem framework, com um backend *serverless* no Cloudflare para o chat com IA e o formulário de contato. **Toda a infraestrutura roda em planos gratuitos.**
+🧪 **Demos de IA ao vivo:** [previsão de ações (LSTM)](https://emanueleborges.github.io/demos/lstm/) · [reconhecimento facial](https://emanueleborges.github.io/demos/face/) · [recomendação de filmes](https://emanueleborges.github.io/demos/filmes/)
+
+Site estático, sem framework, com um backend *serverless* no Cloudflare para o chat com IA e o formulário de contato, e **3 demos de IA que rodam no navegador do visitante**. **Toda a infraestrutura roda em planos gratuitos.**
 
 ---
 
@@ -65,7 +67,13 @@ flowchart LR
   W -->|aviso + resumo semanal| RS[Resend → Gmail do dono]
   W -->|confirmação| GAS[Google Apps Script → visitante]
   GP -->|eventos sem cookies| GC[GoatCounter]
+  GP -->|linguagem, estrelas, atualização| GH[API pública do GitHub]
+  GP -->|demo LSTM: GET /prices| W
+  W -->|fechamentos ajustados| YF[Yahoo Finance]
+  GP -->|demo facial: face-api.js + modelos| CDN[jsDelivr]
 ```
+
+As **demos de IA** fazem a inferência no navegador: o LSTM roda em JavaScript puro com pesos exportados do Keras, o reconhecimento facial usa face-api.js (TensorFlow.js) e a recomendação de filmes calcula TF-IDF + cosseno em JS. O *service worker* (`sw.js`) guarda o site para abrir offline.
 
 ### Como o assistente responde
 
@@ -89,11 +97,15 @@ O conhecimento da IA é **gerado das próprias traduções do site** (`i18n.js`)
 
 **Backend serverless (Cloudflare, plano gratuito):** Workers · Cron Triggers · Workers AI (`@cf/qwen/qwen3-30b-a3b-fp8`, `@cf/baai/bge-m3`) · Vectorize · AI Gateway · D1 (SQLite) · Turnstile · Rate Limiting · Wrangler
 
+**IA nas demos:** Keras/TensorFlow (treino do LSTM) · LSTM em JavaScript puro (inferência) · face-api.js 1.7.15 / TensorFlow.js (WebGL) · TF-IDF + similaridade de cosseno em JS · SVG para gráficos
+
+**PWA:** Web App Manifest · Service Worker (rede primeiro para a página, cache para os arquivos)
+
 **E-mail:** Resend (avisos ao dono e resumo semanal) · Google Apps Script (confirmações ao visitante pelo Gmail)
 
-**Ferramentas:** Git + GitHub · GitHub Pages · GitHub Actions · GitHub CLI · Chrome headless (PDFs e testes) · Lighthouse · Node.js · Python · Shell · GoatCounter
+**Ferramentas:** Git + GitHub · GitHub Pages · GitHub Actions · GitHub CLI · Chrome headless (PDFs e testes) · Lighthouse e Lighthouse CI · Node.js · Python · Shell · GoatCounter
 
-**Recursos externos:** Google Fonts (Manrope, DM Mono) · Simple Icons (CC0) · Unsplash
+**Recursos externos:** Google Fonts (Manrope, DM Mono) · Simple Icons (CC0) · Unsplash · API pública do GitHub · Yahoo Finance · Wikidata e Wikipédia · jsDelivr
 
 ---
 
@@ -109,6 +121,7 @@ O conhecimento da IA é **gerado das próprias traduções do site** (`i18n.js`)
 │   ├── face/               # Reconhecimento facial com face-api.js
 │   └── filmes/             # Recomendação de filmes: tfidf.js e filmes.json
 ├── scripts/gerar-dados-filmes.py  # Gera demos/filmes/filmes.json (Wikidata + Wikipédia)
+├── scripts/lstm/           # Treino (train.py) e exportação (exportar_web.py) do LSTM da demo
 ├── styles.css              # Todo o visual (tema, layout, animações, chat, formulário)
 ├── i18n.js                 # Textos dos 8 idiomas (site, chat, formulário e currículo)
 ├── script.js               # Idiomas, menu, filtros, animações, partículas, estatísticas
@@ -209,6 +222,10 @@ Esse comando (1) gera o conhecimento a partir do `i18n.js`, (2) publica o Worker
 | Ver visitas e eventos | https://emanueleborges.goatcounter.com |
 | Ver buscas e indexação no Google | [Google Search Console](https://search.google.com/search-console) → propriedade `https://emanueleborges.github.io/` |
 | Rodar os testes do chat | `./tests/rodar-testes-chat.sh` |
+| Rodar o Lighthouse como no CI | `npx @lhci/cli@0.15.1 autorun` (usa `lighthouserc.json`) |
+| Atualizar a base de filmes | `python3 scripts/gerar-dados-filmes.py` (~2 min) |
+| Retreinar o LSTM da demo | `pip install -r scripts/lstm/requirements.txt` → `python scripts/lstm/train.py` → `python scripts/lstm/exportar_web.py demos/lstm` |
+| Adicionar uma ação à demo do LSTM | Inclua o código em `TICKERS` (`scripts/lstm/train.py`) e em `PRICE_SYMBOLS` (`worker/src/index.js`); retreine, exporte e rode `npm run deploy` em `worker/` |
 
 ---
 
@@ -219,7 +236,9 @@ Esse comando (1) gera o conhecimento a partir do `i18n.js`, (2) publica o Worker
 | **GitHub Actions** a cada push | Sintaxe dos JavaScript, validação do `sitemap.xml` e do JSON-LD, geração do conhecimento da IA e os **92 testes do chat** |
 | **Lighthouse (celular)** | Desempenho ~80 · Acessibilidade 100 · Boas práticas 100 · SEO 100 |
 | **Lighthouse no CI** a cada push | 3 medições; falha se acessibilidade < 95, boas práticas < 90 ou SEO < 95 (desempenho < 70 só avisa). O link do relatório aparece no log do GitHub Actions. |
-| **Worker** | Origem errada, campos inválidos, token ausente/falso, rota inexistente, limites por minuto e campo-armadilha |
+| **Worker** | Origem errada, campos inválidos, token ausente/falso, rota inexistente, limites por minuto, campo-armadilha e `GET /prices` (ação fora da lista e outra origem recusadas) |
+| **Demos de IA** | LSTM em JS conferido contra o Keras (diferença ~1e-8); demo facial reconhece uma foto espelhada e girada (distância 0,19); demo de filmes indexa ~1.500 filmes em < 50 ms; as três testadas no Chrome (desktop e celular, vários idiomas) e no site publicado |
+| **Offline** | Com o *service worker* ativo, a página recarrega sem internet, com o visual e os projetos |
 | **Ponta a ponta** | Perguntas, avaliações e envio do formulário no site publicado, numa janela real do Chrome (o Turnstile recusa navegadores automatizados invisíveis, como esperado) |
 
 ---
@@ -228,6 +247,7 @@ Esse comando (1) gera o conhecimento a partir do `i18n.js`, (2) publica o Worker
 
 - **CORS:** o Worker só aceita pedidos de `https://emanueleborges.github.io`.
 - **Turnstile:** toda pergunta à IA, envio do formulário e avaliação exigem um token anti-robô válido.
+- **Rota de preços (`GET /prices`):** só leitura, aceita apenas a origem do site e as 3 ações da demo, com cache de 1 h.
 - **Limites por IP:** 10 perguntas/min (chat), 3 mensagens/min (formulário), 20 avaliações/min.
 - **Validação:** pergunta ≤ 500 caracteres; nome 2–100, e-mail válido ≤ 200, mensagem 5–2.000.
 - **Campo-armadilha** no formulário: envios de robôs são descartados sem salvar.
@@ -235,6 +255,7 @@ Esse comando (1) gera o conhecimento a partir do `i18n.js`, (2) publica o Worker
 - **Confirmação ao visitante não vira canal de spam:** não repete o texto da mensagem, usa só o primeiro nome (letras) e envia no máximo 1 por e-mail a cada 24 h.
 - **Sem segredos no código:** todas as chaves são *secrets* do Worker; a site key do Turnstile é pública por natureza.
 - **LGPD:** o formulário guarda só nome, e-mail, mensagem, idioma e data (sem IP); estatísticas sem cookies; o chat avisa quando a pergunta vai para a IA; pergunta e resposta só são salvas se o visitante avaliar, com aviso ao lado dos botões.
+- **Demo facial:** câmera e fotos são processadas só no aparelho do visitante; nada é enviado nem salvo, e os rostos cadastrados somem ao fechar a página.
 
 ---
 
@@ -251,6 +272,8 @@ Esse comando (1) gera o conhecimento a partir do `i18n.js`, (2) publica o Worker
 | Resend | Avisos e resumo semanal (3.000 e-mails/mês grátis) |
 | Google Apps Script | Confirmações ao visitante pelo Gmail (~100/dia) |
 | GoatCounter | Gratuito para uso pessoal |
+| Demos de IA | Rodam no navegador do visitante; modelos do face-api.js pelo jsDelivr (CDN grátis); preços pelo Worker; base de filmes estática |
+| API do GitHub · Yahoo Finance · Wikidata/Wikipédia | Públicas e gratuitas (sem chave) |
 
 Se a cota diária da IA acabar, o chat continua com a busca local até a renovação (00:00 UTC).
 
@@ -284,6 +307,9 @@ O projeto segue **Spec-Driven Development**: a especificação descreve o *quê*
 - Logos de UFG, FIAP, Descomplica e FUCAPI: obtidos dos sites oficiais, usados apenas para identificar a formação.
 - Imagens de fundo: [Unsplash](https://unsplash.com).
 - Fontes: Manrope e DM Mono (Google Fonts).
+- Demo facial: [face-api.js](https://github.com/vladmandic/face-api) (MIT), de Vladimir Mandic.
+- Demo de filmes: dados do [Wikidata](https://www.wikidata.org) (CC0) e resumos da [Wikipédia](https://en.wikipedia.org) em inglês (CC BY-SA 4.0), encurtados.
+- Demo do LSTM: preços do [Yahoo Finance](https://finance.yahoo.com), usados só para demonstração.
 
 ---
 
