@@ -53,7 +53,7 @@ Legend: ✅ done · ⏳ pending · 💡 idea
 
 ### Documentation
 - ✅ **T30** README and SDD documents (spec, plan, tasks) in Portuguese and English
-- ✅ **T38** Email notification for new messages (Resend, free) — FR-06.5
+- ✅ **T38** Email notification for new messages (Resend, free) — FR-06.5 *(active once `RESEND_API_KEY` is set)*
 - ✅ **T36** 👍/👎 rating of AI answers stored in D1 + `ver-avaliacoes.sh` — NFR-08
 
 ---
