@@ -1,0 +1,16 @@
+{
+  "name": "Emanuel Borges — Portfolio",
+  "short_name": "Emanuel Borges",
+  "description": "Portfolio of Emanuel Borges — Senior Full Stack Developer with 10+ years of experience, specializing in Machine Learning and NLP.",
+  "lang": "en",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#090811",
+  "theme_color": "#090811",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

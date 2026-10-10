@@ -68,6 +68,10 @@ Legenda: ✅ concluída · ⏳ pendente · 💡 ideia
 - ✅ **T51** Regras de custo zero documentadas (README e RNF-01); verificado: Workers Free, sem cartão em nenhum serviço — RNF-01
 - ✅ **T44** Confirmação automática ao visitante no idioma da mensagem (Google Apps Script) — RF-06.6
 - ✅ **T52** Alemão como 8º idioma: site, chat (respostas prontas e busca), currículo PDF, IA, confirmação por e-mail e 13 testes — RF-02
+- ✅ **T31** Link "Ver código" nos 9 cards de projetos, apontando para o repositório de cada um (8 idiomas) — RF-01
+- ✅ **T32** Cards com linguagem, estrelas e data da última atualização via API pública do GitHub (sem chave, guardado na sessão) — RF-01
+- ✅ **T53** App instalável e offline (PWA): manifest, ícones 192/512/maskable e *service worker* — RNF-02
+- ✅ **T54** Lighthouse no GitHub Actions com notas mínimas (acessibilidade 95, boas práticas 90, SEO 95) — RNF-02, RNF-06
 
 ---
 
@@ -75,8 +79,6 @@ Legenda: ✅ concluída · ⏳ pendente · 💡 ideia
 
 | ID | Tarefa | Depende de | Requisito |
 |---|---|---|---|
-| ⏳ **T31** | Links "Código" e "Demo" nos cards de projetos | Links dos repositórios | RF-01 |
-| ⏳ **T32** | Cards de projetos com dados do GitHub (estrelas, último commit) via Cron Trigger | T31 | RF-01 |
 | ⏳ **T33** | Números de impacto nas experiências (ex.: tempo de deploy, % de bugs) | Dados do Emanuel | RF-01 |
 | ⏳ **T35** | Revisão das traduções por falantes nativos (prioridade: chinês e russo) | Revisor | RF-02 |
 | ⏳ **T37** | Testar em produção o limite de 3 mensagens por minuto do formulário | — | RNF-04 |

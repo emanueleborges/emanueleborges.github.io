@@ -34,7 +34,7 @@ A framework-free static site with a serverless backend on Cloudflare for the AI 
 | Area | What it does |
 |---|---|
 | **8 languages** | English (default), Portuguese, Spanish, French, Italian, German, Chinese and Russian. Visitors pick one in the header; the choice is remembered and can come in the link (`?lang=pt`). |
-| **Sections** | About (with photo), Experience, Projects (with filters), Skills (45 technologies with icons and filters), Education (with institution logos) and Contact. |
+| **Sections** | About (with photo), Experience, Projects (with filters, a link to the code and language/stars/last update from the GitHub API), Skills (45 technologies with icons and filters), Education (with institution logos) and Contact. |
 | **Visuals** | Dark purple + cyan theme, moving duotone background images, Canvas particle network, scroll animations and a sticky header with reading progress. Respects "reduce motion". |
 | **AI assistant** | Hybrid: local **ready-made answers** for frequent questions, **generative AI with RAG** for everything else and **local search** as a fallback. AI answers can be rated 👍/👎. See [Architecture](#architecture). |
 | **PDF résumé** | One PDF per language, generated from the same text source as the site; the button downloads the PDF for the current language. |
@@ -44,6 +44,7 @@ A framework-free static site with a serverless backend on Cloudflare for the AI 
 | **Analytics** | Visits and events (chat opened, résumé downloads, contact clicks, form submissions, ratings) with GoatCounter, cookieless. |
 | **Weekly summary** | Every Monday an email with the week's messages, chat ratings and a health check of the AI, vector index and database. |
 | **404 page** | Custom page in the site's style with links to the portfolio and the assistant. |
+| **Installable app (PWA)** | Can be installed on a phone or computer (own icon) and opens offline: the page and its files are saved by a *service worker*. |
 
 ---
 
@@ -99,6 +100,7 @@ The AI knowledge is **generated from the site's own translations** (`i18n.js`): 
 .
 ├── index.html              # Single-page portfolio (SEO, Open Graph, JSON-LD)
 ├── 404.html                # Custom "page not found"
+├── manifest.webmanifest · sw.js · icon-*.png  # Installable, offline app (PWA)
 ├── styles.css              # All styling (theme, layout, animations, chat, form)
 ├── i18n.js                 # Text in 8 languages (site, chat, form and résumé)
 ├── script.js               # Languages, menu, filters, animations, particles, analytics
@@ -111,7 +113,8 @@ The AI knowledge is **generated from the site's own translations** (`i18n.js`): 
 ├── cv/                     # PDF résumés (one per language)
 ├── logos/                  # Institution logos and skill icons
 ├── tests/                  # Automated chat tests (92 cases, 8 languages)
-├── .github/workflows/      # GitHub Actions: tests on every push
+├── .github/workflows/      # GitHub Actions: tests and Lighthouse on every push
+├── lighthouserc.json       # Minimum Lighthouse scores in CI
 ├── scripts/pre-commit      # Git hook: last-updated date and file versioning
 ├── apps-script/Codigo.gs   # Visitor confirmation (Google Apps Script) — template without the secret
 ├── docs/sdd/               # Specification (SDD) in Portuguese; docs/sdd/en/ in English
@@ -207,6 +210,7 @@ This (1) builds the knowledge from `i18n.js`, (2) deploys the Worker and (3) upd
 |---|---|
 | **GitHub Actions** on every push | JavaScript syntax, `sitemap.xml` and JSON-LD validation, AI knowledge build and the **92 chat tests** |
 | **Lighthouse (mobile)** | Performance ~80 · Accessibility 100 · Best practices 100 · SEO 100 |
+| **Lighthouse in CI** on every push | 3 runs; fails if accessibility < 95, best practices < 90 or SEO < 95 (performance < 70 only warns). The report link appears in the GitHub Actions log. |
 | **Worker** | Wrong origin, invalid fields, missing/fake token, unknown route, per-minute limits and honeypot |
 | **End-to-end** | Questions, ratings and form submissions on the live site in a real Chrome window (Turnstile rejects invisible automated browsers, as expected) |
 

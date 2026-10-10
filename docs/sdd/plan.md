@@ -249,3 +249,6 @@ Vetor de 1024 dimensões por trecho; `id` estável (ex.: `job1`, `p5`, `edu4`); 
 | ADR-17 | `hreflang` sem `canonical` | `canonical` para a página inicial | O Lighthouse apontou conflito: cada versão de idioma deve ser a sua própria referência. |
 | ADR-18 | Imagens do topo sob demanda e responsivas | Carregar as 4 no início | Reduziu o tempo do conteúdo principal de ~6 s para ~3,5 s no celular. |
 | ADR-19 | GitHub Actions para os testes | Rodar só localmente | Gratuito em repositório público; impede publicar algo que quebre o chat. |
+| ADR-20 | Dados dos repositórios pela API pública do GitHub, direto do navegador | Cron Trigger no Worker | Uma chamada sem chave traz todos os repositórios (limite de 60/h por visitante, guardada na sessão); sem servidor nem deploy. Se falhar, o card mostra só o link. |
+| ADR-21 | *Service worker* próprio: rede primeiro para a página, cópia salva primeiro para CSS/JS/imagens | Workbox, cache-first em tudo | Sem dependência nem build; a página nunca fica desatualizada e o site abre offline. Outros domínios (IA, GitHub, fontes) não passam pelo cache. |
+| ADR-22 | Lighthouse CI (`@lhci/cli`) com relatório em armazenamento público temporário | Rodar só manualmente | Gratuito; impede regressões de acessibilidade e SEO. Desempenho só avisa, porque varia nos servidores do CI. |

@@ -38,3 +38,12 @@ jobs:
 
       - name: Testes do assistente (chat)
         run: ./tests/rodar-testes-chat.sh
+
+  lighthouse:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Lighthouse (desempenho, acessibilidade, boas práticas e SEO)
+        run: npx --yes @lhci/cli@0.15.1 autorun

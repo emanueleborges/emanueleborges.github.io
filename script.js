@@ -95,6 +95,7 @@ document.addEventListener("click", (event) => {
   else if (href.includes("wa.me")) track("contato-whatsapp", "Clicou no WhatsApp");
   else if (href.startsWith("mailto:")) track("contato-email", "Clicou no e-mail");
   else if (href.includes("linkedin.com")) track("contato-linkedin", "Clicou no LinkedIn");
+  else if (link.dataset.repo) track(`projeto-${link.dataset.repo}`, `Abriu o código: ${link.dataset.repo}`);
   else if (href.includes("github.com")) track("contato-github", "Clicou no GitHub");
 });
 
@@ -169,6 +170,59 @@ document.querySelectorAll("[data-filter-group]").forEach((tabList) => {
   document.addEventListener("languagechange", () => applyFilter(activeFilter));
   applyFilter(activeFilter);
 });
+
+/* ---------- Dados dos repositórios (API pública do GitHub) ---------- */
+
+// Uma única chamada traz todos os repositórios; sem chave (limite de 60/h por visitante).
+// Fica guardada na sessão. Se falhar, os cards seguem só com o link "Ver código".
+let repoData = null;
+
+const relativeTime = (iso) => {
+  const days = Math.round((new Date(iso) - Date.now()) / 86400000);
+  const [value, unit] =
+    Math.abs(days) >= 365 ? [Math.round(days / 365), "year"]
+    : Math.abs(days) >= 30 ? [Math.round(days / 30), "month"]
+    : Math.abs(days) >= 7 ? [Math.round(days / 7), "week"]
+    : [days, "day"];
+  return new Intl.RelativeTimeFormat(htmlLang[currentLang], { numeric: "auto" }).format(value, unit);
+};
+
+const renderRepoMeta = () => {
+  if (!repoData) return;
+  document.querySelectorAll("[data-repo-meta]").forEach((meta) => {
+    const repo = repoData[meta.dataset.repoMeta];
+    if (!repo) return;
+    meta.textContent = [
+      repo.language,
+      repo.stars > 0 ? `★ ${repo.stars}` : null,
+      t("proj.updated", { when: relativeTime(repo.pushed) }),
+    ].filter(Boolean).join(" · ");
+  });
+};
+
+const loadRepoData = async () => {
+  try {
+    repoData = JSON.parse(sessionStorage.getItem("repos"));
+  } catch {
+    /* sem sessionStorage: busca de novo */
+  }
+  if (!repoData) {
+    const response = await fetch("https://api.github.com/users/emanueleborges/repos?per_page=100");
+    if (!response.ok) return;
+    repoData = Object.fromEntries(
+      (await response.json()).map((r) => [r.name, { language: r.language, stars: r.stargazers_count, pushed: r.pushed_at }]),
+    );
+    try {
+      sessionStorage.setItem("repos", JSON.stringify(repoData));
+    } catch {
+      /* navegação privada: segue sem guardar */
+    }
+  }
+  renderRepoMeta();
+};
+
+document.addEventListener("languagechange", renderRepoMeta);
+if (location.protocol.startsWith("http")) loadRepoData().catch(() => {});
 
 applyLanguage(detectLang());
 
@@ -343,4 +397,10 @@ if (!prefersReducedMotion) {
       loop();
     }
   });
+}
+
+/* ---------- App instalável e offline (service worker) ---------- */
+
+if ("serviceWorker" in navigator && (location.protocol === "https:" || location.hostname === "localhost")) {
+  addEventListener("load", () => navigator.serviceWorker.register("sw.js").catch(() => {}));
 }

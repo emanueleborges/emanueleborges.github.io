@@ -34,7 +34,7 @@ Site estático, sem framework, com um backend *serverless* no Cloudflare para o 
 | Área | O que faz |
 |---|---|
 | **8 idiomas** | Inglês (padrão), português, espanhol, francês, italiano, alemão, chinês e russo. O visitante escolhe no cabeçalho; a escolha fica salva e pode vir no link (`?lang=pt`). |
-| **Seções** | Sobre (com foto), Experiência, Projetos (com filtros), Habilidades (45 tecnologias com ícones e filtros), Formação (com logos das instituições) e Contato. |
+| **Seções** | Sobre (com foto), Experiência, Projetos (com filtros, link para o código e linguagem/estrelas/última atualização vindos da API do GitHub), Habilidades (45 tecnologias com ícones e filtros), Formação (com logos das instituições) e Contato. |
 | **Visual** | Tema escuro roxo + ciano, imagens de fundo em movimento (duotone), rede de partículas em Canvas, animações ao rolar e cabeçalho fixo com barra de progresso. Respeita "reduzir movimento". |
 | **Assistente com IA** | Híbrido: **respostas prontas** locais para perguntas frequentes, **IA generativa com RAG** para o resto e **busca local** como reserva. Respostas da IA podem ser avaliadas com 👍/👎. Veja [Arquitetura](#arquitetura). |
 | **Currículo em PDF** | Um PDF por idioma, gerado da mesma fonte de textos do site; o botão baixa o PDF do idioma atual. |
@@ -44,6 +44,7 @@ Site estático, sem framework, com um backend *serverless* no Cloudflare para o 
 | **Estatísticas** | Visitas e eventos (chat aberto, downloads do currículo, cliques em contatos, envios do formulário, avaliações) com GoatCounter, sem cookies. |
 | **Resumo semanal** | Toda segunda, um e-mail com as mensagens da semana, as avaliações do chat e um teste de saúde da IA, do índice vetorial e do banco. |
 | **Página 404** | Página personalizada no estilo do site, com links para o portfólio e o assistente. |
+| **App instalável (PWA)** | Pode ser instalado no celular ou computador (ícone próprio) e abre sem internet: a página e os arquivos ficam salvos pelo *service worker*. |
 
 ---
 
@@ -99,6 +100,7 @@ O conhecimento da IA é **gerado das próprias traduções do site** (`i18n.js`)
 .
 ├── index.html              # Página única do portfólio (SEO, Open Graph, JSON-LD)
 ├── 404.html                # "Página não encontrada" personalizada
+├── manifest.webmanifest · sw.js · icon-*.png  # App instalável e offline (PWA)
 ├── styles.css              # Todo o visual (tema, layout, animações, chat, formulário)
 ├── i18n.js                 # Textos dos 8 idiomas (site, chat, formulário e currículo)
 ├── script.js               # Idiomas, menu, filtros, animações, partículas, estatísticas
@@ -111,7 +113,8 @@ O conhecimento da IA é **gerado das próprias traduções do site** (`i18n.js`)
 ├── cv/                     # Currículos em PDF (um por idioma)
 ├── logos/                  # Logos das instituições e ícones das habilidades
 ├── tests/                  # Testes automáticos do chat (92 casos, 8 idiomas)
-├── .github/workflows/      # GitHub Actions: testes a cada push
+├── .github/workflows/      # GitHub Actions: testes e Lighthouse a cada push
+├── lighthouserc.json       # Notas mínimas do Lighthouse no CI
 ├── scripts/pre-commit      # Hook do git: data de atualização e versão dos arquivos
 ├── apps-script/Codigo.gs   # Confirmação ao visitante (Google Apps Script) — modelo sem a senha
 ├── docs/sdd/               # Especificação (SDD) em português; docs/sdd/en/ em inglês
@@ -207,6 +210,7 @@ Esse comando (1) gera o conhecimento a partir do `i18n.js`, (2) publica o Worker
 |---|---|
 | **GitHub Actions** a cada push | Sintaxe dos JavaScript, validação do `sitemap.xml` e do JSON-LD, geração do conhecimento da IA e os **92 testes do chat** |
 | **Lighthouse (celular)** | Desempenho ~80 · Acessibilidade 100 · Boas práticas 100 · SEO 100 |
+| **Lighthouse no CI** a cada push | 3 medições; falha se acessibilidade < 95, boas práticas < 90 ou SEO < 95 (desempenho < 70 só avisa). O link do relatório aparece no log do GitHub Actions. |
 | **Worker** | Origem errada, campos inválidos, token ausente/falso, rota inexistente, limites por minuto e campo-armadilha |
 | **Ponta a ponta** | Perguntas, avaliações e envio do formulário no site publicado, numa janela real do Chrome (o Turnstile recusa navegadores automatizados invisíveis, como esperado) |
 

@@ -68,6 +68,10 @@ Legend: ✅ done · ⏳ pending · 💡 idea
 - ✅ **T51** Zero-cost rules documented (README and NFR-01); verified: Workers Free, no card in any service — NFR-01
 - ✅ **T44** Automatic confirmation to the visitor in the message's language (Google Apps Script) — FR-06.6
 - ✅ **T52** German as the 8th language: site, chat (ready-made answers and search), PDF résumé, AI, email confirmation and 13 tests — FR-02
+- ✅ **T31** "View code" link on the 9 project cards, pointing to each repository (8 languages) — FR-01
+- ✅ **T32** Cards show language, stars and last-update date from the public GitHub API (no key, cached per session) — FR-01
+- ✅ **T53** Installable, offline app (PWA): manifest, 192/512/maskable icons and a service worker — NFR-02
+- ✅ **T54** Lighthouse in GitHub Actions with minimum scores (accessibility 95, best practices 90, SEO 95) — NFR-02, NFR-06
 
 ---
 
@@ -75,8 +79,6 @@ Legend: ✅ done · ⏳ pending · 💡 idea
 
 | ID | Task | Depends on | Requirement |
 |---|---|---|---|
-| ⏳ **T31** | "Code" and "Demo" links on project cards | Repository links | FR-01 |
-| ⏳ **T32** | Project cards with GitHub data (stars, last commit) via a Cron Trigger | T31 | FR-01 |
 | ⏳ **T33** | Impact numbers in the experience section (e.g. deployment time, % fewer bugs) | Data from Emanuel | FR-01 |
 | ⏳ **T35** | Translation review by native speakers (priority: Chinese and Russian) | Reviewer | FR-02 |
 | ⏳ **T37** | Test the contact form's 3-per-minute limit in production | — | NFR-04 |

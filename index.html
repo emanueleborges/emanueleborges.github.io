@@ -119,6 +119,7 @@
     <link rel="icon" href="favicon.svg" type="image/svg+xml" />
     <link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png" />
     <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+    <link rel="manifest" href="manifest.webmanifest" />
     <title data-i18n="meta.title">Emanuel Borges — Portfólio</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -128,12 +129,12 @@
     <!-- Primeira imagem do topo: pré-carregada, menor no celular -->
     <link rel="preload" as="image" href="https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=800&q=70" media="(max-width: 760px)" fetchpriority="high" />
     <link rel="preload" as="image" href="https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1400&q=70" media="(min-width: 761px)" fetchpriority="high" />
-    <link rel="stylesheet" href="styles.css?v=20261010073659" />
-    <script src="i18n.js?v=20261010073659" defer></script>
-    <script src="script.js?v=20261010073659" defer></script>
-    <script src="api.js?v=20261010073659" defer></script>
-    <script src="chat.js?v=20261010073659" defer></script>
-    <script src="contact.js?v=20261010073659" defer></script>
+    <link rel="stylesheet" href="styles.css?v=20261010134814" />
+    <script src="i18n.js?v=20261010134814" defer></script>
+    <script src="script.js?v=20261010134814" defer></script>
+    <script src="api.js?v=20261010134814" defer></script>
+    <script src="chat.js?v=20261010134814" defer></script>
+    <script src="contact.js?v=20261010134814" defer></script>
     <script data-goatcounter="https://emanueleborges.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
   </head>
   <body>
@@ -309,6 +310,7 @@
               detecta tentativas de prompt injection (OWASP LLM01) e gera relatórios em Markdown/PDF.
               Orquestra respostas entre base RAG interna, Ollama local e busca na web.
             </p>
+            <div class="project-footer"><a class="project-link" href="https://github.com/emanueleborges/tcc-ufg" target="_blank" rel="noopener" data-repo="tcc-ufg"><span data-i18n="proj.code">Ver código</span> <span aria-hidden="true">↗</span></a><span class="project-meta mono" data-repo-meta="tcc-ufg"></span></div>
           </article>
           <article data-category="ia" class="project-card">
             <span class="art-number mono">02 / DATATHON</span>
@@ -318,6 +320,7 @@
               Modelo de classificação (Random Forest, XGBoost) com 87% de precisão para o case Passos
               Mágicos, com API e dashboard de monitoramento de drift. Top 5% no datathon.
             </p>
+            <div class="project-footer"><a class="project-link" href="https://github.com/emanueleborges/fiaptech5" target="_blank" rel="noopener" data-repo="fiaptech5"><span data-i18n="proj.code">Ver código</span> <span aria-hidden="true">↗</span></a><span class="project-meta mono" data-repo-meta="fiaptech5"></span></div>
           </article>
           <article data-category="ia" class="project-card">
             <span class="art-number mono">03 / FIAP</span>
@@ -327,6 +330,7 @@
               Modelo de deep learning com 89% de acurácia para predição de preços, com pipeline de
               coleta via Yahoo Finance, pré-processamento e API REST documentada com Swagger.
             </p>
+            <div class="project-footer"><a class="project-link" href="https://github.com/emanueleborges/fiaptech4" target="_blank" rel="noopener" data-repo="fiaptech4"><span data-i18n="proj.code">Ver código</span> <span aria-hidden="true">↗</span></a><span class="project-meta mono" data-repo-meta="fiaptech4"></span></div>
           </article>
           <article data-category="ia" class="project-card">
             <span class="art-number mono">04 / IA</span>
@@ -336,6 +340,7 @@
               Aplicação de perguntas e respostas com LangChain, ChromaDB e LLMs (Ollama/Deepseek), com
               ingestão de documentos, chat via WebSocket e feedback contínuo.
             </p>
+            <div class="project-footer"><a class="project-link" href="https://github.com/emanueleborges/rag-llm-deepseek-documentos" target="_blank" rel="noopener" data-repo="rag-llm-deepseek-documentos"><span data-i18n="proj.code">Ver código</span> <span aria-hidden="true">↗</span></a><span class="project-meta mono" data-repo-meta="rag-llm-deepseek-documentos"></span></div>
           </article>
           <article data-category="backend" class="project-card">
             <span class="art-number mono">05 / BACKEND</span>
@@ -345,6 +350,7 @@
               Arquitetura hexagonal com PostgreSQL (lock pessimista), Redis (cache-aside), Kafka com
               DLQ e MongoDB, além de frontends em Angular 19 e Next.js 15.
             </p>
+            <div class="project-footer"><a class="project-link" href="https://github.com/emanueleborges/financial" target="_blank" rel="noopener" data-repo="financial"><span data-i18n="proj.code">Ver código</span> <span aria-hidden="true">↗</span></a><span class="project-meta mono" data-repo-meta="financial"></span></div>
           </article>
           <article data-category="backend" class="project-card">
             <span class="art-number mono">06 / BACKEND</span>
@@ -354,6 +360,7 @@
               API de produtos com cache em Redis, eventos no Kafka, rate limiting por rota e
               documentação Swagger, sobre PostgreSQL.
             </p>
+            <div class="project-footer"><a class="project-link" href="https://github.com/emanueleborges/nest_typeorm_postgres_redis_kafka" target="_blank" rel="noopener" data-repo="nest_typeorm_postgres_redis_kafka"><span data-i18n="proj.code">Ver código</span> <span aria-hidden="true">↗</span></a><span class="project-meta mono" data-repo-meta="nest_typeorm_postgres_redis_kafka"></span></div>
           </article>
           <article data-category="ia apps" class="project-card">
             <span class="art-number mono">07 / WEB</span>
@@ -363,6 +370,7 @@
               Sistema de recomendação de filmes baseado em TF-IDF e similaridade de cossenos, com
               interface web responsiva e banco PostgreSQL.
             </p>
+            <div class="project-footer"><a class="project-link" href="https://github.com/emanueleborges/challenge-movies" target="_blank" rel="noopener" data-repo="challenge-movies"><span data-i18n="proj.code">Ver código</span> <span aria-hidden="true">↗</span></a><span class="project-meta mono" data-repo-meta="challenge-movies"></span></div>
           </article>
           <article data-category="ia apps" class="project-card">
             <span class="art-number mono">08 / POC</span>
@@ -372,6 +380,7 @@
               Reconhecimento facial em tempo real pela webcam: captura, geração de embeddings e
               verificação a partir de vetores salvos via API REST.
             </p>
+            <div class="project-footer"><a class="project-link" href="https://github.com/emanueleborges/face-recognition-poc" target="_blank" rel="noopener" data-repo="face-recognition-poc"><span data-i18n="proj.code">Ver código</span> <span aria-hidden="true">↗</span></a><span class="project-meta mono" data-repo-meta="face-recognition-poc"></span></div>
           </article>
           <article data-category="apps" class="project-card">
             <span class="art-number mono">09 / DESKTOP</span>
@@ -381,6 +390,7 @@
               Aplicativo desktop moderno com Jetpack Compose for Desktop, consumindo um backend REST
               em Kotlin e Spring Boot.
             </p>
+            <div class="project-footer"><a class="project-link" href="https://github.com/emanueleborges/kotlin-desktop" target="_blank" rel="noopener" data-repo="kotlin-desktop"><span data-i18n="proj.code">Ver código</span> <span aria-hidden="true">↗</span></a><span class="project-meta mono" data-repo-meta="kotlin-desktop"></span></div>
           </article>
         </div>
         <a class="button button-quiet projects-more" href="https://github.com/emanueleborges" target="_blank" rel="noopener" data-i18n="proj.more">Ver todos no GitHub <span>↗</span></a>
