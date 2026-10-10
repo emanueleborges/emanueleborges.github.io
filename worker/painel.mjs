@@ -4,13 +4,23 @@
 //
 // Uso:  cd worker && npm run painel
 //       GOATCOUNTER_TOKEN=... npm run painel   (opcional: inclui as visitas)
+//       ou guarde a chave em worker/.dev.vars (fora do git): GOATCOUNTER_TOKEN=...
 
 import { execFileSync } from "node:child_process";
-import { writeFileSync } from "node:fs";
+import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 
-const OUT = join(dirname(fileURLToPath(import.meta.url)), "painel.html");
+const DIR = dirname(fileURLToPath(import.meta.url));
+const OUT = join(DIR, "painel.html");
+
+// Chave do GoatCounter: variável de ambiente ou worker/.dev.vars (arquivo fora do git).
+const devVar = (name) => {
+  const file = join(DIR, ".dev.vars");
+  if (!existsSync(file)) return undefined;
+  const line = readFileSync(file, "utf8").split("\n").find((l) => l.trim().startsWith(`${name}=`));
+  return line?.slice(line.indexOf("=") + 1).trim().replace(/^["']|["']$/g, "") || undefined;
+};
 const WEEKS = 12;
 const LANGS = { en: "Inglês", pt: "Português", es: "Espanhol", fr: "Francês", it: "Italiano", de: "Alemão", zh: "Chinês", ru: "Russo" };
 
@@ -41,7 +51,7 @@ const lastWeeks = () => {
 const weekLabel = (iso) => new Date(`${iso}T12:00:00Z`).toLocaleDateString("pt-BR", { day: "2-digit", month: "short" }).replace(".", "");
 
 async function goatCounter() {
-  const token = process.env.GOATCOUNTER_TOKEN;
+  const token = process.env.GOATCOUNTER_TOKEN || devVar("GOATCOUNTER_TOKEN");
   if (!token) return null;
   const end = new Date();
   const start = new Date(end.getTime() - 30 * 86400000);
@@ -141,7 +151,7 @@ const messagesWeek = [{ name: "Mensagens", color: "var(--s1)", values: byWeek(me
 const tile = (label, value, note = "") => `<div class="tile"><span>${label}</span><strong>${value}</strong>${note ? `<small>${note}</small>` : ""}</div>`;
 
 const visitsHtml = !visits
-  ? `<p class="muted">Para ver as visitas aqui, crie um token em <a href="https://emanueleborges.goatcounter.com/user/api" target="_blank" rel="noopener">GoatCounter → API</a> (permissão de leitura) e rode <code>GOATCOUNTER_TOKEN=seu_token npm run painel</code>. Enquanto isso: <a href="https://emanueleborges.goatcounter.com" target="_blank" rel="noopener">painel do GoatCounter</a>.</p>`
+  ? `<p class="muted">Para ver as visitas aqui, crie um token em <a href="https://emanueleborges.goatcounter.com/user/api" target="_blank" rel="noopener">GoatCounter → API</a> (permissão de leitura) e guarde-o em <code>worker/.dev.vars</code> como <code>GOATCOUNTER_TOKEN=seu_token</code> (ou rode <code>GOATCOUNTER_TOKEN=seu_token npm run painel</code>). Enquanto isso: <a href="https://emanueleborges.goatcounter.com" target="_blank" rel="noopener">painel do GoatCounter</a>.</p>`
   : visits.error
     ? `<p class="muted">Não foi possível ler o GoatCounter (${escape(visits.error)}).</p>`
     : `<div class="tiles">${tile("Visitas (30 dias)", visits.total.toLocaleString("pt-BR"))}</div>

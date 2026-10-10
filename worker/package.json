@@ -7,7 +7,8 @@
     "dev": "npm run conhecimento && wrangler dev",
     "deploy": "npm run conhecimento && wrangler deploy && node indexar-vectorize.mjs",
     "indexar": "npm run conhecimento && node indexar-vectorize.mjs",
-    "painel": "node painel.mjs"
+    "painel": "node painel.mjs",
+    "panel": "node painel.mjs"
   },
   "devDependencies": {
     "wrangler": "^4.149.0"

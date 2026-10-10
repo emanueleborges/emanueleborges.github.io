@@ -219,7 +219,7 @@ This (1) builds the knowledge from `i18n.js`, (2) deploys the Worker and (3) upd
 | Update the PDF résumés | `./gerar-curriculos.sh` |
 | Read contact-form messages | `cd worker && ./ver-mensagens.sh` (or `./ver-mensagens.sh 50`) — or Cloudflare dashboard: D1 → `portfolio-contact` → Console |
 | See chat ratings 👍/👎 | `cd worker && ./ver-avaliacoes.sh` |
-| **Open the stats dashboard** (rating and message charts, poorly rated answers, visits) | `cd worker && npm run painel` — builds `worker/painel.html` (local, git-ignored, contains personal data) and opens it in the browser. Visits: `GOATCOUNTER_TOKEN=your_token npm run painel` |
+| **Open the stats dashboard** (rating and message charts, poorly rated answers, visits) | `cd worker && npm run painel` — see [Stats dashboard](#stats-dashboard) |
 | See AI usage and cache | Cloudflare dashboard → **AI → AI Gateway → default** |
 | See visits and events | https://emanueleborges.goatcounter.com |
 | See Google searches and indexing | [Google Search Console](https://search.google.com/search-console) → property `https://emanueleborges.github.io/` |
@@ -228,6 +228,43 @@ This (1) builds the knowledge from `i18n.js`, (2) deploys the Worker and (3) upd
 | Refresh the movie data | `python3 scripts/gerar-dados-filmes.py` (~2 min) |
 | Retrain the demo's LSTM | `pip install -r scripts/lstm/requirements.txt` → `python scripts/lstm/train.py` → `python scripts/lstm/exportar_web.py demos/lstm` |
 | Add a stock to the LSTM demo | Add the ticker to `TICKERS` (`scripts/lstm/train.py`) and `PRICE_SYMBOLS` (`worker/src/index.js`); retrain, export and run `npm run deploy` in `worker/` |
+
+### Stats dashboard
+
+Private dashboard with charts of chat ratings, contact-form messages and visits. It's a local file (`worker/painel.html`), git-ignored, because it contains visitors' names and emails.
+
+```bash
+cd worker
+npm run painel        # or: npm run panel
+```
+
+**To include visits (GoatCounter):**
+
+1. Create a key at https://emanueleborges.goatcounter.com/user/api (permission to read statistics).
+2. Pick one way to use it:
+
+   **Option A — save it once (recommended):** store the key in `worker/.dev.vars`, a file git ignores:
+   ```bash
+   cd worker
+   echo 'GOATCOUNTER_TOKEN=YOUR_KEY' >> .dev.vars
+   npm run painel
+   ```
+
+   **Option B — pass it each time**, on the same line as the command:
+   ```bash
+   cd worker
+   GOATCOUNTER_TOKEN=YOUR_KEY npm run painel
+   ```
+
+   or on two lines, with `export` (lasts until you close the terminal):
+   ```bash
+   export GOATCOUNTER_TOKEN=YOUR_KEY
+   npm run painel
+   ```
+
+> ⚠️ Replace `YOUR_KEY` with the real key **only in the terminal or in `.dev.vars`** — never in this README or any file in git. Without `export`, a key set on a separate line does **not** reach `npm run painel`.
+
+**Bonus:** the same key adds visits to the weekly email summary: `cd worker && npx wrangler secret put GOATCOUNTER_TOKEN` (paste the key when asked).
 
 ---
 

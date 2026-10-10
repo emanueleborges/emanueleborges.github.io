@@ -219,7 +219,7 @@ Esse comando (1) gera o conhecimento a partir do `i18n.js`, (2) publica o Worker
 | Atualizar os currículos em PDF | `./gerar-curriculos.sh` |
 | Ler as mensagens do formulário | `cd worker && ./ver-mensagens.sh` (ou `./ver-mensagens.sh 50`) — ou no painel: D1 → `portfolio-contact` → Console |
 | Ver as avaliações 👍/👎 do chat | `cd worker && ./ver-avaliacoes.sh` |
-| **Ver o painel de estatísticas** (gráficos de avaliações e mensagens, respostas mal avaliadas, visitas) | `cd worker && npm run painel` — gera `worker/painel.html` (local, fora do git, com dados pessoais) e abre no navegador. Visitas: `GOATCOUNTER_TOKEN=seu_token npm run painel` |
+| **Ver o painel de estatísticas** (gráficos de avaliações e mensagens, respostas mal avaliadas, visitas) | `cd worker && npm run painel` — veja [Painel de estatísticas](#painel-de-estatísticas) |
 | Ver uso da IA e do cache | Painel do Cloudflare → **AI → AI Gateway → default** |
 | Ver visitas e eventos | https://emanueleborges.goatcounter.com |
 | Ver buscas e indexação no Google | [Google Search Console](https://search.google.com/search-console) → propriedade `https://emanueleborges.github.io/` |
@@ -228,6 +228,43 @@ Esse comando (1) gera o conhecimento a partir do `i18n.js`, (2) publica o Worker
 | Atualizar a base de filmes | `python3 scripts/gerar-dados-filmes.py` (~2 min) |
 | Retreinar o LSTM da demo | `pip install -r scripts/lstm/requirements.txt` → `python scripts/lstm/train.py` → `python scripts/lstm/exportar_web.py demos/lstm` |
 | Adicionar uma ação à demo do LSTM | Inclua o código em `TICKERS` (`scripts/lstm/train.py`) e em `PRICE_SYMBOLS` (`worker/src/index.js`); retreine, exporte e rode `npm run deploy` em `worker/` |
+
+### Painel de estatísticas
+
+Painel privado com gráficos de avaliações do chat, mensagens do formulário e visitas. É um arquivo local (`worker/painel.html`), fora do git, porque contém nomes e e-mails de visitantes.
+
+```bash
+cd worker
+npm run painel        # ou: npm run panel
+```
+
+**Para incluir as visitas (GoatCounter):**
+
+1. Crie uma chave em https://emanueleborges.goatcounter.com/user/api (permissão de leitura de estatísticas).
+2. Escolha uma forma de usar a chave:
+
+   **Opção A — salvar uma vez (recomendado):** grave a chave em `worker/.dev.vars`, arquivo que o git ignora:
+   ```bash
+   cd worker
+   echo 'GOATCOUNTER_TOKEN=SUA_CHAVE' >> .dev.vars
+   npm run painel
+   ```
+
+   **Opção B — informar a cada uso**, na mesma linha do comando:
+   ```bash
+   cd worker
+   GOATCOUNTER_TOKEN=SUA_CHAVE npm run painel
+   ```
+
+   ou em duas linhas, com `export` (vale até fechar o terminal):
+   ```bash
+   export GOATCOUNTER_TOKEN=SUA_CHAVE
+   npm run painel
+   ```
+
+> ⚠️ Troque `SUA_CHAVE` pela chave real **só no terminal ou no `.dev.vars`** — nunca neste README nem em arquivos do git. Sem `export`, a chave escrita numa linha separada **não** chega ao `npm run painel`.
+
+**Bônus:** a mesma chave inclui as visitas no resumo semanal por e-mail: `cd worker && npx wrangler secret put GOATCOUNTER_TOKEN` (cole a chave quando pedir).
 
 ---
 
