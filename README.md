@@ -265,15 +265,15 @@ This (1) builds the knowledge from `i18n.js`, (2) deploys the Worker and (3) upd
 
 | Service | Use |
 |---|---|
-| GitHub Pages · GitHub Actions | Hosting and CI (public repository) |
-| Cloudflare Workers | Backend and weekly cron (~100k requests/day free) |
-| Workers AI | AI and embeddings (10,000 "neurons"/day free; hundreds of questions/day) |
-| Vectorize, D1, AI Gateway, Turnstile | Free tiers |
-| Resend | Notifications and weekly summary (3,000 emails/month free) |
-| Google Apps Script | Visitor confirmations from Gmail (~100/day) |
-| GoatCounter | Free for personal use |
-| AI demos | Run in the visitor's browser; face-api.js models via jsDelivr (free CDN); prices via the Worker; static movie data |
-| GitHub API · Yahoo Finance · Wikidata/Wikipedia | Public and free (no key) |
+| [GitHub Pages](https://pages.github.com) · [GitHub Actions](https://github.com/features/actions) | Hosting and CI (public repository) |
+| [Cloudflare Workers](https://workers.cloudflare.com) | Backend and weekly cron (~100k requests/day free) |
+| [Workers AI](https://developers.cloudflare.com/workers-ai/) | AI and embeddings (10,000 "neurons"/day free; hundreds of questions/day) |
+| [Vectorize](https://developers.cloudflare.com/vectorize/), [D1](https://developers.cloudflare.com/d1/), [AI Gateway](https://developers.cloudflare.com/ai-gateway/), [Turnstile](https://www.cloudflare.com/application-services/products/turnstile/) | Free tiers |
+| [Resend](https://resend.com) | Notifications and weekly summary (3,000 emails/month free) |
+| [Google Apps Script](https://developers.google.com/apps-script) | Visitor confirmations from Gmail (~100/day) |
+| [GoatCounter](https://www.goatcounter.com) | Free for personal use |
+| AI demos | Run in the visitor's browser; face-api.js models via [jsDelivr](https://www.jsdelivr.com) (free CDN); prices via the Worker; static movie data |
+| [GitHub API](https://docs.github.com/en/rest) · [Yahoo Finance](https://finance.yahoo.com) · [Wikidata](https://www.wikidata.org)/[Wikipedia](https://www.wikipedia.org) | Public and free (no key) |
 
 If the daily AI quota runs out, the chat keeps working with local search until it resets (00:00 UTC).
 

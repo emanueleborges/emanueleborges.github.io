@@ -265,15 +265,15 @@ Esse comando (1) gera o conhecimento a partir do `i18n.js`, (2) publica o Worker
 
 | Serviço | Uso |
 |---|---|
-| GitHub Pages · GitHub Actions | Hospedagem e testes (repositório público) |
-| Cloudflare Workers | Backend e cron semanal (~100 mil requisições/dia grátis) |
-| Workers AI | IA e embeddings (10.000 "neurônios"/dia grátis; centenas de perguntas/dia) |
-| Vectorize, D1, AI Gateway, Turnstile | Planos gratuitos |
-| Resend | Avisos e resumo semanal (3.000 e-mails/mês grátis) |
-| Google Apps Script | Confirmações ao visitante pelo Gmail (~100/dia) |
-| GoatCounter | Gratuito para uso pessoal |
-| Demos de IA | Rodam no navegador do visitante; modelos do face-api.js pelo jsDelivr (CDN grátis); preços pelo Worker; base de filmes estática |
-| API do GitHub · Yahoo Finance · Wikidata/Wikipédia | Públicas e gratuitas (sem chave) |
+| [GitHub Pages](https://pages.github.com) · [GitHub Actions](https://github.com/features/actions) | Hospedagem e testes (repositório público) |
+| [Cloudflare Workers](https://workers.cloudflare.com) | Backend e cron semanal (~100 mil requisições/dia grátis) |
+| [Workers AI](https://developers.cloudflare.com/workers-ai/) | IA e embeddings (10.000 "neurônios"/dia grátis; centenas de perguntas/dia) |
+| [Vectorize](https://developers.cloudflare.com/vectorize/), [D1](https://developers.cloudflare.com/d1/), [AI Gateway](https://developers.cloudflare.com/ai-gateway/), [Turnstile](https://www.cloudflare.com/application-services/products/turnstile/) | Planos gratuitos |
+| [Resend](https://resend.com) | Avisos e resumo semanal (3.000 e-mails/mês grátis) |
+| [Google Apps Script](https://developers.google.com/apps-script) | Confirmações ao visitante pelo Gmail (~100/dia) |
+| [GoatCounter](https://www.goatcounter.com) | Gratuito para uso pessoal |
+| Demos de IA | Rodam no navegador do visitante; modelos do face-api.js pelo [jsDelivr](https://www.jsdelivr.com) (CDN grátis); preços pelo Worker; base de filmes estática |
+| [API do GitHub](https://docs.github.com/pt/rest) · [Yahoo Finance](https://finance.yahoo.com) · [Wikidata](https://www.wikidata.org)/[Wikipédia](https://www.wikipedia.org) | Públicas e gratuitas (sem chave) |
 
 Se a cota diária da IA acabar, o chat continua com a busca local até a renovação (00:00 UTC).
 
