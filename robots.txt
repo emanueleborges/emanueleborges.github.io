@@ -1,0 +1,11 @@
+# Portfólio de Emanuel Borges
+User-agent: *
+Allow: /
+Disallow: /worker/
+Disallow: /tests/
+Disallow: /scripts/
+Disallow: /apps-script/
+Disallow: /docs/
+Disallow: /curriculo.html
+
+Sitemap: https://emanueleborges.github.io/sitemap.xml
