@@ -34,6 +34,22 @@ const json = (body, status, origin) =>
     headers: { "Content-Type": "application/json; charset=utf-8", ...corsHeaders(origin) },
   });
 
+// Valida o token do Turnstile no Cloudflare (gratuito).
+async function isHuman(token, ip, env) {
+  if (typeof token !== "string" || !token) return false;
+  const form = new FormData();
+  form.append("secret", env.TURNSTILE_SECRET);
+  form.append("response", token);
+  form.append("remoteip", ip);
+  try {
+    const response = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", { method: "POST", body: form });
+    const outcome = await response.json();
+    return outcome.success === true;
+  } catch {
+    return false;
+  }
+}
+
 export default {
   async fetch(request, env) {
     const origin = env.ALLOWED_ORIGIN;
@@ -54,11 +70,14 @@ export default {
     }
     const question = typeof payload?.question === "string" ? payload.question.trim() : "";
     if (!question || question.length > MAX_QUESTION_LENGTH) return json({ error: "invalid_question" }, 400, origin);
-    const language = LANGUAGES[payload?.lang] ?? LANGUAGES.en;
-    const previous = typeof payload?.previous === "string" ? payload.previous.slice(0, MAX_QUESTION_LENGTH) : "";
+    const lang = LANGUAGES[payload?.lang] ? payload.lang : "en";
 
-    // Cada pergunta é uma requisição independente; a pergunta anterior entra só como contexto.
-    const userText = `${previous ? `Previous visitor question (context only): ${previous}\n\n` : ""}Visitor question: ${question}\n\nAnswer in ${language}.`;
+    // Turnstile: confirma que a pergunta veio de uma pessoa no site, não de um robô.
+    if (!(await isHuman(payload?.turnstileToken, ip, env))) return json({ error: "turnstile_failed" }, 403, origin);
+
+    // Pergunta normalizada: perguntas iguais reaproveitam a resposta guardada no AI Gateway.
+    const normalized = question.toLowerCase().replace(/\s+/g, " ").replace(/[\s?!.。？！]+$/u, "");
+    const userText = `Visitor question: ${normalized}\n\nAnswer in ${LANGUAGES[lang]}.`;
 
     try {
       const result = await env.AI.run(MODEL, {
@@ -69,6 +88,9 @@ export default {
         ],
         max_tokens: 600,
         temperature: 0.3,
+      }, {
+        // AI Gateway (gratuito): cache de 24 h, logs e métricas no painel do Cloudflare.
+        gateway: { id: "default", cacheTtl: 86400, cacheKey: `v1:${lang}:${normalized}` },
       });
       const raw = result?.response ?? result?.choices?.[0]?.message?.content ?? "";
       const answer = String(raw)

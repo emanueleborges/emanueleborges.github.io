@@ -242,6 +242,7 @@ main, .footer { position: relative; z-index: 1; }
 .chat-note { margin: 0; padding: 0 16px 12px; color: #787285; font-size: 10.5px; }
 .chat-toggle:focus-visible, .chat-close:focus-visible, .chat-chip:focus-visible, .chat-form button:focus-visible, .chat-goto:focus-visible { outline: 2px solid #b895ff; outline-offset: 2px; }
 .chat-highlight { animation: chat-glow 2.4s ease; }
+.chat-turnstile { position: fixed; right: 24px; bottom: 96px; z-index: 21; }
 .chat-ai-label { display: inline-block; margin-bottom: 6px; padding: 2px 8px; border-radius: 999px; background: rgba(34,211,238,.14); color: var(--cyan-soft); font: 600 10px var(--mono); letter-spacing: .06em; text-transform: uppercase; }
 .chat-msg .chat-goto { margin-top: 8px; text-align: left; }
 .chat-summary { margin-top: 6px !important; color: #d6d1e2; font-size: 12.5px; }

@@ -5,6 +5,8 @@
 (() => {
   // Endereço do Cloudflare Worker com a IA (pasta worker/). Vazio = só busca local.
   const AI_ENDPOINT = "https://emanuel-portfolio-chat.emanuel-portfolio-chat.workers.dev";
+  // Chave pública do Turnstile (anti-robô invisível do Cloudflare) para este site.
+  const TURNSTILE_SITE_KEY = "0x4AAAAAAFSypCNI4YX6-cMF";
   // Estes temas sempre usam a resposta pronta local (rápida, sem custo e controlada).
   const LOCAL_ONLY = new Set(["greeting", "thanks", "salary", "start"]);
 
@@ -596,16 +598,62 @@
     suggestions.replaceChildren(...["s1", "s2", "s3", "s4"].map((key) => chipButton(tc(key))));
   };
 
+  /* ---------- Turnstile: token anti-robô, carregado só quando o chat é usado ---------- */
+
+  let turnstileReady = null;
+  let turnstileWidget = null;
+  let turnstileResolve = null;
+
+  const loadTurnstile = () => {
+    turnstileReady ??= new Promise((resolve, reject) => {
+      const script = document.createElement("script");
+      script.src = "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";
+      script.async = true;
+      script.onload = () => resolve(window.turnstile);
+      script.onerror = () => reject(new Error("turnstile"));
+      document.head.append(script);
+    });
+    return turnstileReady;
+  };
+
+  // Gera um token novo a cada pergunta (cada token vale uma única vez).
+  const turnstileToken = async () => {
+    try {
+      const turnstile = await loadTurnstile();
+      return await new Promise((resolve) => {
+        turnstileResolve = resolve;
+        setTimeout(() => resolve(null), 10000);
+        if (turnstileWidget === null) {
+          const holder = el("div", "chat-turnstile");
+          root.append(holder);
+          turnstileWidget = turnstile.render(holder, {
+            sitekey: TURNSTILE_SITE_KEY,
+            execution: "execute",
+            appearance: "interaction-only",
+            callback: (token) => turnstileResolve?.(token),
+            "error-callback": () => turnstileResolve?.(null),
+          });
+        } else {
+          turnstile.reset(turnstileWidget);
+        }
+        turnstile.execute(turnstileWidget);
+      });
+    } catch {
+      return null;
+    }
+  };
+
   // Pergunta à IA (Worker). Em qualquer falha, devolve null e o chat usa a busca local.
-  let previousQuestion = "";
   const askAi = async (question) => {
+    const token = await turnstileToken();
+    if (!token) return null;
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), 25000);
     try {
       const response = await fetch(AI_ENDPOINT, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ question, lang: currentLang, previous: previousQuestion }),
+        body: JSON.stringify({ question, lang: currentLang, turnstileToken: token }),
         signal: controller.signal,
       });
       if (!response.ok) return null;
@@ -621,7 +669,6 @@
   // Resposta da IA + atalho "Ver na página" para o trecho mais relevante do site.
   const aiReply = async (question) => {
     const text = await askAi(question);
-    previousQuestion = question;
     if (!text) return answer(question);
     track("chat-ia", "Pergunta respondida pela IA");
     const nodes = [el("span", "chat-ai-label", tc("aiLabel"))];
@@ -714,6 +761,7 @@
     toggle.setAttribute("aria-expanded", String(open));
     root.classList.toggle("is-open", open);
     if (open) {
+      if (AI_ENDPOINT) loadTurnstile().catch(() => {});
       if (!messages.children.length) addMessage("bot", el("p", null, tc("greeting")));
       input.focus();
     }
