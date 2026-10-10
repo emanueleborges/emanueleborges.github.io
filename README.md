@@ -44,6 +44,7 @@ A framework-free static site with a serverless backend on Cloudflare for the AI 
 | **Analytics** | Visits and events (chat opened, résumé downloads, contact clicks, form submissions, ratings) with GoatCounter, cookieless. |
 | **Weekly summary** | Every Monday an email with the week's messages, chat ratings and a health check of the AI, vector index and database. |
 | **404 page** | Custom page in the site's style with links to the portfolio and the assistant. |
+| **AI demo: LSTM stock forecasting** | `/demos/lstm/` page (8 languages) where the FIAP project's LSTM runs **in the browser, in plain JavaScript** (weights exported from Keras, same output to ~1e-8). Recent prices come from the Worker (Yahoo Finance), with a saved copy if it fails; test metrics compared against a naive baseline. |
 | **Installable app (PWA)** | Can be installed on a phone or computer (own icon) and opens offline: the page and its files are saved by a *service worker*. |
 
 ---
@@ -101,6 +102,7 @@ The AI knowledge is **generated from the site's own translations** (`i18n.js`): 
 ├── index.html              # Single-page portfolio (SEO, Open Graph, JSON-LD)
 ├── 404.html                # Custom "page not found"
 ├── manifest.webmanifest · sw.js · icon-*.png  # Installable, offline app (PWA)
+├── demos/lstm/             # In-browser LSTM demo: page, lstm.js (inference), weights and data
 ├── styles.css              # All styling (theme, layout, animations, chat, form)
 ├── i18n.js                 # Text in 8 languages (site, chat, form and résumé)
 ├── script.js               # Languages, menu, filters, animations, particles, analytics
@@ -119,7 +121,7 @@ The AI knowledge is **generated from the site's own translations** (`i18n.js`): 
 ├── apps-script/Codigo.gs   # Visitor confirmation (Google Apps Script) — template without the secret
 ├── docs/sdd/               # Specification (SDD) in Portuguese; docs/sdd/en/ in English
 └── worker/                 # Cloudflare Worker
-    ├── src/index.js            # POST / (chat), /contact, /feedback + weekly Cron
+    ├── src/index.js            # POST / (chat), /contact, /feedback, GET /prices (LSTM demo) + weekly Cron
     ├── src/conhecimento.js     # Generated: summary, excerpts, full profile, version
     ├── gerar-conhecimento.mjs  # Builds the AI knowledge from i18n.js
     ├── indexar-vectorize.mjs   # Generates embeddings and updates the Vectorize index

@@ -43,7 +43,7 @@ async function profileContext(question, env) {
 
 const corsHeaders = (origin) => ({
   "Access-Control-Allow-Origin": origin,
-  "Access-Control-Allow-Methods": "POST, OPTIONS",
+  "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
   "Access-Control-Allow-Headers": "Content-Type",
   "Access-Control-Max-Age": "86400",
   Vary: "Origin",
@@ -340,6 +340,38 @@ async function sendWeeklySummary(env) {
   if (!response.ok) console.error(`Resumo semanal: Resend respondeu ${response.status}: ${await response.text()}`);
 }
 
+// Fechamentos ajustados do último ano para a demo do LSTM (demos/lstm), via Yahoo Finance.
+// Só as ações da demo; resposta guardada por 1 hora no navegador e na borda do Cloudflare.
+const PRICE_SYMBOLS = new Set(["PETR4.SA", "VALE3.SA", "AAPL"]);
+
+async function handlePrices(request, origin) {
+  const symbol = new URL(request.url).searchParams.get("symbol");
+  if (!PRICE_SYMBOLS.has(symbol)) return json({ error: "invalid_symbol" }, 400, origin);
+  try {
+    const response = await fetch(
+      `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(symbol)}?range=1y&interval=1d`,
+      { headers: { "User-Agent": "Mozilla/5.0" }, cf: { cacheTtl: 3600, cacheEverything: true } },
+    );
+    if (!response.ok) return json({ error: "upstream" }, 502, origin);
+    const result = (await response.json()).chart.result[0];
+    const offset = result.meta.gmtoffset * 1000;
+    const adjusted = result.indicators.adjclose[0].adjclose;
+    const dates = [];
+    const close = [];
+    result.timestamp.forEach((ts, i) => {
+      if (adjusted[i] == null) return;
+      dates.push(new Date(ts * 1000 + offset).toISOString().slice(0, 10));
+      close.push(Math.round(adjusted[i] * 10000) / 10000);
+    });
+    const body = json({ symbol, dates, close }, 200, origin);
+    body.headers.set("Cache-Control", "public, max-age=3600");
+    return body;
+  } catch (error) {
+    console.error(`Preços (${symbol}): ${error}`);
+    return json({ error: "upstream" }, 502, origin);
+  }
+}
+
 export default {
   async scheduled(event, env, ctx) {
     ctx.waitUntil(sendWeeklySummary(env));
@@ -348,6 +380,10 @@ export default {
   async fetch(request, env, ctx) {
     const origin = env.ALLOWED_ORIGIN;
     if (request.method === "OPTIONS") return new Response(null, { status: 204, headers: corsHeaders(origin) });
+    if (request.method === "GET" && new URL(request.url).pathname === "/prices") {
+      if (request.headers.get("Origin") !== origin) return json({ error: "forbidden_origin" }, 403, origin);
+      return handlePrices(request, origin);
+    }
     if (request.method !== "POST") return json({ error: "method_not_allowed" }, 405, origin);
     if (request.headers.get("Origin") !== origin) return json({ error: "forbidden_origin" }, 403, origin);
 

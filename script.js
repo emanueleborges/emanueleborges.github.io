@@ -95,6 +95,7 @@ document.addEventListener("click", (event) => {
   else if (href.includes("wa.me")) track("contato-whatsapp", "Clicou no WhatsApp");
   else if (href.startsWith("mailto:")) track("contato-email", "Clicou no e-mail");
   else if (href.includes("linkedin.com")) track("contato-linkedin", "Clicou no LinkedIn");
+  else if (link.dataset.demo) track(`demo-${link.dataset.demo}`, `Abriu a demo: ${link.dataset.demo}`);
   else if (link.dataset.repo) track(`projeto-${link.dataset.repo}`, `Abriu o código: ${link.dataset.repo}`);
   else if (href.includes("github.com")) track("contato-github", "Clicou no GitHub");
 });

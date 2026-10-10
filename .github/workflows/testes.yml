@@ -18,7 +18,7 @@ jobs:
 
       - name: Sintaxe dos scripts JavaScript
         run: |
-          for f in *.js worker/src/index.js worker/gerar-conhecimento.mjs worker/indexar-vectorize.mjs; do
+          for f in *.js demos/*/*.js worker/src/index.js worker/gerar-conhecimento.mjs worker/indexar-vectorize.mjs; do
             node --check "$f"
           done
 

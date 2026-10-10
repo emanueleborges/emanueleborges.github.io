@@ -72,6 +72,7 @@ Legenda: ✅ concluída · ⏳ pendente · 💡 ideia
 - ✅ **T32** Cards com linguagem, estrelas e data da última atualização via API pública do GitHub (sem chave, guardado na sessão) — RF-01
 - ✅ **T53** App instalável e offline (PWA): manifest, ícones 192/512/maskable e *service worker* — RNF-02
 - ✅ **T54** Lighthouse no GitHub Actions com notas mínimas (acessibilidade 95, boas práticas 90, SEO 95) — RNF-02, RNF-06
+- ✅ **T55** Demo de IA `/demos/lstm/`: LSTM retreinado sem vazamento, inferência em JavaScript puro no navegador, comparação com baseline ingênuo, 8 idiomas e rota `GET /prices` no Worker — RF-01
 
 ---
 

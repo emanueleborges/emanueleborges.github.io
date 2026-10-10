@@ -44,6 +44,7 @@ Site estático, sem framework, com um backend *serverless* no Cloudflare para o 
 | **Estatísticas** | Visitas e eventos (chat aberto, downloads do currículo, cliques em contatos, envios do formulário, avaliações) com GoatCounter, sem cookies. |
 | **Resumo semanal** | Toda segunda, um e-mail com as mensagens da semana, as avaliações do chat e um teste de saúde da IA, do índice vetorial e do banco. |
 | **Página 404** | Página personalizada no estilo do site, com links para o portfólio e o assistente. |
+| **Demo de IA: previsão de ações com LSTM** | Página `/demos/lstm/` (8 idiomas) onde o LSTM do projeto FIAP roda **no navegador, em JavaScript puro** (pesos exportados do Keras, mesma saída até ~1e-8). Preços recentes pelo Worker (Yahoo Finance), com cópia salva se ele falhar; métricas do teste comparadas com um baseline ingênuo. |
 | **App instalável (PWA)** | Pode ser instalado no celular ou computador (ícone próprio) e abre sem internet: a página e os arquivos ficam salvos pelo *service worker*. |
 
 ---
@@ -101,6 +102,7 @@ O conhecimento da IA é **gerado das próprias traduções do site** (`i18n.js`)
 ├── index.html              # Página única do portfólio (SEO, Open Graph, JSON-LD)
 ├── 404.html                # "Página não encontrada" personalizada
 ├── manifest.webmanifest · sw.js · icon-*.png  # App instalável e offline (PWA)
+├── demos/lstm/             # Demo do LSTM no navegador: página, lstm.js (inferência), pesos e dados
 ├── styles.css              # Todo o visual (tema, layout, animações, chat, formulário)
 ├── i18n.js                 # Textos dos 8 idiomas (site, chat, formulário e currículo)
 ├── script.js               # Idiomas, menu, filtros, animações, partículas, estatísticas
@@ -119,7 +121,7 @@ O conhecimento da IA é **gerado das próprias traduções do site** (`i18n.js`)
 ├── apps-script/Codigo.gs   # Confirmação ao visitante (Google Apps Script) — modelo sem a senha
 ├── docs/sdd/               # Especificação (SDD) em português; docs/sdd/en/ em inglês
 └── worker/                 # Cloudflare Worker
-    ├── src/index.js            # POST / (chat), /contact, /feedback + Cron semanal
+    ├── src/index.js            # POST / (chat), /contact, /feedback, GET /prices (demo LSTM) + Cron semanal
     ├── src/conhecimento.js     # Gerado: resumo, trechos, perfil completo e versão
     ├── gerar-conhecimento.mjs  # Gera o conhecimento da IA a partir do i18n.js
     ├── indexar-vectorize.mjs   # Gera embeddings e atualiza o índice Vectorize

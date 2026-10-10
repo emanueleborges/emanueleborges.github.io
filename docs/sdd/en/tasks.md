@@ -72,6 +72,7 @@ Legend: ✅ done · ⏳ pending · 💡 idea
 - ✅ **T32** Cards show language, stars and last-update date from the public GitHub API (no key, cached per session) — FR-01
 - ✅ **T53** Installable, offline app (PWA): manifest, 192/512/maskable icons and a service worker — NFR-02
 - ✅ **T54** Lighthouse in GitHub Actions with minimum scores (accessibility 95, best practices 90, SEO 95) — NFR-02, NFR-06
+- ✅ **T55** AI demo `/demos/lstm/`: LSTM retrained without leakage, plain-JavaScript inference in the browser, naive-baseline comparison, 8 languages and a `GET /prices` Worker route — FR-01
 
 ---
 
