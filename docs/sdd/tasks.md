@@ -53,6 +53,7 @@ Legenda: ✅ concluída · ⏳ pendente · 💡 ideia
 
 ### Documentação
 - ✅ **T30** README e documentos SDD (spec, plan, tasks) em português e inglês
+- ✅ **T38** Aviso de nova mensagem por e-mail (Resend, gratuito) — RF-06.5 *(ativo após cadastrar `RESEND_API_KEY`)*
 
 ---
 
@@ -72,6 +73,6 @@ Legenda: ✅ concluída · ⏳ pendente · 💡 ideia
 
 - 💡 Card do próprio portfólio na seção Projetos.
 - 💡 Recomendações de colegas (LinkedIn).
-- 💡 Domínio próprio (pago) — permitiria e-mail de notificação do formulário.
+- 💡 Domínio próprio (pago) — endereço mais profissional e e-mails com remetente próprio.
 - 💡 Versão do README em inglês.
 - 💡 Teste de desempenho (Lighthouse) e otimização das imagens de fundo.

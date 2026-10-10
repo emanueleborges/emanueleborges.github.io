@@ -53,6 +53,7 @@ Legend: ✅ done · ⏳ pending · 💡 idea
 
 ### Documentation
 - ✅ **T30** README and SDD documents (spec, plan, tasks) in Portuguese and English
+- ✅ **T38** Email notification for new messages (Resend, free) — FR-06.5 *(active once `RESEND_API_KEY` is set)*
 
 ---
 
@@ -72,6 +73,6 @@ Legend: ✅ done · ⏳ pending · 💡 idea
 
 - 💡 A card for the portfolio itself in the Projects section.
 - 💡 Recommendations from colleagues (LinkedIn).
-- 💡 Custom domain (paid) — would enable email notifications for the contact form.
+- 💡 Custom domain (paid) — more professional address and emails from your own sender.
 - 💡 English version of the README.
 - 💡 Performance audit (Lighthouse) and background image optimization.

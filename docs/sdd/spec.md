@@ -30,7 +30,6 @@ Currículos e perfis estáticos obrigam o recrutador a ler tudo para achar uma i
 
 ### 1.3 Fora do escopo
 - Área administrativa web (as mensagens são lidas pelo terminal ou painel do Cloudflare).
-- Envio de e-mail de notificação (exige domínio próprio, que é pago).
 - Blog, contas de usuário ou pagamentos.
 
 ---
@@ -80,6 +79,7 @@ O site deve apresentar: topo (nome, cargo, resumo, localização, anos de experi
 - RF-06.2 Validação no navegador e no servidor.
 - RF-06.3 Mensagens válidas são armazenadas; o visitante vê confirmação ("Mensagem enviada!").
 - RF-06.4 O dono lê as mensagens por um comando ou pelo painel do Cloudflare.
+- RF-06.5 A cada mensagem nova, o dono recebe um aviso por e-mail, com "Responder" direcionado ao visitante.
 
 ### RF-07 — Contatos diretos
 E-mail, WhatsApp, LinkedIn e GitHub visíveis na seção de contato e no assistente.

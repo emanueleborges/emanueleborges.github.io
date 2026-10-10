@@ -19,7 +19,9 @@
   ],
   "vars": {
     // Só o portfólio publicado pode chamar este Worker.
-    "ALLOWED_ORIGIN": "https://emanueleborges.github.io"
+    "ALLOWED_ORIGIN": "https://emanueleborges.github.io",
+    // Recebe o aviso de nova mensagem do formulário (precisa ser o e-mail da conta do Resend).
+    "NOTIFY_EMAIL": "emanuel.eborges@gmail.com"
   },
   // Até 10 perguntas por minuto por visitante (IP).
   "ratelimits": [

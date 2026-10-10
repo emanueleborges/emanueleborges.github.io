@@ -34,7 +34,7 @@ O projeto é um site estático, sem framework, com um backend *serverless* no Cl
 | **Visual** | Tema escuro roxo + ciano, imagens de fundo em movimento (duotone), rede de partículas em Canvas, animações ao rolar e cabeçalho fixo com barra de progresso. Respeita a preferência "reduzir movimento". |
 | **Assistente (chat)** | Híbrido: **respostas prontas** locais para perguntas frequentes, **IA generativa com RAG** para o resto e **busca local** como reserva. Mais detalhes em [Arquitetura](#arquitetura). |
 | **Currículo em PDF** | Um PDF por idioma, gerado da mesma fonte de traduções do site; o botão baixa o PDF do idioma atual. |
-| **Formulário de contato** | Mensagens salvas num banco D1, com proteção anti-robô invisível. |
+| **Formulário de contato** | Mensagens salvas num banco D1, com proteção anti-robô invisível e **aviso por e-mail** a cada mensagem nova (Resend, gratuito). |
 | **Contatos diretos** | E-mail, WhatsApp, LinkedIn e GitHub. |
 | **Estatísticas** | Visitas e eventos (abertura do chat, downloads do currículo, cliques em contatos, envios do formulário) com GoatCounter, sem cookies. |
 
@@ -164,7 +164,7 @@ Esse comando (1) gera o conhecimento a partir do `i18n.js`, (2) publica o Worker
 | Índice Vectorize | `portfolio-profile` (1024 dimensões, cosseno) |
 | AI Gateway | `default` |
 | Widget Turnstile | invisível, domínio `emanueleborges.github.io` |
-| Secret do Worker | `TURNSTILE_SECRET` |
+| Secrets do Worker | `TURNSTILE_SECRET`, `RESEND_API_KEY` |
 
 ---
 
@@ -212,6 +212,7 @@ Esse comando (1) gera o conhecimento a partir do `i18n.js`, (2) publica o Worker
 | Cloudflare Workers | Backend (~100 mil requisições/dia grátis) |
 | Workers AI | IA e embeddings (10.000 "neurônios"/dia grátis; ~centenas de perguntas/dia) |
 | Vectorize, D1, AI Gateway, Turnstile | Planos gratuitos |
+| Resend | Aviso por e-mail (3.000/mês grátis) |
 | GoatCounter | Plano gratuito para uso pessoal |
 
 Se a cota diária da IA acabar, o chat continua funcionando com a busca local até a renovação (00:00 UTC).

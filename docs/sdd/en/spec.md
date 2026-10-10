@@ -30,7 +30,6 @@ Static résumés and profiles force recruiters to read everything to find one sp
 
 ### 1.3 Out of scope
 - Web admin area (messages are read via the terminal or the Cloudflare dashboard).
-- Email notifications (require a custom domain, which is paid).
 - Blog, user accounts or payments.
 
 ---
@@ -80,6 +79,7 @@ The site must present: hero (name, role, summary, location, years of experience)
 - FR-06.2 Validation in the browser and on the server.
 - FR-06.3 Valid messages are stored; the visitor sees a confirmation ("Message sent!").
 - FR-06.4 The owner reads messages with a command or in the Cloudflare dashboard.
+- FR-06.5 For each new message, the owner receives an email notification, with "Reply" addressed to the visitor.
 
 ### FR-07 — Direct contacts
 Email, WhatsApp, LinkedIn and GitHub visible in the contact section and in the assistant.

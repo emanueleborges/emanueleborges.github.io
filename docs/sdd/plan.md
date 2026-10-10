@@ -113,7 +113,7 @@ pergunta
 **Resposta 200:** `{ "ok": true }`
 **Erros:** `400 invalid_fields` · `403 forbidden_origin` · `403 turnstile_failed` · `429 rate_limited` · `503 unavailable`
 
-**Fluxo:** origem → limite (3/min/IP) → campo-armadilha preenchido ⇒ `200` sem salvar → validação → Turnstile → `INSERT` no D1.
+**Fluxo:** origem → limite (3/min/IP) → campo-armadilha preenchido ⇒ `200` sem salvar → validação → Turnstile → `INSERT` no D1 → aviso por e-mail via **Resend** em segundo plano (`ctx.waitUntil`), com `reply_to` = e-mail do visitante.
 
 ### 3.2 Configuração (`wrangler.jsonc`)
 
@@ -126,6 +126,8 @@ pergunta
 | `CONTACT_LIMITER` | 3 req / 60 s |
 | `ALLOWED_ORIGIN` | `https://emanueleborges.github.io` |
 | `TURNSTILE_SECRET` | *secret* (fora do repositório) |
+| `RESEND_API_KEY` | *secret* — chave do Resend (plano gratuito) |
+| `NOTIFY_EMAIL` | e-mail que recebe os avisos (o da conta do Resend) |
 
 ### 3.3 Conhecimento da IA
 `gerar-conhecimento.mjs` lê `../i18n.js` (inglês) e gera `src/conhecimento.js` com:
@@ -195,7 +197,8 @@ Vetor de 1024 dimensões por trecho; `id` estável (ex.: `job1`, `p5`, `edu4`); 
 | ADR-08 | Formação sempre com resposta pronta | Deixar para a IA | O modelo gratuito traduzia errado nomes de cursos e universidades. |
 | ADR-09 | Cache no AI Gateway com chave versionada | Sem cache / KV próprio | Economiza cota; a versão (hash do perfil) invalida respostas antigas automaticamente. |
 | ADR-10 | Turnstile invisível em toda chamada | CAPTCHA visível / nenhum | Protege a cota gratuita sem atrito para o visitante. |
-| ADR-11 | Mensagens no D1, lidas por comando/painel | Página administrativa | Evita superfície de ataque; notificação por e-mail exigiria domínio pago. |
+| ADR-11 | Mensagens no D1, lidas por comando/painel | Página administrativa | Evita superfície de ataque. |
+| ADR-15 | Aviso por e-mail com Resend (remetente de testes `onboarding@resend.dev`) | Cloudflare Email Routing, domínio próprio | Gratuito e sem domínio: o remetente de testes entrega só para o e-mail da conta, que é exatamente o destinatário. |
 | ADR-12 | GoatCounter | Google Analytics | Sem cookies (sem banner de LGPD). |
 | ADR-13 | Versão `?v=` automática nos arquivos | Instruir limpeza de cache | Garante que HTML novo nunca use CSS/JS antigos. |
 | ADR-14 | Simple Icons + ícones genéricos | Logos oficiais de todas as marcas | Respeita diretrizes de marca de Oracle, Microsoft e AWS. |

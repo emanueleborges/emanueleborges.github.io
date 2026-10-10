@@ -1,6 +1,6 @@
 // Cloudflare Worker do portfólio (tudo no plano gratuito do Cloudflare):
 //   POST /         → chat com IA (Workers AI), usando só o perfil do Emanuel (src/conhecimento.js)
-//   POST /contact  → formulário de contato, salvo no banco D1
+//   POST /contact  → formulário de contato, salvo no banco D1 + aviso por e-mail (Resend)
 import { CORE, PROFILE, VERSION } from "./conhecimento.js";
 
 // Modelo aberto multilíngue com bom custo na cota gratuita (~15 "neurônios" por pergunta).
@@ -115,7 +115,36 @@ async function handleChat(payload, ip, env, origin) {
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 const clean = (value, max) => (typeof value === "string" ? value.trim().slice(0, max + 1) : "");
 
-async function handleContact(payload, ip, env, origin) {
+// Aviso por e-mail (Resend, plano gratuito). Sem domínio próprio, o remetente de testes
+// onboarding@resend.dev só entrega para o e-mail da conta do Resend — que é o do Emanuel.
+const escapeHtml = (value) => value.replace(/[&<>"']/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[char]);
+
+async function notifyByEmail({ name, email, message, lang }, env) {
+  if (!env.RESEND_API_KEY || !env.NOTIFY_EMAIL) return;
+  try {
+    const response = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${env.RESEND_API_KEY}`,
+        "Content-Type": "application/json",
+        "User-Agent": "emanuel-portfolio-chat",
+      },
+      body: JSON.stringify({
+        from: "Portfólio <onboarding@resend.dev>",
+        to: [env.NOTIFY_EMAIL],
+        reply_to: email,
+        subject: `Nova mensagem no portfólio: ${name.slice(0, 60)}`,
+        text: `Nome: ${name}\nE-mail: ${email}\nIdioma do site: ${lang}\n\n${message}\n\n— Responda este e-mail para falar direto com ${name}.`,
+        html: `<p><strong>Nome:</strong> ${escapeHtml(name)}<br><strong>E-mail:</strong> ${escapeHtml(email)}<br><strong>Idioma do site:</strong> ${escapeHtml(lang)}</p><p style="white-space:pre-wrap">${escapeHtml(message)}</p><p style="color:#666">Responda este e-mail para falar direto com ${escapeHtml(name)}.</p>`,
+      }),
+    });
+    if (!response.ok) console.error(`Resend respondeu ${response.status}: ${await response.text()}`);
+  } catch (error) {
+    console.error("Falha ao enviar o aviso por e-mail:", error?.message ?? error);
+  }
+}
+
+async function handleContact(payload, ip, env, origin, ctx) {
   const { success } = await env.CONTACT_LIMITER.limit({ key: ip });
   if (!success) return json({ error: "rate_limited" }, 429, origin);
 
@@ -138,6 +167,8 @@ async function handleContact(payload, ip, env, origin) {
     await env.DB.prepare("INSERT INTO messages (name, email, message, lang) VALUES (?, ?, ?, ?)")
       .bind(name, email, message, lang)
       .run();
+    // A mensagem já está salva; o aviso por e-mail segue em segundo plano.
+    ctx.waitUntil(notifyByEmail({ name, email, message, lang }, env));
     return json({ ok: true }, 200, origin);
   } catch (error) {
     console.error("Erro ao salvar mensagem:", error?.message ?? error);
@@ -146,7 +177,7 @@ async function handleContact(payload, ip, env, origin) {
 }
 
 export default {
-  async fetch(request, env) {
+  async fetch(request, env, ctx) {
     const origin = env.ALLOWED_ORIGIN;
     if (request.method === "OPTIONS") return new Response(null, { status: 204, headers: corsHeaders(origin) });
     if (request.method !== "POST") return json({ error: "method_not_allowed" }, 405, origin);
@@ -160,7 +191,7 @@ export default {
     }
     const ip = request.headers.get("CF-Connecting-IP") ?? "unknown";
     const { pathname } = new URL(request.url);
-    if (pathname === "/contact") return handleContact(payload, ip, env, origin);
+    if (pathname === "/contact") return handleContact(payload, ip, env, origin, ctx);
     if (pathname === "/") return handleChat(payload, ip, env, origin);
     return json({ error: "not_found" }, 404, origin);
   },

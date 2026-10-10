@@ -113,7 +113,7 @@ question
 **200 response:** `{ "ok": true }`
 **Errors:** `400 invalid_fields` · `403 forbidden_origin` · `403 turnstile_failed` · `429 rate_limited` · `503 unavailable`
 
-**Flow:** origin → rate limit (3/min/IP) → honeypot filled ⇒ `200` without saving → validation → Turnstile → `INSERT` into D1.
+**Flow:** origin → rate limit (3/min/IP) → honeypot filled ⇒ `200` without saving → validation → Turnstile → `INSERT` into D1 → email notification via **Resend** in the background (`ctx.waitUntil`), with `reply_to` = the visitor's email.
 
 ### 3.2 Configuration (`wrangler.jsonc`)
 
@@ -126,6 +126,8 @@ question
 | `CONTACT_LIMITER` | 3 req / 60 s |
 | `ALLOWED_ORIGIN` | `https://emanueleborges.github.io` |
 | `TURNSTILE_SECRET` | secret (outside the repository) |
+| `RESEND_API_KEY` | secret — Resend key (free plan) |
+| `NOTIFY_EMAIL` | email that receives the notifications (the Resend account's email) |
 
 ### 3.3 AI knowledge
 `gerar-conhecimento.mjs` reads `../i18n.js` (English) and generates `src/conhecimento.js` with:
@@ -195,7 +197,8 @@ One 1024-dimension vector per excerpt; stable `id` (e.g. `job1`, `p5`, `edu4`); 
 | ADR-08 | Education always uses a ready-made answer | Leave it to the AI | The free model mistranslated degree and university names. |
 | ADR-09 | AI Gateway cache with a versioned key | No cache / custom KV | Saves quota; the version (profile hash) invalidates old answers automatically. |
 | ADR-10 | Invisible Turnstile on every call | Visible CAPTCHA / none | Protects the free quota with no friction for visitors. |
-| ADR-11 | Messages in D1, read via command/dashboard | Admin web page | Avoids attack surface; email notifications would require a paid domain. |
+| ADR-11 | Messages in D1, read via command/dashboard | Admin web page | Avoids attack surface. |
+| ADR-15 | Email notification with Resend (test sender `onboarding@resend.dev`) | Cloudflare Email Routing, custom domain | Free and domain-less: the test sender only delivers to the account's own email, which is exactly the recipient. |
 | ADR-12 | GoatCounter | Google Analytics | Cookieless (no consent banner needed). |
 | ADR-13 | Automatic `?v=` file versions | Asking users to clear the cache | Guarantees new HTML never uses old CSS/JS. |
 | ADR-14 | Simple Icons + generic icons | Official logos for every brand | Respects Oracle, Microsoft and AWS brand guidelines. |
