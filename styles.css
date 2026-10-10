@@ -184,6 +184,8 @@ blockquote { margin: 32px 0 0; padding: 12px 0 12px 16px; border-left: 2px solid
 .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
 .form-trap { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
 .form-privacy { margin: 0 0 16px; color: var(--muted); font-size: 12px; }
+.contact-form .button { border: 0; font-family: var(--sans); font-size: 13px; cursor: pointer; }
+.contact-form .button .form-send { font-size: 13px; font-weight: 700; }
 .contact-form button[disabled] { opacity: .6; cursor: progress; }
 .form-status { min-height: 1.4em; margin: 12px 0 0; font-size: 13px; }
 .form-status.is-success { color: #5eead4; }
