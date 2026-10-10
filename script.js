@@ -188,12 +188,22 @@ onScroll();
 /* ---------- Imagens do topo em rotação ---------- */
 
 const slides = document.querySelectorAll(".hero-slide");
+
+// As imagens seguintes só são baixadas quando vão aparecer (versão menor no celular).
+const loadSlide = (slide) => {
+  const url = matchMedia("(max-width: 760px)").matches ? slide.dataset.bgMobile : slide.dataset.bg;
+  if (url && !slide.style.backgroundImage) slide.style.backgroundImage = `url('${url}')`;
+};
+
 if (slides.length > 1 && !prefersReducedMotion) {
   let current = 0;
+  // Pré-carrega a próxima imagem alguns segundos antes da troca.
+  setTimeout(() => loadSlide(slides[1]), 3000);
   setInterval(() => {
     slides[current].classList.remove("is-active");
     current = (current + 1) % slides.length;
     slides[current].classList.add("is-active");
+    loadSlide(slides[(current + 1) % slides.length]);
   }, 7000);
 }
 
