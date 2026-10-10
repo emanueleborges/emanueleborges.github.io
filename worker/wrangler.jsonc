@@ -43,5 +43,7 @@
       "simple": { "limit": 20, "period": 60 }
     }
   ],
+  // Resumo semanal por e-mail: toda segunda às 12:00 UTC (08:00 em Manaus).
+  "triggers": { "crons": ["0 12 * * 1"] },
   "observability": { "enabled": true }
 }

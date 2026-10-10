@@ -3,6 +3,7 @@
 //   POST /contact  → formulário de contato, salvo no banco D1 + aviso por e-mail (Resend)
 //                    + confirmação ao visitante (Google Apps Script)
 //   POST /feedback → avaliação 👍/👎 das respostas da IA, salva no banco D1
+//   Cron (segunda 12:00 UTC) → resumo semanal por e-mail com saúde do sistema
 import { CORE, PROFILE, VERSION } from "./conhecimento.js";
 
 // Modelo aberto multilíngue com bom custo na cota gratuita (~15 "neurônios" por pergunta).
@@ -255,7 +256,94 @@ async function handleFeedback(payload, ip, env, origin) {
   }
 }
 
+// Resumo semanal (Cron Trigger, segunda 12:00 UTC = 08:00 em Manaus), enviado por e-mail.
+async function healthCheck(env) {
+  const checks = {};
+  try {
+    const embedding = await env.AI.run(EMBEDDING_MODEL, { text: ["health check"] });
+    checks.embeddings = Boolean(embedding?.data?.[0]?.length);
+    const { matches } = await env.VECTORIZE.query(embedding.data[0], { topK: 1 });
+    checks.vectorize = matches?.length > 0;
+  } catch (error) {
+    checks.embeddings ??= false;
+    checks.vectorize = false;
+  }
+  try {
+    const result = await env.AI.run(MODEL, { messages: [{ role: "user", content: "Reply with the single word OK. /no_think" }], max_tokens: 20 });
+    checks.ia = Boolean(String(result?.response ?? result?.choices?.[0]?.message?.content ?? "").trim());
+  } catch {
+    checks.ia = false;
+  }
+  try {
+    await env.DB.prepare("SELECT 1").first();
+    checks.banco = true;
+  } catch {
+    checks.banco = false;
+  }
+  return checks;
+}
+
+async function goatCounterVisits(env) {
+  if (!env.GOATCOUNTER_TOKEN) return null;
+  try {
+    const end = new Date();
+    const start = new Date(end.getTime() - 7 * 86400000);
+    const url = `https://emanueleborges.goatcounter.com/api/v0/stats/total?start=${start.toISOString().slice(0, 10)}&end=${end.toISOString().slice(0, 10)}`;
+    const response = await fetch(url, { headers: { Authorization: `Bearer ${env.GOATCOUNTER_TOKEN}`, "Content-Type": "application/json" } });
+    if (!response.ok) return null;
+    const data = await response.json();
+    return typeof data.total === "number" ? data.total : null;
+  } catch {
+    return null;
+  }
+}
+
+async function sendWeeklySummary(env) {
+  if (!env.RESEND_API_KEY || !env.NOTIFY_EMAIL) return;
+  const week = "created_at > datetime('now', '-7 days')";
+  const [messages, ratings, negatives, health, visits] = await Promise.all([
+    env.DB.prepare(`SELECT created_at, name, email, lang FROM messages WHERE ${week} ORDER BY id DESC LIMIT 20`).all(),
+    env.DB.prepare(`SELECT SUM(rating = 1) AS up, SUM(rating = -1) AS down FROM feedback WHERE ${week}`).first(),
+    env.DB.prepare(`SELECT lang, question, answer FROM feedback WHERE rating = -1 AND ${week} ORDER BY id DESC LIMIT 5`).all(),
+    healthCheck(env),
+    goatCounterVisits(env),
+  ]);
+  const ok = (value) => (value ? "✅ funcionando" : "❌ com problema");
+  const list = (items) => (items.length ? `<ul>${items.join("")}</ul>` : "<p>Nenhuma.</p>");
+  const html = `
+    <h2>Resumo semanal do portfólio</h2>
+    <p><strong>Visitas (7 dias):</strong> ${visits ?? "— (configure GOATCOUNTER_TOKEN para ver aqui; veja em emanueleborges.goatcounter.com)"}</p>
+    <h3>Mensagens do formulário: ${messages.results.length}</h3>
+    ${list(messages.results.map((m) => `<li>${escapeHtml(m.created_at)} UTC — <strong>${escapeHtml(m.name)}</strong> (${escapeHtml(m.email)}, ${escapeHtml(m.lang)})</li>`))}
+    <h3>Avaliações do chat: 👍 ${ratings?.up ?? 0} · 👎 ${ratings?.down ?? 0}</h3>
+    ${negatives.results.length ? "<p>Últimas respostas com 👎 (para melhorar):</p>" : ""}
+    ${negatives.results.length ? list(negatives.results.map((f) => `<li><strong>[${escapeHtml(f.lang)}] ${escapeHtml(f.question)}</strong><br>${escapeHtml(f.answer.slice(0, 300))}</li>`)) : ""}
+    <h3>Saúde do sistema</h3>
+    <ul>
+      <li>IA (Qwen3): ${ok(health.ia)}</li>
+      <li>Embeddings (BGE-M3): ${ok(health.embeddings)}</li>
+      <li>Vectorize (RAG): ${ok(health.vectorize)}</li>
+      <li>Banco D1: ${ok(health.banco)}</li>
+    </ul>
+    <p style="color:#666">Mensagens completas: <code>cd worker && ./ver-mensagens.sh</code> · Avaliações: <code>./ver-avaliacoes.sh</code></p>`;
+  const response = await fetch("https://api.resend.com/emails", {
+    method: "POST",
+    headers: { Authorization: `Bearer ${env.RESEND_API_KEY}`, "Content-Type": "application/json", "User-Agent": "emanuel-portfolio-chat" },
+    body: JSON.stringify({
+      from: "Portfólio <onboarding@resend.dev>",
+      to: [env.NOTIFY_EMAIL],
+      subject: `Resumo semanal do portfólio — ${messages.results.length} mensagem(ns), 👍 ${ratings?.up ?? 0} 👎 ${ratings?.down ?? 0}${Object.values(health).every(Boolean) ? "" : " ⚠️"}`,
+      html,
+    }),
+  });
+  if (!response.ok) console.error(`Resumo semanal: Resend respondeu ${response.status}: ${await response.text()}`);
+}
+
 export default {
+  async scheduled(event, env, ctx) {
+    ctx.waitUntil(sendWeeklySummary(env));
+  },
+
   async fetch(request, env, ctx) {
     const origin = env.ALLOWED_ORIGIN;
     if (request.method === "OPTIONS") return new Response(null, { status: 204, headers: corsHeaders(origin) });

@@ -766,6 +766,9 @@
   });
   renderTexts();
 
+  // Link direto para o assistente: https://emanueleborges.github.io/#chat
+  if (location.hash === "#chat") setOpen(true);
+
   // Usado pelos testes automáticos (tests/): devolve a resposta em texto.
   window.portfolioChat = {
     answerText: (query) =>
