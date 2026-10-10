@@ -147,6 +147,7 @@ The AI knowledge is **generated from the site's own translations** (`i18n.js`): 
     ├── migrations/             # D1 schema (messages, feedback)
     ├── ver-mensagens.sh        # Lists contact-form messages
     ├── ver-avaliacoes.sh       # 👍/👎 summary of chat answers
+    ├── painel.mjs              # Private stats dashboard (npm run painel)
     └── wrangler.jsonc          # Config (AI, Vectorize, D1, limits, origin, cron)
 ```
 
@@ -218,6 +219,7 @@ This (1) builds the knowledge from `i18n.js`, (2) deploys the Worker and (3) upd
 | Update the PDF résumés | `./gerar-curriculos.sh` |
 | Read contact-form messages | `cd worker && ./ver-mensagens.sh` (or `./ver-mensagens.sh 50`) — or Cloudflare dashboard: D1 → `portfolio-contact` → Console |
 | See chat ratings 👍/👎 | `cd worker && ./ver-avaliacoes.sh` |
+| **Open the stats dashboard** (rating and message charts, poorly rated answers, visits) | `cd worker && npm run painel` — builds `worker/painel.html` (local, git-ignored, contains personal data) and opens it in the browser. Visits: `GOATCOUNTER_TOKEN=your_token npm run painel` |
 | See AI usage and cache | Cloudflare dashboard → **AI → AI Gateway → default** |
 | See visits and events | https://emanueleborges.goatcounter.com |
 | See Google searches and indexing | [Google Search Console](https://search.google.com/search-console) → property `https://emanueleborges.github.io/` |

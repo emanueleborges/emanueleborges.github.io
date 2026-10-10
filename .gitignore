@@ -5,3 +5,4 @@ worker/.dev.vars
 .lighthouseci/
 scripts/lstm/models/
 scripts/lstm/data/
+worker/painel.html

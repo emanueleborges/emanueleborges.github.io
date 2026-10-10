@@ -78,6 +78,7 @@ Legenda: ✅ concluída · ⏳ pendente · 💡 ideia
 - ✅ **T58** Card 10: o assistente do portfólio como projeto (RAG com Workers AI e Vectorize), com botão que abre o chat — RF-01
 - ✅ **T59** Documentação atualizada (README, especificação RF-12/RF-13, plano §2.6–2.8, `GET /prices`, ADR-24 a 26) e scripts de treino do LSTM trazidos para `scripts/lstm/` — RNF-09
 - ✅ **T60** Segurança: limite por IP na rota `GET /prices` (30/min) e SRI no face-api.js da demo facial (testado com arquivo adulterado) — RNF-04
+- ✅ **T61** Painel privado de estatísticas (`npm run painel` em `worker/`): avaliações por semana e idioma, respostas mal avaliadas, mensagens e visitas (com token do GoatCounter); arquivo local, fora do git — RF-08
 
 ---
 
