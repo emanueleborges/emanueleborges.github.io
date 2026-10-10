@@ -88,6 +88,20 @@ question
 
 ---
 
+### 2.4 SEO and sharing
+- **Link previews:** static Open Graph and Twitter Card tags (in English) with `og-image.jpg` (1200×630).
+- **Languages:** `<link rel="alternate" hreflang>` for `?lang=en|pt|es|fr|it|zh|ru` + `x-default`. No `canonical` (it would conflict with the per-language alternates).
+- **Structured data:** `Person` JSON-LD (role, employer, city, education, technologies, languages, LinkedIn and GitHub).
+- **Crawling:** `sitemap.xml` (page in 7 languages + 7 PDFs) and `robots.txt` (blocks `worker/`, `tests/`, `scripts/`, `apps-script/`, `docs/`, `curriculo.html`).
+- **Google Search Console:** verified with an HTML tag (`google-site-verification`); sitemap submitted.
+- **404:** `404.html` (GitHub Pages returns HTTP 404 with this page); `/#chat` opens the assistant.
+
+### 2.5 Performance
+- First hero image: responsive CSS (800 px on mobile, 1400 px on desktop) + `<link rel="preload" … fetchpriority="high">` per media query.
+- Other images: `data-bg`/`data-bg-mobile`, loaded only right before they appear in the carousel.
+- Google Fonts with `preload` + `onload` (non-blocking) and a `<noscript>` fallback.
+- Result (Lighthouse, mobile): performance 69 → ~80; accessibility, best practices and SEO 100; initial weight ~237 KB.
+
 ## 3. Backend — Cloudflare Worker
 
 ### 3.1 Routes
@@ -123,6 +137,9 @@ question
 `rating`: `1` (👍) or `-1` (👎). **200 response:** `{ "ok": true }` · **Errors:** `400 invalid_fields` · `403` · `429 rate_limited` (20/min/IP) · `503 unavailable`
 
 Stored only when the visitor clicks; the chat panel notes that the question and answer will be saved.
+
+#### Cron — weekly summary (`0 12 * * 1`, Mondays 12:00 UTC)
+Queries D1 for the last 7 days of messages and ratings, runs a health check (Qwen3 generation, BGE-M3 embedding, Vectorize query and `SELECT 1` on D1), fetches visits from GoatCounter (if `GOATCOUNTER_TOKEN` is set) and sends an email through Resend to `NOTIFY_EMAIL`. The subject gets a ⚠️ when any service fails.
 
 ### 3.2 Configuration (`wrangler.jsonc`)
 
@@ -194,11 +211,15 @@ One 1024-dimension vector per excerpt; stable `id` (e.g. `job1`, `p5`, `edu4`); 
 | Résumés | `./gerar-curriculos.sh` (headless Chrome → `cv/*.pdf`) |
 | Worker + knowledge + index | `cd worker && npm run deploy` |
 | Database | `npx wrangler d1 migrations apply portfolio-contact --remote` |
+| Automated tests | GitHub Actions (`.github/workflows/testes.yml`) on every push and pull request |
+| SEO | `sitemap.xml` + Google Search Console |
 
 ---
 
 ## 6. Quality
 
+- **Continuous integration:** GitHub Actions runs script syntax checks, `sitemap.xml` and JSON-LD validation, the AI knowledge build and the chat tests (the script finds Chrome on macOS or Linux).
+- **Lighthouse:** performance ~80 · accessibility 100 · best practices 100 · SEO 100 (mobile).
 - **Chat tests:** `tests/rodar-testes-chat.sh` (headless Chrome + `tests/runner.js` + `tests/chat-casos.json`, 79 cases).
 - **Worker tests:** calls with a wrong origin, invalid fields, missing/fake token, unknown route, per-minute limit and honeypot.
 - **End-to-end:** Chrome DevTools Protocol in a real browser window (Turnstile rejects headless browsers with error 600010 — expected behavior).
@@ -220,7 +241,11 @@ One 1024-dimension vector per excerpt; stable `id` (e.g. `job1`, `p5`, `edu4`); 
 | ADR-09 | AI Gateway cache with a versioned key | No cache / custom KV | Saves quota; the version (profile hash) invalidates old answers automatically. |
 | ADR-10 | Invisible Turnstile on every call | Visible CAPTCHA / none | Protects the free quota with no friction for visitors. |
 | ADR-11 | Messages in D1, read via command/dashboard | Admin web page | Avoids attack surface. |
-| ADR-15 | Email notification with Resend (test sender `onboarding@resend.dev`) | Cloudflare Email Routing, custom domain | Free and domain-less: the test sender only delivers to the account's own email, which is exactly the recipient. |
 | ADR-12 | GoatCounter | Google Analytics | Cookieless (no consent banner needed). |
 | ADR-13 | Automatic `?v=` file versions | Asking users to clear the cache | Guarantees new HTML never uses old CSS/JS. |
 | ADR-14 | Simple Icons + generic icons | Official logos for every brand | Respects Oracle, Microsoft and AWS brand guidelines. |
+| ADR-15 | Email notification with Resend (test sender `onboarding@resend.dev`) | Cloudflare Email Routing, custom domain | Free and domain-less: the test sender only delivers to the account's own email, which is exactly the recipient. |
+| ADR-16 | Visitor confirmation via Google Apps Script (owner's Gmail) | Resend with a custom domain | Free and domain-less; abuse protection: no echoed text, first name only, 1 per email every 24 h. |
+| ADR-17 | `hreflang` without `canonical` | `canonical` pointing to the home page | Lighthouse flagged a conflict: each language version must reference itself. |
+| ADR-18 | On-demand, responsive hero images | Loading all 4 upfront | Cut the main-content time on mobile from ~6 s to ~3.5 s. |
+| ADR-19 | GitHub Actions for tests | Running them only locally | Free for public repositories; prevents publishing a change that breaks the chat. |

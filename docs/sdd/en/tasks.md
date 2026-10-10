@@ -61,6 +61,7 @@ Legend: ✅ done · ⏳ pending · 💡 idea
 - ✅ **T41** Lighthouse: on-demand responsive images, non-blocking fonts, contrast (performance 69 → ~80; accessibility, best practices and SEO 100) — NFR-02, NFR-06
 - ✅ **T42** Weekly summary email (Cron) with AI, Vectorize and D1 health check — FR-08
 - ✅ **T43** Custom 404 page and `#chat` link that opens the assistant
+- ✅ **T45** Google Search Console: HTML-tag verification and `sitemap.xml` submission — FR-09.3
 - ✅ **T44** Automatic confirmation to the visitor in the message's language (Google Apps Script) — FR-06.6
 
 ---
@@ -74,7 +75,6 @@ Legend: ✅ done · ⏳ pending · 💡 idea
 | ⏳ **T33** | Impact numbers in the experience section (e.g. deployment time, % fewer bugs) | Data from Emanuel | FR-01 |
 | ⏳ **T35** | Translation review by native speakers (priority: Chinese and Russian) | Reviewer | FR-02 |
 | ⏳ **T37** | Test the contact form's 3-per-minute limit in production | — | NFR-04 |
-| ⏳ **T45** | Verify the site in Google Search Console and submit `sitemap.xml` | Verification code from Emanuel | NFR-02 |
 | ⏳ **T46** | Set the Apps Script web app access to "Anyone" and test the confirmation | Emanuel | FR-06.6 |
 | ⏳ **T47** | GoatCounter token (`GOATCOUNTER_TOKEN`) to include visits in the weekly summary | Emanuel | FR-08 |
 

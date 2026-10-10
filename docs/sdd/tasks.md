@@ -61,6 +61,7 @@ Legenda: ✅ concluída · ⏳ pendente · 💡 ideia
 - ✅ **T41** Lighthouse: imagens sob demanda e responsivas, fontes sem bloqueio, contraste (desempenho 69 → ~80; acessibilidade, boas práticas e SEO 100) — RNF-02, RNF-06
 - ✅ **T42** Resumo semanal por e-mail (Cron) com saúde da IA, Vectorize e D1 — RF-08
 - ✅ **T43** Página 404 personalizada e link `#chat` que abre o assistente
+- ✅ **T45** Google Search Console: verificação por tag HTML e envio do `sitemap.xml` — RF-09.3
 - ✅ **T44** Confirmação automática ao visitante no idioma da mensagem (Google Apps Script) — RF-06.6
 
 ---
@@ -74,7 +75,6 @@ Legenda: ✅ concluída · ⏳ pendente · 💡 ideia
 | ⏳ **T33** | Números de impacto nas experiências (ex.: tempo de deploy, % de bugs) | Dados do Emanuel | RF-01 |
 | ⏳ **T35** | Revisão das traduções por falantes nativos (prioridade: chinês e russo) | Revisor | RF-02 |
 | ⏳ **T37** | Testar em produção o limite de 3 mensagens por minuto do formulário | — | RNF-04 |
-| ⏳ **T45** | Verificar o site no Google Search Console e enviar o `sitemap.xml` | Código de verificação do Emanuel | RNF-02 |
 | ⏳ **T46** | Liberar o App da Web do Apps Script para "Qualquer pessoa" e testar a confirmação | Emanuel | RF-06.6 |
 | ⏳ **T47** | Token do GoatCounter (`GOATCOUNTER_TOKEN`) para incluir visitas no resumo semanal | Emanuel | RF-08 |
 

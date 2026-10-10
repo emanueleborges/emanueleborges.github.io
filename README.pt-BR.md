@@ -40,7 +40,7 @@ Site estático, sem framework, com um backend *serverless* no Cloudflare para o 
 | **Currículo em PDF** | Um PDF por idioma, gerado da mesma fonte de textos do site; o botão baixa o PDF do idioma atual. |
 | **Formulário de contato** | Mensagens salvas no D1, proteção anti-robô invisível, **aviso por e-mail** ao dono e **confirmação automática** ao visitante no idioma da mensagem. |
 | **Contatos diretos** | E-mail, WhatsApp, LinkedIn e GitHub. |
-| **SEO** | Prévia de link (Open Graph/Twitter), `hreflang` para os 7 idiomas, dados estruturados de `Person` (JSON-LD), `sitemap.xml` e `robots.txt`. |
+| **SEO** | Prévia de link (Open Graph/Twitter), `hreflang` para os 7 idiomas, dados estruturados de `Person` (JSON-LD), `sitemap.xml` e `robots.txt`; verificado no Google Search Console. |
 | **Estatísticas** | Visitas e eventos (chat aberto, downloads do currículo, cliques em contatos, envios do formulário, avaliações) com GoatCounter, sem cookies. |
 | **Resumo semanal** | Toda segunda, um e-mail com as mensagens da semana, as avaliações do chat e um teste de saúde da IA, do índice vetorial e do banco. |
 | **Página 404** | Página personalizada no estilo do site, com links para o portfólio e o assistente. |
@@ -196,6 +196,7 @@ Esse comando (1) gera o conhecimento a partir do `i18n.js`, (2) publica o Worker
 | Ver as avaliações 👍/👎 do chat | `cd worker && ./ver-avaliacoes.sh` |
 | Ver uso da IA e do cache | Painel do Cloudflare → **AI → AI Gateway → default** |
 | Ver visitas e eventos | https://emanueleborges.goatcounter.com |
+| Ver buscas e indexação no Google | [Google Search Console](https://search.google.com/search-console) → propriedade `https://emanueleborges.github.io/` |
 | Rodar os testes do chat | `./tests/rodar-testes-chat.sh` |
 
 ---

@@ -73,6 +73,8 @@ O site deve apresentar: topo (nome, cargo, resumo, localização, anos de experi
 - RF-05.6 Se a IA falhar, a resposta vem da **busca local** no conteúdo da página, sem mensagem de erro.
 - RF-05.7 A busca local tolera erros de digitação e sinônimos e funciona nos 7 idiomas.
 - RF-05.8 Perguntas sobre contato mostram botões de contato; sobre currículo, o link do PDF.
+- RF-05.9 O link `/#chat` abre o site com o assistente aberto.
+- RF-05.10 Respostas da IA podem ser avaliadas com 👍/👎; a avaliação (pergunta + resposta) só é salva quando o visitante clica, com aviso ao lado dos botões.
 
 ### RF-06 — Formulário de contato
 - RF-06.1 Campos: nome, e-mail e mensagem (obrigatórios), com contador de caracteres.
@@ -86,7 +88,18 @@ O site deve apresentar: topo (nome, cargo, resumo, localização, anos de experi
 E-mail, WhatsApp, LinkedIn e GitHub visíveis na seção de contato e no assistente.
 
 ### RF-08 — Estatísticas
-Registrar visitas e eventos (chat aberto, pergunta respondida pela IA, download de currículo por idioma, cliques em contatos, troca de idioma, envio do formulário) **sem cookies e sem o texto das perguntas**.
+Registrar visitas e eventos (chat aberto, pergunta respondida pela IA, download de currículo por idioma, cliques em contatos, troca de idioma, envio do formulário, avaliações) **sem cookies e sem o texto das perguntas**.
+
+### RF-09 — SEO e compartilhamento
+- RF-09.1 Ao compartilhar o link (LinkedIn, WhatsApp, X), exibir prévia com imagem, título e descrição.
+- RF-09.2 Indicar ao Google as 7 versões de idioma (`hreflang`) e quem é a pessoa do site (dados estruturados `Person`).
+- RF-09.3 Publicar `sitemap.xml` e `robots.txt`; o site é verificado no Google Search Console.
+
+### RF-10 — Resumo semanal
+Toda segunda-feira, o dono recebe por e-mail: mensagens da semana, avaliações do chat (com as respostas mal avaliadas) e a saúde da IA, do índice vetorial e do banco; visitas, se houver token do GoatCounter.
+
+### RF-11 — Página não encontrada
+Endereços inexistentes mostram uma página 404 no estilo do site, com links para o portfólio e o assistente.
 
 ---
 
@@ -95,7 +108,7 @@ Registrar visitas e eventos (chat aberto, pergunta respondida pela IA, download 
 | ID | Categoria | Requisito |
 |---|---|---|
 | RNF-01 | **Custo** | Infraestrutura com custo zero (planos gratuitos). |
-| RNF-02 | **Desempenho** | Site estático sem build; scripts de terceiros (Turnstile) carregados sob demanda; respostas repetidas da IA servidas do cache. |
+| RNF-02 | **Desempenho** | Site estático sem build; primeira imagem pré-carregada (menor no celular) e demais sob demanda; fontes sem bloquear a exibição; scripts de terceiros (Turnstile) carregados sob demanda; respostas repetidas da IA servidas do cache. Meta: Lighthouse (celular) ≥ 75 em desempenho e 100 em acessibilidade, boas práticas e SEO. |
 | RNF-03 | **Disponibilidade** | O chat deve continuar útil mesmo sem IA (busca local); o formulário falha com mensagem clara. |
 | RNF-04 | **Segurança** | Backend aceita só a origem do site; anti-robô em toda chamada ao backend; limites por IP; validação de entrada; nenhum segredo no repositório. |
 | RNF-05 | **Privacidade (LGPD)** | Sem cookies de rastreamento; formulário guarda o mínimo (sem IP); aviso de uso de IA e de finalidade dos dados. |
@@ -139,3 +152,21 @@ Registrar visitas e eventos (chat aberto, pergunta respondida pela IA, download 
 ### Cache
 - [x] Após um commit, o HTML referencia `styles.css?v=<nova versão>`.
 - [x] Mudança no perfil invalida automaticamente o cache de respostas da IA.
+
+### Avaliações
+- [x] Clicar em 👎 numa resposta da IA mostra "Obrigado pela avaliação!" e grava o registro no banco.
+
+### SEO e desempenho
+- [x] `sitemap.xml` e `robots.txt` respondem HTTP 200; o sitemap é XML válido com 15 endereços.
+- [x] A página tem prévia Open Graph (imagem 1200×630), `hreflang` para os 7 idiomas e JSON-LD `Person` válido.
+- [x] A tag de verificação do Google Search Console está publicada.
+- [x] Lighthouse (celular): desempenho ~80, acessibilidade 100, boas práticas 100, SEO 100.
+- [x] Um endereço inexistente responde HTTP 404 com a página personalizada.
+
+### Integração contínua
+- [x] Cada push na `main` roda no GitHub Actions: sintaxe dos scripts, validação de SEO, geração do conhecimento da IA e os 79 testes do chat — todos passando.
+
+### E-mails
+- [x] Nova mensagem do formulário gera aviso no Gmail do dono, com "Responder" para o visitante.
+- [ ] O visitante recebe a confirmação no idioma da mensagem (aguardando liberar o Apps Script para "Qualquer pessoa").
+- [ ] O resumo semanal chega na segunda-feira (envio de teste executado sem erros; recebimento a confirmar).

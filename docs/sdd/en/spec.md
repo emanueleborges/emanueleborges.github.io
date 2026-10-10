@@ -73,6 +73,8 @@ The site must present: hero (name, role, summary, location, years of experience)
 - FR-05.6 If the AI fails, the answer comes from **local search** over the page content, with no error message.
 - FR-05.7 Local search tolerates typos and synonyms and works in all 7 languages.
 - FR-05.8 Questions about contact show contact buttons; questions about the résumé show the PDF link.
+- FR-05.9 The `/#chat` link opens the site with the assistant open.
+- FR-05.10 AI answers can be rated 👍/👎; a rating (question + answer) is stored only when the visitor clicks, with a notice next to the buttons.
 
 ### FR-06 — Contact form
 - FR-06.1 Fields: name, email and message (required), with a character counter.
@@ -86,7 +88,18 @@ The site must present: hero (name, role, summary, location, years of experience)
 Email, WhatsApp, LinkedIn and GitHub visible in the contact section and in the assistant.
 
 ### FR-08 — Analytics
-Record visits and events (chat opened, question answered by the AI, résumé download by language, contact clicks, language change, form submission) **without cookies and without the text of the questions**.
+Record visits and events (chat opened, question answered by the AI, résumé download by language, contact clicks, language change, form submission, ratings) **without cookies and without the text of the questions**.
+
+### FR-09 — SEO and sharing
+- FR-09.1 When the link is shared (LinkedIn, WhatsApp, X), show a preview with image, title and description.
+- FR-09.2 Tell Google about the 7 language versions (`hreflang`) and who the site is about (`Person` structured data).
+- FR-09.3 Publish `sitemap.xml` and `robots.txt`; the site is verified in Google Search Console.
+
+### FR-10 — Weekly summary
+Every Monday the owner receives an email with the week's messages, chat ratings (including poorly rated answers) and the health of the AI, vector index and database; visits too, if a GoatCounter token is set.
+
+### FR-11 — Not-found page
+Unknown addresses show a 404 page in the site's style, with links to the portfolio and the assistant.
 
 ---
 
@@ -95,7 +108,7 @@ Record visits and events (chat opened, question answered by the AI, résumé dow
 | ID | Category | Requirement |
 |---|---|---|
 | NFR-01 | **Cost** | Zero-cost infrastructure (free tiers). |
-| NFR-02 | **Performance** | Static site with no build step; third-party scripts (Turnstile) loaded on demand; repeated AI answers served from cache. |
+| NFR-02 | **Performance** | Static site with no build step; first image preloaded (smaller on mobile) and the rest on demand; non-blocking fonts; third-party scripts (Turnstile) loaded on demand; repeated AI answers served from cache. Target: Lighthouse (mobile) ≥ 75 performance and 100 accessibility, best practices and SEO. |
 | NFR-03 | **Availability** | The chat must remain useful without AI (local search); the form fails with a clear message. |
 | NFR-04 | **Security** | The backend only accepts the site's origin; bot protection on every backend call; per-IP limits; input validation; no secrets in the repository. |
 | NFR-05 | **Privacy (LGPD/GDPR-style)** | No tracking cookies; the form stores the minimum (no IP address); notices about AI use and the purpose of the data. |
@@ -139,3 +152,21 @@ Record visits and events (chat opened, question answered by the AI, résumé dow
 ### Caching
 - [x] After a commit, the HTML references `styles.css?v=<new version>`.
 - [x] A profile change automatically invalidates the AI answer cache.
+
+### Ratings
+- [x] Clicking 👎 on an AI answer shows "Thanks for your feedback!" and stores the record in the database.
+
+### SEO and performance
+- [x] `sitemap.xml` and `robots.txt` return HTTP 200; the sitemap is valid XML with 15 URLs.
+- [x] The page has an Open Graph preview (1200×630 image), `hreflang` for the 7 languages and valid `Person` JSON-LD.
+- [x] The Google Search Console verification tag is published.
+- [x] Lighthouse (mobile): performance ~80, accessibility 100, best practices 100, SEO 100.
+- [x] An unknown address returns HTTP 404 with the custom page.
+
+### Continuous integration
+- [x] Every push to `main` runs in GitHub Actions: script syntax, SEO validation, AI knowledge build and the 79 chat tests — all passing.
+
+### Emails
+- [x] A new contact-form message triggers a notification to the owner's Gmail, with "Reply" addressed to the visitor.
+- [ ] The visitor receives a confirmation in the message's language (waiting for the Apps Script web app to be set to "Anyone").
+- [ ] The weekly summary arrives on Monday (test run completed without errors; delivery to be confirmed).

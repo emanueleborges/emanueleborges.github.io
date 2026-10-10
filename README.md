@@ -40,7 +40,7 @@ A framework-free static site with a serverless backend on Cloudflare for the AI 
 | **PDF résumé** | One PDF per language, generated from the same text source as the site; the button downloads the PDF for the current language. |
 | **Contact form** | Messages stored in D1, invisible bot protection, **email notification** to the owner and an **automatic confirmation** to the visitor in the language of their message. |
 | **Direct contacts** | Email, WhatsApp, LinkedIn and GitHub. |
-| **SEO** | Link previews (Open Graph/Twitter), `hreflang` for 7 languages, `Person` structured data (JSON-LD), `sitemap.xml` and `robots.txt`. |
+| **SEO** | Link previews (Open Graph/Twitter), `hreflang` for 7 languages, `Person` structured data (JSON-LD), `sitemap.xml` and `robots.txt`; verified in Google Search Console. |
 | **Analytics** | Visits and events (chat opened, résumé downloads, contact clicks, form submissions, ratings) with GoatCounter, cookieless. |
 | **Weekly summary** | Every Monday an email with the week's messages, chat ratings and a health check of the AI, vector index and database. |
 | **404 page** | Custom page in the site's style with links to the portfolio and the assistant. |
@@ -196,6 +196,7 @@ This (1) builds the knowledge from `i18n.js`, (2) deploys the Worker and (3) upd
 | See chat ratings 👍/👎 | `cd worker && ./ver-avaliacoes.sh` |
 | See AI usage and cache | Cloudflare dashboard → **AI → AI Gateway → default** |
 | See visits and events | https://emanueleborges.goatcounter.com |
+| See Google searches and indexing | [Google Search Console](https://search.google.com/search-console) → property `https://emanueleborges.github.io/` |
 | Run the chat tests | `./tests/rodar-testes-chat.sh` |
 
 ---
