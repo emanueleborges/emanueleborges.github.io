@@ -35,6 +35,12 @@
       "name": "CONTACT_LIMITER",
       "namespace_id": "1002",
       "simple": { "limit": 3, "period": 60 }
+    },
+    // Até 20 avaliações (👍/👎) por minuto por visitante (IP).
+    {
+      "name": "FEEDBACK_LIMITER",
+      "namespace_id": "1003",
+      "simple": { "limit": 20, "period": 60 }
     }
   ],
   "observability": { "enabled": true }

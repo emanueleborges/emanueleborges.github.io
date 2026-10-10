@@ -195,7 +195,13 @@ window.I18N = {
     "form.again": "Enviar outra mensagem",
     "form.successTitle": "Mensagem enviada!",
     "chat.faq.education": "Bacharelado em Análise de Sistemas pela FUCAPI (Manaus, 2000–2010). Pós-graduações: Aplicativos Móveis Multiplataforma (Descomplica, 2024–2025), Machine Learning Engineering (FIAP, 2025–2026) e Natural Language Processing (Universidade Federal de Goiás – UFG, 2025–2026).",
-    "chat.q.education": "Formação"
+    "chat.q.education": "Formação",
+    "chat.rateAsk": "Esta resposta ajudou?",
+    "chat.rateUp": "Sim, ajudou",
+    "chat.rateDown": "Não ajudou",
+    "chat.rateNote": "Ao avaliar, a pergunta e a resposta são salvas para melhorar o assistente.",
+    "chat.rateThanks": "Obrigado pela avaliação!",
+    "chat.rateError": "Não foi possível registrar agora."
   },
   "en": {
     "menu.open": "Open menu",
@@ -382,7 +388,13 @@ window.I18N = {
     "form.again": "Send another message",
     "form.successTitle": "Message sent!",
     "chat.faq.education": "Bachelor's in Systems Analysis from FUCAPI (Manaus, Brazil, 2000–2010). Postgraduate studies: Cross-Platform Mobile Apps (Descomplica, 2024–2025), Machine Learning Engineering (FIAP, 2025–2026) and Natural Language Processing (Universidade Federal de Goiás – UFG, 2025–2026).",
-    "chat.q.education": "Education"
+    "chat.q.education": "Education",
+    "chat.rateAsk": "Was this answer helpful?",
+    "chat.rateUp": "Yes, helpful",
+    "chat.rateDown": "Not helpful",
+    "chat.rateNote": "If you rate, the question and answer are saved to improve the assistant.",
+    "chat.rateThanks": "Thanks for your feedback!",
+    "chat.rateError": "Couldn't save your rating right now."
   },
   "es": {
     "menu.open": "Abrir menú",
@@ -561,7 +573,13 @@ window.I18N = {
     "form.again": "Enviar otro mensaje",
     "form.successTitle": "¡Mensaje enviado!",
     "chat.faq.education": "Licenciatura en Análisis de Sistemas por la FUCAPI (Manaus, Brasil, 2000–2010). Posgrados: Aplicaciones Móviles Multiplataforma (Descomplica, 2024–2025), Machine Learning Engineering (FIAP, 2025–2026) y Natural Language Processing (Universidade Federal de Goiás – UFG, 2025–2026).",
-    "chat.q.education": "Formación"
+    "chat.q.education": "Formación",
+    "chat.rateAsk": "¿Te ayudó esta respuesta?",
+    "chat.rateUp": "Sí, me ayudó",
+    "chat.rateDown": "No me ayudó",
+    "chat.rateNote": "Al valorar, la pregunta y la respuesta se guardan para mejorar el asistente.",
+    "chat.rateThanks": "¡Gracias por tu valoración!",
+    "chat.rateError": "No se pudo registrar ahora."
   },
   "fr": {
     "menu.open": "Ouvrir le menu",
@@ -757,7 +775,13 @@ window.I18N = {
     "form.again": "Envoyer un autre message",
     "form.successTitle": "Message envoyé !",
     "chat.faq.education": "Licence en analyse de systèmes à la FUCAPI (Manaus, Brésil, 2000–2010). Spécialisations de troisième cycle : applications mobiles multiplateformes (Descomplica, 2024–2025), Machine Learning Engineering (FIAP, 2025–2026) et Natural Language Processing (Universidade Federal de Goiás – UFG, 2025–2026).",
-    "chat.q.education": "Formation"
+    "chat.q.education": "Formation",
+    "chat.rateAsk": "Cette réponse vous a-t-elle aidé ?",
+    "chat.rateUp": "Oui, utile",
+    "chat.rateDown": "Pas utile",
+    "chat.rateNote": "En notant, la question et la réponse sont enregistrées pour améliorer l’assistant.",
+    "chat.rateThanks": "Merci pour votre avis !",
+    "chat.rateError": "Impossible d’enregistrer pour le moment."
   },
   "it": {
     "menu.open": "Apri il menu",
@@ -953,7 +977,13 @@ window.I18N = {
     "form.again": "Invia un altro messaggio",
     "form.successTitle": "Messaggio inviato!",
     "chat.faq.education": "Laurea in Analisi dei Sistemi presso la FUCAPI (Manaus, Brasile, 2000–2010). Master post-laurea: App Mobile Multipiattaforma (Descomplica, 2024–2025), Machine Learning Engineering (FIAP, 2025–2026) e Natural Language Processing (Universidade Federal de Goiás – UFG, 2025–2026).",
-    "chat.q.education": "Formazione"
+    "chat.q.education": "Formazione",
+    "chat.rateAsk": "Questa risposta ti è stata utile?",
+    "chat.rateUp": "Sì, utile",
+    "chat.rateDown": "Non utile",
+    "chat.rateNote": "Valutando, la domanda e la risposta vengono salvate per migliorare l’assistente.",
+    "chat.rateThanks": "Grazie per il feedback!",
+    "chat.rateError": "Impossibile registrare ora."
   },
   "zh": {
     "menu.open": "打开菜单",
@@ -1149,7 +1179,13 @@ window.I18N = {
     "form.again": "再发一条留言",
     "form.successTitle": "留言已发送！",
     "chat.faq.education": "本科：FUCAPI 系统分析学士（巴西马瑙斯，2000–2010）。研究生课程：跨平台移动应用（Descomplica，2024–2025）、机器学习工程（FIAP，2025–2026）和自然语言处理（巴西戈亚斯联邦大学 Universidade Federal de Goiás – UFG，2025–2026）。",
-    "chat.q.education": "教育背景"
+    "chat.q.education": "教育背景",
+    "chat.rateAsk": "这个回答有帮助吗？",
+    "chat.rateUp": "有帮助",
+    "chat.rateDown": "没有帮助",
+    "chat.rateNote": "评价时，问题和回答会被保存，用于改进助手。",
+    "chat.rateThanks": "感谢你的反馈！",
+    "chat.rateError": "暂时无法提交评价。"
   },
   "ru": {
     "menu.open": "Открыть меню",
@@ -1345,6 +1381,12 @@ window.I18N = {
     "form.again": "Отправить ещё одно сообщение",
     "form.successTitle": "Сообщение отправлено!",
     "chat.faq.education": "Бакалавр в области системного анализа, FUCAPI (Манаус, Бразилия, 2000–2010). Последипломное образование: кроссплатформенные мобильные приложения (Descomplica, 2024–2025), Machine Learning Engineering (FIAP, 2025–2026) и Natural Language Processing (Universidade Federal de Goiás – UFG, 2025–2026).",
-    "chat.q.education": "Образование"
+    "chat.q.education": "Образование",
+    "chat.rateAsk": "Этот ответ был полезен?",
+    "chat.rateUp": "Да, полезен",
+    "chat.rateDown": "Не помог",
+    "chat.rateNote": "При оценке вопрос и ответ сохраняются для улучшения ассистента.",
+    "chat.rateThanks": "Спасибо за оценку!",
+    "chat.rateError": "Не удалось сохранить оценку."
   }
 };

@@ -1,6 +1,7 @@
 // Cloudflare Worker do portfólio (tudo no plano gratuito do Cloudflare):
 //   POST /         → chat com IA (Workers AI), usando só o perfil do Emanuel (src/conhecimento.js)
 //   POST /contact  → formulário de contato, salvo no banco D1 + aviso por e-mail (Resend)
+//   POST /feedback → avaliação 👍/👎 das respostas da IA, salva no banco D1
 import { CORE, PROFILE, VERSION } from "./conhecimento.js";
 
 // Modelo aberto multilíngue com bom custo na cota gratuita (~15 "neurônios" por pergunta).
@@ -176,6 +177,31 @@ async function handleContact(payload, ip, env, origin, ctx) {
   }
 }
 
+// POST /feedback — avaliação 👍/👎 de uma resposta da IA, salva no D1.
+async function handleFeedback(payload, ip, env, origin) {
+  const { success } = await env.FEEDBACK_LIMITER.limit({ key: ip });
+  if (!success) return json({ error: "rate_limited" }, 429, origin);
+
+  const rating = payload?.rating === 1 || payload?.rating === -1 ? payload.rating : 0;
+  const question = clean(payload?.question, MAX_QUESTION_LENGTH);
+  const answer = clean(payload?.answer, 3000);
+  const lang = LANGUAGES[payload?.lang] ? payload.lang : "en";
+  if (!rating || !question || question.length > MAX_QUESTION_LENGTH || !answer || answer.length > 3000) {
+    return json({ error: "invalid_fields" }, 400, origin);
+  }
+  if (!(await isHuman(payload?.turnstileToken, ip, env))) return json({ error: "turnstile_failed" }, 403, origin);
+
+  try {
+    await env.DB.prepare("INSERT INTO feedback (rating, lang, question, answer) VALUES (?, ?, ?, ?)")
+      .bind(rating, lang, question, answer)
+      .run();
+    return json({ ok: true }, 200, origin);
+  } catch (error) {
+    console.error("Erro ao salvar avaliação:", error?.message ?? error);
+    return json({ error: "unavailable" }, 503, origin);
+  }
+}
+
 export default {
   async fetch(request, env, ctx) {
     const origin = env.ALLOWED_ORIGIN;
@@ -192,6 +218,7 @@ export default {
     const ip = request.headers.get("CF-Connecting-IP") ?? "unknown";
     const { pathname } = new URL(request.url);
     if (pathname === "/contact") return handleContact(payload, ip, env, origin, ctx);
+    if (pathname === "/feedback") return handleFeedback(payload, ip, env, origin);
     if (pathname === "/") return handleChat(payload, ip, env, origin);
     return json({ error: "not_found" }, 404, origin);
   },

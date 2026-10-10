@@ -612,6 +612,34 @@
     return typeof text === "string" && text.trim() ? text.trim() : null;
   };
 
+  // Avaliação 👍/👎 de uma resposta da IA (salva no D1 só quando o visitante clica).
+  const ratingRow = (question, answerText) => {
+    const row = el("div", "chat-rate");
+    const label = el("span", "chat-rate-ask", tc("rateAsk"));
+    const note = el("small", "chat-rate-note", tc("rateNote"));
+    const buttons = [
+      [1, "👍", "rateUp"],
+      [-1, "👎", "rateDown"],
+    ].map(([rating, icon, key]) => {
+      const button = el("button", "chat-rate-button", icon);
+      button.type = "button";
+      button.setAttribute("aria-label", tc(key));
+      button.setAttribute("aria-pressed", "false");
+      button.addEventListener("click", async () => {
+        buttons.forEach((other) => (other.disabled = true));
+        button.setAttribute("aria-pressed", "true");
+        const { ok } = await window.PortfolioApi.post("/feedback", { question, answer: answerText, rating, lang: currentLang });
+        label.textContent = tc(ok ? "rateThanks" : "rateError");
+        note.remove();
+        if (ok) track(rating === 1 ? "chat-avaliacao-positiva" : "chat-avaliacao-negativa", rating === 1 ? "Avaliou resposta da IA com 👍" : "Avaliou resposta da IA com 👎");
+        else buttons.forEach((other) => (other.disabled = false));
+      });
+      return button;
+    });
+    row.append(label, ...buttons, note);
+    return row;
+  };
+
   // Resposta da IA + atalho "Ver na página" para o trecho mais relevante do site.
   const aiReply = async (question) => {
     const text = await askAi(question);
@@ -627,6 +655,7 @@
       button.addEventListener("click", () => goTo(best.target));
       nodes.push(button);
     }
+    nodes.push(ratingRow(question, text));
     return nodes;
   };
 
