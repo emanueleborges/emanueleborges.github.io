@@ -1,5 +1,7 @@
 # Tarefas — Portfólio de Emanuel Borges
 
+🌐 [English](en/tasks.md) · **Português**
+
 > **Spec-Driven Development (SDD).** Lista de execução derivada da [especificação](spec.md) e do [plano técnico](plan.md). Cada tarefa referencia os requisitos que atende.
 
 Legenda: ✅ concluída · ⏳ pendente · 💡 ideia
@@ -50,7 +52,7 @@ Legenda: ✅ concluída · ⏳ pendente · 💡 ideia
 - ✅ **T29** Data de atualização no rodapé e versão `?v=` automática (hook) — RNF-10
 
 ### Documentação
-- ✅ **T30** README e documentos SDD (spec, plan, tasks)
+- ✅ **T30** README e documentos SDD (spec, plan, tasks) em português e inglês
 
 ---
 
@@ -64,6 +66,7 @@ Legenda: ✅ concluída · ⏳ pendente · 💡 ideia
 | ⏳ **T34** | Imagem de prévia para compartilhamento (Open Graph) e metadados de SEO por idioma | — | RNF-02 |
 | ⏳ **T35** | Revisão das traduções por falantes nativos (prioridade: chinês e russo) | Revisor | RF-02 |
 | ⏳ **T36** | Avaliação 👍/👎 das respostas da IA (D1) para medir qualidade | — | RNF-08 |
+| ⏳ **T37** | Testar em produção o limite de 3 mensagens por minuto do formulário | — | RNF-04 |
 
 ## Ideias
 

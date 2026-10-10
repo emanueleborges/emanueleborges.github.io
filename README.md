@@ -99,7 +99,7 @@ O conhecimento da IA é **gerado das próprias traduções do site** (`i18n.js`)
 ├── logos/                  # Logos das instituições e ícones das habilidades
 ├── tests/                  # Testes automáticos do chat (79 casos, 7 idiomas)
 ├── scripts/pre-commit      # Hook do git: data de atualização e versão dos arquivos
-├── docs/sdd/               # Especificação (SDD): spec, plano técnico e tarefas
+├── docs/sdd/               # Especificação (SDD) em português; docs/sdd/en/ em inglês
 └── worker/                 # Cloudflare Worker (chat com IA + formulário)
     ├── src/index.js            # Rotas POST / (chat) e POST /contact
     ├── src/conhecimento.js     # Gerado: resumo, trechos e perfil completo
@@ -222,9 +222,11 @@ Se a cota diária da IA acabar, o chat continua funcionando com a busca local at
 
 O projeto segue **Spec-Driven Development**: a especificação descreve o *quê* e o *porquê* antes do *como*.
 
-- [`docs/sdd/spec.md`](docs/sdd/spec.md) — visão, requisitos funcionais e não funcionais, critérios de aceite
-- [`docs/sdd/plan.md`](docs/sdd/plan.md) — arquitetura, contratos de API, modelo de dados e decisões técnicas (ADRs)
-- [`docs/sdd/tasks.md`](docs/sdd/tasks.md) — tarefas concluídas e backlog
+| Documento | Português | English |
+|---|---|---|
+| Especificação — visão, requisitos e critérios de aceite | [spec.md](docs/sdd/spec.md) | [spec.md](docs/sdd/en/spec.md) |
+| Plano técnico — arquitetura, contratos de API, dados e decisões (ADRs) | [plan.md](docs/sdd/plan.md) | [plan.md](docs/sdd/en/plan.md) |
+| Tarefas — concluídas e pendentes | [tasks.md](docs/sdd/tasks.md) | [tasks.md](docs/sdd/en/tasks.md) |
 
 ---
 

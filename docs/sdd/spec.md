@@ -1,5 +1,7 @@
 # Especificação — Portfólio de Emanuel Borges
 
+🌐 [English](en/spec.md) · **Português**
+
 > **Spec-Driven Development (SDD).** Este documento descreve **o quê** o produto faz e **por quê**. O **como** está em [`plan.md`](plan.md) e a execução em [`tasks.md`](tasks.md).
 
 | | |

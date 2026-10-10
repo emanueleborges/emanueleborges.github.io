@@ -1,5 +1,7 @@
 # Plano técnico — Portfólio de Emanuel Borges
 
+🌐 [English](en/plan.md) · **Português**
+
 > **Spec-Driven Development (SDD).** Este documento descreve **como** a [especificação](spec.md) é atendida: arquitetura, componentes, contratos, dados e decisões.
 
 ---
