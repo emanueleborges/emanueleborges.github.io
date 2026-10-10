@@ -286,7 +286,7 @@ npm run painel        # or: npm run panel
 
 - **CORS:** the Worker only accepts requests from `https://emanueleborges.github.io`.
 - **Turnstile:** every AI question, form submission and rating requires a valid bot-protection token.
-- **Prices route (`GET /prices`):** read-only; only accepts the site's origin and the demo's 3 stocks, with a per-IP limit and a 1 h cache.
+- **Prices route (`GET /prices`):** read-only; only accepts the site's origin and the demo's 15 stocks, with a per-IP limit and a 1 h cache.
 - **External script integrity (SRI):** the face demo's face-api.js has an `integrity` (SHA-384) attribute; if the CDN file is altered, the browser won't run it.
 - **HTTPS enforced** with HSTS (GitHub Pages).
 - **Accounts:** the most important protection is two-factor authentication (2FA) on GitHub, Cloudflare, Google and Resend.

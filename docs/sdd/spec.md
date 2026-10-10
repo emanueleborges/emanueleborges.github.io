@@ -40,7 +40,7 @@ Currículos e perfis estáticos obrigam o recrutador a ler tudo para achar uma i
 |---|---|---|
 | **Recrutador(a) técnico(a)** | Verificar rapidamente tecnologias e experiência | Seções organizadas, filtros, chat com IA, currículo em PDF |
 | **Recrutador(a) internacional** | Ler no próprio idioma; entender modelo de contratação | 8 idiomas (inglês por padrão), respostas sobre remoto, fuso e CLT/PJ |
-| **Gestor(a) / tech lead** | Avaliar profundidade técnica e projetos | Projetos com descrições técnicas, resultados medidos (87%, top 5%, MAPE 1,1–1,4% contra baseline), **demos de IA ao vivo** e o próprio site como demonstração |
+| **Gestor(a) / tech lead** | Avaliar profundidade técnica e projetos | Projetos com descrições técnicas, resultados medidos (87%, top 5%, MAPE 1,1–2,2% contra baseline), **demos de IA ao vivo** e o próprio site como demonstração |
 | **Emanuel (dono)** | Atualizar conteúdo e acompanhar interesse | Fonte única de textos (`i18n.js`), scripts de publicação, estatísticas e mensagens do formulário |
 
 ---
@@ -106,7 +106,7 @@ Endereços inexistentes mostram uma página 404 no estilo do site, com links par
 
 ### RF-12 — Demos de IA
 Páginas próprias (`/demos/…`), nos 8 idiomas, no estilo do site, com link de volta ao portfólio e ao código:
-- RF-12.1 **Previsão de ações (LSTM):** o visitante escolhe PETR4, VALE3 ou AAPL e 1–10 dias úteis; vê a previsão (gráfico e tabela), as métricas do teste fora da amostra **comparadas a um baseline ingênuo** e o gráfico real × previsto. Preços atualizados quando possível; sem eles, a última cópia salva, com a data indicada. Aviso "não é recomendação de investimento".
+- RF-12.1 **Previsão de ações (LSTM):** o visitante escolhe uma de 15 ações (8 da B3 e 7 da NASDAQ, com preços na moeda de cada bolsa) e 1–10 dias úteis; vê a previsão (gráfico e tabela), as métricas do teste fora da amostra **comparadas a um baseline ingênuo** e o gráfico real × previsto. Preços atualizados quando possível; sem eles, a última cópia salva, com a data indicada. Aviso "não é recomendação de investimento".
 - RF-12.2 **Reconhecimento facial:** pela webcam ou por foto; o visitante cadastra rostos com um nome e vê o reconhecimento com a distância. **Nenhuma imagem sai do aparelho** e nada é salvo; a página informa isso.
 - RF-12.3 **Recomendação de filmes:** por um filme escolhido ou por descrição livre (em inglês), mostrando para cada resultado a similaridade e **os termos que explicam a recomendação**. Base de filmes de licença livre, com crédito às fontes.
 - RF-12.4 As demos rodam no navegador do visitante; nenhuma exige conta, cadastro ou servidor pago.
@@ -123,7 +123,7 @@ O site pode ser instalado como app (manifest e ícones) e, depois da primeira vi
 | RNF-01 | **Custo** | Infraestrutura com custo zero: apenas planos gratuitos **sem forma de pagamento cadastrada** (o dono não pode ter custos). Ao atingir um limite grátis, o recurso deve pausar e o site seguir funcionando (degradação graciosa), nunca gerar cobrança. Serviços novos só entram se tiverem plano gratuito sem cartão. As demos de IA rodam no navegador do visitante (sem custo de servidor). |
 | RNF-02 | **Desempenho** | Site estático sem build; primeira imagem pré-carregada (menor no celular) e demais sob demanda; fontes sem bloquear a exibição; scripts de terceiros (Turnstile) carregados sob demanda; respostas repetidas da IA servidas do cache. Meta: Lighthouse (celular) ≥ 75 em desempenho e 100 em acessibilidade, boas práticas e SEO. |
 | RNF-03 | **Disponibilidade** | O chat deve continuar útil mesmo sem IA (busca local); o formulário falha com mensagem clara. |
-| RNF-04 | **Segurança** | Backend aceita só a origem do site; anti-robô em toda chamada que grava dados ou usa IA; limites por IP; validação de entrada; nenhum segredo no repositório. A rota de preços (só leitura) aceita apenas a origem do site e as 3 ações da demo, com cache. |
+| RNF-04 | **Segurança** | Backend aceita só a origem do site; anti-robô em toda chamada que grava dados ou usa IA; limites por IP; validação de entrada; nenhum segredo no repositório. A rota de preços (só leitura) aceita apenas a origem do site e as 15 ações da demo, com limite por IP e cache. |
 | RNF-05 | **Privacidade (LGPD)** | Sem cookies de rastreamento; formulário guarda o mínimo (sem IP); aviso de uso de IA e de finalidade dos dados. Na demo de reconhecimento facial, câmera e fotos são processadas só no aparelho. |
 | RNF-06 | **Acessibilidade** | HTML semântico, rótulos ARIA traduzidos, foco visível, navegação por teclado, respeito a `prefers-reduced-motion`. |
 | RNF-07 | **Responsividade** | Funcional e legível de 360 px a desktop largo. |
@@ -185,7 +185,7 @@ O site pode ser instalado como app (manifest e ícones) e, depois da primeira vi
 ### Projetos e demos
 - [x] Os 10 cards têm "Ver código"; linguagem e data de atualização aparecem com dados do GitHub (sem eles, só o link).
 - [x] O LSTM em JavaScript dá o mesmo resultado do Keras (diferença ~1e-8) e a demo mostra "Yahoo Finance (atualizado)" em produção.
-- [x] No teste fora da amostra, o MAPE do LSTM (1,1–1,4%) é exibido ao lado do baseline ingênuo; o card cita o mesmo número.
+- [x] No teste fora da amostra, o MAPE do LSTM (1,1–2,2%) é exibido ao lado do baseline ingênuo; o card cita o mesmo número.
 - [x] Demo facial: uma foto cadastrada é reconhecida numa versão espelhada e girada (distância 0,19 < 0,55); a câmera liga e analisa o vídeo.
 - [x] Demo de filmes: ~1.500 filmes indexados em < 50 ms; "The Godfather" recomenda as continuações, Scarface e Goodfellas, com os termos que explicam cada resultado.
 - [x] O botão "Ver demo" do card do assistente abre o chat na própria página.

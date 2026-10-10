@@ -179,7 +179,7 @@ Gravado só quando o visitante clica; o painel do chat avisa que a pergunta e a 
 ```
 **Erros:** `400 invalid_symbol` · `403 forbidden_origin` · `429 rate_limited` · `502 upstream`
 
-Só leitura e sem Turnstile; limite de 30/min por IP; aceita apenas a origem do site e `PETR4.SA`, `VALE3.SA`, `AAPL`. Busca 1 ano de fechamentos ajustados no Yahoo Finance (`v8/finance/chart`), converte as datas para o fuso da bolsa e responde com `Cache-Control: max-age=3600`.
+Só leitura e sem Turnstile; limite de 30/min por IP; aceita apenas a origem do site e as 15 ações da demo (`PRICE_SYMBOLS`: 8 da B3 e 7 da NASDAQ). Busca 1 ano de fechamentos ajustados no Yahoo Finance (`v8/finance/chart`), converte as datas para o fuso da bolsa e responde com `Cache-Control: max-age=3600`.
 
 #### Cron — resumo semanal (`0 12 * * 1`, segunda 12:00 UTC)
 Consulta no D1 as mensagens e avaliações dos últimos 7 dias, testa a saúde (geração com Qwen3, embedding BGE-M3, consulta no Vectorize e `SELECT 1` no D1), busca visitas no GoatCounter (se houver `GOATCOUNTER_TOKEN`) e envia um e-mail pelo Resend para `NOTIFY_EMAIL`. O assunto ganha ⚠️ se algum serviço falhar.

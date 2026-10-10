@@ -48,6 +48,8 @@ def export(symbol: str, info: dict, out: Path) -> dict:
 
     return {
         "name": info["name"],
+        "market": info["market"],
+        "currency": info["currency"],
         "model": f"{name}.json",
         "train": info["train"],
         "test": info["test"],

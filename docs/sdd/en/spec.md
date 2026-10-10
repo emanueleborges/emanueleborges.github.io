@@ -40,7 +40,7 @@ Static résumés and profiles force recruiters to read everything to find one sp
 |---|---|---|
 | **Technical recruiter** | Quickly check technologies and experience | Organized sections, filters, AI chat, PDF résumé |
 | **International recruiter** | Read in their own language; understand the hiring model | 8 languages (English by default), answers about remote work, time zone and employee/contractor arrangements |
-| **Hiring manager / tech lead** | Assess technical depth and projects | Projects with technical descriptions, measured results (87%, top 5%, 1.1–1.4% MAPE vs. a baseline), **live AI demos** and the site itself as a demo |
+| **Hiring manager / tech lead** | Assess technical depth and projects | Projects with technical descriptions, measured results (87%, top 5%, 1.1–2.2% MAPE vs. a baseline), **live AI demos** and the site itself as a demo |
 | **Emanuel (owner)** | Update content and track interest | Single source of text (`i18n.js`), publishing scripts, analytics and contact-form messages |
 
 ---
@@ -106,7 +106,7 @@ Unknown addresses show a 404 page in the site's style, with links to the portfol
 
 ### FR-12 — AI demos
 Dedicated pages (`/demos/…`) in 8 languages, in the site's style, linking back to the portfolio and the code:
-- FR-12.1 **Stock forecasting (LSTM):** the visitor picks PETR4, VALE3 or AAPL and 1–10 business days; sees the forecast (chart and table), the out-of-sample test metrics **compared with a naive baseline** and the actual × predicted chart. Up-to-date prices when possible; otherwise the last saved copy, with its date. "Not investment advice" notice.
+- FR-12.1 **Stock forecasting (LSTM):** the visitor picks one of 15 stocks (8 from B3 and 7 from NASDAQ, priced in each exchange's currency) and 1–10 business days; sees the forecast (chart and table), the out-of-sample test metrics **compared with a naive baseline** and the actual × predicted chart. Up-to-date prices when possible; otherwise the last saved copy, with its date. "Not investment advice" notice.
 - FR-12.2 **Face recognition:** via webcam or photo; the visitor registers faces with a name and sees recognition with the distance. **No image leaves the device** and nothing is stored; the page says so.
 - FR-12.3 **Movie recommender:** from a chosen film or a free description (in English), showing for each result the similarity and **the terms behind the recommendation**. Freely licensed movie data, crediting the sources.
 - FR-12.4 Demos run in the visitor's browser; none requires an account, sign-up or paid server.
@@ -123,7 +123,7 @@ The site can be installed as an app (manifest and icons) and, after the first vi
 | NFR-01 | **Cost** | Zero-cost infrastructure: free tiers only, **with no payment method on file** (the owner cannot incur costs). When a free limit is reached, the feature must pause and the site keep working (graceful degradation), never generate a charge. New services are added only if they have a free plan with no card required. AI demos run in the visitor's browser (no server cost). |
 | NFR-02 | **Performance** | Static site with no build step; first image preloaded (smaller on mobile) and the rest on demand; non-blocking fonts; third-party scripts (Turnstile) loaded on demand; repeated AI answers served from cache. Target: Lighthouse (mobile) ≥ 75 performance and 100 accessibility, best practices and SEO. |
 | NFR-03 | **Availability** | The chat must remain useful without AI (local search); the form fails with a clear message. |
-| NFR-04 | **Security** | The backend only accepts the site's origin; bot protection on every call that stores data or uses AI; per-IP limits; input validation; no secrets in the repository. The (read-only) prices route only accepts the site's origin and the demo's 3 stocks, with caching. |
+| NFR-04 | **Security** | The backend only accepts the site's origin; bot protection on every call that stores data or uses AI; per-IP limits; input validation; no secrets in the repository. The (read-only) prices route only accepts the site's origin and the demo's 15 stocks, with a per-IP limit and caching. |
 | NFR-05 | **Privacy (LGPD/GDPR-style)** | No tracking cookies; the form stores the minimum (no IP address); notices about AI use and the purpose of the data. In the face recognition demo, camera and photos are processed only on the device. |
 | NFR-06 | **Accessibility** | Semantic HTML, translated ARIA labels, visible focus, keyboard navigation, respects `prefers-reduced-motion`. |
 | NFR-07 | **Responsiveness** | Usable and readable from 360 px to wide desktops. |
@@ -185,7 +185,7 @@ The site can be installed as an app (manifest and icons) and, after the first vi
 ### Projects and demos
 - [x] All 10 cards have "View code"; language and update date come from GitHub data (without it, just the link).
 - [x] The JavaScript LSTM matches Keras (difference ~1e-8) and the demo shows "Yahoo Finance (up to date)" in production.
-- [x] On the out-of-sample test, the LSTM's MAPE (1.1–1.4%) is shown next to the naive baseline; the card cites the same number.
+- [x] On the out-of-sample test, the LSTM's MAPE (1.1–2.2%) is shown next to the naive baseline; the card cites the same number.
 - [x] Face demo: a registered photo is recognized in a mirrored, rotated version (distance 0.19 < 0.55); the camera turns on and analyzes the video.
 - [x] Movie demo: ~1,500 films indexed in < 50 ms; "The Godfather" recommends its sequels, Scarface and Goodfellas, with the terms behind each result.
 - [x] The assistant card's "Live demo" button opens the chat on the same page.

@@ -286,7 +286,7 @@ npm run painel        # ou: npm run panel
 
 - **CORS:** o Worker só aceita pedidos de `https://emanueleborges.github.io`.
 - **Turnstile:** toda pergunta à IA, envio do formulário e avaliação exigem um token anti-robô válido.
-- **Rota de preços (`GET /prices`):** só leitura, aceita apenas a origem do site e as 3 ações da demo, com limite por IP e cache de 1 h.
+- **Rota de preços (`GET /prices`):** só leitura, aceita apenas a origem do site e as 15 ações da demo, com limite por IP e cache de 1 h.
 - **Integridade de scripts externos (SRI):** o face-api.js da demo facial tem `integrity` (SHA-384); se o arquivo do CDN for alterado, o navegador não o executa.
 - **HTTPS obrigatório** com HSTS (GitHub Pages).
 - **Contas:** a proteção mais importante é a verificação em duas etapas (2FA) no GitHub, Cloudflare, Google e Resend.

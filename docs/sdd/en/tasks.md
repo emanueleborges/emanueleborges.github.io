@@ -79,6 +79,7 @@ Legend: ✅ done · ⏳ pending · 💡 idea
 - ✅ **T59** Documentation updated (README, spec FR-12/FR-13, plan §2.6–2.8, `GET /prices`, ADR-24 to 26) and LSTM training scripts brought into `scripts/lstm/` — NFR-09
 - ✅ **T60** Security: per-IP limit on `GET /prices` (30/min) and SRI on the face demo's face-api.js (tested with a tampered file) — NFR-04
 - ✅ **T61** Private stats dashboard (`npm run painel` in `worker/`): ratings by week and language, poorly rated answers, messages and visits (with a GoatCounter token); local file, git-ignored — FR-08
+- ✅ **T62** LSTM demo with 15 stocks (8 from B3, 7 from NASDAQ), menu by exchange and prices in each exchange's currency; card updated to the 1.1–2.2% MAPE — FR-12
 
 ---
 

@@ -6,6 +6,8 @@ const HISTORY_DAYS = 30;
 
 const T = {
   en: {
+    groupB3: "Brazil (B3)",
+    groupUS: "United States (NASDAQ)",
     "meta.title": "LSTM Stock Forecasting — Emanuel Borges",
     "meta.description": "LSTM neural network that forecasts the next stock close, running in your browser in plain JavaScript and evaluated against a naive baseline.",
     lang: "Language",
@@ -38,6 +40,8 @@ const T = {
     disclaimer: "⚠️ Technical demo — not investment advice.",
   },
   pt: {
+    groupB3: "Brasil (B3)",
+    groupUS: "EUA (NASDAQ)",
     "meta.title": "Previsão de Ações com LSTM — Emanuel Borges",
     "meta.description": "Rede neural LSTM que prevê o próximo fechamento de ações, rodando no seu navegador em JavaScript puro e avaliada contra um baseline ingênuo.",
     lang: "Idioma",
@@ -70,6 +74,8 @@ const T = {
     disclaimer: "⚠️ Demonstração técnica — não é recomendação de investimento.",
   },
   es: {
+    groupB3: "Brasil (B3)",
+    groupUS: "Estados Unidos (NASDAQ)",
     "meta.title": "Predicción de Acciones con LSTM — Emanuel Borges",
     "meta.description": "Red neuronal LSTM que predice el próximo cierre de acciones, ejecutándose en tu navegador en JavaScript puro y evaluada frente a un baseline ingenuo.",
     lang: "Idioma",
@@ -102,6 +108,8 @@ const T = {
     disclaimer: "⚠️ Demostración técnica — no es una recomendación de inversión.",
   },
   fr: {
+    groupB3: "Brésil (B3)",
+    groupUS: "États-Unis (NASDAQ)",
     "meta.title": "Prévision d'actions avec LSTM — Emanuel Borges",
     "meta.description": "Réseau de neurones LSTM qui prévoit la prochaine clôture d'une action, exécuté dans votre navigateur en JavaScript pur et évalué face à une référence naïve.",
     lang: "Langue",
@@ -134,6 +142,8 @@ const T = {
     disclaimer: "⚠️ Démonstration technique — pas un conseil en investissement.",
   },
   it: {
+    groupB3: "Brasile (B3)",
+    groupUS: "Stati Uniti (NASDAQ)",
     "meta.title": "Previsione di Azioni con LSTM — Emanuel Borges",
     "meta.description": "Rete neurale LSTM che prevede la prossima chiusura di un'azione, eseguita nel tuo browser in JavaScript puro e valutata rispetto a un baseline ingenuo.",
     lang: "Lingua",
@@ -166,6 +176,8 @@ const T = {
     disclaimer: "⚠️ Dimostrazione tecnica — non è una raccomandazione di investimento.",
   },
   de: {
+    groupB3: "Brasilien (B3)",
+    groupUS: "USA (NASDAQ)",
     "meta.title": "Aktienprognose mit LSTM — Emanuel Borges",
     "meta.description": "LSTM-Netz, das den nächsten Schlusskurs einer Aktie prognostiziert – läuft in Ihrem Browser in reinem JavaScript und wird mit einer naiven Baseline verglichen.",
     lang: "Sprache",
@@ -198,6 +210,8 @@ const T = {
     disclaimer: "⚠️ Technische Demo – keine Anlageberatung.",
   },
   zh: {
+    groupB3: "巴西 (B3)",
+    groupUS: "美国 (NASDAQ)",
     "meta.title": "LSTM 股价预测 — Emanuel Borges",
     "meta.description": "预测股票下一个收盘价的 LSTM 神经网络，以纯 JavaScript 在浏览器中运行，并与朴素基线对比评估。",
     lang: "语言",
@@ -230,6 +244,8 @@ const T = {
     disclaimer: "⚠️ 技术演示——不构成投资建议。",
   },
   ru: {
+    groupB3: "Бразилия (B3)",
+    groupUS: "США (NASDAQ)",
     "meta.title": "Прогноз акций с LSTM — Emanuel Borges",
     "meta.description": "Нейросеть LSTM, прогнозирующая следующую цену закрытия акции, работает в вашем браузере на чистом JavaScript и сравнивается с наивным бейзлайном.",
     lang: "Язык",
@@ -268,6 +284,8 @@ const models = {};
 const prices = {};
 
 const { t, fmtDate, fmtNum, fmtPct, track } = Demo;
+const money = (value, currency) =>
+  new Intl.NumberFormat(Demo.locale(), { style: "currency", currency, minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(value);
 const $ = (selector) => document.querySelector(selector);
 
 /* ---------- Gráfico de linhas em SVG ---------- */
@@ -358,7 +376,7 @@ async function runForecast() {
     const future = businessDays(lastDate, days);
 
     status.innerHTML = t("status", {
-      price: fmtNum(lastClose),
+      price: money(lastClose, data[symbol].currency),
       date: fmtDate(lastDate),
       source: series.live ? t("live") : t("saved", { date: fmtDate(lastDate) }),
     });
@@ -371,7 +389,7 @@ async function runForecast() {
 
     $("[data-forecast-table]").innerHTML =
       `<thead><tr><th>${t("date")}</th><th>${t("price")}</th><th>${t("change")}</th></tr></thead><tbody>` +
-      future.map((d, i) => `<tr><td>${fmtDate(d)}</td><td class="num">${fmtNum(predicted[i])}</td><td class="num">${fmtPct((predicted[i] / lastClose - 1) * 100, true)}</td></tr>`).join("") +
+      future.map((d, i) => `<tr><td>${fmtDate(d)}</td><td class="num">${money(predicted[i], data[symbol].currency)}</td><td class="num">${fmtPct((predicted[i] / lastClose - 1) * 100, true)}</td></tr>`).join("") +
       "</tbody>";
   } catch {
     status.textContent = t("error");
@@ -387,7 +405,7 @@ function renderTest() {
     lstm: fmtPct(info.lstm.mape),
     naive: fmtPct(info.naive.mape),
   });
-  const row = (name, m) => `<tr><td>${name}</td><td class="num">${fmtNum(m.mae)}</td><td class="num">${fmtNum(m.rmse)}</td><td class="num">${fmtPct(m.mape)}</td></tr>`;
+  const row = (name, m) => `<tr><td>${name}</td><td class="num">${money(m.mae, info.currency)}</td><td class="num">${money(m.rmse, info.currency)}</td><td class="num">${fmtPct(m.mape)}</td></tr>`;
   $("[data-metrics-table]").innerHTML =
     `<thead><tr><th>${t("model")}</th><th>MAE</th><th>RMSE</th><th>MAPE</th></tr></thead><tbody>` +
     row("LSTM", info.lstm) + row(t("naive"), info.naive) + "</tbody>";
@@ -398,7 +416,20 @@ function renderTest() {
   ], t("backtest"), { month: "short", year: "2-digit" });
 }
 
+// Menu agrupado por bolsa; refeito ao trocar o idioma (mantém a ação escolhida).
+function buildSelect() {
+  const select = $("[data-symbol]");
+  const current = select.value;
+  const group = (market, label) =>
+    `<optgroup label="${t(label)}">` +
+    Object.entries(data).filter(([, info]) => info.market === market).map(([symbol, info]) => `<option value="${symbol}">${info.name} (${symbol.replace(".SA", "")})</option>`).join("") +
+    "</optgroup>";
+  select.innerHTML = group("B3", "groupB3") + group("NASDAQ", "groupUS");
+  if (current) select.value = current;
+}
+
 function render() {
+  buildSelect();
   renderTest();
   runForecast();
 }
@@ -414,7 +445,7 @@ async function init() {
   }
 
   const select = $("[data-symbol]");
-  select.innerHTML = Object.entries(data).map(([symbol, info]) => `<option value="${symbol}">${info.name} (${symbol})</option>`).join("");
+  buildSelect();
 
   select.addEventListener("change", () => {
     renderTest();

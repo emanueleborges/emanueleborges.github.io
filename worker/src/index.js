@@ -342,7 +342,10 @@ async function sendWeeklySummary(env) {
 
 // Fechamentos ajustados do último ano para a demo do LSTM (demos/lstm), via Yahoo Finance.
 // Só as ações da demo; até 30 pedidos por minuto por IP; resposta guardada por 1 hora no navegador e na borda do Cloudflare.
-const PRICE_SYMBOLS = new Set(["PETR4.SA", "VALE3.SA", "AAPL"]);
+const PRICE_SYMBOLS = new Set([
+  "PETR4.SA", "VALE3.SA", "ITUB4.SA", "BBDC4.SA", "BBAS3.SA", "ABEV3.SA", "WEGE3.SA", "B3SA3.SA",
+  "AAPL", "MSFT", "NVDA", "AMZN", "GOOGL", "META", "TSLA",
+]);
 
 async function handlePrices(request, ip, env, origin) {
   const { success } = await env.PRICES_LIMITER.limit({ key: ip });

@@ -179,7 +179,7 @@ Stored only when the visitor clicks; the chat panel notes that the question and 
 ```
 **Errors:** `400 invalid_symbol` · `403 forbidden_origin` · `429 rate_limited` · `502 upstream`
 
-Read-only and without Turnstile; 30/min per-IP limit; it only accepts the site's origin and `PETR4.SA`, `VALE3.SA`, `AAPL`. It fetches 1 year of adjusted closes from Yahoo Finance (`v8/finance/chart`), converts dates to the exchange's time zone and responds with `Cache-Control: max-age=3600`.
+Read-only and without Turnstile; 30/min per-IP limit; it only accepts the site's origin and the demo's 15 stocks (`PRICE_SYMBOLS`: 8 from B3 and 7 from NASDAQ). It fetches 1 year of adjusted closes from Yahoo Finance (`v8/finance/chart`), converts dates to the exchange's time zone and responds with `Cache-Control: max-age=3600`.
 
 #### Cron — weekly summary (`0 12 * * 1`, Mondays 12:00 UTC)
 Queries D1 for the last 7 days of messages and ratings, runs a health check (Qwen3 generation, BGE-M3 embedding, Vectorize query and `SELECT 1` on D1), fetches visits from GoatCounter (if `GOATCOUNTER_TOKEN` is set) and sends an email through Resend to `NOTIFY_EMAIL`. The subject gets a ⚠️ when any service fails.

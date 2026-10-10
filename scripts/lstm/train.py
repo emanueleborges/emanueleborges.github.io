@@ -24,7 +24,24 @@ from tensorflow.keras.callbacks import EarlyStopping
 from tensorflow.keras.layers import LSTM, Dense, Dropout, Input
 from tensorflow.keras.models import Sequential
 
-TICKERS = {"PETR4.SA": "Petrobras PN", "VALE3.SA": "Vale ON", "AAPL": "Apple"}
+# Ações da demo: nome, bolsa e moeda. Ao incluir uma, inclua também em PRICE_SYMBOLS (worker/src/index.js).
+TICKERS = {
+    "PETR4.SA": ("Petrobras PN", "B3", "BRL"),
+    "VALE3.SA": ("Vale ON", "B3", "BRL"),
+    "ITUB4.SA": ("Itaú Unibanco PN", "B3", "BRL"),
+    "BBDC4.SA": ("Bradesco PN", "B3", "BRL"),
+    "BBAS3.SA": ("Banco do Brasil ON", "B3", "BRL"),
+    "ABEV3.SA": ("Ambev ON", "B3", "BRL"),
+    "WEGE3.SA": ("WEG ON", "B3", "BRL"),
+    "B3SA3.SA": ("B3 ON", "B3", "BRL"),
+    "AAPL": ("Apple", "NASDAQ", "USD"),
+    "MSFT": ("Microsoft", "NASDAQ", "USD"),
+    "NVDA": ("NVIDIA", "NASDAQ", "USD"),
+    "AMZN": ("Amazon", "NASDAQ", "USD"),
+    "GOOGL": ("Alphabet (Google)", "NASDAQ", "USD"),
+    "META": ("Meta", "NASDAQ", "USD"),
+    "TSLA": ("Tesla", "NASDAQ", "USD"),
+}
 WINDOW = 60
 PERIOD = "5y"
 MODELS = Path(__file__).parent / "models"
@@ -97,7 +114,9 @@ def train(symbol: str) -> dict:
 
     dates = close.index[split:]
     return {
-        "name": TICKERS[symbol],
+        "name": TICKERS[symbol][0],
+        "market": TICKERS[symbol][1],
+        "currency": TICKERS[symbol][2],
         "train": {"start": str(close.index[0].date()), "end": str(close.index[split - 1].date())},
         "test": {"start": str(dates[0].date()), "end": str(dates[-1].date()), "days": len(actual)},
         "epochs": len(history.history["loss"]),
