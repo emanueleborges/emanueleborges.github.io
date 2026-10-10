@@ -22,7 +22,9 @@
     <link rel="stylesheet" href="styles.css" />
     <script src="i18n.js" defer></script>
     <script src="script.js" defer></script>
+    <script src="api.js" defer></script>
     <script src="chat.js" defer></script>
+    <script src="contact.js" defer></script>
     <script data-goatcounter="https://emanueleborges.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
   </head>
   <body>
@@ -378,6 +380,19 @@
             <a href="https://github.com/emanueleborges" target="_blank" rel="noopener">GitHub <span>↗</span></a>
             <a href="https://www.linkedin.com/in/borgesemmanuell" target="_blank" rel="noopener">LinkedIn <span>↗</span></a>
           </div>
+          <form class="contact-form" novalidate hidden>
+            <h3 data-i18n="form.title">Ou deixe uma mensagem</h3>
+            <div class="form-row">
+              <label><span data-i18n="form.name">Nome</span><input name="name" type="text" autocomplete="name" maxlength="100" required /></label>
+              <label><span data-i18n="form.email">E-mail</span><input name="email" type="email" autocomplete="email" maxlength="200" required /></label>
+            </div>
+            <label><span data-i18n="form.message">Mensagem</span><textarea name="message" rows="5" maxlength="2000" required></textarea></label>
+            <!-- Campo-armadilha: escondido para pessoas; robôs costumam preenchê-lo. -->
+            <div class="form-trap" aria-hidden="true"><label>Website<input name="website" type="text" tabindex="-1" autocomplete="off" /></label></div>
+            <p class="form-privacy" data-i18n="form.privacy">Seus dados são usados apenas para o Emanuel responder ao seu contato.</p>
+            <button class="button button-primary" type="submit"><span class="form-send" data-i18n="form.send">Enviar mensagem</span> <span aria-hidden="true">↗</span></button>
+            <p class="form-status" role="status" aria-live="polite"></p>
+          </form>
         </div>
       </section>
     </main>

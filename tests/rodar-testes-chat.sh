@@ -6,7 +6,7 @@ cd "$(dirname "$0")/.."
 CHROME="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
 TMP=$(mktemp -d)
 trap 'rm -rf "$TMP"' EXIT
-cp -R index.html styles.css script.js i18n.js chat.js emanuel-borges.jpg logos tests/runner.js "$TMP"/
+cp -R index.html styles.css script.js i18n.js api.js chat.js contact.js emanuel-borges.jpg logos tests/runner.js "$TMP"/
 # Sem o contador de visitas nos testes; injeta o executor dos testes.
 sed -i '' -e '/goatcounter/d' -e 's#<script src="chat.js" defer></script>#&<script src="runner.js" defer></script>#' "$TMP/index.html"
 python3 -I - "$TMP" "$CHROME" tests/chat-casos.json <<'PY'

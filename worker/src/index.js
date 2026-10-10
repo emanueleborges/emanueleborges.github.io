@@ -1,6 +1,6 @@
-// Cloudflare Worker: recebe perguntas do chat do portfólio e responde com IA
-// (Workers AI, cota gratuita do Cloudflare), usando apenas o perfil profissional
-// do Emanuel (src/conhecimento.js). Não há chave de API nem custo.
+// Cloudflare Worker do portfólio (tudo no plano gratuito do Cloudflare):
+//   POST /         → chat com IA (Workers AI), usando só o perfil do Emanuel (src/conhecimento.js)
+//   POST /contact  → formulário de contato, salvo no banco D1
 import { PROFILE } from "./conhecimento.js";
 
 // Modelo aberto multilíngue com bom custo na cota gratuita (~15 "neurônios" por pergunta).
@@ -50,6 +50,83 @@ async function isHuman(token, ip, env) {
   }
 }
 
+// POST / — pergunta ao chat com IA.
+async function handleChat(payload, ip, env, origin) {
+  const { success } = await env.CHAT_LIMITER.limit({ key: ip });
+  if (!success) return json({ error: "rate_limited" }, 429, origin);
+
+  const question = typeof payload?.question === "string" ? payload.question.trim() : "";
+  if (!question || question.length > MAX_QUESTION_LENGTH) return json({ error: "invalid_question" }, 400, origin);
+  const lang = LANGUAGES[payload?.lang] ? payload.lang : "en";
+
+  // Turnstile: confirma que a pergunta veio de uma pessoa no site, não de um robô.
+  if (!(await isHuman(payload?.turnstileToken, ip, env))) return json({ error: "turnstile_failed" }, 403, origin);
+
+  // Pergunta normalizada: perguntas iguais reaproveitam a resposta guardada no AI Gateway.
+  const normalized = question.toLowerCase().replace(/\s+/g, " ").replace(/[\s?!.。？！]+$/u, "");
+  const userText = `Visitor question: ${normalized}\n\nAnswer in ${LANGUAGES[lang]}.`;
+
+  try {
+    const result = await env.AI.run(MODEL, {
+      messages: [
+        { role: "system", content: SYSTEM_PROMPT },
+        // "/no_think" desliga o modo de raciocínio do Qwen3: respostas mais rápidas e econômicas.
+        { role: "user", content: `${userText} /no_think` },
+      ],
+      max_tokens: 600,
+      temperature: 0.3,
+    }, {
+      // AI Gateway (gratuito): cache de 24 h, logs e métricas no painel do Cloudflare.
+      gateway: { id: "default", cacheTtl: 86400, cacheKey: `v1:${lang}:${normalized}` },
+    });
+    const raw = result?.response ?? result?.choices?.[0]?.message?.content ?? "";
+    const answer = String(raw)
+      .replace(/<think>[\s\S]*?<\/think>/g, "")
+      .replace(/\*\*|^#+\s*/gm, "")
+      .trim();
+    if (!answer) return json({ error: "empty_answer" }, 502, origin);
+    return json({ answer }, 200, origin);
+  } catch (error) {
+    // Inclui o caso de a cota gratuita do dia acabar: o site volta para a busca local.
+    console.error("Erro no Workers AI:", error?.message ?? error);
+    return json({ error: "unavailable" }, 503, origin);
+  }
+}
+
+// POST /contact — mensagem do formulário de contato, salva no D1.
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+const clean = (value, max) => (typeof value === "string" ? value.trim().slice(0, max + 1) : "");
+
+async function handleContact(payload, ip, env, origin) {
+  const { success } = await env.CONTACT_LIMITER.limit({ key: ip });
+  if (!success) return json({ error: "rate_limited" }, 429, origin);
+
+  // Campo-armadilha: invisível para pessoas, só robôs preenchem.
+  if (clean(payload?.website, 200)) return json({ ok: true }, 200, origin);
+
+  const name = clean(payload?.name, 100);
+  const email = clean(payload?.email, 200);
+  const message = clean(payload?.message, 2000);
+  const lang = LANGUAGES[payload?.lang] ? payload.lang : "en";
+  const valid =
+    name.length >= 2 && name.length <= 100 &&
+    email.length <= 200 && EMAIL_PATTERN.test(email) &&
+    message.length >= 5 && message.length <= 2000;
+  if (!valid) return json({ error: "invalid_fields" }, 400, origin);
+
+  if (!(await isHuman(payload?.turnstileToken, ip, env))) return json({ error: "turnstile_failed" }, 403, origin);
+
+  try {
+    await env.DB.prepare("INSERT INTO messages (name, email, message, lang) VALUES (?, ?, ?, ?)")
+      .bind(name, email, message, lang)
+      .run();
+    return json({ ok: true }, 200, origin);
+  } catch (error) {
+    console.error("Erro ao salvar mensagem:", error?.message ?? error);
+    return json({ error: "unavailable" }, 503, origin);
+  }
+}
+
 export default {
   async fetch(request, env) {
     const origin = env.ALLOWED_ORIGIN;
@@ -57,52 +134,16 @@ export default {
     if (request.method !== "POST") return json({ error: "method_not_allowed" }, 405, origin);
     if (request.headers.get("Origin") !== origin) return json({ error: "forbidden_origin" }, 403, origin);
 
-    // Limite por visitante (IP) definido em wrangler.jsonc.
-    const ip = request.headers.get("CF-Connecting-IP") ?? "unknown";
-    const { success } = await env.CHAT_LIMITER.limit({ key: ip });
-    if (!success) return json({ error: "rate_limited" }, 429, origin);
-
     let payload;
     try {
       payload = await request.json();
     } catch {
       return json({ error: "invalid_json" }, 400, origin);
     }
-    const question = typeof payload?.question === "string" ? payload.question.trim() : "";
-    if (!question || question.length > MAX_QUESTION_LENGTH) return json({ error: "invalid_question" }, 400, origin);
-    const lang = LANGUAGES[payload?.lang] ? payload.lang : "en";
-
-    // Turnstile: confirma que a pergunta veio de uma pessoa no site, não de um robô.
-    if (!(await isHuman(payload?.turnstileToken, ip, env))) return json({ error: "turnstile_failed" }, 403, origin);
-
-    // Pergunta normalizada: perguntas iguais reaproveitam a resposta guardada no AI Gateway.
-    const normalized = question.toLowerCase().replace(/\s+/g, " ").replace(/[\s?!.。？！]+$/u, "");
-    const userText = `Visitor question: ${normalized}\n\nAnswer in ${LANGUAGES[lang]}.`;
-
-    try {
-      const result = await env.AI.run(MODEL, {
-        messages: [
-          { role: "system", content: SYSTEM_PROMPT },
-          // "/no_think" desliga o modo de raciocínio do Qwen3: respostas mais rápidas e econômicas.
-          { role: "user", content: `${userText} /no_think` },
-        ],
-        max_tokens: 600,
-        temperature: 0.3,
-      }, {
-        // AI Gateway (gratuito): cache de 24 h, logs e métricas no painel do Cloudflare.
-        gateway: { id: "default", cacheTtl: 86400, cacheKey: `v1:${lang}:${normalized}` },
-      });
-      const raw = result?.response ?? result?.choices?.[0]?.message?.content ?? "";
-      const answer = String(raw)
-        .replace(/<think>[\s\S]*?<\/think>/g, "")
-        .replace(/\*\*|^#+\s*/gm, "")
-        .trim();
-      if (!answer) return json({ error: "empty_answer" }, 502, origin);
-      return json({ answer }, 200, origin);
-    } catch (error) {
-      // Inclui o caso de a cota gratuita do dia acabar: o site volta para a busca local.
-      console.error("Erro no Workers AI:", error?.message ?? error);
-      return json({ error: "unavailable" }, 503, origin);
-    }
+    const ip = request.headers.get("CF-Connecting-IP") ?? "unknown";
+    const { pathname } = new URL(request.url);
+    if (pathname === "/contact") return handleContact(payload, ip, env, origin);
+    if (pathname === "/") return handleChat(payload, ip, env, origin);
+    return json({ error: "not_found" }, 404, origin);
   },
 };

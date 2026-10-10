@@ -3,10 +3,8 @@
 // Usa `t`, `currentLang`, `prefersReducedMotion` e `track`, definidos em script.js.
 
 (() => {
-  // Endereço do Cloudflare Worker com a IA (pasta worker/). Vazio = só busca local.
-  const AI_ENDPOINT = "https://emanuel-portfolio-chat.emanuel-portfolio-chat.workers.dev";
-  // Chave pública do Turnstile (anti-robô invisível do Cloudflare) para este site.
-  const TURNSTILE_SITE_KEY = "0x4AAAAAAFSypCNI4YX6-cMF";
+  // IA ligada quando o Worker está configurado em api.js (sem ele, só busca local).
+  const AI_ENABLED = Boolean(window.PortfolioApi?.enabled);
   // Estes temas sempre usam a resposta pronta local (rápida, sem custo e controlada).
   const LOCAL_ONLY = new Set(["greeting", "thanks", "salary", "start"]);
 
@@ -382,7 +380,7 @@
         <input type="text" autocomplete="off" maxlength="200" />
         <button type="submit" data-chat-aria="send">↑</button>
       </form>
-      <p class="chat-note" data-chat="${AI_ENDPOINT ? "disclaimerAi" : "disclaimer"}"></p>
+      <p class="chat-note" data-chat="${AI_ENABLED ? "disclaimerAi" : "disclaimer"}"></p>
     </section>
     <div class="chat-hint" hidden>
       <button class="chat-hint-text" type="button" data-chat="hint"></button>
@@ -598,72 +596,11 @@
     suggestions.replaceChildren(...["s1", "s2", "s3", "s4"].map((key) => chipButton(tc(key))));
   };
 
-  /* ---------- Turnstile: token anti-robô, carregado só quando o chat é usado ---------- */
-
-  let turnstileReady = null;
-  let turnstileWidget = null;
-  let turnstileResolve = null;
-
-  const loadTurnstile = () => {
-    turnstileReady ??= new Promise((resolve, reject) => {
-      const script = document.createElement("script");
-      script.src = "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";
-      script.async = true;
-      script.onload = () => resolve(window.turnstile);
-      script.onerror = () => reject(new Error("turnstile"));
-      document.head.append(script);
-    });
-    return turnstileReady;
-  };
-
-  // Gera um token novo a cada pergunta (cada token vale uma única vez).
-  const turnstileToken = async () => {
-    try {
-      const turnstile = await loadTurnstile();
-      return await new Promise((resolve) => {
-        turnstileResolve = resolve;
-        setTimeout(() => resolve(null), 10000);
-        if (turnstileWidget === null) {
-          const holder = el("div", "chat-turnstile");
-          root.append(holder);
-          turnstileWidget = turnstile.render(holder, {
-            sitekey: TURNSTILE_SITE_KEY,
-            execution: "execute",
-            appearance: "interaction-only",
-            callback: (token) => turnstileResolve?.(token),
-            "error-callback": () => turnstileResolve?.(null),
-          });
-        } else {
-          turnstile.reset(turnstileWidget);
-        }
-        turnstile.execute(turnstileWidget);
-      });
-    } catch {
-      return null;
-    }
-  };
-
   // Pergunta à IA (Worker). Em qualquer falha, devolve null e o chat usa a busca local.
   const askAi = async (question) => {
-    const token = await turnstileToken();
-    if (!token) return null;
-    const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), 25000);
-    try {
-      const response = await fetch(AI_ENDPOINT, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ question, lang: currentLang, turnstileToken: token }),
-        signal: controller.signal,
-      });
-      if (!response.ok) return null;
-      const { answer: text } = await response.json();
-      return typeof text === "string" && text.trim() ? text.trim() : null;
-    } catch {
-      return null;
-    } finally {
-      clearTimeout(timer);
-    }
+    const { ok, data } = await window.PortfolioApi.post("/", { question, lang: currentLang });
+    const text = ok ? data?.answer : null;
+    return typeof text === "string" && text.trim() ? text.trim() : null;
   };
 
   // Resposta da IA + atalho "Ver na página" para o trecho mais relevante do site.
@@ -686,7 +623,7 @@
 
   // Usa a IA quando configurada, exceto em contato, currículo e temas locais.
   const usesAi = (query) => {
-    if (!AI_ENDPOINT) return false;
+    if (!AI_ENABLED) return false;
     const q = normalize(query);
     if (intents.cv.test(q) || intents.contact.test(q)) return false;
     const faq = faqs.find(({ pattern, unless }) => pattern.test(q) && !(unless && unless.test(q)));
@@ -761,7 +698,7 @@
     toggle.setAttribute("aria-expanded", String(open));
     root.classList.toggle("is-open", open);
     if (open) {
-      if (AI_ENDPOINT) loadTurnstile().catch(() => {});
+      if (AI_ENABLED) window.PortfolioApi.loadTurnstile().catch(() => {});
       if (!messages.children.length) addMessage("bot", el("p", null, tc("greeting")));
       input.focus();
     }
