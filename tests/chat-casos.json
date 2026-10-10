@@ -22,7 +22,7 @@
     ],
     [
       "where did he study?",
-      "Education"
+      "answer:Systems Analysis"
     ],
     [
       "database",
@@ -140,7 +140,7 @@
     ],
     [
       "onde estudou?",
-      "Formação"
+      "answer:Análise de Sistemas"
     ],
     [
       "sabe Oracle?",
@@ -233,12 +233,20 @@
     [
       "experiência com devops",
       "answer:AWS Serverless"
+    ],
+    [
+      "onde ele fez a graduação?",
+      "answer:Bacharelado em Análise de Sistemas"
+    ],
+    [
+      "qual foi o tcc dele?",
+      "Crítico Jurídico"
     ]
   ],
   "es": [
     [
       "¿dónde estudió?",
-      "Formación"
+      "answer:Análisis de Sistemas"
     ],
     [
       "proyectos con Kafka",
@@ -264,7 +272,7 @@
     ],
     [
       "教育背景",
-      "教育背景"
+      "answer:FUCAPI"
     ],
     [
       "你好",

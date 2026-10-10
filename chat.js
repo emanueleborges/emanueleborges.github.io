@@ -6,7 +6,8 @@
   // IA ligada quando o Worker está configurado em api.js (sem ele, só busca local).
   const AI_ENABLED = Boolean(window.PortfolioApi?.enabled);
   // Estes temas sempre usam a resposta pronta local (rápida, sem custo e controlada).
-  const LOCAL_ONLY = new Set(["greeting", "thanks", "salary", "start"]);
+  // "education" usa resposta conferida: o modelo gratuito às vezes traduz errado nomes de cursos e universidades.
+  const LOCAL_ONLY = new Set(["greeting", "thanks", "salary", "start", "education"]);
 
   /* ---------- Normalização e termos de busca ---------- */
 
@@ -113,6 +114,13 @@
       pattern: /remot|home ?office|presencial|hibrid|hybrid|on-?site|fuso|timezone|time zone|zona horaria|fuseau|fuso orario|\butc\b|\bgmt\b|onde mora|where .*(live|based|located)|donde vive|ou habite|dove vive|internaciona|internationa|exterior|abroad|estero|etranger|relocat|\bvisa\b|\bclt\b|\bpj\b|contrat|freelanc|autonom|disponib|availab|远程|时区|国际|合同|удален|пояс|междунар|контракт|релокац/,
       contacts: true,
       related: ["seeking", "years"],
+    },
+    {
+      key: "education",
+      pattern: /graduac|faculdade|universidade|formacao|formacao academica|estudou|bacharel|pos-graduac|pos graduac|degree|graduat|universit|college|studied|study|education|postgrad|carrera|licenciatura|universidad|estudio|formacion|diplome|licence|etudes|formation|laurea|universita|studi|formazione|学历|大学|毕业院校|学位|教育背景|образовани|университет|учил|степен/,
+      unless: /tcc|capstone|thesis|projeto|project|proyecto|projet|progett|项目|проект/,
+      target: ".education-list",
+      related: ["ai", "years", "stack"],
     },
     {
       key: "years",
@@ -227,7 +235,8 @@
     document.querySelectorAll(".project-card").forEach((card) => {
       const title = text(card.querySelector("h3"));
       // Projetos da categoria "IA / ML" também respondem a buscas por IA.
-      const hidden = card.dataset.category.split(" ").includes("ia") ? "ia ai machine learning nlp ии 人工智能" : "";
+      // A marca do card (ex.: "01 / TCC · UFG") também é pesquisável.
+      const hidden = `${text(card.querySelector(".art-number"))} ${card.dataset.category.split(" ").includes("ia") ? "ia ai machine learning nlp ии 人工智能" : ""}`;
       add({ section: projects, item: title, body: `${text(card.querySelector(".project-type"))} — ${text(card.querySelector(".muted"))}`, target: card, title, hidden });
     });
 

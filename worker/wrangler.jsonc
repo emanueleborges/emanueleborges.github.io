@@ -6,6 +6,8 @@
   "compatibility_flags": ["nodejs_compat"],
   // IA do Cloudflare (Workers AI) — cota gratuita de 10.000 neurônios por dia.
   "ai": { "binding": "AI" },
+  // Índice vetorial gratuito (Vectorize) com os trechos do perfil, para o RAG do chat.
+  "vectorize": [{ "binding": "VECTORIZE", "index_name": "portfolio-profile" }],
   // Banco gratuito (D1) com as mensagens do formulário de contato.
   "d1_databases": [
     {
