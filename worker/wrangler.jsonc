@@ -4,6 +4,8 @@
   "main": "src/index.js",
   "compatibility_date": "2026-09-01",
   "compatibility_flags": ["nodejs_compat"],
+  // IA do Cloudflare (Workers AI) — cota gratuita de 10.000 neurônios por dia.
+  "ai": { "binding": "AI" },
   "vars": {
     // Só o portfólio publicado pode chamar este Worker.
     "ALLOWED_ORIGIN": "https://emanueleborges.github.io"

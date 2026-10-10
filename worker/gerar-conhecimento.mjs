@@ -55,7 +55,7 @@ ${get("chat.faq.differential")}
 - Movie Recommender System: ${get("p7.desc")}
 - Face Recognition POC: ${get("p8.desc")}
 - Kotlin Desktop CRUD: ${get("p9.desc")}
-- This portfolio itself: static site (HTML, CSS, vanilla JavaScript, Canvas), 7 languages, local search assistant, AI chat via Cloudflare Workers + Claude, PDF résumés generated with headless Chrome, hosted on GitHub Pages.
+- This portfolio itself: static site (HTML, CSS, vanilla JavaScript, Canvas), 7 languages, local search assistant, AI chat via Cloudflare Workers AI (free tier), PDF résumés generated with headless Chrome, hosted on GitHub Pages.
 
 ## Skills
 - Backend: Java, Kotlin, Spring Boot, Node.js, NestJS, Express, PHP/Laravel, Python, Flask, FastAPI

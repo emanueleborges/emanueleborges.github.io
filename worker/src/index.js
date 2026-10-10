@@ -1,10 +1,10 @@
-// Cloudflare Worker: recebe perguntas do chat do portfólio e responde com o Claude,
-// usando apenas o perfil profissional do Emanuel (src/conhecimento.js).
-// A chave da API fica no secret ANTHROPIC_API_KEY do Cloudflare, nunca no site.
-import Anthropic from "@anthropic-ai/sdk";
+// Cloudflare Worker: recebe perguntas do chat do portfólio e responde com IA
+// (Workers AI, cota gratuita do Cloudflare), usando apenas o perfil profissional
+// do Emanuel (src/conhecimento.js). Não há chave de API nem custo.
 import { PROFILE } from "./conhecimento.js";
 
-const MODEL = "claude-opus-5-5";
+// Modelo aberto multilíngue com bom custo na cota gratuita (~15 "neurônios" por pergunta).
+const MODEL = "@cf/qwen/qwen3-30b-a3b-fp8";
 const MAX_QUESTION_LENGTH = 500;
 const LANGUAGES = { en: "English", pt: "Brazilian Portuguese", es: "Spanish", fr: "French", it: "Italian", zh: "Simplified Chinese", ru: "Russian" };
 
@@ -60,38 +60,27 @@ export default {
     // Cada pergunta é uma requisição independente; a pergunta anterior entra só como contexto.
     const userText = `${previous ? `Previous visitor question (context only): ${previous}\n\n` : ""}Visitor question: ${question}\n\nAnswer in ${language}.`;
 
-    const client = new Anthropic({ apiKey: env.ANTHROPIC_API_KEY });
     try {
-      const response = await client.beta.messages.create({
-        model: MODEL,
-        max_tokens: 2000,
-        betas: ["server-side-fallback-2026-07-01"],
-        fallbacks: "default",
-        output_config: { effort: "low" },
-        system: [{ type: "text", text: SYSTEM_PROMPT, cache_control: { type: "ephemeral" } }],
-        messages: [{ role: "user", content: userText }],
+      const result = await env.AI.run(MODEL, {
+        messages: [
+          { role: "system", content: SYSTEM_PROMPT },
+          // "/no_think" desliga o modo de raciocínio do Qwen3: respostas mais rápidas e econômicas.
+          { role: "user", content: `${userText} /no_think` },
+        ],
+        max_tokens: 600,
+        temperature: 0.3,
       });
-
-      if (response.stop_reason === "refusal") return json({ error: "refused" }, 502, origin);
-      const answer = response.content
-        .filter((block) => block.type === "text")
-        .map((block) => block.text)
-        .join("\n")
+      const raw = result?.response ?? result?.choices?.[0]?.message?.content ?? "";
+      const answer = String(raw)
+        .replace(/<think>[\s\S]*?<\/think>/g, "")
+        .replace(/\*\*|^#+\s*/gm, "")
         .trim();
       if (!answer) return json({ error: "empty_answer" }, 502, origin);
       return json({ answer }, 200, origin);
     } catch (error) {
-      if (error instanceof Anthropic.RateLimitError) return json({ error: "upstream_rate_limited" }, 503, origin);
-      if (error instanceof Anthropic.AuthenticationError) {
-        console.error("ANTHROPIC_API_KEY inválida ou ausente");
-        return json({ error: "unavailable" }, 503, origin);
-      }
-      if (error instanceof Anthropic.APIError) {
-        console.error(`Anthropic API error ${error.status}: ${error.message}`);
-        return json({ error: "unavailable" }, 502, origin);
-      }
-      console.error("Erro inesperado:", error);
-      return json({ error: "unavailable" }, 500, origin);
+      // Inclui o caso de a cota gratuita do dia acabar: o site volta para a busca local.
+      console.error("Erro no Workers AI:", error?.message ?? error);
+      return json({ error: "unavailable" }, 503, origin);
     }
   },
 };
