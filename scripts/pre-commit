@@ -1,0 +1,9 @@
+#!/bin/sh
+# 1. Atualiza a data de "última atualização" do rodapé.
+# 2. Atualiza a versão (?v=) dos arquivos CSS/JS para o navegador não usar cópias antigas em cache.
+today=$(date +%Y-%m-%d)
+shown=$(date +%d/%m/%Y)
+version=$(date +%Y%m%d%H%M%S)
+sed -i '' -E "s#<time id=\"updated\" datetime=\"[0-9-]+\">[^<]*</time>#<time id=\"updated\" datetime=\"$today\">$shown</time>#" index.html
+sed -i '' -E "s#(\.(css|js))\?v=[A-Za-z0-9]+\"#\1?v=$version\"#g" index.html
+git add index.html

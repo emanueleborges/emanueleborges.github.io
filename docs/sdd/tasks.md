@@ -1,0 +1,74 @@
+# Tarefas — Portfólio de Emanuel Borges
+
+> **Spec-Driven Development (SDD).** Lista de execução derivada da [especificação](spec.md) e do [plano técnico](plan.md). Cada tarefa referencia os requisitos que atende.
+
+Legenda: ✅ concluída · ⏳ pendente · 💡 ideia
+
+---
+
+## Concluídas
+
+### Fundação
+- ✅ **T01** Estrutura do site (topo, Sobre, Experiência, Projetos, Habilidades, Formação, Contato) — RF-01
+- ✅ **T02** Publicação no GitHub Pages com deploy a cada `git push` — RNF-01
+- ✅ **T03** Cabeçalho fixo com barra de progresso de leitura — RNF-06
+- ✅ **T04** Favicon e ícone para iPhone/iPad com o "E." do logo
+
+### Conteúdo e visual
+- ✅ **T05** Conteúdo a partir do currículo e do LinkedIn — RF-01
+- ✅ **T06** Foto oval com zoom ao passar o mouse — RF-01
+- ✅ **T07** Paleta IA/tecnologia (roxo + ciano), imagens de fundo em tela cheia com duotone — RNF-07
+- ✅ **T08** Partículas (Canvas), manchas de luz, animações ao rolar, respeito a "reduzir movimento" — RNF-06
+- ✅ **T09** Filtros de Projetos e Habilidades com contador — RF-03
+- ✅ **T10** Logos das instituições (versões para fundo claro e escuro) — RF-01
+- ✅ **T11** Ícones das 45 habilidades (Simple Icons + genéricos) — RF-01
+
+### Idiomas
+- ✅ **T12** i18n em 7 idiomas, seletor no cabeçalho, `?lang=`, inglês por padrão — RF-02
+
+### Currículo
+- ✅ **T13** `curriculo.html` + `gerar-curriculos.sh` → 7 PDFs — RF-04
+- ✅ **T14** Botão de download por idioma — RF-04.2
+
+### Assistente
+- ✅ **T15** Busca local (TF-IDF, sinônimos, chinês) — RF-05.6, RF-05.7
+- ✅ **T16** Correção de digitação (Damerau-Levenshtein) — RF-05.7
+- ✅ **T17** 19 temas de respostas prontas com botões de continuação — RF-05.2
+- ✅ **T18** Balão de convite (3 s, uma vez) — RF-05.1
+- ✅ **T19** Worker com Workers AI (Qwen3 30B), CORS e limite por IP — RF-05.4, RNF-01, RNF-04
+- ✅ **T20** AI Gateway com cache de 24 h e chave versionada — RNF-02
+- ✅ **T21** Turnstile invisível — RNF-04
+- ✅ **T22** RAG com Vectorize + BGE-M3 (32 trechos) — RF-05.4, RNF-09
+- ✅ **T23** Formação com resposta pronta conferida — RNF-08
+- ✅ **T24** 79 testes automáticos do chat — Critérios de aceite
+
+### Contato e métricas
+- ✅ **T25** WhatsApp, e-mail, LinkedIn, GitHub — RF-07
+- ✅ **T26** Formulário com D1, Turnstile, campo-armadilha, limite por IP, contador e confirmação — RF-06
+- ✅ **T27** `ver-mensagens.sh` — RF-06.4
+- ✅ **T28** GoatCounter com eventos — RF-08
+- ✅ **T29** Data de atualização no rodapé e versão `?v=` automática (hook) — RNF-10
+
+### Documentação
+- ✅ **T30** README e documentos SDD (spec, plan, tasks)
+
+---
+
+## Pendentes
+
+| ID | Tarefa | Depende de | Requisito |
+|---|---|---|---|
+| ⏳ **T31** | Links "Código" e "Demo" nos cards de projetos | Links dos repositórios | RF-01 |
+| ⏳ **T32** | Cards de projetos com dados do GitHub (estrelas, último commit) via Cron Trigger | T31 | RF-01 |
+| ⏳ **T33** | Números de impacto nas experiências (ex.: tempo de deploy, % de bugs) | Dados do Emanuel | RF-01 |
+| ⏳ **T34** | Imagem de prévia para compartilhamento (Open Graph) e metadados de SEO por idioma | — | RNF-02 |
+| ⏳ **T35** | Revisão das traduções por falantes nativos (prioridade: chinês e russo) | Revisor | RF-02 |
+| ⏳ **T36** | Avaliação 👍/👎 das respostas da IA (D1) para medir qualidade | — | RNF-08 |
+
+## Ideias
+
+- 💡 Card do próprio portfólio na seção Projetos.
+- 💡 Recomendações de colegas (LinkedIn).
+- 💡 Domínio próprio (pago) — permitiria e-mail de notificação do formulário.
+- 💡 Versão do README em inglês.
+- 💡 Teste de desempenho (Lighthouse) e otimização das imagens de fundo.
