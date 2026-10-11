@@ -172,6 +172,13 @@ All run **in the visitor's browser**, with no AI server.
 
 Stored only when the visitor clicks; the chat panel notes that the question and answer will be saved.
 
+#### `POST /match` — "Does your role match?"
+**Request:** `{ "job": "80–8000 characters", "lang": "…", "turnstileToken": "…" }`
+**200 response:** `{ "role": "…", "score": 0-100, "requirements": [{ "requirement", "importance": "must|nice", "level": "strong|partial|none", "evidence": ["excerpt id"], "reason" }], "pitch": "…" }`
+**Errors:** `400 invalid_job` · `403 forbidden_origin` · `403 turnstile_failed` · `429 rate_limited` (3/min/IP) · `502 empty_answer` · `503 unavailable`
+
+**Flow:** limit → validation → Turnstile → **step 1:** Qwen3 extracts the role and requirements reading only the posting (JSON mode with schema) → **step 2:** Qwen3 grades the numbered list against the 32 profile excerpts (JSON mode) → **Worker checks:** drops unknown ids; no evidence ⇒ "none"; a technology (from a ~90-term list) absent from the profile ⇒ "none"; a technology present in the profile marked "none" ⇒ "partial" with the excerpts that mention it; evidence that doesn't mention the technology is removed (with its reason); ids leaking into text are stripped → score = Σ(weight × value)/Σ weight (required 2, nice 1; strong 1, partial 0.5, none 0). AI Gateway cache for 24 h (profile version + language + SHA-1 of the posting). ~60 neurons per analysis.
+
 #### `GET /prices?symbol=` — LSTM demo prices
 **200 response**
 ```json
@@ -304,3 +311,4 @@ One 1024-dimension vector per excerpt; stable `id` (e.g. `job1`, `p5`, `edu4`); 
 | ADR-24 | In-browser face recognition with face-api.js | Server-side recognition API | Privacy (the image never leaves the device) and zero cost; same library as the original POC. |
 | ADR-25 | Movie data from Wikidata (CC0) + Wikipedia summaries (CC BY-SA) | The original project's TMDB/Kaggle data | TMDB has redistribution restrictions; Wikidata and Wikipedia allow publishing with credit. |
 | ADR-26 | LSTM with windows normalized by the last price and a naive-baseline comparison | `MinMaxScaler` over the whole series (original) | The original leaked test data and couldn't extrapolate prices outside the training range (12% MAPE on PETR4); the card now cites the verifiable number. |
+| ADR-27 | Two-step job match (extract reading only the posting → grade) + deterministic Worker checks and rule-based score | A single call, score given by the AI | In a single call the AI invented favorable requirements, omitted gaps (English) and claimed absent technologies (Go); with the steps and rules, a data job went from 80% to 23% and gaps show up. |

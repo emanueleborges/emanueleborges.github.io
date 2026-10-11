@@ -104,6 +104,11 @@ Toda segunda-feira, o dono recebe por e-mail: mensagens da semana, avaliações 
 ### RF-11 — Página não encontrada
 Endereços inexistentes mostram uma página 404 no estilo do site, com links para o portfólio e o assistente.
 
+### RF-14 — "Sua vaga combina?" (para recrutadores)
+- RF-14.1 Página `/vaga/` (8 idiomas) onde o recrutador cola a descrição de uma vaga (80–8.000 caracteres, qualquer idioma) e recebe: nota de aderência (0–100%), cada requisito com nível (atende / parcial / não encontrado), obrigatório ou diferencial, justificativa e evidências clicáveis para as seções do portfólio, e um resumo "por que o Emanuel" com botão de copiar.
+- RF-14.2 Os requisitos são só os escritos na vaga (nada inventado, nada omitido); a nota é calculada por regra, não pela IA; nenhuma experiência pode ser afirmada sem evidência no perfil.
+- RF-14.3 O texto da vaga não é salvo; o visitante é avisado disso.
+
 ### RF-12 — Demos de IA
 Páginas próprias (`/demos/…`), nos 8 idiomas, no estilo do site, com link de volta ao portfólio e ao código:
 - RF-12.1 **Previsão de ações (LSTM):** o visitante escolhe uma de 15 ações (8 da B3 e 7 da NASDAQ, com preços na moeda de cada bolsa) e 1–10 dias úteis; vê a previsão (gráfico e tabela), as métricas do teste fora da amostra **comparadas a um baseline ingênuo** e o gráfico real × previsto. Preços atualizados quando possível; sem eles, a última cópia salva, com a data indicada. Aviso "não é recomendação de investimento".

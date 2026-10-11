@@ -80,6 +80,7 @@ Legenda: ✅ concluída · ⏳ pendente · 💡 ideia
 - ✅ **T60** Segurança: limite por IP na rota `GET /prices` (30/min) e SRI no face-api.js da demo facial (testado com arquivo adulterado) — RNF-04
 - ✅ **T61** Painel privado de estatísticas (`npm run painel` em `worker/`): avaliações por semana e idioma, respostas mal avaliadas, mensagens e visitas (com token do GoatCounter); arquivo local, fora do git — RF-08
 - ✅ **T62** Demo do LSTM com 15 ações (8 da B3, 7 da NASDAQ), menu por bolsa e preços na moeda de cada bolsa; card atualizado para o MAPE de 1,1–2,2% — RF-12
+- ✅ **T63** "Sua vaga combina?" (`/vaga/` + `POST /match`): match de vaga em duas etapas com conferências no Worker, nota por regra, evidências clicáveis, 8 idiomas e convite no topo do site — RF-14
 
 ---
 

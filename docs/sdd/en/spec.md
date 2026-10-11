@@ -104,6 +104,11 @@ Every Monday the owner receives an email with the week's messages, chat ratings 
 ### FR-11 — Not-found page
 Unknown addresses show a 404 page in the site's style, with links to the portfolio and the assistant.
 
+### FR-14 — "Does your role match?" (for recruiters)
+- FR-14.1 `/vaga/` page (8 languages) where a recruiter pastes a job description (80–8,000 characters, any language) and gets: a match score (0–100%), each requirement with its level (meets / partial / not found), required or nice-to-have, a reason and clickable evidence linking to portfolio sections, plus a "why Emanuel" summary with a copy button.
+- FR-14.2 Requirements are only those written in the posting (nothing invented, nothing omitted); the score is computed by rule, not by the AI; no experience may be claimed without evidence in the profile.
+- FR-14.3 The posting text is not stored; the visitor is told so.
+
 ### FR-12 — AI demos
 Dedicated pages (`/demos/…`) in 8 languages, in the site's style, linking back to the portfolio and the code:
 - FR-12.1 **Stock forecasting (LSTM):** the visitor picks one of 15 stocks (8 from B3 and 7 from NASDAQ, priced in each exchange's currency) and 1–10 business days; sees the forecast (chart and table), the out-of-sample test metrics **compared with a naive baseline** and the actual × predicted chart. Up-to-date prices when possible; otherwise the last saved copy, with its date. "Not investment advice" notice.

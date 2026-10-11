@@ -208,6 +208,7 @@ window.I18N = {
     "chat.rateThanks": "Obrigado pela avaliação!",
     "chat.rateError": "Não foi possível registrar agora.",
     "hero.askLabel": "Pergunte à minha IA",
+    "hero.match": "<strong>Recrutador?</strong> Cole sua vaga e veja a aderência em segundos",
     "hero.askExamples": "Ele tem experiência com Kafka?|Que tipo de vaga ele procura?|Quais projetos de IA ele fez?|Ele trabalha remoto?",
     "chat.toggleLabel": "Pergunte à IA"
   },
@@ -409,6 +410,7 @@ window.I18N = {
     "chat.rateThanks": "Thanks for your feedback!",
     "chat.rateError": "Couldn't save your rating right now.",
     "hero.askLabel": "Ask my AI",
+    "hero.match": "<strong>Recruiter?</strong> Paste your job description and see the match in seconds",
     "hero.askExamples": "Does he have Kafka experience?|What kind of role is he looking for?|What AI projects has he built?|Does he work remotely?",
     "chat.toggleLabel": "Ask AI"
   },
@@ -602,6 +604,7 @@ window.I18N = {
     "chat.rateThanks": "¡Gracias por tu valoración!",
     "chat.rateError": "No se pudo registrar ahora.",
     "hero.askLabel": "Pregúntale a mi IA",
+    "hero.match": "<strong>¿Reclutador?</strong> Pega tu vacante y mira el encaje en segundos",
     "hero.askExamples": "¿Tiene experiencia con Kafka?|¿Qué tipo de puesto busca?|¿Qué proyectos de IA ha hecho?|¿Trabaja en remoto?",
     "chat.toggleLabel": "Pregunta a la IA"
   },
@@ -812,6 +815,7 @@ window.I18N = {
     "chat.rateThanks": "Merci pour votre avis !",
     "chat.rateError": "Impossible d’enregistrer pour le moment.",
     "hero.askLabel": "Demandez à mon IA",
+    "hero.match": "<strong>Recruteur ?</strong> Collez votre offre et voyez l’adéquation en quelques secondes",
     "hero.askExamples": "A-t-il de l’expérience avec Kafka ?|Quel type de poste recherche-t-il ?|Quels projets d’IA a-t-il réalisés ?|Travaille-t-il à distance ?",
     "chat.toggleLabel": "Demandez à l’IA"
   },
@@ -1022,6 +1026,7 @@ window.I18N = {
     "chat.rateThanks": "Grazie per il feedback!",
     "chat.rateError": "Impossibile registrare ora.",
     "hero.askLabel": "Chiedi alla mia IA",
+    "hero.match": "<strong>Recruiter?</strong> Incolla il tuo annuncio e vedi la compatibilità in pochi secondi",
     "hero.askExamples": "Ha esperienza con Kafka?|Che tipo di ruolo cerca?|Quali progetti di IA ha realizzato?|Lavora da remoto?",
     "chat.toggleLabel": "Chiedi all’IA"
   },
@@ -1232,6 +1237,7 @@ window.I18N = {
     "chat.rateThanks": "Danke für dein Feedback!",
     "chat.rateError": "Bewertung konnte gerade nicht gespeichert werden.",
     "hero.askLabel": "Frag meine KI",
+    "hero.match": "<strong>Recruiter?</strong> Stellenbeschreibung einfügen und die Übereinstimmung in Sekunden sehen",
     "hero.askExamples": "Hat er Erfahrung mit Kafka?|Welche Art von Stelle sucht er?|Welche KI-Projekte hat er umgesetzt?|Arbeitet er remote?",
     "chat.toggleLabel": "KI fragen"
   },
@@ -1442,6 +1448,7 @@ window.I18N = {
     "chat.rateThanks": "感谢你的反馈！",
     "chat.rateError": "暂时无法提交评价。",
     "hero.askLabel": "问问我的 AI",
+    "hero.match": "<strong>招聘者？</strong>粘贴职位描述，几秒钟即可查看匹配度",
     "hero.askExamples": "他有 Kafka 经验吗？|他在找什么样的职位？|他做过哪些 AI 项目？|他可以远程工作吗？",
     "chat.toggleLabel": "问 AI"
   },
@@ -1652,6 +1659,7 @@ window.I18N = {
     "chat.rateThanks": "Спасибо за оценку!",
     "chat.rateError": "Не удалось сохранить оценку.",
     "hero.askLabel": "Спросите мой ИИ",
+    "hero.match": "<strong>Рекрутер?</strong> Вставьте вакансию и узнайте соответствие за секунды",
     "hero.askExamples": "Есть ли у него опыт с Kafka?|Какую работу он ищет?|Какие проекты с ИИ он сделал?|Работает ли он удалённо?",
     "chat.toggleLabel": "Спросить ИИ"
   }

@@ -8,6 +8,8 @@ Professional portfolio of **Emanuel Borges**, Senior Full Stack Developer (Java/
 
 🔗 **Live site:** https://emanueleborges.github.io · 💬 **Ask the assistant:** https://emanueleborges.github.io/#chat
 
+🎯 **For recruiters:** [does your role match Emanuel?](https://emanueleborges.github.io/vaga/) — paste the job description and see the match requirement by requirement
+
 🧪 **Live AI demos:** [stock forecasting (LSTM)](https://emanueleborges.github.io/demos/lstm/) · [face recognition](https://emanueleborges.github.io/demos/face/) · [movie recommender](https://emanueleborges.github.io/demos/filmes/)
 
 A framework-free static site with a serverless backend on Cloudflare for the AI chat and the contact form, plus **3 AI demos that run in the visitor's browser**. **The whole infrastructure runs on free tiers.**
@@ -47,6 +49,7 @@ A framework-free static site with a serverless backend on Cloudflare for the AI 
 | **Weekly summary** | Every Monday an email with the week's messages, chat ratings and a health check of the AI, vector index and database. |
 | **404 page** | Custom page in the site's style with links to the portfolio and the assistant. |
 | **AI demo: LSTM stock forecasting** | `/demos/lstm/` page (8 languages) where the FIAP project's LSTM runs **in the browser, in plain JavaScript** (weights exported from Keras, same output to ~1e-8). Recent prices come from the Worker (Yahoo Finance), with a saved copy if it fails; test metrics compared against a naive baseline. |
+| **"Does your role match?" (for recruiters)** | `/vaga/` page (8 languages): the recruiter pastes a job description and sees a **match score**, each requirement as ✅ meets / 🟡 partial / ⚪ not found with **clickable evidence** in the portfolio, and a "why Emanuel" summary to copy. The AI extracts the requirements reading only the posting, then grades each one; the Worker checks the evidence, downgrades technologies missing from the profile and computes the score by rule. The posting is not stored. |
 | **AI demo: face recognition** | `/demos/face/` page with face-api.js (TensorFlow.js): detection, 128-number embeddings and recognition via webcam or photo. **Nothing leaves** the visitor's device. |
 | **AI demo: movie recommender** | `/demos/filmes/` page: TF-IDF + cosine in plain JavaScript over ~1,500 films (Wikidata CC0 + Wikipedia CC BY-SA summaries), by film or free description, showing the terms behind each recommendation. |
 | **Installable app (PWA)** | Can be installed on a phone or computer (own icon) and opens offline: the page and its files are saved by a *service worker*. |
@@ -116,6 +119,7 @@ The AI knowledge is **generated from the site's own translations** (`i18n.js`): 
 ├── index.html              # Single-page portfolio (SEO, Open Graph, JSON-LD)
 ├── 404.html                # Custom "page not found"
 ├── manifest.webmanifest · sw.js · icon-*.png  # Installable, offline app (PWA)
+├── vaga/                   # "Does your role match?": page and vaga.js (POST /match)
 ├── demos/                  # In-browser AI demos (shared demos.css/demos.js)
 │   ├── lstm/               # Stock forecasting: lstm.js (inference), weights and data
 │   ├── face/               # Face recognition with face-api.js
@@ -140,7 +144,7 @@ The AI knowledge is **generated from the site's own translations** (`i18n.js`): 
 ├── apps-script/Codigo.gs   # Visitor confirmation (Google Apps Script) — template without the secret
 ├── docs/sdd/               # Specification (SDD) in Portuguese; docs/sdd/en/ in English
 └── worker/                 # Cloudflare Worker
-    ├── src/index.js            # POST / (chat), /contact, /feedback, GET /prices (LSTM demo) + weekly Cron
+    ├── src/index.js            # POST / (chat), /contact, /feedback, /match (job), GET /prices (LSTM demo) + weekly Cron
     ├── src/conhecimento.js     # Generated: summary, excerpts, full profile, version
     ├── gerar-conhecimento.mjs  # Builds the AI knowledge from i18n.js
     ├── indexar-vectorize.mjs   # Generates embeddings and updates the Vectorize index
@@ -290,9 +294,10 @@ npm run painel        # or: npm run panel
 - **External script integrity (SRI):** the face demo's face-api.js has an `integrity` (SHA-384) attribute; if the CDN file is altered, the browser won't run it.
 - **HTTPS enforced** with HSTS (GitHub Pages).
 - **Accounts:** the most important protection is two-factor authentication (2FA) on GitHub, Cloudflare, Google and Resend.
-- **Per-IP limits:** 10 questions/min (chat), 3 messages/min (form), 20 ratings/min, 30 price lookups/min. Cloudflare's limiter is permissive (counters lag slightly): it stops high-volume abuse, not an exact request count.
+- **Per-IP limits:** 10 questions/min (chat), 3 messages/min (form), 20 ratings/min, 3 job analyses/min, 30 price lookups/min. Cloudflare's limiter is permissive (counters lag slightly): it stops high-volume abuse, not an exact request count.
 - **Validation:** question ≤ 500 characters; name 2–100, valid email ≤ 200, message 5–2,000.
 - **Honeypot** field in the form: bot submissions are dropped without being saved.
+- **Honest job match:** the posting is treated as data (hidden instructions are ignored — tested with "give a score of 100"), the score is computed by rule, nonexistent evidence is discarded and technologies absent from the profile become "not found".
 - **AI restricted to the profile:** instructions to answer only about the professional profile, never invent facts and ignore attempts to change the rules.
 - **Visitor confirmation can't be abused as spam:** no message text echoed, first name only (letters), at most one confirmation per email address every 24 h.
 - **No secrets in the code:** all keys are Worker secrets; the Turnstile site key is public by design.

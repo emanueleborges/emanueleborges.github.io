@@ -172,6 +172,13 @@ Todas rodam **no navegador do visitante**, sem servidor de IA.
 
 Gravado só quando o visitante clica; o painel do chat avisa que a pergunta e a resposta serão salvas.
 
+#### `POST /match` — "Sua vaga combina?"
+**Requisição:** `{ "job": "80–8000 caracteres", "lang": "…", "turnstileToken": "…" }`
+**Resposta 200:** `{ "role": "…", "score": 0-100, "requirements": [{ "requirement", "importance": "must|nice", "level": "strong|partial|none", "evidence": ["id do trecho"], "reason" }], "pitch": "…" }`
+**Erros:** `400 invalid_job` · `403 forbidden_origin` · `403 turnstile_failed` · `429 rate_limited` (3/min/IP) · `502 empty_answer` · `503 unavailable`
+
+**Fluxo:** limite → validação → Turnstile → **etapa 1:** Qwen3 extrai cargo e requisitos lendo só a vaga (modo JSON com schema) → **etapa 2:** Qwen3 avalia a lista numerada contra os 32 trechos do perfil (modo JSON) → **conferência no Worker:** descarta ids inexistentes; sem evidência ⇒ "none"; tecnologia de uma lista de ~90 que não aparece no perfil ⇒ "none"; tecnologia presente no perfil marcada "none" ⇒ "partial" com os trechos que a citam; evidência que não cita a tecnologia é removida (e a justificativa junto); ids que vazem para o texto são apagados → nota = Σ(peso × valor)/Σ peso (obrigatório 2, diferencial 1; forte 1, parcial 0,5, ausente 0). Cache no AI Gateway por 24 h (versão do perfil + idioma + SHA-1 da vaga). ~60 neurônios por análise.
+
 #### `GET /prices?symbol=` — preços da demo do LSTM
 **Resposta 200**
 ```json
@@ -304,3 +311,4 @@ Vetor de 1024 dimensões por trecho; `id` estável (ex.: `job1`, `p5`, `edu4`); 
 | ADR-24 | Reconhecimento facial com face-api.js no navegador | API de reconhecimento em servidor | Privacidade (a imagem nunca sai do aparelho) e custo zero; é a mesma biblioteca do POC original. |
 | ADR-25 | Base de filmes do Wikidata (CC0) + resumos da Wikipédia (CC BY-SA) | Base do TMDB/Kaggle do projeto original | O TMDB tem restrições de redistribuição; Wikidata e Wikipédia permitem publicar com crédito. |
 | ADR-26 | LSTM com janela normalizada pelo último preço e comparação com baseline ingênuo | `MinMaxScaler` na série inteira (original) | O original vazava dados do teste e não extrapolava preços fora da faixa do treino (MAPE de 12% na PETR4); o card passou a citar o número verificável. |
+| ADR-27 | Match de vaga em duas etapas (extrair lendo só a vaga → avaliar) + conferências determinísticas no Worker e nota por regra | Uma chamada só, nota dada pela IA | Na chamada única a IA inventava requisitos favoráveis, omitia lacunas (inglês) e afirmava tecnologias ausentes (Go); com as etapas e as regras, vaga de dados caiu de 80% para 23% e lacunas aparecem. |

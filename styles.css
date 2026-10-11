@@ -80,6 +80,11 @@ button { font: inherit; }
 .button-quiet { border: 1px solid rgba(237,228,255,.2); background: rgba(26,23,38,.55); }
 .hero-ask { display: flex; align-items: center; gap: 10px; width: min(100%, 560px); margin-top: 18px; padding: 12px 16px; border: 1px solid transparent; border-radius: 16px; background: linear-gradient(rgba(16,12,31,.88), rgba(16,12,31,.88)) padding-box, linear-gradient(115deg, #8e50ff, #6d5cff 50%, #22d3ee) border-box; color: var(--text); font: 500 14px var(--sans); text-align: left; cursor: pointer; box-shadow: 0 10px 40px rgba(91,92,240,.25); transition: transform .2s, box-shadow .2s; }
 .hero-ask[hidden] { display: none; }
+.hero-match { display: flex; align-items: center; gap: 10px; width: min(100%, 560px); margin-top: 10px; padding: 10px 16px; border: 1px dashed rgba(184,149,255,.45); border-radius: 14px; background: rgba(16,12,31,.6); color: #e8e3f5; font-size: 14px; transition: border-color .2s, transform .2s; }
+.hero-match strong { color: var(--cyan-soft); }
+.hero-match:hover { border-color: var(--cyan); transform: translateY(-1px); }
+.hero-match:focus-visible { outline: 2px solid #b895ff; outline-offset: 3px; }
+.hero-match-go { margin-left: auto; color: var(--purple); }
 .hero-ask:hover { transform: translateY(-2px); box-shadow: 0 14px 46px rgba(34,211,238,.25); }
 .hero-ask:focus-visible { outline: 2px solid #b895ff; outline-offset: 3px; }
 .hero-ask-icon { flex: none; font-size: 18px; }
