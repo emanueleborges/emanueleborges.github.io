@@ -1,6 +1,8 @@
 // "Essa vaga combina com o Emanuel?": envia a descrição da vaga ao Worker (POST /match) e mostra
 // a nota, cada requisito com o nível e as evidências (links para o portfólio) e um resumo pronto.
 // A nota é calculada por regra no Worker; o texto da vaga não é salvo.
+import { Demo } from "../demos/demos.js";
+import { PortfolioApi } from "../api.js";
 
 const SAMPLE_JOB = `Senior Full Stack Engineer — AI Products (Remote, LATAM)
 
@@ -454,7 +456,7 @@ async function analyze(event) {
   }
   setBusy(true);
   cycleSteps();
-  const { ok, status: code, data } = await window.PortfolioApi.post("/match", { job, lang: Demo.lang }, 60000);
+  const { ok, status: code, data } = await PortfolioApi.post("/match", { job, lang: Demo.lang }, 60000);
   clearInterval(stepTimer);
   setBusy(false);
   if (!ok || !data?.requirements) {

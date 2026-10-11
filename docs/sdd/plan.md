@@ -67,8 +67,8 @@ flowchart TB
 | `index.html` | Estrutura e conteúdo em português (idioma de origem). Elementos traduzíveis marcados com `data-i18n`, `data-i18n-aria`, `data-i18n-placeholder`, `data-i18n-title`, `data-i18n-alt`, `data-i18n-content`. |
 | `i18n/` · `i18n.js` | `window.I18N[lang][chave]`, um arquivo por idioma (`i18n/<idioma>.js`): site, chat (respostas prontas, rótulos), formulário e currículo. A página traz `pt` (original e reserva) e `en` (padrão); `I18N.load(idioma)` baixa os demais quando escolhidos, e o `boot.js` (com `data-i18n`) já pré-carrega o idioma salvo. |
 | `script.js` | Aplica o idioma (guarda o original em português), seletor de idioma, menu mobile, filtros, data de atualização (`Intl`), animações ao rolar, partículas (Canvas), progresso de leitura e eventos do GoatCounter (`track`). |
-| `api.js` | `window.PortfolioApi`: URL do Worker, carregamento sob demanda do Turnstile, geração de token por envio e `post(path, body)`. |
-| `chat.js` · `chat/` | Assistente. `chat.js` é a interface; `chat/texto.js` (normalização e erros de digitação), `chat/regras.js` (respostas prontas por expressão regular), `chat/busca.js` (busca local) e `chat/ia.js` (Worker) expõem `window.ChatCore` e carregam antes. |
+| `api.js` | Módulo `PortfolioApi`: URL do Worker, carregamento sob demanda do Turnstile, geração de token por envio e `post(path, body)`. |
+| `chat.js` · `chat/` | Assistente. `chat.js` é a interface; `chat/texto.js` (normalização e erros de digitação), `chat/regras.js` (respostas prontas por expressão regular), `chat/busca.js` (busca local) e `chat/ia.js` (Worker) são módulos ES importados pelo `chat.js`. |
 | `components/` | Web Components sem framework: `<site-logo>` e `<theme-toggle>` (`components.js`); `boot.js` aplica o tema antes da pintura. |
 | `data/` · `scripts/gerar-secoes.mjs` | Projetos e habilidades como dados; o gerador escreve o HTML estático no `index.html` entre marcadores (textos do `i18n/pt.js`). O CI confere com `--check`. |
 | `contact.js` | Validação, envio, contador, estados de carregamento/sucesso do formulário. |
@@ -82,6 +82,7 @@ flowchart TB
 ### 2.1 Internacionalização
 - O HTML contém o português; ao trocar o idioma, `script.js` aplica `I18N[lang]` e restaura o original para `pt`.
 - Chave ausente num idioma → mantém o texto em português (fallback).
+- **Módulos:** o código do site, das demos e da página de vagas é de módulos ES (`import`/`export`), sem variáveis globais entre arquivos. No `index.html`, um `<script type="importmap">` aplica a versão `?v=` também aos imports (o hook de pre-commit atualiza) e `modulepreload` baixa o chat em paralelo; `scripts/conferir-modulos.mjs` (CI) garante que todo módulo importado esteja no mapa. Ficam como scripts clássicos só os dados de tradução (`i18n/`, lidos também pelo currículo e pelos geradores), o `boot.js` (precisa rodar antes da pintura) e os Web Components. Os testes do chat servem o site num servidor local, porque módulos não carregam por `file://`.
 - Idioma inicial: `?lang` → `localStorage` → **inglês**.
 - Evento `languagechange` notifica chat, filtros e formulário.
 
@@ -141,7 +142,7 @@ Todas rodam **no navegador do visitante**, sem servidor de IA.
 ### 2.9 Temas
 - **Tokens:** todas as cores viraram papéis em variáveis CSS (`--bg`, `--surface`, `--text`, `--accent`, `--accent-rgb`, `--grad-primary`, `--on-primary`, `--duotone`, `--particle-a/-b`…), definidos em `:root[data-theme="amazonia"]` (padrão) e `:root[data-theme="editorial"]` em `styles.css` e `demos/demos.css`; a 404 tem os seus.
 - **Sem piscar:** um script curto no `<head>` de cada página lê `?theme=` ou `localStorage.theme` e define `<html data-theme>` e a `theme-color` antes da pintura.
-- **Troca:** `script.js` (site) e `demos/demos.js` (demos e vagas) alternam o tema, salvam, atualizam o rótulo/ARIA nos 8 idiomas e disparam `themechange` (as partículas releem as cores). Gráficos SVG usam `style="stroke:var(--series-n)"` e acompanham na hora.
+- **Troca:** o componente `<theme-toggle>` (`components/components.js`, em todas as páginas) alterna o tema, salvam, atualizam o rótulo/ARIA nos 8 idiomas e disparam `themechange` (as partículas releem as cores). Gráficos SVG usam `style="stroke:var(--series-n)"` e acompanham na hora.
 - **Gráficos:** séries validadas para daltonismo — Amazônia azul `#3987e5` × lima `#65a30d`; Editorial azul `#2a78d6` × laranja `#d9420c`.
 - **CI:** o Lighthouse mede `index.html` e `index.html?theme=editorial`.
 - **Logo "E.":** SVG dentro das páginas (cabeçalho, rodapé, chat, demos, vagas, 404) com cores pelas variáveis `--logo-*` de cada tema; o E se desenha ao carregar (`stroke-dashoffset`), o nó de IA aparece e emite um pulso a cada 3,2 s, e ao passar o mouse gira e brilha — tudo desligado com "reduzir movimento". Favicon, `imagens/logo.svg` e ícones do app usam a versão Amazônia.
@@ -322,4 +323,5 @@ Vetor de 1024 dimensões por trecho; `id` estável (ex.: `job1`, `p5`, `edu4`); 
 | ADR-25 | Base de filmes do Wikidata (CC0) + resumos da Wikipédia (CC BY-SA) | Base do TMDB/Kaggle do projeto original | O TMDB tem restrições de redistribuição; Wikidata e Wikipédia permitem publicar com crédito. |
 | ADR-26 | LSTM com janela normalizada pelo último preço e comparação com baseline ingênuo | `MinMaxScaler` na série inteira (original) | O original vazava dados do teste e não extrapolava preços fora da faixa do treino (MAPE de 12% na PETR4); o card passou a citar o número verificável. |
 | ADR-27 | Match de vaga em duas etapas (extrair lendo só a vaga → avaliar) + conferências determinísticas no Worker e nota por regra | Uma chamada só, nota dada pela IA | Na chamada única a IA inventava requisitos favoráveis, omitia lacunas (inglês) e afirmava tecnologias ausentes (Go); com as etapas e as regras, vaga de dados caiu de 80% para 23% e lacunas aparecem. |
+| ADR-29 | Componentização sem framework: Web Components, dados + gerador de HTML estático, módulos ES com importmap, rotas do Worker em arquivos separados, traduções por idioma sob demanda | React/Vue/Astro; bundler (Vite) | Sem build nem dependências: o GitHub Pages serve os arquivos como estão, o HTML continua estático (SEO e busca do chat) e cada parte tem um lugar só; o importmap resolve o cache por versão que um bundler faria. |
 | ADR-28 | Dois temas por variáveis CSS + script no `<head>` | Tema único; `prefers-color-scheme` | O dono quis a identidade "Amazônia" como padrão e uma opção clara para quem prefere; o script antes da pintura evita o "flash" e `?theme=` permite compartilhar/testar. |

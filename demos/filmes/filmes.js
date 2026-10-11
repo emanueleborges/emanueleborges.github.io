@@ -1,5 +1,7 @@
 // Recomendação de filmes por conteúdo (TF-IDF + cosseno), calculada no navegador.
 // Base: filmes.json (Wikidata + resumos da Wikipédia), gerada por scripts/gerar-dados-filmes.py.
+import { Demo } from "../demos.js";
+import { TfIdf } from "./tfidf.js";
 
 const EXAMPLES = ["The Matrix", "Toy Story", "The Godfather", "Shrek", "Titanic", "Interstellar"];
 const QUERIES = ["space adventure with robots", "mafia family crime", "haunted house horror", "superhero team"];

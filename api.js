@@ -1,6 +1,6 @@
 // Conexão do site com o Cloudflare Worker (chat com IA e formulário de contato)
 // e com o Turnstile (anti-robô invisível). Tudo no plano gratuito do Cloudflare.
-window.PortfolioApi = (() => {
+export const PortfolioApi = (() => {
   const BASE = "https://emanuel-portfolio-chat.emanuel-portfolio-chat.workers.dev";
   // Chave pública do Turnstile para emanueleborges.github.io.
   const TURNSTILE_SITE_KEY = "0x4AAAAAAFSypCNI4YX6-cMF";

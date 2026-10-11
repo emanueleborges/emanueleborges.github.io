@@ -1,8 +1,11 @@
 // Formulário de contato: envia ao Worker (salvo no banco D1 do Cloudflare),
-// com Turnstile invisível contra robôs. Usa `t`, `currentLang` e `track` de script.js.
-(() => {
+// com Turnstile invisível contra robôs.
+import { PortfolioApi } from "./api.js";
+import { currentLang, t, track } from "./script.js";
+
+function initContactForm() {
   const form = document.querySelector(".contact-form");
-  if (!form || !window.PortfolioApi?.enabled) return;
+  if (!form || !PortfolioApi.enabled) return;
   form.hidden = false;
 
   const status = form.querySelector(".form-status");
@@ -40,7 +43,7 @@
   };
 
   // Começa a carregar o Turnstile quando o visitante interage com o formulário.
-  form.addEventListener("focusin", () => window.PortfolioApi.loadTurnstile().catch(() => {}), { once: true });
+  form.addEventListener("focusin", () => PortfolioApi.loadTurnstile().catch(() => {}), { once: true });
 
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
@@ -61,7 +64,7 @@
     button.setAttribute("aria-busy", "true");
     label.textContent = t("form.sending");
     setStatus("", "");
-    const { ok, status: code } = await window.PortfolioApi.post("/contact", {
+    const { ok, status: code } = await PortfolioApi.post("/contact", {
       name,
       email,
       message,
@@ -94,4 +97,6 @@
   document.addEventListener("languagechange", () => {
     if (lastStatus) setStatus(lastStatus.key, lastStatus.kind);
   });
-})();
+}
+
+initContactForm();

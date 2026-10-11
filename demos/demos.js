@@ -1,6 +1,6 @@
 // Base compartilhada das páginas de demo (demos/*): idioma, textos, formatação e estatísticas.
 // Cada página chama Demo.setup(textos, render) com os textos nos 8 idiomas.
-window.Demo = (() => {
+export const Demo = (() => {
   const htmlLang = { en: "en", pt: "pt-BR", es: "es", fr: "fr", it: "it", de: "de", zh: "zh-CN", ru: "ru" };
   let texts = {};
   let lang = "en";

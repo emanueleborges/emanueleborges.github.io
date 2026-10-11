@@ -1,14 +1,13 @@
 // Assistente do portfólio — interface: painel, mensagens, sugestões e a barra "Pergunte à minha IA".
 // A lógica fica em chat/: texto.js (normalização), regras.js (respostas prontas),
-// busca.js (busca local na página) e ia.js (Worker). Esses arquivos carregam antes deste.
-// Usa `t`, `currentLang`, `prefersReducedMotion` e `track`, definidos em script.js.
+// busca.js (busca local na página) e ia.js (Worker).
+import { currentLang, prefersReducedMotion, t, track } from "./script.js";
+import { normalize } from "./chat/texto.js";
+import { LOCAL_ONLY, intents, faqs, findFaq } from "./chat/regras.js";
+import { text, search } from "./chat/busca.js";
+import * as ai from "./chat/ia.js";
 
-(() => {
-  const { normalize } = window.ChatCore.text;
-  const { LOCAL_ONLY, intents, faqs, findFaq } = window.ChatCore.rules;
-  const { text, search } = window.ChatCore.search;
-  const ai = window.ChatCore.ai;
-
+function initChat() {
   /* ---------- Interface ---------- */
 
   const root = document.createElement("div");
@@ -468,4 +467,6 @@
         .join(" | "),
     search: (query) => search(query).results.map((result) => result.label),
   };
-})();
+}
+
+initChat();

@@ -9,6 +9,7 @@ const track = (path, title = path) => {
 
 /* ---------- Idiomas ---------- */
 
+// Os textos vêm de i18n/<idioma>.js (dados em window.I18N, também lidos pelo currículo e pelos geradores).
 const translations = window.I18N || {};
 const htmlLang = { en: "en", pt: "pt-BR", es: "es", fr: "fr", it: "it", de: "de", zh: "zh-CN", ru: "ru" };
 const supportedLangs = Object.keys(htmlLang);
@@ -506,3 +507,6 @@ if (!prefersReducedMotion) {
 if ("serviceWorker" in navigator && (location.protocol === "https:" || location.hostname === "localhost")) {
   addEventListener("load", () => navigator.serviceWorker.register("sw.js").catch(() => {}));
 }
+
+// Usado pelo assistente (chat.js) e pelo formulário (contact.js). currentLang acompanha a troca de idioma.
+export { currentLang, prefersReducedMotion, t, track };

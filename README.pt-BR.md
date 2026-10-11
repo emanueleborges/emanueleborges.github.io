@@ -125,6 +125,7 @@ O conhecimento da IA é **gerado das próprias traduções do site** (`i18n/`): 
 │   ├── lstm/               # Previsão de ações: lstm.js (inferência), pesos e dados
 │   ├── face/               # Reconhecimento facial com face-api.js
 │   └── filmes/             # Recomendação de filmes: tfidf.js e filmes.json
+├── scripts/conferir-modulos.mjs # CI: todo módulo ES importado pelo index.html está no importmap
 ├── scripts/gerar-secoes.mjs # Gera os cards de projetos e as habilidades a partir de data/ (--check no CI)
 ├── scripts/gerar-dados-filmes.py  # Gera demos/filmes/filmes.json (Wikidata + Wikipédia)
 ├── scripts/lstm/           # Treino (train.py) e exportação (exportar_web.py) do LSTM da demo

@@ -125,6 +125,7 @@ The AI knowledge is **generated from the site's own translations** (`i18n/`): wh
 │   ├── lstm/               # Stock forecasting: lstm.js (inference), weights and data
 │   ├── face/               # Face recognition with face-api.js
 │   └── filmes/             # Movie recommender: tfidf.js and filmes.json
+├── scripts/conferir-modulos.mjs # CI: every ES module imported by index.html is in the import map
 ├── scripts/gerar-secoes.mjs # Renders project cards and skill chips from data/ (--check in CI)
 ├── scripts/gerar-dados-filmes.py  # Builds demos/filmes/filmes.json (Wikidata + Wikipedia)
 ├── scripts/lstm/           # Training (train.py) and export (exportar_web.py) of the demo's LSTM

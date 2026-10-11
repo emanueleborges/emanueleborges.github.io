@@ -1,6 +1,7 @@
 // Reconhecimento facial no navegador com face-api.js (TensorFlow.js).
 // Detecção (TinyFaceDetector) → 68 pontos → embedding de 128 números → distância euclidiana.
 // A câmera e as fotos nunca saem do aparelho: nada é enviado nem salvo.
+import { Demo } from "../demos.js";
 
 const MODELS = "https://cdn.jsdelivr.net/npm/@vladmandic/face-api@1.7.15/model/";
 // A biblioteca (~1,3 MB) e os modelos (~6 MB) só são baixados no primeiro uso (câmera, foto ou exemplo).

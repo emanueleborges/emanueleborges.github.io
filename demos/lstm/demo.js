@@ -1,5 +1,7 @@
 // Demo do LSTM no navegador: carrega os pesos exportados do Keras e prevê com lstm.js.
 // Preços recentes: Worker do Cloudflare (Yahoo Finance); se falhar, a cópia em dados.json.
+import { Demo } from "../demos.js";
+import { LSTM } from "./lstm.js";
 
 const PRICES_API = "https://emanuel-portfolio-chat.emanuel-portfolio-chat.workers.dev/prices";
 const HISTORY_DAYS = 30;
