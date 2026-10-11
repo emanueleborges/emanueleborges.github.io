@@ -68,7 +68,9 @@ flowchart TB
 | `i18n.js` | `window.I18N[lang][key]` for the 8 languages: site, chat (ready-made answers, labels), contact form and résumé. |
 | `script.js` | Applies the language (keeping the Portuguese original), language selector, mobile menu, filters, last-updated date (`Intl`), scroll animations, particles (Canvas), reading progress and GoatCounter events (`track`). |
 | `api.js` | `window.PortfolioApi`: Worker URL, on-demand Turnstile loading, one token per submission and `post(path, body)`. |
-| `chat.js` | Assistant: ready-made answers (regex rules), local search, AI call and UI. |
+| `chat.js` · `chat/` | Assistant. `chat.js` is the UI; `chat/texto.js` (normalization and typos), `chat/regras.js` (regex ready-made answers), `chat/busca.js` (local search) and `chat/ia.js` (Worker) expose `window.ChatCore` and load first. |
+| `components/` | Framework-free Web Components: `<site-logo>` and `<theme-toggle>` (`components.js`); `boot.js` applies the theme before paint. |
+| `data/` · `scripts/gerar-secoes.mjs` | Projects and skills as data; the generator writes static HTML into `index.html` between markers (text from `i18n.js`). CI checks it with `--check`. |
 | `contact.js` | Contact form validation, submission, counter and loading/success states. |
 | `curriculo.html` | A4 résumé template, rendered per language from `i18n.js`. |
 | `manifest.webmanifest` · `sw.js` · `icon-*.png` | Installable, offline app (PWA). |

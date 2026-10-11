@@ -68,7 +68,9 @@ flowchart TB
 | `i18n.js` | `window.I18N[lang][chave]` para os 8 idiomas: site, chat (respostas prontas, rótulos), formulário e currículo. |
 | `script.js` | Aplica o idioma (guarda o original em português), seletor de idioma, menu mobile, filtros, data de atualização (`Intl`), animações ao rolar, partículas (Canvas), progresso de leitura e eventos do GoatCounter (`track`). |
 | `api.js` | `window.PortfolioApi`: URL do Worker, carregamento sob demanda do Turnstile, geração de token por envio e `post(path, body)`. |
-| `chat.js` | Assistente: respostas prontas (regras por expressão regular), busca local, chamada à IA e interface. |
+| `chat.js` · `chat/` | Assistente. `chat.js` é a interface; `chat/texto.js` (normalização e erros de digitação), `chat/regras.js` (respostas prontas por expressão regular), `chat/busca.js` (busca local) e `chat/ia.js` (Worker) expõem `window.ChatCore` e carregam antes. |
+| `components/` | Web Components sem framework: `<site-logo>` e `<theme-toggle>` (`components.js`); `boot.js` aplica o tema antes da pintura. |
+| `data/` · `scripts/gerar-secoes.mjs` | Projetos e habilidades como dados; o gerador escreve o HTML estático no `index.html` entre marcadores (textos do `i18n.js`). O CI confere com `--check`. |
 | `contact.js` | Validação, envio, contador, estados de carregamento/sucesso do formulário. |
 | `curriculo.html` | Modelo A4 do currículo, renderizado por idioma a partir do `i18n.js`. |
 | `manifest.webmanifest` · `sw.js` · `icon-*.png` | App instalável e offline (PWA). |

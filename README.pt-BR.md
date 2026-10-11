@@ -125,13 +125,18 @@ O conhecimento da IA é **gerado das próprias traduções do site** (`i18n.js`)
 │   ├── lstm/               # Previsão de ações: lstm.js (inferência), pesos e dados
 │   ├── face/               # Reconhecimento facial com face-api.js
 │   └── filmes/             # Recomendação de filmes: tfidf.js e filmes.json
+├── scripts/gerar-secoes.mjs # Gera os cards de projetos e as habilidades a partir de data/ (--check no CI)
 ├── scripts/gerar-dados-filmes.py  # Gera demos/filmes/filmes.json (Wikidata + Wikipédia)
 ├── scripts/lstm/           # Treino (train.py) e exportação (exportar_web.py) do LSTM da demo
 ├── styles.css              # Todo o visual (tema, layout, animações, chat, formulário)
 ├── i18n.js                 # Textos dos 8 idiomas (site, chat, formulário e currículo)
 ├── script.js               # Idiomas, menu, filtros, animações, partículas, estatísticas
 ├── api.js                  # Conexão compartilhada com o Worker e o Turnstile
-├── chat.js                 # Assistente: respostas prontas, busca local, IA e avaliações
+├── chat.js                 # Interface do assistente (painel, mensagens, barra "Pergunte à minha IA")
+├── chat/                   # Lógica do assistente: texto.js (normalização), regras.js (respostas prontas),
+│                           #   busca.js (busca local na página), ia.js (Worker e avaliações)
+├── components/             # Web Components: <site-logo>, <theme-toggle> (components.js) e boot.js (tema antes da pintura)
+├── data/                   # Projetos e habilidades (fonte única) → scripts/gerar-secoes.mjs escreve no index.html
 ├── contact.js              # Formulário de contato
 ├── curriculo.html          # Modelo do currículo (A4) usado para gerar os PDFs
 ├── gerar-curriculos.sh     # Gera os 8 PDFs em cv/ com Chrome headless
@@ -145,7 +150,10 @@ O conhecimento da IA é **gerado das próprias traduções do site** (`i18n.js`)
 ├── apps-script/Codigo.gs   # Confirmação ao visitante (Google Apps Script) — modelo sem a senha
 ├── docs/sdd/               # Especificação (SDD) em português; docs/sdd/en/ em inglês
 └── worker/                 # Cloudflare Worker
-    ├── src/index.js            # POST / (chat), /contact, /feedback, /match (vaga), GET /prices (demo LSTM) + Cron semanal
+    ├── src/index.js            # Roteador: POST / (chat), /contact, /feedback, /match (vaga), GET /prices + Cron semanal
+    ├── src/rotas/              # Um arquivo por rota: chat, contato, avaliacao, vaga, precos
+    ├── src/comum.js            # Compartilhado: modelos, idiomas, CORS/JSON, Turnstile, limite, e-mail
+    ├── src/agendado.js         # Resumo semanal por e-mail e retenção de dados (LGPD)
     ├── src/conhecimento.js     # Gerado: resumo, trechos, perfil completo e versão
     ├── gerar-conhecimento.mjs  # Gera o conhecimento da IA a partir do i18n.js
     ├── indexar-vectorize.mjs   # Gera embeddings e atualiza o índice Vectorize

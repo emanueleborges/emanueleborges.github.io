@@ -125,13 +125,18 @@ The AI knowledge is **generated from the site's own translations** (`i18n.js`): 
 │   ├── lstm/               # Stock forecasting: lstm.js (inference), weights and data
 │   ├── face/               # Face recognition with face-api.js
 │   └── filmes/             # Movie recommender: tfidf.js and filmes.json
+├── scripts/gerar-secoes.mjs # Renders project cards and skill chips from data/ (--check in CI)
 ├── scripts/gerar-dados-filmes.py  # Builds demos/filmes/filmes.json (Wikidata + Wikipedia)
 ├── scripts/lstm/           # Training (train.py) and export (exportar_web.py) of the demo's LSTM
 ├── styles.css              # All styling (theme, layout, animations, chat, form)
 ├── i18n.js                 # Text in 8 languages (site, chat, form and résumé)
 ├── script.js               # Languages, menu, filters, animations, particles, analytics
 ├── api.js                  # Shared connection to the Worker and Turnstile
-├── chat.js                 # Assistant: ready-made answers, local search, AI and ratings
+├── chat.js                 # Assistant interface (panel, messages, "Ask my AI" bar)
+├── chat/                   # Assistant logic: texto.js (normalization), regras.js (ready-made answers),
+│                           #   busca.js (local search on the page), ia.js (Worker and ratings)
+├── components/             # Web Components: <site-logo>, <theme-toggle> (components.js) and boot.js (theme before paint)
+├── data/                   # Projects and skills (single source) → scripts/gerar-secoes.mjs writes them into index.html
 ├── contact.js              # Contact form
 ├── curriculo.html          # A4 résumé template used to generate the PDFs
 ├── gerar-curriculos.sh     # Generates the 8 PDFs in cv/ with headless Chrome
@@ -145,7 +150,10 @@ The AI knowledge is **generated from the site's own translations** (`i18n.js`): 
 ├── apps-script/Codigo.gs   # Visitor confirmation (Google Apps Script) — template without the secret
 ├── docs/sdd/               # Specification (SDD) in Portuguese; docs/sdd/en/ in English
 └── worker/                 # Cloudflare Worker
-    ├── src/index.js            # POST / (chat), /contact, /feedback, /match (job), GET /prices (LSTM demo) + weekly Cron
+    ├── src/index.js            # Router: POST / (chat), /contact, /feedback, /match (job), GET /prices + weekly Cron
+    ├── src/rotas/              # One file per route: chat, contato, avaliacao, vaga, precos
+    ├── src/comum.js            # Shared: models, languages, CORS/JSON, Turnstile, rate limit, e-mail
+    ├── src/agendado.js         # Weekly summary e-mail and data retention (LGPD)
     ├── src/conhecimento.js     # Generated: summary, excerpts, full profile, version
     ├── gerar-conhecimento.mjs  # Builds the AI knowledge from i18n.js
     ├── indexar-vectorize.mjs   # Generates embeddings and updates the Vectorize index
