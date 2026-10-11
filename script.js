@@ -86,20 +86,95 @@ langSelect.addEventListener("change", () => {
   track(`idioma-${langSelect.value}`, `Trocou idioma para ${langSelect.value.toUpperCase()}`);
 });
 
-// Cliques em currículo e contatos.
-document.addEventListener("click", (event) => {
-  const link = event.target.closest("a[href]");
-  if (!link) return;
-  const href = link.getAttribute("href");
-  if (link.hasAttribute("data-cv-link") || href.startsWith("cv/")) track(`curriculo-${currentLang}`, `Baixou currículo (${currentLang.toUpperCase()})`);
-  else if (href.includes("wa.me")) track("contato-whatsapp", "Clicou no WhatsApp");
-  else if (href.startsWith("mailto:")) track("contato-email", "Clicou no e-mail");
-  else if (href.includes("linkedin.com")) track("contato-linkedin", "Clicou no LinkedIn");
-  else if (link.hasAttribute("data-match-link")) track("vaga-abrir", "Abriu o match de vaga");
-  else if (link.dataset.demo) track(`demo-${link.dataset.demo}`, `Abriu a demo: ${link.dataset.demo}`);
-  else if (link.dataset.repo) track(`projeto-${link.dataset.repo}`, `Abriu o código: ${link.dataset.repo}`);
-  else if (href.includes("github.com")) track("contato-github", "Clicou no GitHub");
-});
+/* ---------- Mapa de cliques e de atenção (GoatCounter, sem cookies) ---------- */
+
+// Cada clique vira "clique/<área>/<elemento>" e cada seção vista vira "secao/<id>" (uma vez por
+// visita à página). Os nomes são fixos — iguais nos 8 idiomas — e nada do que o visitante digita é enviado.
+const slug = (text) =>
+  String(text).toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 40);
+
+function clickArea(el) {
+  if (el.closest(".chat")) return "chat";
+  if (el.closest(".site-header")) return "cabecalho";
+  if (el.closest("footer")) return "rodape";
+  return el.closest("section[id]")?.id ?? "outros";
+}
+
+function clickLabel(el) {
+  const link = el.closest("a[href]");
+  if (link) {
+    const href = link.getAttribute("href");
+    if (link.dataset.demo) return `demo/${link.dataset.demo}`;
+    if (link.dataset.repo) return `codigo/${link.dataset.repo}`;
+    if (link.hasAttribute("data-match-link")) return "match-vaga";
+    if (link.hasAttribute("data-cv-link") || href.startsWith("cv/")) return `curriculo/${currentLang}`;
+    if (href.startsWith("mailto:")) return "email";
+    if (href.includes("wa.me")) return "whatsapp";
+    if (href.includes("linkedin.com")) return "linkedin";
+    if (href.includes("github.com")) return "github";
+    if (link.classList.contains("brand")) return "logo";
+    if (href.startsWith("#")) return `${link.closest(".nav-links") ? "menu" : "link"}/${href.slice(1) || "topo"}`;
+    try {
+      return `externo/${new URL(href, location.href).hostname}`;
+    } catch {
+      return "link";
+    }
+  }
+  const button = el.closest("button");
+  if (button) {
+    if (button.matches("[data-filter]")) return `filtro/${button.closest("[data-filter-group]")?.dataset.filterGroup}/${button.dataset.filter}`;
+    if (button.matches("[data-theme-toggle]")) return "tema";
+    if (button.matches(".menu-toggle")) return "abrir-menu";
+    if (button.matches("[data-hero-ask]")) return "pergunte-ia";
+    if (button.matches(".chat-toggle")) return "abrir";
+    if (button.matches(".chat-close")) return "fechar";
+    if (button.matches(".chat-chip")) return "sugestao";
+    if (button.matches(".chat-goto")) return "ver-na-pagina";
+    if (button.matches(".chat-rate-button")) return "avaliar";
+    if (button.matches(".chat-hint-text, .chat-hint-close")) return "convite";
+    if (button.type === "submit") return "enviar";
+    return `botao/${slug(button.className.split(" ")[0] || "sem-nome")}`;
+  }
+  // Cliques no que não é link também mostram interesse (ex.: card de projeto, habilidade).
+  const card = el.closest(".project-card");
+  if (card) return `card/${card.querySelector("[data-repo]")?.dataset.repo ?? "projeto"}`;
+  const skill = el.closest(".skill-chip");
+  if (skill) return `habilidade/${slug(skill.querySelector("strong")?.dataset.i18n ?? skill.querySelector("strong")?.textContent ?? "")}`;
+  if (el.closest(".job")) return "emprego";
+  if (el.closest(".education-list li")) return "formacao-item";
+  if (el.closest(".about-photo")) return "foto";
+  return null; // áreas vazias não contam
+}
+
+document.addEventListener(
+  "click",
+  (event) => {
+    const label = clickLabel(event.target);
+    if (!label) return;
+    const area = clickArea(event.target);
+    track(`clique/${area}/${label}`, `Clique: ${area} › ${label}`);
+  },
+  { capture: true },
+);
+
+// Seção "vista" quando cruza a faixa central da tela (vale para seções mais altas que a tela) ou quando
+// metade dela aparece (vale para a última seção, que não chega ao meio da tela).
+if ("IntersectionObserver" in window) {
+  const seen = new Set();
+  const markSeen = (entries) =>
+    entries.forEach((entry) => {
+      const id = entry.target.id;
+      if (!entry.isIntersecting || seen.has(id)) return;
+      seen.add(id);
+      track(`secao/${id}`, `Viu a seção: ${id}`);
+    });
+  const band = new IntersectionObserver(markSeen, { rootMargin: "-45% 0px -45% 0px" });
+  const half = new IntersectionObserver(markSeen, { threshold: 0.5 });
+  document.querySelectorAll("main section[id]").forEach((section) => {
+    band.observe(section);
+    half.observe(section);
+  });
+}
 
 /* ---------- Tema (Amazônia padrão · Editorial) ---------- */
 

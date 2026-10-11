@@ -91,7 +91,7 @@ The site must present: hero (name, role, summary, location, years of experience)
 Email, WhatsApp, LinkedIn and GitHub visible in the contact section and in the assistant.
 
 ### FR-08 — Analytics
-Record visits and events (chat opened, question answered by the AI, résumé download by language, contact clicks, language change, form submission, ratings, "View code" and "Live demo" clicks, demo usage) **without cookies and without the text of the questions**.
+Record visits, **every click by area and element**, the **sections seen** (attention funnel) and events (chat opened, question answered by the AI, résumé download by language, contact clicks, language change, form submission, ratings, "View code" and "Live demo" clicks, demo usage) **without cookies and without the text of the questions**.
 
 ### FR-09 — SEO and sharing
 - FR-09.1 When the link is shared (LinkedIn, WhatsApp, X), show a preview with image, title and description.

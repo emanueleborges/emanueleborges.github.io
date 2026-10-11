@@ -91,7 +91,7 @@ O site deve apresentar: topo (nome, cargo, resumo, localização, anos de experi
 E-mail, WhatsApp, LinkedIn e GitHub visíveis na seção de contato e no assistente.
 
 ### RF-08 — Estatísticas
-Registrar visitas e eventos (chat aberto, pergunta respondida pela IA, download de currículo por idioma, cliques em contatos, troca de idioma, envio do formulário, avaliações, clique em "Ver código" e "Ver demo", uso das demos) **sem cookies e sem o texto das perguntas**.
+Registrar visitas, **cada clique por área e elemento**, as **seções vistas** (funil de atenção) e eventos (chat aberto, pergunta respondida pela IA, download de currículo por idioma, cliques em contatos, troca de idioma, envio do formulário, avaliações, clique em "Ver código" e "Ver demo", uso das demos) **sem cookies e sem o texto das perguntas**.
 
 ### RF-09 — SEO e compartilhamento
 - RF-09.1 Ao compartilhar o link (LinkedIn, WhatsApp, X), exibir prévia com imagem, título e descrição.

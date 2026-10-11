@@ -83,6 +83,7 @@ Legend: ✅ done · ⏳ pending · 💡 idea
 - ✅ **T63** "Does your role match?" (`/vaga/` + `POST /match`): two-step job match with Worker checks, rule-based score, clickable evidence, 8 languages and an invite at the top of the site — FR-14
 - ✅ **T64** Amazon (default) and Editorial themes: colors as CSS variables, a button on every page (8 languages), no flash, charts validated for color-vision deficiency, Lighthouse accessibility 100 in both — FR-15
 - ✅ **T65** New per-theme "E." logo (green/lime in Amazon, orange in Editorial), with draw-in animation, AI-node pulse and hover effect; favicon and app icons rebuilt — FR-15
+- ✅ **T66** Click map: every click becomes `clique/<area>/<element>` and every section seen `secao/<id>` (site, demos, job page); dashboard with attention funnel, clicks by area, rate per section and most/least clicked — FR-08
 
 ---
 

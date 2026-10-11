@@ -96,5 +96,32 @@ window.Demo = (() => {
     new Intl.NumberFormat(locale(), { style: "percent", minimumFractionDigits: 2, maximumFractionDigits: 2, signDisplay: sign ? "exceptZero" : "auto" }).format(value / 100);
   const escape = (text) => String(text).replace(/[&<>"']/g, (c) => `&#${c.charCodeAt(0)};`);
 
+  // Mapa de cliques (como no site): "clique/<página>/<elemento>", com nomes fixos nos 8 idiomas.
+  const pageArea = () => location.pathname.replace(/index\.html$/, "").replace(/^\/|\/$/g, "").replace(/\//g, "-") || "inicio";
+  const kebab = (text) => String(text).replace(/[A-Z]/g, (c) => `-${c.toLowerCase()}`);
+  document.addEventListener(
+    "click",
+    (event) => {
+      const link = event.target.closest("a[href]");
+      const button = event.target.closest("button, label.button");
+      let label = null;
+      if (link) {
+        const href = link.getAttribute("href");
+        if (link.closest(".evidence")) label = `evidencia/${href.split("#")[1] ?? "site"}`;
+        else if (link.classList.contains("brand")) label = "logo";
+        else if (href.includes("github.com")) label = "codigo";
+        else if (href.includes("wikipedia.org")) label = "wikipedia";
+        else if (href.startsWith("/cv/")) label = "curriculo";
+        else if (href.includes("#contato")) label = "contato";
+        else if (href === "/" || href.startsWith("/#") || href.startsWith("/?")) label = "voltar-portfolio";
+        else label = "link";
+      } else if (button) {
+        label = `botao/${kebab(button.dataset.t || Object.keys(button.dataset)[0] || "sem-nome")}`;
+      }
+      if (label) track(`clique/${pageArea()}/${label}`, `Clique: ${pageArea()} › ${label}`);
+    },
+    { capture: true },
+  );
+
   return { setup, t, locale, fmtDate, fmtNum, fmtPct, track, escape, get lang() { return lang; } };
 })();

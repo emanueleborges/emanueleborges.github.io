@@ -53,8 +53,8 @@ const weekLabel = (iso) => new Date(`${iso}T12:00:00Z`).toLocaleDateString("pt-B
 async function goatCounter() {
   const token = process.env.GOATCOUNTER_TOKEN || devVar("GOATCOUNTER_TOKEN");
   if (!token) return null;
-  const end = new Date();
-  const start = new Date(end.getTime() - 30 * 86400000);
+  const end = new Date(Date.now() + 86400000); // inclui hoje
+  const start = new Date(end.getTime() - 31 * 86400000);
   const range = `start=${start.toISOString().slice(0, 10)}&end=${end.toISOString().slice(0, 10)}`;
   const get = async (path) => {
     const response = await fetch(`https://emanueleborges.goatcounter.com/api/v0/${path}`, { headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" } });
@@ -62,8 +62,20 @@ async function goatCounter() {
     return response.json();
   };
   try {
-    const [total, hits] = await Promise.all([get(`stats/total?${range}`), get(`stats/hits?${range}&limit=15`)]);
-    return { total: total.total, hits: (hits.hits ?? []).map((h) => ({ path: h.path, title: h.title, event: h.event, count: h.count })) };
+    // Todas as páginas e eventos do período (a API devolve em lotes; exclude_paths pagina).
+    const all = [];
+    const seen = [];
+    for (let page = 0; page < 30; page += 1) {
+      const exclude = seen.length ? `&exclude_paths=${seen.join(",")}` : "";
+      const batch = await get(`stats/hits?${range}&limit=100${exclude}`);
+      for (const h of batch.hits ?? []) {
+        seen.push(h.path_id);
+        all.push({ path: h.path, title: h.title, event: h.event, count: h.count });
+      }
+      if (!batch.more || !(batch.hits ?? []).length) break;
+    }
+    const total = await get(`stats/total?${range}`);
+    return { total: total.total, all, hits: [...all].sort((a, b) => b.count - a.count).slice(0, 15) };
   } catch (error) {
     return { error: String(error.message ?? error) };
   }
@@ -148,6 +160,93 @@ const ratingsLang = [
 ];
 const messagesWeek = [{ name: "Mensagens", color: "var(--s1)", values: byWeek(messages) }];
 
+/* ---------- Mapa de cliques (eventos "clique/<área>/<elemento>" e "secao/<id>" do site) ---------- */
+
+const SECTIONS = { inicio: "Topo", sobre: "Sobre", experiencia: "Experiência", projetos: "Projetos", habilidades: "Habilidades", formacao: "Formação", contato: "Contato" };
+const AREAS = { ...SECTIONS, cabecalho: "Cabeçalho", rodape: "Rodapé", chat: "Chat", "demos-lstm": "Demo LSTM", "demos-face": "Demo facial", "demos-filmes": "Demo filmes", vaga: "Match de vaga" };
+
+// Elementos clicáveis que existem no site (lidos do index.html), para achar os que ninguém clicou.
+function siteCatalog() {
+  const html = readFileSync(join(DIR, "..", "index.html"), "utf8");
+  const uniq = (list) => [...new Set(list)];
+  const grab = (re) => uniq([...html.matchAll(re)].map((m) => m[1]));
+  const catalog = [
+    ...[...(html.match(/class="nav-links"[\s\S]*?<\/div>/)?.[0] ?? "").matchAll(/href="#([^"]+)"/g)].map((m) => `menu/${m[1]}`),
+    ...grab(/data-demo="([^"]+)"/g).map((d) => `demo/${d}`),
+    ...grab(/data-repo="([^"]+)"/g).map((r) => `codigo/${r}`),
+    ...grab(/data-repo="([^"]+)"/g).map((r) => `card/${r}`),
+    ...[...html.matchAll(/data-filter-group="([^"]+)"[\s\S]*?<\/div>/g)].flatMap((m) => [...m[0].matchAll(/data-filter="([^"]+)"/g)].map((f) => `filtro/${m[1]}/${f[1]}`)),
+    "match-vaga", "curriculo", "email", "whatsapp", "linkedin", "github", "tema", "pergunte-ia", "abrir", "logo",
+  ];
+  return uniq(catalog);
+}
+
+// Barras horizontais em HTML (nomes longos de categoria ficam legíveis em qualquer largura).
+const hbars = (rows) => {
+  const max = Math.max(1, ...rows.map(([, n]) => n));
+  return `<div class="hbars">${rows.map(([name, n]) => `<div class="hbar"><span>${escape(name)}</span><i style="width:${(n / max) * 100}%"></i><b>${n}</b></div>`).join("")}</div>`;
+};
+
+function clickMap(all) {
+  if (!all) return "";
+  const events = all.filter((h) => h.event);
+  const views = Object.fromEntries(Object.keys(SECTIONS).map((id) => [id, 0]));
+  const byArea = {};
+  const byElement = {};
+  const byLabel = {};
+  for (const h of events) {
+    const parts = h.path.split("/");
+    if (parts[0] === "secao" && parts[1] in views) views[parts[1]] += h.count;
+    if (parts[0] !== "clique" || parts.length < 3) continue;
+    const area = parts[1];
+    const label = parts.slice(2).join("/");
+    byArea[area] = (byArea[area] ?? 0) + h.count;
+    byElement[`${area} › ${label}`] = (byElement[`${area} › ${label}`] ?? 0) + h.count;
+    const key = label.startsWith("curriculo/") ? "curriculo" : label;
+    byLabel[key] = (byLabel[key] ?? 0) + h.count;
+  }
+  const totalClicks = Object.values(byArea).reduce((a, b) => a + b, 0);
+  if (!totalClicks && !views.inicio) {
+    return '<p class="muted">Ainda não há dados de cliques. O rastreamento começa a contar a partir da publicação desta versão do site — volte em alguns dias.</p>';
+  }
+  const top = Object.entries(byElement).sort((a, b) => b[1] - a[1]);
+  const catalog = siteCatalog();
+  const zero = catalog.filter((label) => !byLabel[label]);
+  // "Menos clicados": os que ninguém clicou + os clicados abaixo da mediana.
+  const clicked = Object.entries(byLabel).filter(([label]) => catalog.includes(label)).sort((a, b) => a[1] - b[1]);
+  const median = clicked.length ? clicked[Math.floor(clicked.length / 2)][1] : 0;
+  const low = clicked.filter(([, n]) => n < median).slice(0, 10);
+  const sectionIds = Object.keys(SECTIONS);
+  const reach = (id) => (views.inicio ? Math.round((views[id] / views.inicio) * 100) : 0);
+  const areaRows = Object.entries(byArea).sort((a, b) => b[1] - a[1]);
+
+  return `
+  <div class="tiles">
+    ${tile("Cliques (30 dias)", totalClicks.toLocaleString("pt-BR"))}
+    ${tile("Visitas ao topo", views.inicio.toLocaleString("pt-BR"), "base do funil")}
+    ${tile("Chegam ao Contato", `${reach("contato")}%`, "das visitas ao topo")}
+    ${tile("Elementos sem clique", zero.length, `de ${catalog.length} no site`)}
+  </div>
+  <div class="grid2" style="margin-top:12px">
+    <div class="card"><h3>Até onde as pessoas rolam (visualizações por seção)</h3>${bars(sectionIds.map((id) => SECTIONS[id]), [{ name: "Visualizações", color: "var(--s1)", values: sectionIds.map((id) => views[id]) }], { height: 220 })}</div>
+    <div class="card"><h3>Cliques por área</h3>${areaRows.length ? hbars(areaRows.slice(0, 10).map(([a, n]) => [AREAS[a] ?? a, n])) : '<p class="muted">Sem cliques ainda.</p>'}</div>
+  </div>
+  <h3 style="margin-top:22px">Interesse por seção</h3>
+  <div class="table-wrap"><table><thead><tr><th>Seção</th><th class="num">Visualizações</th><th class="num">Alcance</th><th class="num">Cliques</th><th class="num">Cliques por 100 visualizações</th></tr></thead><tbody>
+    ${sectionIds.map((id) => `<tr><td>${SECTIONS[id]}</td><td class="num">${views[id]}</td><td class="num">${reach(id)}%</td><td class="num">${byArea[id] ?? 0}</td><td class="num">${views[id] ? Math.round(((byArea[id] ?? 0) / views[id]) * 100) : "—"}</td></tr>`).join("")}
+  </tbody></table></div>
+  <p class="muted" style="font-size:13px">Alcance = visualizações da seção ÷ visitas ao topo. Seção pouco clicada mas muito vista = conteúdo que não convida à ação; seção pouco vista = está "abaixo da dobra" para a maioria.</p>
+  <div class="grid2" style="margin-top:16px">
+    <div><h3>Mais clicados</h3><div class="table-wrap"><table><thead><tr><th>Elemento (área › elemento)</th><th class="num">Cliques</th></tr></thead><tbody>
+      ${top.slice(0, 20).map(([name, n]) => `<tr><td>${escape(name)}</td><td class="num">${n}</td></tr>`).join("") || '<tr><td colspan="2" class="muted">Sem cliques ainda.</td></tr>'}
+    </tbody></table></div></div>
+    <div><h3>Menos clicados</h3><div class="table-wrap"><table><thead><tr><th>Elemento</th><th class="num">Cliques</th></tr></thead><tbody>
+      ${zero.slice(0, 25).map((label) => `<tr><td>${escape(label)}</td><td class="num">0</td></tr>`).join("")}
+      ${low.map(([label, n]) => `<tr><td>${escape(label)}</td><td class="num">${n}</td></tr>`).join("")}
+    </tbody></table></div></div>
+  </div>`;
+}
+
 const tile = (label, value, note = "") => `<div class="tile"><span>${label}</span><strong>${value}</strong>${note ? `<small>${note}</small>` : ""}</div>`;
 
 const visitsHtml = !visits
@@ -195,6 +294,11 @@ const html = `<!doctype html>
   th { font-size: 12px; color: var(--muted); font-weight: 600; }
   td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
   td.text { min-width: 260px; }
+  .hbars { display: grid; gap: 8px; margin-top: 6px; }
+  .hbar { display: grid; grid-template-columns: 110px 1fr 40px; align-items: center; gap: 10px; font-size: 13px; }
+  .hbar span { color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .hbar i { display: block; height: 14px; min-width: 2px; border-radius: 0 4px 4px 0; background: var(--s1); }
+  .hbar b { font-weight: 600; font-variant-numeric: tabular-nums; text-align: right; }
   details summary { cursor: pointer; color: var(--muted); font-size: 13px; margin-top: 8px; }
   @media (max-width: 720px) { .grid2 { grid-template-columns: 1fr; } }
 </style>
@@ -236,6 +340,9 @@ const html = `<!doctype html>
   ${messages.length ? `<div class="table-wrap" style="margin-top:12px"><table><thead><tr><th>Data</th><th>Nome</th><th>E-mail</th><th>Idioma</th><th>Mensagem</th></tr></thead><tbody>
     ${messages.slice(0, 30).map((m) => `<tr><td>${fmtDate(m.created_at)}</td><td>${escape(m.name)}</td><td><a href="mailto:${escape(m.email)}">${escape(m.email)}</a></td><td>${escape(m.lang)}</td><td class="text">${escape(m.message)}</td></tr>`).join("")}
   </tbody></table></div>` : ""}
+
+  <h2>Mapa de cliques (últimos 30 dias)</h2>
+  ${visits && !visits.error ? clickMap(visits.all) : '<p class="muted">Precisa da chave do GoatCounter (veja abaixo).</p>'}
 
   <h2>Visitas (GoatCounter)</h2>
   ${visitsHtml}
