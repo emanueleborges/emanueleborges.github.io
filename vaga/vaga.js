@@ -398,8 +398,8 @@ function ring(score) {
   const r = 52;
   const c = 2 * Math.PI * r;
   return `<svg viewBox="0 0 120 120" aria-hidden="true">
-      <defs><linearGradient id="g" x1="0" x2="1"><stop offset="0" stop-color="#8e50ff"/><stop offset="1" stop-color="#22d3ee"/></linearGradient></defs>
-      <circle cx="60" cy="60" r="${r}" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="10"/>
+      <defs><linearGradient id="g" x1="0" x2="1"><stop offset="0" style="stop-color:var(--accent)"/><stop offset="1" style="stop-color:var(--accent-2)"/></linearGradient></defs>
+      <circle cx="60" cy="60" r="${r}" fill="none" style="stroke:var(--line)" stroke-width="10"/>
       <circle cx="60" cy="60" r="${r}" fill="none" stroke="url(#g)" stroke-width="10" stroke-linecap="round" stroke-dasharray="${(c * score) / 100} ${c}"/>
     </svg><strong aria-label="${score}% ${escape(t("score"))}">${score}%<small>${escape(t("score"))}</small></strong>`;
 }

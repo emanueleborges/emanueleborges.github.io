@@ -81,6 +81,7 @@ Legend: ✅ done · ⏳ pending · 💡 idea
 - ✅ **T61** Private stats dashboard (`npm run painel` in `worker/`): ratings by week and language, poorly rated answers, messages and visits (with a GoatCounter token); local file, git-ignored — FR-08
 - ✅ **T62** LSTM demo with 15 stocks (8 from B3, 7 from NASDAQ), menu by exchange and prices in each exchange's currency; card updated to the 1.1–2.2% MAPE — FR-12
 - ✅ **T63** "Does your role match?" (`/vaga/` + `POST /match`): two-step job match with Worker checks, rule-based score, clickable evidence, 8 languages and an invite at the top of the site — FR-14
+- ✅ **T64** Amazon (default) and Editorial themes: colors as CSS variables, a button on every page (8 languages), no flash, charts validated for color-vision deficiency, Lighthouse accessibility 100 in both — FR-15
 
 ---
 

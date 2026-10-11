@@ -308,7 +308,7 @@ function drawChart(svg, series, label, tickFormat) {
   let out = "";
   for (let i = 0; i <= 4; i += 1) {
     const v = min + ((max - min) * i) / 4;
-    out += `<line x1="${pad.l}" x2="${W - pad.r}" y1="${y(v)}" y2="${y(v)}" stroke="var(--grid)"/>`;
+    out += `<line x1="${pad.l}" x2="${W - pad.r}" y1="${y(v)}" y2="${y(v)}" style="stroke:var(--grid)"/>`;
     out += `<text x="${pad.l - 8}" y="${y(v) + 4}" text-anchor="end">${fmtNum(v)}</text>`;
   }
   const ticks = W < 600 ? 3 : 5;
@@ -320,7 +320,7 @@ function drawChart(svg, series, label, tickFormat) {
   }
   for (const s of series) {
     const path = s.points.map((p, i) => `${i ? "L" : "M"}${x(p.x).toFixed(1)},${y(p.y).toFixed(1)}`).join("");
-    out += `<path d="${path}" fill="none" stroke="${s.color}" stroke-width="2" stroke-linejoin="round"${s.dashed ? ' stroke-dasharray="6 5"' : ""}/>`;
+    out += `<path d="${path}" fill="none" style="stroke:${s.color}" stroke-width="2" stroke-linejoin="round"${s.dashed ? ' stroke-dasharray="6 5"' : ""}/>`;
   }
   svg.innerHTML = out;
   svg.setAttribute("aria-label", label);
@@ -383,8 +383,8 @@ async function runForecast() {
 
     const history = series.dates.slice(-HISTORY_DAYS).map((d, i) => ({ x: d, y: series.close.slice(-HISTORY_DAYS)[i] }));
     drawChart($('[data-chart="forecast"]'), [
-      { color: "#67e8f9", points: history },
-      { color: "#b895ff", dashed: true, points: [{ x: lastDate, y: lastClose }, ...future.map((d, i) => ({ x: d, y: predicted[i] }))] },
+      { color: "var(--series-1)", points: history },
+      { color: "var(--series-2)", dashed: true, points: [{ x: lastDate, y: lastClose }, ...future.map((d, i) => ({ x: d, y: predicted[i] }))] },
     ], t("chart"), { day: "2-digit", month: "short" });
 
     $("[data-forecast-table]").innerHTML =
@@ -411,8 +411,8 @@ function renderTest() {
     row("LSTM", info.lstm) + row(t("naive"), info.naive) + "</tbody>";
   const bt = info.backtest;
   drawChart($('[data-chart="backtest"]'), [
-    { color: "#67e8f9", points: bt.dates.map((d, i) => ({ x: d, y: bt.actual[i] })) },
-    { color: "#b895ff", points: bt.dates.map((d, i) => ({ x: d, y: bt.predicted[i] })) },
+    { color: "var(--series-1)", points: bt.dates.map((d, i) => ({ x: d, y: bt.actual[i] })) },
+    { color: "var(--series-2)", points: bt.dates.map((d, i) => ({ x: d, y: bt.predicted[i] })) },
   ], t("backtest"), { month: "short", year: "2-digit" });
 }
 

@@ -104,6 +104,11 @@ Toda segunda-feira, o dono recebe por e-mail: mensagens da semana, avaliações 
 ### RF-11 — Página não encontrada
 Endereços inexistentes mostram uma página 404 no estilo do site, com links para o portfólio e o assistente.
 
+### RF-15 — Temas
+- RF-15.1 Dois temas: **Amazônia** (padrão inicial; escuro, verde-floresta e lima) e **Editorial** (claro; papel, tinta e laranja).
+- RF-15.2 Botão no cabeçalho de todas as páginas (site, demos, vagas) troca o tema; a escolha fica salva e vale nas próximas visitas e páginas; `?theme=editorial` abre direto no tema.
+- RF-15.3 O tema é aplicado antes da primeira pintura (sem piscar); acessibilidade 100 no Lighthouse nos dois temas.
+
 ### RF-14 — "Sua vaga combina?" (para recrutadores)
 - RF-14.1 Página `/vaga/` (8 idiomas) onde o recrutador cola a descrição de uma vaga (80–8.000 caracteres, qualquer idioma) e recebe: nota de aderência (0–100%), cada requisito com nível (atende / parcial / não encontrado), obrigatório ou diferencial, justificativa e evidências clicáveis para as seções do portfólio, e um resumo "por que o Emanuel" com botão de copiar.
 - RF-14.2 Os requisitos são só os escritos na vaga (nada inventado, nada omitido); a nota é calculada por regra, não pela IA; nenhuma experiência pode ser afirmada sem evidência no perfil.

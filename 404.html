@@ -4,6 +4,9 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="robots" content="noindex" />
+    <meta name="theme-color" content="#06100b" />
+    <!-- Tema antes da pintura (evita piscar): ?theme= ou o salvo; padrão "amazonia". -->
+    <script>(function(){var t;try{t=new URLSearchParams(location.search).get("theme")||localStorage.getItem("theme")}catch(e){}t=t==="editorial"?"editorial":"amazonia";document.documentElement.dataset.theme=t;var m=document.querySelector('meta[name="theme-color"]');if(m)m.content=t==="editorial"?"#f6f3ec":"#06100b"})();</script>
     <title>Page not found — Emanuel Borges</title>
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png" />
@@ -11,26 +14,27 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@500&family=Manrope:wght@500;700;800&display=swap" rel="stylesheet" />
     <style>
-      :root { --bg: #090811; --text: #f4f1fa; --muted: #aaa5b8; --line: rgba(222, 212, 255, 0.12); }
+      :root, :root[data-theme="amazonia"] { color-scheme: dark; --bg: #06100b; --text: #eef5ee; --muted: #9db3a5; --line: rgba(190, 242, 200, .13); --glow-1: #15803d; --glow-2: #0e7490; --kicker: #86efac; --grad-text: linear-gradient(100deg, #d9f99d, #86efac 50%, #5eead4); --grad-primary: linear-gradient(115deg, #84cc16 0%, #22c55e 55%, #14b8a6 100%); --on-primary: #04130a; --quiet-bg: rgba(14, 32, 22, .62); --quiet-line: rgba(190, 242, 200, .24); --focus: #bef264; }
+      :root[data-theme="editorial"] { color-scheme: light; --bg: #f6f3ec; --text: #16131c; --muted: #5a5563; --line: rgba(22, 19, 28, .12); --glow-1: #fdba74; --glow-2: #fcd34d; --kicker: #b4380a; --grad-text: linear-gradient(100deg, #d9420c, #f05a1a); --grad-primary: linear-gradient(115deg, #16131c, #2b2633); --on-primary: #ffffff; --quiet-bg: #ffffff; --quiet-line: rgba(22, 19, 28, .22); --focus: #b4380a; }
       * { box-sizing: border-box; }
       body { margin: 0; min-height: 100vh; display: grid; place-items: center; padding: 24px 16px; background: var(--bg); color: var(--text); font-family: Manrope, sans-serif; overflow-x: clip; }
       .glow { position: fixed; border-radius: 50%; filter: blur(120px); opacity: .45; pointer-events: none; }
-      .glow-1 { width: 520px; height: 520px; left: -160px; top: -200px; background: #6a3df0; }
-      .glow-2 { width: 480px; height: 480px; right: -160px; bottom: -220px; background: #0e7490; }
+      .glow-1 { width: 520px; height: 520px; left: -160px; top: -200px; background: var(--glow-1); }
+      .glow-2 { width: 480px; height: 480px; right: -160px; bottom: -220px; background: var(--glow-2); }
       main { position: relative; max-width: 620px; text-align: center; }
       .brand { display: inline-block; margin-bottom: 26px; border-radius: 16px; filter: drop-shadow(0 0 18px rgba(138,89,255,.35)); }
       .brand img { display: block; }
-      .code { margin: 0; font: 500 13px "DM Mono", monospace; letter-spacing: .2em; color: #67e8f9; }
+      .code { margin: 0; font: 500 13px "DM Mono", monospace; letter-spacing: .2em; color: var(--kicker); }
       h1 { margin: 14px 0 0; font-size: clamp(38px, 8vw, 64px); line-height: 1.05; letter-spacing: -.05em; }
-      h1 span { background: linear-gradient(100deg, #c3a5ff, #8f9bff 50%, #5fe0f5); -webkit-background-clip: text; background-clip: text; color: transparent; }
+      h1 span { background: var(--grad-text); -webkit-background-clip: text; background-clip: text; color: transparent; }
       p.lead { margin: 18px auto 0; max-width: 480px; color: var(--muted); font-size: 16px; line-height: 1.6; }
       p.lead + p.lead { margin-top: 6px; font-size: 14px; }
       .actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: 32px; }
-      .button { display: inline-flex; align-items: center; gap: 10px; min-height: 48px; padding: 0 20px; border-radius: 13px; color: #fff; font-weight: 700; font-size: 14px; text-decoration: none; transition: transform .2s; }
+      .button { display: inline-flex; align-items: center; gap: 10px; min-height: 48px; padding: 0 20px; border-radius: 13px; color: var(--text); font-weight: 700; font-size: 14px; text-decoration: none; transition: transform .2s; }
       .button:hover { transform: translateY(-2px); }
-      .button:focus-visible { outline: 2px solid #b895ff; outline-offset: 3px; }
-      .primary { background: linear-gradient(115deg, #8e50ff 0%, #6d5cff 55%, #2bb5e8 100%); box-shadow: 0 8px 30px rgba(91,92,240,.3); }
-      .quiet { border: 1px solid rgba(237,228,255,.2); background: rgba(26,23,38,.55); }
+      .button:focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; }
+      .primary { background: var(--grad-primary); color: var(--on-primary); box-shadow: 0 8px 30px rgba(0,0,0,.18); }
+      .quiet { border: 1px solid var(--quiet-line); background: var(--quiet-bg); }
     </style>
   </head>
   <body>

@@ -312,7 +312,8 @@ function draw(faces) {
     const x = mirrored ? canvas.width - (box.x * scale) - w : box.x * scale;
     const y = box.y * scale;
     const result = match(face.descriptor);
-    const color = result.known ? "#22d3ee" : "#b895ff";
+    const style = getComputedStyle(document.documentElement);
+    const color = style.getPropertyValue(result.known ? "--series-1" : "--series-2").trim();
     ctx.strokeStyle = color;
     ctx.lineWidth = 2.5;
     ctx.strokeRect(x, y, w, h);
@@ -321,7 +322,7 @@ function draw(faces) {
     const labelY = y > 26 ? y - 24 : y + h;
     ctx.fillStyle = color;
     ctx.fillRect(x, labelY, labelWidth, 22);
-    ctx.fillStyle = "#090811";
+    ctx.fillStyle = "#ffffff";
     ctx.fillText(label, x + 6, labelY + 16);
   }
 }

@@ -5,7 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title data-t="meta.title">Does your role match Emanuel? — Emanuel Borges</title>
     <meta name="description" data-t-content="meta.description" content="Paste a job description and see, requirement by requirement, how Emanuel Borges's profile matches it — with evidence from his portfolio." />
-    <meta name="theme-color" content="#090811" />
+    <meta name="theme-color" content="#06100b" />
+    <!-- Tema antes da pintura (evita piscar): ?theme= ou o salvo; padrão "amazonia". -->
+    <script>(function(){var t;try{t=new URLSearchParams(location.search).get("theme")||localStorage.getItem("theme")}catch(e){}t=t==="editorial"?"editorial":"amazonia";document.documentElement.dataset.theme=t;var m=document.querySelector('meta[name="theme-color"]');if(m)m.content=t==="editorial"?"#f6f3ec":"#06100b"})();</script>
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
@@ -15,15 +17,15 @@
     <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;700;800&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="../demos/demos.css" />
     <style>
-      textarea { width: 100%; min-height: 220px; padding: 14px; border: 1px solid var(--line); border-radius: 12px; background: rgba(26,23,38,.75); color: var(--text); font: 500 14px/1.6 Manrope, sans-serif; resize: vertical; }
-      textarea:focus-visible { outline: 2px solid #b895ff; outline-offset: 2px; }
+      textarea { width: 100%; min-height: 220px; padding: 14px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface-2); color: var(--text); font: 500 14px/1.6 Manrope, sans-serif; resize: vertical; }
+      textarea:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 2px; }
       .row { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 12px; }
       .row .count { margin-left: auto; font: 500 12px "DM Mono", monospace; color: var(--muted); }
       .button:disabled { opacity: .5; cursor: progress; }
       .privacy { margin-top: 12px; font-size: 13px; color: var(--muted); }
       .loading[hidden] { display: none; }
       .loading { display: flex; align-items: center; gap: 12px; margin-top: 22px; color: var(--muted); }
-      .spinner { width: 22px; height: 22px; border: 3px solid rgba(184,149,255,.25); border-top-color: #b895ff; border-radius: 50%; animation: spin 0.9s linear infinite; }
+      .spinner { width: 22px; height: 22px; border: 3px solid rgba(var(--accent-rgb),.25); border-top-color: var(--accent-text); border-radius: 50%; animation: spin 0.9s linear infinite; }
       @keyframes spin { to { transform: rotate(360deg); } }
       @media (prefers-reduced-motion: reduce) { .spinner { animation: none; } }
       .result-head { display: grid; grid-template-columns: auto 1fr; gap: 24px; align-items: center; }
@@ -35,17 +37,17 @@
       .tally { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
       .pill { padding: 4px 10px; border: 1px solid var(--line); border-radius: 999px; font-size: 13px; }
       .reqs { display: grid; gap: 10px; margin: 22px 0 0; padding: 0; list-style: none; }
-      .req { display: grid; grid-template-columns: auto 1fr; gap: 4px 12px; padding: 14px 16px; border: 1px solid var(--line); border-radius: 12px; background: rgba(26,23,38,.45); }
+      .req { display: grid; grid-template-columns: auto 1fr; gap: 4px 12px; padding: 14px 16px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface-2); }
       .req .icon { grid-row: span 3; font-size: 18px; line-height: 1.4; }
       .req strong { font-size: 15px; }
-      .tag { margin-left: 8px; padding: 2px 8px; border-radius: 999px; background: rgba(255,255,255,.07); font: 600 11px Manrope, sans-serif; color: var(--muted); vertical-align: 2px; }
+      .tag { margin-left: 8px; padding: 2px 8px; border-radius: 999px; background: var(--line); font: 600 11px Manrope, sans-serif; color: var(--muted); vertical-align: 2px; }
       .level { font-size: 12px; font-weight: 700; letter-spacing: .02em; }
-      .level.strong { color: #67e8f9; } .level.partial { color: #fcd34d; } .level.none { color: var(--muted); }
+      .level.strong { color: var(--ok); } .level.partial { color: var(--warn); } .level.none { color: var(--muted); }
       .req p { margin: 0; font-size: 14px; color: var(--muted); }
       .evidence { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
-      .evidence a { padding: 3px 10px; border: 1px solid rgba(184,149,255,.35); border-radius: 999px; font-size: 12px; text-decoration: none; color: #c3a5ff; }
-      .evidence a:hover { border-color: #c3a5ff; }
-      .pitch { margin-top: 26px; padding: 18px; border-left: 3px solid var(--cyan); border-radius: 0 12px 12px 0; background: rgba(34, 211, 238, .06); }
+      .evidence a { padding: 3px 10px; border: 1px solid rgba(var(--accent-rgb),.35); border-radius: 999px; font-size: 12px; text-decoration: none; color: var(--accent-text); }
+      .evidence a:hover { border-color: var(--accent-text); }
+      .pitch { margin-top: 26px; padding: 18px; border-left: 3px solid var(--cyan); border-radius: 0 12px 12px 0; background: rgba(var(--accent-2-rgb), .06); }
       .pitch p { margin: 6px 0 12px; }
       .note-ai { font-size: 12px; color: var(--muted); }
       @media (max-width: 640px) { .result-head { grid-template-columns: 1fr; justify-items: start; } .ring { width: 120px; height: 120px; } .ring strong { font-size: 30px; } }
@@ -62,7 +64,9 @@
     <div class="shell">
       <header>
         <a class="brand" href="/"><img src="/logo.svg" alt="" /> Emanuel Borges</a>
-        <label><span class="visually-hidden" data-t="lang">Language</span>
+        <div class="header-tools">
+          <button class="theme-toggle" type="button" data-theme-toggle><span class="theme-swatch" aria-hidden="true"></span><span class="theme-name" data-theme-name>Amazônia</span></button>
+          <label><span class="visually-hidden" data-t="lang">Language</span>
           <select data-lang>
             <option value="en" lang="en">English</option>
             <option value="pt" lang="pt-BR">Português</option>
@@ -74,6 +78,7 @@
             <option value="ru" lang="ru">Русский</option>
           </select>
         </label>
+        </div>
       </header>
 
       <main>

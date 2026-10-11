@@ -5,7 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title data-t="meta.title">LSTM Stock Forecasting — Emanuel Borges</title>
     <meta name="description" data-t-content="meta.description" content="LSTM neural network that forecasts the next stock close, running in your browser in plain JavaScript and evaluated against a naive baseline." />
-    <meta name="theme-color" content="#090811" />
+    <meta name="theme-color" content="#06100b" />
+    <!-- Tema antes da pintura (evita piscar): ?theme= ou o salvo; padrão "amazonia". -->
+    <script>(function(){var t;try{t=new URLSearchParams(location.search).get("theme")||localStorage.getItem("theme")}catch(e){}t=t==="editorial"?"editorial":"amazonia";document.documentElement.dataset.theme=t;var m=document.querySelector('meta[name="theme-color"]');if(m)m.content=t==="editorial"?"#f6f3ec":"#06100b"})();</script>
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
@@ -25,7 +27,9 @@
     <div class="shell">
       <header>
         <a class="brand" href="/"><img src="/logo.svg" alt="" /> Emanuel Borges</a>
-        <label><span class="visually-hidden" data-t="lang">Language</span>
+        <div class="header-tools">
+          <button class="theme-toggle" type="button" data-theme-toggle><span class="theme-swatch" aria-hidden="true"></span><span class="theme-name" data-theme-name>Amazônia</span></button>
+          <label><span class="visually-hidden" data-t="lang">Language</span>
           <select data-lang>
             <option value="en" lang="en">English</option>
             <option value="pt" lang="pt-BR">Português</option>
@@ -37,6 +41,7 @@
             <option value="ru" lang="ru">Русский</option>
           </select>
         </label>
+        </div>
       </header>
 
       <main>
@@ -59,7 +64,7 @@
           <p class="status" data-status aria-live="polite"></p>
           <h3 id="forecast-title" data-t="chart">Last 30 sessions and forecast</h3>
           <svg class="chart" data-chart="forecast" viewBox="0 0 900 300" role="img"></svg>
-          <div class="legend"><span style="--c:#67e8f9" data-t="real">Actual</span><span style="--c:#b895ff" data-t="predicted">LSTM forecast</span></div>
+          <div class="legend"><span style="--c:var(--series-1)" data-t="real">Actual</span><span style="--c:var(--series-2)" data-t="predicted">LSTM forecast</span></div>
           <div class="table-wrap"><table data-forecast-table></table></div>
         </section>
 
@@ -69,7 +74,7 @@
           <div class="table-wrap"><table data-metrics-table></table></div>
           <h3 style="margin-top:24px" data-t="backtest">Test: actual × predicted (one day ahead)</h3>
           <svg class="chart" data-chart="backtest" viewBox="0 0 900 300" role="img"></svg>
-          <div class="legend"><span style="--c:#67e8f9" data-t="real">Actual</span><span style="--c:#b895ff" data-t="predictedNext">LSTM (next day)</span></div>
+          <div class="legend"><span style="--c:var(--series-1)" data-t="real">Actual</span><span style="--c:var(--series-2)" data-t="predictedNext">LSTM (next day)</span></div>
         </section>
 
         <p class="note" data-t="how"></p>

@@ -39,7 +39,8 @@ Site estático, sem framework, com um backend *serverless* no Cloudflare para o 
 |---|---|
 | **8 idiomas** | Inglês (padrão), português, espanhol, francês, italiano, alemão, chinês e russo. O visitante escolhe no cabeçalho; a escolha fica salva e pode vir no link (`?lang=pt`). |
 | **Seções** | Sobre (com foto), Experiência, Projetos (10 cards, 4 com demo ao vivo; filtros, link para o código e linguagem/estrelas/última atualização vindos da API do GitHub), Habilidades (45 tecnologias com ícones e filtros), Formação (com logos das instituições) e Contato. |
-| **Visual** | Tema escuro roxo + ciano, imagens de fundo em movimento (duotone), rede de partículas em Canvas, animações ao rolar e cabeçalho fixo com barra de progresso. Respeita "reduzir movimento". |
+| **Temas** | Dois temas que o visitante escolhe no cabeçalho (a escolha fica salva e vale em todas as páginas, inclusive demos e 404): **Amazônia** (padrão — verde-floresta escuro com lima, "IA feita na Amazônia") e **Editorial** (claro — papel, tinta preta e laranja). Também pelo link: `?theme=editorial`. Aplicado antes da pintura, sem piscar. |
+| **Visual** | Tema escolhido pelo visitante, imagens de fundo em movimento (duotone), rede de partículas em Canvas, animações ao rolar e cabeçalho fixo com barra de progresso. Respeita "reduzir movimento". |
 | **Assistente com IA** | Híbrido: **respostas prontas** locais para perguntas frequentes, **IA generativa com RAG** para o resto e **busca local** como reserva. Respostas da IA podem ser avaliadas com 👍/👎. Veja [Arquitetura](#arquitetura). |
 | **Currículo em PDF** | Um PDF por idioma, gerado da mesma fonte de textos do site; o botão baixa o PDF do idioma atual. |
 | **Formulário de contato** | Mensagens salvas no D1, proteção anti-robô invisível, **aviso por e-mail** ao dono e **confirmação automática** ao visitante no idioma da mensagem. |

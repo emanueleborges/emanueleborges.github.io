@@ -39,6 +39,7 @@ A framework-free static site with a serverless backend on Cloudflare for the AI 
 |---|---|
 | **8 languages** | English (default), Portuguese, Spanish, French, Italian, German, Chinese and Russian. Visitors pick one in the header; the choice is remembered and can come in the link (`?lang=pt`). |
 | **Sections** | About (with photo), Experience, Projects (10 cards, 4 with a live demo; filters, a link to the code and language/stars/last update from the GitHub API), Skills (45 technologies with icons and filters), Education (with institution logos) and Contact. |
+| **Themes** | Two themes the visitor picks in the header (saved and applied on every page, demos and 404 included): **Amazon** (default — dark forest green with lime, "AI made in the Amazon") and **Editorial** (light — paper, black ink and orange). Also via link: `?theme=editorial`. Applied before first paint, no flash. |
 | **Visuals** | Dark purple + cyan theme, moving duotone background images, Canvas particle network, scroll animations and a sticky header with reading progress. Respects "reduce motion". |
 | **AI assistant** | Hybrid: local **ready-made answers** for frequent questions, **generative AI with RAG** for everything else and **local search** as a fallback. AI answers can be rated 👍/👎. See [Architecture](#architecture). |
 | **PDF résumé** | One PDF per language, generated from the same text source as the site; the button downloads the PDF for the current language. |

@@ -136,6 +136,13 @@ All run **in the visitor's browser**, with no AI server.
 
 **Movie recommender** — `scripts/gerar-dados-filmes.py` builds `filmes.json` from Wikidata (films, animated films and features with ≥ 45 Wikipedia articles; year, genres, director) and each film's English Wikipedia introduction (up to 700 characters). `tfidf.js` uses scikit-learn's `TfidfVectorizer` formula (tf × smoothed idf, L2 normalization), English and "film credits" stopwords, double-weighted genres and the director as a single word; it recommends by cosine and shows the 4 top-contributing terms.
 
+### 2.9 Themes
+- **Tokens:** every color became a role in CSS variables (`--bg`, `--surface`, `--text`, `--accent`, `--accent-rgb`, `--grad-primary`, `--on-primary`, `--duotone`, `--particle-a/-b`…), defined in `:root[data-theme="amazonia"]` (default) and `:root[data-theme="editorial"]` in `styles.css` and `demos/demos.css`; the 404 has its own.
+- **No flash:** a short `<head>` script on each page reads `?theme=` or `localStorage.theme` and sets `<html data-theme>` and `theme-color` before first paint.
+- **Switching:** `script.js` (site) and `demos/demos.js` (demos and job match) toggle the theme, save it, update the label/ARIA in 8 languages and fire `themechange` (particles re-read their colors). SVG charts use `style="stroke:var(--series-n)"` and follow instantly.
+- **Charts:** series validated for color-vision deficiency — Amazon blue `#3987e5` × lime `#65a30d`; Editorial blue `#2a78d6` × orange `#d9420c`.
+- **CI:** Lighthouse checks `index.html` and `index.html?theme=editorial`.
+
 ## 3. Backend — Cloudflare Worker
 
 ### 3.1 Routes
@@ -312,3 +319,4 @@ One 1024-dimension vector per excerpt; stable `id` (e.g. `job1`, `p5`, `edu4`); 
 | ADR-25 | Movie data from Wikidata (CC0) + Wikipedia summaries (CC BY-SA) | The original project's TMDB/Kaggle data | TMDB has redistribution restrictions; Wikidata and Wikipedia allow publishing with credit. |
 | ADR-26 | LSTM with windows normalized by the last price and a naive-baseline comparison | `MinMaxScaler` over the whole series (original) | The original leaked test data and couldn't extrapolate prices outside the training range (12% MAPE on PETR4); the card now cites the verifiable number. |
 | ADR-27 | Two-step job match (extract reading only the posting → grade) + deterministic Worker checks and rule-based score | A single call, score given by the AI | In a single call the AI invented favorable requirements, omitted gaps (English) and claimed absent technologies (Go); with the steps and rules, a data job went from 80% to 23% and gaps show up. |
+| ADR-28 | Two themes via CSS variables + a `<head>` script | A single theme; `prefers-color-scheme` | The owner wanted the "Amazon" identity as the default plus a light option; the pre-paint script avoids a flash and `?theme=` allows sharing/testing. |

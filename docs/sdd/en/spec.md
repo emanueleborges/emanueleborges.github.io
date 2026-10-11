@@ -104,6 +104,11 @@ Every Monday the owner receives an email with the week's messages, chat ratings 
 ### FR-11 — Not-found page
 Unknown addresses show a 404 page in the site's style, with links to the portfolio and the assistant.
 
+### FR-15 — Themes
+- FR-15.1 Two themes: **Amazon** (initial default; dark, forest green and lime) and **Editorial** (light; paper, ink and orange).
+- FR-15.2 A header button on every page (site, demos, job match) switches the theme; the choice is saved for later visits and pages; `?theme=editorial` opens straight in that theme.
+- FR-15.3 The theme is applied before first paint (no flash); Lighthouse accessibility 100 in both themes.
+
 ### FR-14 — "Does your role match?" (for recruiters)
 - FR-14.1 `/vaga/` page (8 languages) where a recruiter pastes a job description (80–8,000 characters, any language) and gets: a match score (0–100%), each requirement with its level (meets / partial / not found), required or nice-to-have, a reason and clickable evidence linking to portfolio sections, plus a "why Emanuel" summary with a copy button.
 - FR-14.2 Requirements are only those written in the posting (nothing invented, nothing omitted); the score is computed by rule, not by the AI; no experience may be claimed without evidence in the profile.

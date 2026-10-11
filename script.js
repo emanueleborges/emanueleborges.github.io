@@ -101,6 +101,36 @@ document.addEventListener("click", (event) => {
   else if (href.includes("github.com")) track("contato-github", "Clicou no GitHub");
 });
 
+/* ---------- Tema (Amazônia padrão · Editorial) ---------- */
+
+// O tema inicial já foi aplicado no <head> (sem piscar); aqui ficam o botão e a troca.
+const THEMES = ["amazonia", "editorial"];
+const THEME_COLORS = { amazonia: "#06100b", editorial: "#f6f3ec" };
+const themeButton = document.querySelector("[data-theme-toggle]");
+const currentTheme = () => (document.documentElement.dataset.theme === "editorial" ? "editorial" : "amazonia");
+
+function updateThemeButton() {
+  const theme = currentTheme();
+  const next = THEMES.find((name) => name !== theme);
+  themeButton.querySelector("[data-theme-name]").textContent = t(`theme.${theme}`);
+  themeButton.setAttribute("aria-label", t("theme.switch", { current: t(`theme.${theme}`), next: t(`theme.${next}`) }));
+}
+
+themeButton.addEventListener("click", () => {
+  const next = THEMES.find((name) => name !== currentTheme());
+  document.documentElement.dataset.theme = next;
+  document.querySelector('meta[name="theme-color"]')?.setAttribute("content", THEME_COLORS[next]);
+  try {
+    localStorage.setItem("theme", next);
+  } catch {
+    /* navegação privada: vale só nesta visita */
+  }
+  updateThemeButton();
+  document.dispatchEvent(new CustomEvent("themechange"));
+  track(`tema-${next}`, `Trocou o tema para ${next}`);
+});
+document.addEventListener("languagechange", updateThemeButton);
+
 /* ---------- Menu mobile ---------- */
 
 const menuButton = document.querySelector(".menu-toggle");
@@ -314,6 +344,17 @@ const canvas = document.querySelector(".bg-canvas");
 const ctx = canvas.getContext("2d");
 const pointer = { x: -9999, y: -9999 };
 let particles = [];
+// Cores das partículas vêm do tema (variáveis --particle-a/-b do CSS).
+let particleColors = {};
+const readParticleColors = () => {
+  const style = getComputedStyle(document.documentElement);
+  particleColors = { a: style.getPropertyValue("--particle-a").trim(), b: style.getPropertyValue("--particle-b").trim() };
+};
+readParticleColors();
+document.addEventListener("themechange", () => {
+  readParticleColors();
+  if (prefersReducedMotion) drawParticles();
+});
 let animationId = null;
 
 const resizeCanvas = () => {
@@ -356,7 +397,7 @@ function drawParticles() {
 
     ctx.beginPath();
     ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-    ctx.fillStyle = p.cyan ? "rgba(103, 232, 249, 0.75)" : "rgba(195, 165, 255, 0.7)";
+    ctx.fillStyle = p.cyan ? `rgba(${particleColors.b}, 0.75)` : `rgba(${particleColors.a}, 0.7)`;
     ctx.fill();
 
     for (let j = i + 1; j < particles.length; j += 1) {
@@ -364,7 +405,7 @@ function drawParticles() {
       const d = Math.hypot(p.x - q.x, p.y - q.y);
       if (d < linkDistance) {
         const alpha = 0.22 * (1 - d / linkDistance);
-        ctx.strokeStyle = p.cyan && q.cyan ? `rgba(34, 211, 238, ${alpha})` : `rgba(155, 112, 255, ${alpha})`;
+        ctx.strokeStyle = p.cyan && q.cyan ? `rgba(${particleColors.b}, ${alpha})` : `rgba(${particleColors.a}, ${alpha})`;
         ctx.lineWidth = 0.7;
         ctx.beginPath();
         ctx.moveTo(p.x, p.y);

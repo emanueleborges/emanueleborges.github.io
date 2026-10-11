@@ -136,6 +136,13 @@ Todas rodam **no navegador do visitante**, sem servidor de IA.
 
 **Recomendação de filmes** — `scripts/gerar-dados-filmes.py` monta `filmes.json` com o Wikidata (filmes, animações e longas com ≥ 45 artigos na Wikipédia; ano, gêneros, direção) e a introdução de cada filme na Wikipédia em inglês (até 700 caracteres). `tfidf.js` usa a fórmula do `TfidfVectorizer` do scikit-learn (tf × idf suavizado, normalização L2), *stopwords* em inglês e de "ficha técnica", gêneros com peso dobrado e direção como uma palavra só; recomenda pelo cosseno e mostra os 4 termos que mais contribuíram.
 
+### 2.9 Temas
+- **Tokens:** todas as cores viraram papéis em variáveis CSS (`--bg`, `--surface`, `--text`, `--accent`, `--accent-rgb`, `--grad-primary`, `--on-primary`, `--duotone`, `--particle-a/-b`…), definidos em `:root[data-theme="amazonia"]` (padrão) e `:root[data-theme="editorial"]` em `styles.css` e `demos/demos.css`; a 404 tem os seus.
+- **Sem piscar:** um script curto no `<head>` de cada página lê `?theme=` ou `localStorage.theme` e define `<html data-theme>` e a `theme-color` antes da pintura.
+- **Troca:** `script.js` (site) e `demos/demos.js` (demos e vagas) alternam o tema, salvam, atualizam o rótulo/ARIA nos 8 idiomas e disparam `themechange` (as partículas releem as cores). Gráficos SVG usam `style="stroke:var(--series-n)"` e acompanham na hora.
+- **Gráficos:** séries validadas para daltonismo — Amazônia azul `#3987e5` × lima `#65a30d`; Editorial azul `#2a78d6` × laranja `#d9420c`.
+- **CI:** o Lighthouse mede `index.html` e `index.html?theme=editorial`.
+
 ## 3. Backend — Cloudflare Worker
 
 ### 3.1 Rotas
@@ -312,3 +319,4 @@ Vetor de 1024 dimensões por trecho; `id` estável (ex.: `job1`, `p5`, `edu4`); 
 | ADR-25 | Base de filmes do Wikidata (CC0) + resumos da Wikipédia (CC BY-SA) | Base do TMDB/Kaggle do projeto original | O TMDB tem restrições de redistribuição; Wikidata e Wikipédia permitem publicar com crédito. |
 | ADR-26 | LSTM com janela normalizada pelo último preço e comparação com baseline ingênuo | `MinMaxScaler` na série inteira (original) | O original vazava dados do teste e não extrapolava preços fora da faixa do treino (MAPE de 12% na PETR4); o card passou a citar o número verificável. |
 | ADR-27 | Match de vaga em duas etapas (extrair lendo só a vaga → avaliar) + conferências determinísticas no Worker e nota por regra | Uma chamada só, nota dada pela IA | Na chamada única a IA inventava requisitos favoráveis, omitia lacunas (inglês) e afirmava tecnologias ausentes (Go); com as etapas e as regras, vaga de dados caiu de 80% para 23% e lacunas aparecem. |
+| ADR-28 | Dois temas por variáveis CSS + script no `<head>` | Tema único; `prefers-color-scheme` | O dono quis a identidade "Amazônia" como padrão e uma opção clara para quem prefere; o script antes da pintura evita o "flash" e `?theme=` permite compartilhar/testar. |
