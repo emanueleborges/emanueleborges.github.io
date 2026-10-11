@@ -2,6 +2,7 @@
    O tema vem de <html data-theme>, definido antes da pintura (script no <head>) e trocado pelo botão do cabeçalho. */
 :root, :root[data-theme="amazonia"] {
   color-scheme: dark;
+  --logo-bg1: #13321f; --logo-bg2: #050d08; --logo-edge1: #bef264; --logo-edge2: #2dd4bf; --logo-letter1: #ffffff; --logo-letter2: #e4fbb5; --logo-letter3: #86efac; --logo-node1: #f7fee7; --logo-node2: #a3e635; --logo-node3: #14b8a6; --logo-ring: #a3e635;
   --bg: #06100b;
   --bg-rgb: 6, 16, 11;
   --surface: #0b1912;
@@ -57,6 +58,7 @@
 
 :root[data-theme="editorial"] {
   color-scheme: light;
+  --logo-bg1: #2b2633; --logo-bg2: #16131c; --logo-edge1: #ff8a4c; --logo-edge2: #d9420c; --logo-letter1: #ffffff; --logo-letter2: #ffe7da; --logo-letter3: #ffb38a; --logo-node1: #fff1ea; --logo-node2: #ff6a2b; --logo-node3: #d9420c; --logo-ring: #ff6a2b;
   --bg: #f6f3ec;
   --bg-rgb: 246, 243, 236;
   --surface: #ffffff;
@@ -118,8 +120,9 @@ button { font: inherit; }
 .site-header { position: fixed; z-index: 10; inset: 0 0 auto; background: rgba(var(--bg-rgb),.82); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); }
 .nav { height: 82px; display: flex; align-items: center; justify-content: space-between; gap: 22px; border-bottom: 1px solid var(--line); }
 .brand { margin-right: auto; white-space: nowrap; display: inline-flex; align-items: center; gap: 11px; font-size: 14px; font-weight: 800; letter-spacing: -.04em; }
-.brand-logo { flex: none; display: block; width: 34px; height: 34px; filter: drop-shadow(0 0 10px rgba(var(--accent-rgb),.35)); transition: transform .3s ease; }
-.brand:hover .brand-logo { transform: rotate(-6deg) scale(1.05); }
+.brand-logo { flex: none; display: block; width: 34px; height: 34px; filter: drop-shadow(0 0 10px rgba(var(--accent-rgb),.35)); transition: transform .35s cubic-bezier(.34,1.56,.64,1), filter .35s; }
+.brand:hover .brand-logo, .brand:focus-visible .brand-logo { transform: rotate(-8deg) scale(1.08); filter: drop-shadow(0 0 16px rgba(var(--accent-rgb),.6)); }
+.brand:hover .logo-ring { animation-duration: 1.4s; }
 .brand-mark { display: grid; place-items: center; width: 34px; height: 34px; border: 1px solid rgba(var(--accent-rgb),.6); border-radius: 11px; color: var(--text); font-size: 18px; box-shadow: 0 0 22px rgba(var(--accent-rgb),.24); }
 .brand-mark span { color: var(--purple); }
 .nav-links { display: flex; align-items: center; gap: 28px; font-size: 14px; color: var(--text-soft); }
@@ -533,3 +536,14 @@ main, .footer { position: relative; z-index: 1; }
   .hero-slide, .bg-aurora span, .hero h1 span, .about-photo, .status-dot, .hero-ask-caret { animation: none !important; }
   *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; }
 }
+
+/* Logo "E." (SVG nas páginas): cores pelo tema; o E se desenha ao carregar, o nó de IA emite um pulso,
+   e ao passar o mouse o logo gira e brilha. Sem efeitos com "reduzir movimento". */
+.logo { overflow: visible; }
+.logo-ring { stroke: var(--logo-ring); stroke-opacity: .45; transform-origin: 49px 46.5px; animation: logo-pulse 3.2s ease-out 1.4s infinite; }
+.logo-e { stroke-dasharray: 100; stroke-dashoffset: 0; animation: logo-draw 1.1s cubic-bezier(.65,0,.35,1) .15s both; }
+.logo-node { transform-origin: 49px 46.5px; animation: logo-pop .5s cubic-bezier(.34,1.56,.64,1) 1.1s both; }
+@keyframes logo-draw { from { stroke-dashoffset: 100; } }
+@keyframes logo-pop { from { transform: scale(0); } }
+@keyframes logo-pulse { 0% { transform: scale(1); stroke-opacity: .55; } 70%, 100% { transform: scale(1.9); stroke-opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .logo-ring, .logo-e, .logo-node { animation: none !important; } }

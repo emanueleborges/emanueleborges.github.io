@@ -82,6 +82,7 @@ Legenda: ✅ concluída · ⏳ pendente · 💡 ideia
 - ✅ **T62** Demo do LSTM com 15 ações (8 da B3, 7 da NASDAQ), menu por bolsa e preços na moeda de cada bolsa; card atualizado para o MAPE de 1,1–2,2% — RF-12
 - ✅ **T63** "Sua vaga combina?" (`/vaga/` + `POST /match`): match de vaga em duas etapas com conferências no Worker, nota por regra, evidências clicáveis, 8 idiomas e convite no topo do site — RF-14
 - ✅ **T64** Temas Amazônia (padrão) e Editorial: cores em variáveis CSS, botão em todas as páginas (8 idiomas), sem piscar, gráficos validados para daltonismo, Lighthouse 100 de acessibilidade nos dois — RF-15
+- ✅ **T65** Novo logo "E." por tema (verde/lima no Amazônia, laranja no Editorial), com animação de desenho, pulso do nó de IA e efeito ao passar o mouse; favicon e ícones do app refeitos — RF-15
 
 ---
 

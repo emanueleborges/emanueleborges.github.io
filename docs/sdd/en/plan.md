@@ -142,6 +142,7 @@ All run **in the visitor's browser**, with no AI server.
 - **Switching:** `script.js` (site) and `demos/demos.js` (demos and job match) toggle the theme, save it, update the label/ARIA in 8 languages and fire `themechange` (particles re-read their colors). SVG charts use `style="stroke:var(--series-n)"` and follow instantly.
 - **Charts:** series validated for color-vision deficiency — Amazon blue `#3987e5` × lime `#65a30d`; Editorial blue `#2a78d6` × orange `#d9420c`.
 - **CI:** Lighthouse checks `index.html` and `index.html?theme=editorial`.
+- **"E." logo:** inline SVG on every page (header, footer, chat, demos, job match, 404) colored by each theme's `--logo-*` variables; the E draws itself on load (`stroke-dashoffset`), the AI node pops in and pulses every 3.2 s, and on hover it tilts and glows — all off with "reduce motion". Favicon, `logo.svg` and app icons use the Amazon version.
 
 ## 3. Backend — Cloudflare Worker
 

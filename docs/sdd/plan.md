@@ -142,6 +142,7 @@ Todas rodam **no navegador do visitante**, sem servidor de IA.
 - **Troca:** `script.js` (site) e `demos/demos.js` (demos e vagas) alternam o tema, salvam, atualizam o rótulo/ARIA nos 8 idiomas e disparam `themechange` (as partículas releem as cores). Gráficos SVG usam `style="stroke:var(--series-n)"` e acompanham na hora.
 - **Gráficos:** séries validadas para daltonismo — Amazônia azul `#3987e5` × lima `#65a30d`; Editorial azul `#2a78d6` × laranja `#d9420c`.
 - **CI:** o Lighthouse mede `index.html` e `index.html?theme=editorial`.
+- **Logo "E.":** SVG dentro das páginas (cabeçalho, rodapé, chat, demos, vagas, 404) com cores pelas variáveis `--logo-*` de cada tema; o E se desenha ao carregar (`stroke-dashoffset`), o nó de IA aparece e emite um pulso a cada 3,2 s, e ao passar o mouse gira e brilha — tudo desligado com "reduzir movimento". Favicon, `logo.svg` e ícones do app usam a versão Amazônia.
 
 ## 3. Backend — Cloudflare Worker
 

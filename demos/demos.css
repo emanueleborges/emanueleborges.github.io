@@ -2,6 +2,7 @@
    portfólio: "amazonia" (padrão) e "editorial". O tema vem de <html data-theme> (script no <head>). */
 :root, :root[data-theme="amazonia"] {
   color-scheme: dark;
+  --logo-bg1: #13321f; --logo-bg2: #050d08; --logo-edge1: #bef264; --logo-edge2: #2dd4bf; --logo-letter1: #ffffff; --logo-letter2: #e4fbb5; --logo-letter3: #86efac; --logo-node1: #f7fee7; --logo-node2: #a3e635; --logo-node3: #14b8a6; --logo-ring: #a3e635;
   --bg: #06100b; --surface: #0b1912; --surface-2: rgba(14, 32, 22, .62); --stage: #040b07;
   --text: #eef5ee; --muted: #9db3a5; --line: rgba(190, 242, 200, .13); --line-strong: rgba(190, 242, 200, .24); --grid: rgba(190, 242, 200, .08);
   --accent: #a3e635; --accent-rgb: 163, 230, 53; --accent-2: #34d399; --accent-2-rgb: 52, 211, 153; --accent-text: #bef264; --kicker: #86efac;
@@ -14,6 +15,7 @@
 }
 :root[data-theme="editorial"] {
   color-scheme: light;
+  --logo-bg1: #2b2633; --logo-bg2: #16131c; --logo-edge1: #ff8a4c; --logo-edge2: #d9420c; --logo-letter1: #ffffff; --logo-letter2: #ffe7da; --logo-letter3: #ffb38a; --logo-node1: #fff1ea; --logo-node2: #ff6a2b; --logo-node3: #d9420c; --logo-ring: #ff6a2b;
   --bg: #f6f3ec; --surface: #ffffff; --surface-2: #ffffff; --stage: #efeae0;
   --text: #16131c; --muted: #5a5563; --line: rgba(22, 19, 28, .12); --line-strong: rgba(22, 19, 28, .22); --grid: rgba(22, 19, 28, .08);
   --accent: #d9420c; --accent-rgb: 217, 66, 12; --accent-2: #d9420c; --accent-2-rgb: 217, 66, 12; --accent-text: #b4380a; --kicker: #b4380a;
@@ -33,7 +35,8 @@ a { color: inherit; }
 .shell { width: min(960px, calc(100% - 32px)); margin-inline: auto; }
 header { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 20px 0; border-bottom: 1px solid var(--line); }
 .brand { display: inline-flex; align-items: center; gap: 10px; font-weight: 800; font-size: 14px; text-decoration: none; letter-spacing: -.03em; }
-.brand img { width: 32px; height: 32px; }
+.brand-logo { flex: none; width: 32px; height: 32px; filter: drop-shadow(0 0 8px rgba(var(--accent-rgb),.3)); transition: transform .35s cubic-bezier(.34,1.56,.64,1), filter .35s; }
+.brand:hover .brand-logo { transform: rotate(-8deg) scale(1.08); filter: drop-shadow(0 0 14px rgba(var(--accent-rgb),.55)); }
 select { appearance: none; padding: 8px 14px; border: 1px solid var(--line); border-radius: 999px; background: var(--surface-2); color: var(--text); font: 600 12px Manrope, sans-serif; cursor: pointer; }
 select:focus-visible, button:focus-visible, a:focus-visible, input:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 2px; }
 .kicker { margin: 48px 0 0; font: 500 12px "DM Mono", monospace; letter-spacing: .14em; color: var(--kicker); }
@@ -76,3 +79,14 @@ th, [data-metrics-table] td:first-child { white-space: normal; }
 .theme-swatch { width: 18px; height: 18px; border-radius: 50%; background: var(--swatch); box-shadow: inset 0 0 0 1px var(--line-strong); }
 .header-tools { display: flex; align-items: center; gap: 8px; }
 @media (max-width: 640px) { .theme-toggle { padding: 7px; } .theme-name { display: none; } }
+
+/* Logo "E." (SVG nas páginas): cores pelo tema; o E se desenha ao carregar, o nó de IA emite um pulso,
+   e ao passar o mouse o logo gira e brilha. Sem efeitos com "reduzir movimento". */
+.logo { overflow: visible; }
+.logo-ring { stroke: var(--logo-ring); stroke-opacity: .45; transform-origin: 49px 46.5px; animation: logo-pulse 3.2s ease-out 1.4s infinite; }
+.logo-e { stroke-dasharray: 100; stroke-dashoffset: 0; animation: logo-draw 1.1s cubic-bezier(.65,0,.35,1) .15s both; }
+.logo-node { transform-origin: 49px 46.5px; animation: logo-pop .5s cubic-bezier(.34,1.56,.64,1) 1.1s both; }
+@keyframes logo-draw { from { stroke-dashoffset: 100; } }
+@keyframes logo-pop { from { transform: scale(0); } }
+@keyframes logo-pulse { 0% { transform: scale(1); stroke-opacity: .55; } 70%, 100% { transform: scale(1.9); stroke-opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .logo-ring, .logo-e, .logo-node { animation: none !important; } }
