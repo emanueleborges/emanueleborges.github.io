@@ -394,7 +394,8 @@ function evidenceLink(id) {
   return `<a href="/?lang=${Demo.lang}#${section}">${escape(label || sec.about)}</a>`;
 }
 
-function ring(score) {
+function ring(value) {
+  const score = Math.max(0, Math.min(100, Math.round(Number(value) || 0)));
   const r = 52;
   const c = 2 * Math.PI * r;
   return `<svg viewBox="0 0 120 120" aria-hidden="true">

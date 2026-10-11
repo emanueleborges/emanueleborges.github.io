@@ -3,10 +3,15 @@
 // A câmera e as fotos nunca saem do aparelho: nada é enviado nem salvo.
 
 const MODELS = "https://cdn.jsdelivr.net/npm/@vladmandic/face-api@1.7.15/model/";
+// A biblioteca (~1,3 MB) e os modelos (~6 MB) só são baixados no primeiro uso (câmera, foto ou exemplo).
+// integrity: o navegador só executa o arquivo se ele for idêntico ao conferido (proteção contra CDN adulterado).
+const LIBRARY = "https://cdn.jsdelivr.net/npm/@vladmandic/face-api@1.7.15/dist/face-api.js";
+const LIBRARY_SRI = "sha384-M5nePoB6/w/a9JhtegEibSLGiJy/+QMZZMfvcxjWVCQW/HPwrQ7i21V/Px/8AyVA";
 const THRESHOLD = 0.55;
 
 const T = {
   en: {
+    idle: "The AI models (~7 MB) download only when you use the camera, a photo or the sample.",
     "meta.title": "Face Recognition in the Browser — Emanuel Borges",
     "meta.description": "Real-time face recognition with face-api.js: detection, 128-dimension embeddings and matching, entirely in your browser — the camera never leaves your device.",
     lang: "Language",
@@ -39,6 +44,7 @@ const T = {
     how: "<strong>How it works:</strong> TinyFaceDetector finds the faces; a 68-point landmark network aligns each one; a ResNet turns it into a 128-number embedding. Two faces belong to the same person when the Euclidean distance between their vectors is below 0.55. Everything runs with TensorFlow.js (WebGL) in your browser.",
   },
   pt: {
+    idle: "Os modelos de IA (~7 MB) só são baixados quando você usar a câmera, uma foto ou o exemplo.",
     "meta.title": "Reconhecimento Facial no Navegador — Emanuel Borges",
     "meta.description": "Reconhecimento facial em tempo real com face-api.js: detecção, embeddings de 128 dimensões e comparação, tudo no seu navegador — a câmera nunca sai do seu aparelho.",
     lang: "Idioma",
@@ -71,6 +77,7 @@ const T = {
     how: "<strong>Como funciona:</strong> o TinyFaceDetector encontra os rostos; uma rede de 68 pontos alinha cada um; uma ResNet gera um embedding de 128 números. Dois rostos são da mesma pessoa quando a distância euclidiana entre os vetores é menor que 0,55. Tudo roda com TensorFlow.js (WebGL) no seu navegador.",
   },
   es: {
+    idle: "Los modelos de IA (~7 MB) solo se descargan cuando uses la cámara, una foto o el ejemplo.",
     "meta.title": "Reconocimiento Facial en el Navegador — Emanuel Borges",
     "meta.description": "Reconocimiento facial en tiempo real con face-api.js: detección, embeddings de 128 dimensiones y comparación, todo en tu navegador — la cámara nunca sale de tu dispositivo.",
     lang: "Idioma",
@@ -103,6 +110,7 @@ const T = {
     how: "<strong>Cómo funciona:</strong> TinyFaceDetector encuentra los rostros; una red de 68 puntos alinea cada uno; una ResNet genera un embedding de 128 números. Dos rostros son de la misma persona cuando la distancia euclidiana entre sus vectores es menor que 0,55. Todo se ejecuta con TensorFlow.js (WebGL) en tu navegador.",
   },
   fr: {
+    idle: "Les modèles d'IA (~7 Mo) ne sont téléchargés que lorsque vous utilisez la caméra, une photo ou l'exemple.",
     "meta.title": "Reconnaissance faciale dans le navigateur — Emanuel Borges",
     "meta.description": "Reconnaissance faciale en temps réel avec face-api.js : détection, embeddings de 128 dimensions et comparaison, entièrement dans votre navigateur — la caméra ne quitte jamais votre appareil.",
     lang: "Langue",
@@ -135,6 +143,7 @@ const T = {
     how: "<strong>Fonctionnement :</strong> TinyFaceDetector trouve les visages ; un réseau de 68 points aligne chacun d'eux ; un ResNet produit un embedding de 128 nombres. Deux visages appartiennent à la même personne lorsque la distance euclidienne entre leurs vecteurs est inférieure à 0,55. Tout s'exécute avec TensorFlow.js (WebGL) dans votre navigateur.",
   },
   it: {
+    idle: "I modelli di IA (~7 MB) vengono scaricati solo quando usi la fotocamera, una foto o l'esempio.",
     "meta.title": "Riconoscimento Facciale nel Browser — Emanuel Borges",
     "meta.description": "Riconoscimento facciale in tempo reale con face-api.js: rilevamento, embedding a 128 dimensioni e confronto, tutto nel tuo browser — la fotocamera non lascia mai il tuo dispositivo.",
     lang: "Lingua",
@@ -167,6 +176,7 @@ const T = {
     how: "<strong>Come funziona:</strong> TinyFaceDetector trova i volti; una rete a 68 punti allinea ciascuno; una ResNet genera un embedding di 128 numeri. Due volti appartengono alla stessa persona quando la distanza euclidea tra i vettori è inferiore a 0,55. Tutto gira con TensorFlow.js (WebGL) nel tuo browser.",
   },
   de: {
+    idle: "Die KI-Modelle (~7 MB) werden erst geladen, wenn Sie Kamera, Foto oder Beispiel verwenden.",
     "meta.title": "Gesichtserkennung im Browser — Emanuel Borges",
     "meta.description": "Gesichtserkennung in Echtzeit mit face-api.js: Erkennung, 128-dimensionale Embeddings und Abgleich, komplett in Ihrem Browser – die Kamera verlässt nie Ihr Gerät.",
     lang: "Sprache",
@@ -199,6 +209,7 @@ const T = {
     how: "<strong>So funktioniert es:</strong> TinyFaceDetector findet die Gesichter; ein 68-Punkte-Netz richtet jedes aus; ein ResNet erzeugt ein Embedding aus 128 Zahlen. Zwei Gesichter gehören zur selben Person, wenn der euklidische Abstand ihrer Vektoren unter 0,55 liegt. Alles läuft mit TensorFlow.js (WebGL) in Ihrem Browser.",
   },
   zh: {
+    idle: "AI 模型（约 7 MB）仅在你使用摄像头、照片或示例时下载。",
     "meta.title": "浏览器中的人脸识别 — Emanuel Borges",
     "meta.description": "基于 face-api.js 的实时人脸识别：检测、128 维嵌入向量与比对，全部在浏览器中完成——摄像头画面不会离开你的设备。",
     lang: "语言",
@@ -231,6 +242,7 @@ const T = {
     how: "<strong>工作原理：</strong>TinyFaceDetector 找到人脸；68 点关键点网络对齐每张脸；ResNet 生成 128 维嵌入向量。当两个向量之间的欧氏距离小于 0.55 时，判定为同一个人。全部通过 TensorFlow.js（WebGL）在你的浏览器中运行。",
   },
   ru: {
+    idle: "Модели ИИ (~7 МБ) загружаются, только когда вы используете камеру, фото или пример.",
     "meta.title": "Распознавание лиц в браузере — Emanuel Borges",
     "meta.description": "Распознавание лиц в реальном времени с face-api.js: обнаружение, 128-мерные эмбеддинги и сравнение — полностью в вашем браузере, изображение с камеры не покидает устройство.",
     lang: "Язык",
@@ -404,32 +416,61 @@ function render() {
   if (source && !looping) analyze();
 }
 
-async function init() {
-  Demo.setup(T, render);
-  renderPeople();
-  setStatus(t("loading"));
-  try {
+let aiReady = null;
+const loadScript = () =>
+  new Promise((resolve, reject) => {
+    const script = document.createElement("script");
+    script.src = LIBRARY;
+    script.integrity = LIBRARY_SRI;
+    script.crossOrigin = "anonymous";
+    script.onload = resolve;
+    script.onerror = reject;
+    document.head.append(script);
+  });
+
+// Baixa e prepara a IA uma única vez; se falhar, a próxima tentativa recomeça.
+function loadAI() {
+  aiReady ??= (async () => {
+    setStatus(t("loading"));
+    await loadScript();
     await Promise.all([
       faceapi.nets.tinyFaceDetector.loadFromUri(MODELS),
       faceapi.nets.faceLandmark68Net.loadFromUri(MODELS),
       faceapi.nets.faceRecognitionNet.loadFromUri(MODELS),
     ]);
-  } catch {
+    setStatus(t("ready"));
+  })().catch((error) => {
+    aiReady = null;
     setStatus(t("loadError"));
+    throw error;
+  });
+  return aiReady;
+}
+
+// Executa a ação depois que a IA estiver pronta (ignora se o carregamento falhar).
+const withAI = (action) => async (...args) => {
+  try {
+    await loadAI();
+  } catch {
     return;
   }
-  setStatus(t("ready"));
-  document.querySelectorAll("[data-camera], [data-upload], [data-sample]").forEach((el) => (el.disabled = false));
+  return action(...args);
+};
 
-  $("[data-camera]").addEventListener("click", () => (stream ? stopCamera() : startCamera()));
-  $("[data-sample]").addEventListener("click", () => {
+function init() {
+  Demo.setup(T, render);
+  renderPeople();
+  setStatus(t("idle"));
+
+  $("[data-camera]").addEventListener("click", withAI(() => (stream ? stopCamera() : startCamera())));
+  $("[data-sample]").addEventListener("click", withAI(() => {
     showImage("/emanuel-borges.jpg");
     $("[data-name]").value ||= "Emanuel";
-  });
+  }));
   $("[data-upload]").addEventListener("change", (event) => {
     const file = event.target.files[0];
-    if (file) showImage(URL.createObjectURL(file));
     event.target.value = "";
+    if (file) withAI(() => showImage(URL.createObjectURL(file)))();
   });
   $("[data-enroll]").addEventListener("submit", (event) => {
     event.preventDefault();

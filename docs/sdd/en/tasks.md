@@ -85,6 +85,7 @@ Legend: ✅ done · ⏳ pending · 💡 idea
 - ✅ **T65** New per-theme "E." logo (green/lime in Amazon, orange in Editorial), with draw-in animation, AI-node pulse and hover effect; favicon and app icons rebuilt — FR-15
 - ✅ **T66** Click map: every click becomes `clique/<area>/<element>` and every section seen `secao/<id>` (site, demos, job page); dashboard with attention funnel, clicks by area, rate per section and most/least clicked — FR-08
 - ✅ **T67** GoatCounter: pages counted by path only (no split by `?lang=`/`?theme=`), `?ref=curriculo-<lang>` in the PDF and `?ref=github` in the README, 404 tracked as an event and weekly summary with clicks, Contact reach and 404s — FR-08
+- ✅ **T68** Audit (2026-10-11) and fixes: face demo loads the AI only on first use (4.7 MB → 103 KB, performance 55 → 92), automatic data retention (12/6 months), CSP and referrer policy on every page, no layout shift at the top (CLS 0.121 → 0.004), heading order in demos (accessibility 100 everywhere), default links on the job page, movie data preload and a numeric match score — NFR-02, NFR-04, NFR-05, NFR-06
 
 ---
 

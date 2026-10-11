@@ -3,6 +3,9 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Segurança: só carrega recursos destes domínios (CSP) e não envia o endereço completo a outros sites. -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://gc.zgo.at https://challenges.cloudflare.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://images.unsplash.com https://emanueleborges.goatcounter.com; connect-src 'self' https://emanuel-portfolio-chat.emanuel-portfolio-chat.workers.dev https://api.github.com https://emanueleborges.goatcounter.com https://cdn.jsdelivr.net; frame-src https://challenges.cloudflare.com; media-src 'self' blob:; worker-src 'self' blob:; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
     <meta
       data-i18n-content="meta.description"
       name="description"
@@ -131,12 +134,12 @@
     <!-- Primeira imagem do topo: pré-carregada, menor no celular -->
     <link rel="preload" as="image" href="https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=800&q=70" media="(max-width: 760px)" fetchpriority="high" />
     <link rel="preload" as="image" href="https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1400&q=70" media="(min-width: 761px)" fetchpriority="high" />
-    <link rel="stylesheet" href="styles.css?v=20261011100917" />
-    <script src="i18n.js?v=20261011100917" defer></script>
-    <script src="script.js?v=20261011100917" defer></script>
-    <script src="api.js?v=20261011100917" defer></script>
-    <script src="chat.js?v=20261011100917" defer></script>
-    <script src="contact.js?v=20261011100917" defer></script>
+    <link rel="stylesheet" href="styles.css?v=20261011110457" />
+    <script src="i18n.js?v=20261011110457" defer></script>
+    <script src="script.js?v=20261011110457" defer></script>
+    <script src="api.js?v=20261011110457" defer></script>
+    <script src="chat.js?v=20261011110457" defer></script>
+    <script src="contact.js?v=20261011110457" defer></script>
     <!-- GoatCounter: conta só o caminho (sem ?lang=, ?theme=…), para não dividir a mesma página; a origem (?ref=, utm_*) continua registrada. -->
     <script>window.goatcounter = { path: function (p) { return p.split("?")[0].replace(/index\.html$/, "") || "/"; } };</script>
     <script data-goatcounter="https://emanueleborges.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
@@ -552,7 +555,7 @@
               <p class="form-counter" aria-live="polite"><span class="form-count">0</span> / 2000</p>
               <!-- Campo-armadilha: escondido para pessoas; robôs costumam preenchê-lo. -->
               <div class="form-trap" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden"><label>Website<input name="website" type="text" tabindex="-1" autocomplete="off" /></label></div>
-              <p class="form-privacy" data-i18n="form.privacy">Seus dados são usados apenas para o Emanuel responder ao seu contato.</p>
+              <p class="form-privacy" data-i18n="form.privacy">Seus dados são usados apenas para o Emanuel responder ao seu contato e são apagados automaticamente após 12 meses.</p>
               <button class="button button-primary" type="submit"><span class="form-spinner" aria-hidden="true"></span><span class="form-send" data-i18n="form.send">Enviar mensagem</span> <span class="form-arrow" aria-hidden="true">↗</span></button>
               <p class="form-status" role="status" aria-live="polite"></p>
             </div>

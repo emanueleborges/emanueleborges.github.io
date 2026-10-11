@@ -296,6 +296,8 @@ npm run painel        # or: npm run panel
 - **Prices route (`GET /prices`):** read-only; only accepts the site's origin and the demo's 15 stocks, with a per-IP limit and a 1 h cache.
 - **External script integrity (SRI):** the face demo's face-api.js has an `integrity` (SHA-384) attribute; if the CDN file is altered, the browser won't run it.
 - **HTTPS enforced** with HSTS (GitHub Pages).
+- **Content Security Policy** on every page via meta tag: scripts, styles, fonts, images and connections only from the domains in use (Google Fonts, Unsplash, GoatCounter, Cloudflare, GitHub API, jsDelivr); plugins blocked (`object-src 'none'`) and `<base>` locked. Referrer policy `strict-origin-when-cross-origin`.
+- **Retention (privacy):** every week the Worker deletes contact-form messages older than 12 months and chat ratings older than 6 months; the form and chat notices state these periods.
 - **Accounts:** the most important protection is two-factor authentication (2FA) on GitHub, Cloudflare, Google and Resend.
 - **Per-IP limits:** 10 questions/min (chat), 3 messages/min (form), 20 ratings/min, 3 job analyses/min, 30 price lookups/min. Cloudflare's limiter is permissive (counters lag slightly): it stops high-volume abuse, not an exact request count.
 - **Validation:** question ≤ 500 characters; name 2–100, valid email ≤ 200, message 5–2,000.

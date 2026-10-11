@@ -296,6 +296,8 @@ npm run painel        # ou: npm run panel
 - **Rota de preços (`GET /prices`):** só leitura, aceita apenas a origem do site e as 15 ações da demo, com limite por IP e cache de 1 h.
 - **Integridade de scripts externos (SRI):** o face-api.js da demo facial tem `integrity` (SHA-384); se o arquivo do CDN for alterado, o navegador não o executa.
 - **HTTPS obrigatório** com HSTS (GitHub Pages).
+- **Política de conteúdo (CSP)** em todas as páginas, por meta tag: só carrega scripts, estilos, fontes, imagens e conexões dos domínios usados (Google Fonts, Unsplash, GoatCounter, Cloudflare, API do GitHub, jsDelivr); bloqueia plugins (`object-src 'none'`) e troca de `<base>`. Política de referenciador `strict-origin-when-cross-origin`.
+- **Retenção (LGPD):** toda semana o Worker apaga mensagens do formulário com mais de 12 meses e avaliações do chat com mais de 6 meses; os avisos do formulário e do chat informam os prazos.
 - **Contas:** a proteção mais importante é a verificação em duas etapas (2FA) no GitHub, Cloudflare, Google e Resend.
 - **Limites por IP:** 10 perguntas/min (chat), 3 mensagens/min (formulário), 20 avaliações/min, 3 análises de vaga/min, 30 consultas de preços/min. O limitador do Cloudflare é permissivo (contadores com pequeno atraso): segura abusos em volume, não um pedido exato.
 - **Validação:** pergunta ≤ 500 caracteres; nome 2–100, e-mail válido ≤ 200, mensagem 5–2.000.

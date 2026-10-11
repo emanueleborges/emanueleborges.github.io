@@ -3,6 +3,9 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Segurança: só carrega recursos destes domínios (CSP) e não envia o endereço completo a outros sites. -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://gc.zgo.at https://challenges.cloudflare.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://images.unsplash.com https://emanueleborges.goatcounter.com; connect-src 'self' https://emanuel-portfolio-chat.emanuel-portfolio-chat.workers.dev https://api.github.com https://emanueleborges.goatcounter.com https://cdn.jsdelivr.net; frame-src https://challenges.cloudflare.com; media-src 'self' blob:; worker-src 'self' blob:; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
     <title data-t="meta.title">Does your role match Emanuel? — Emanuel Borges</title>
     <meta name="description" data-t-content="meta.description" content="Paste a job description and see, requirement by requirement, how Emanuel Borges's profile matches it — with evidence from his portfolio." />
     <meta name="theme-color" content="#06100b" />
@@ -120,8 +123,8 @@
             <button class="button" type="button" data-copy data-t="copy"></button>
           </div>
           <div class="links" style="margin-top:22px">
-            <a class="button primary" data-cv download data-t="cv"></a>
-            <a class="button" data-contact data-t="contact"></a>
+            <a class="button primary" href="/cv/curriculo-emanuel-borges-en.pdf" data-cv download data-t="cv"></a>
+            <a class="button" href="/#contato" data-contact data-t="contact"></a>
             <button class="button" type="button" data-again data-t="again"></button>
           </div>
           <p class="note-ai" style="margin-top:16px" data-t="aiNote"></p>

@@ -181,7 +181,8 @@ button { font: inherit; }
 .button-primary:hover { box-shadow: 0 10px 38px rgba(var(--glow-rgb),.43); }
 .button-quiet { border: 1px solid var(--line-strong); background: var(--surface-2); }
 .hero-ask { display: flex; align-items: center; gap: 10px; width: min(100%, 560px); margin-top: 18px; padding: 12px 16px; border: 1px solid transparent; border-radius: 16px; background: linear-gradient(var(--ask-bg), var(--ask-bg)) padding-box, var(--ask-border) border-box; color: var(--text); font: 500 14px var(--sans); text-align: left; cursor: pointer; box-shadow: var(--ask-shadow); transition: transform .2s, box-shadow .2s; }
-.hero-ask[hidden] { display: none; }
+/* Escondida até o chat.js carregar, mas ocupando o espaço desde o início (evita deslocar o topo). */
+.hero-ask[hidden] { display: flex !important; visibility: hidden; }
 .hero-match { display: flex; align-items: center; gap: 10px; width: min(100%, 560px); margin-top: 10px; padding: 10px 16px; border: 1px dashed rgba(var(--accent-rgb),.45); border-radius: 14px; background: var(--surface-2); color: var(--text); font-size: 14px; transition: border-color .2s, transform .2s; }
 .hero-match strong { color: var(--cyan-soft); }
 .hero-match:hover { border-color: var(--cyan); transform: translateY(-1px); }

@@ -3,6 +3,9 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Segurança: só carrega recursos destes domínios (CSP) e não envia o endereço completo a outros sites. -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://gc.zgo.at https://challenges.cloudflare.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://images.unsplash.com https://emanueleborges.goatcounter.com; connect-src 'self' https://emanuel-portfolio-chat.emanuel-portfolio-chat.workers.dev https://api.github.com https://emanueleborges.goatcounter.com https://cdn.jsdelivr.net; frame-src https://challenges.cloudflare.com; media-src 'self' blob:; worker-src 'self' blob:; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
     <title data-t="meta.title">Movie Recommender with TF-IDF — Emanuel Borges</title>
     <meta name="description" data-t-content="meta.description" content="Content-based movie recommendations with TF-IDF and cosine similarity over 1,500 films, computed in your browser, with the terms that explain each match." />
     <meta name="theme-color" content="#06100b" />
@@ -26,8 +29,8 @@
       .picked { margin-top: 22px; padding: 16px 18px; border-left: 3px solid var(--cyan); border-radius: 0 12px 12px 0; background: rgba(var(--accent-2-rgb), .06); }
       .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px; margin-top: 16px; }
       .movie { display: flex; flex-direction: column; gap: 6px; padding: 16px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface-2); }
-      .movie h4 { margin: 0; font-size: 16px; letter-spacing: -.02em; }
-      .movie h4 small { color: var(--muted); font-weight: 500; }
+      .movie .movie-title { margin: 0; font-size: 16px; letter-spacing: -.02em; }
+      .movie .movie-title small { color: var(--muted); font-weight: 500; }
       .meta { font-size: 12px; color: var(--muted); }
       .score { display: flex; align-items: center; gap: 8px; font: 500 12px "DM Mono", monospace; color: var(--accent-text); }
       .bar { flex: 1; height: 4px; border-radius: 4px; background: var(--line); overflow: hidden; }
@@ -42,6 +45,7 @@
       @media (max-width: 720px) { .modes { grid-template-columns: 1fr; } }
       @media (max-width: 420px) { .field { flex-wrap: wrap; } .field input { flex-basis: 100%; } .field .button { width: 100%; justify-content: center; } }
     </style>
+    <link rel="preload" href="filmes.json" as="fetch" crossorigin="anonymous" />
     <script src="../demos.js" defer></script>
     <script src="tfidf.js" defer></script>
     <script src="filmes.js" defer></script>

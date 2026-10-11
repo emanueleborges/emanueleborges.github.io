@@ -484,6 +484,21 @@ async function healthCheck(env) {
   return checks;
 }
 
+// LGPD: dados pessoais não ficam para sempre. Toda semana (junto com o resumo) apaga mensagens do
+// formulário com mais de 12 meses e avaliações do chat com mais de 6 meses.
+async function purgeOldData(env) {
+  try {
+    const results = await env.DB.batch([
+      env.DB.prepare("DELETE FROM messages WHERE created_at < datetime('now', '-12 months')"),
+      env.DB.prepare("DELETE FROM feedback WHERE created_at < datetime('now', '-6 months')"),
+    ]);
+    const removed = results.map((r) => r.meta?.changes ?? 0);
+    if (removed.some(Boolean)) console.log(`Retenção: ${removed[0]} mensagens e ${removed[1]} avaliações apagadas`);
+  } catch (error) {
+    console.error("Retenção de dados falhou:", error?.message ?? error);
+  }
+}
+
 // Semana no GoatCounter: visitas, cliques mais frequentes, alcance do Contato e endereços 404.
 async function goatCounterWeek(env) {
   if (!env.GOATCOUNTER_TOKEN) return null;
@@ -598,7 +613,7 @@ async function handlePrices(request, ip, env, origin) {
 
 export default {
   async scheduled(event, env, ctx) {
-    ctx.waitUntil(sendWeeklySummary(env));
+    ctx.waitUntil(Promise.all([sendWeeklySummary(env), purgeOldData(env)]));
   },
 
   async fetch(request, env, ctx) {

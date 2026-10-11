@@ -3,6 +3,9 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Segurança: só carrega recursos destes domínios (CSP) e não envia o endereço completo a outros sites. -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://gc.zgo.at https://challenges.cloudflare.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://images.unsplash.com https://emanueleborges.goatcounter.com; connect-src 'self' https://emanuel-portfolio-chat.emanuel-portfolio-chat.workers.dev https://api.github.com https://emanueleborges.goatcounter.com https://cdn.jsdelivr.net; frame-src https://challenges.cloudflare.com; media-src 'self' blob:; worker-src 'self' blob:; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
     <title data-t="meta.title">Face Recognition in the Browser — Emanuel Borges</title>
     <meta name="description" data-t-content="meta.description" content="Real-time face recognition with face-api.js: detection, 128-dimension embeddings and matching, entirely in your browser — the camera never leaves your device." />
     <meta name="theme-color" content="#06100b" />
@@ -33,10 +36,9 @@
       .people button { width: 22px; height: 22px; border: 0; border-radius: 50%; background: var(--line); color: var(--text); cursor: pointer; }
       .privacy { margin-top: 22px; padding: 12px 16px; border: 1px solid rgba(var(--accent-2-rgb), .3); border-radius: 12px; background: rgba(var(--accent-2-rgb), .06); font-size: 13px; color: var(--accent-text); }
       .results { margin: 12px 0 0; font-size: 14px; }
+      [data-status] { min-height: 3.2em; }
     </style>
     <script src="../demos.js" defer></script>
-    <!-- integrity: o navegador só executa o arquivo se ele for idêntico ao conferido (proteção contra CDN adulterado). -->
-    <script src="https://cdn.jsdelivr.net/npm/@vladmandic/face-api@1.7.15/dist/face-api.js" integrity="sha384-M5nePoB6/w/a9JhtegEibSLGiJy/+QMZZMfvcxjWVCQW/HPwrQ7i21V/Px/8AyVA" crossorigin="anonymous" defer></script>
     <script src="face.js" defer></script>
     <!-- GoatCounter: conta só o caminho (sem ?lang=, ?theme=…), para não dividir a mesma página; a origem (?ref=, utm_*) continua registrada. -->
     <script>window.goatcounter = { path: function (p) { return p.split("?")[0].replace(/index\.html$/, "") || "/"; } };</script>
@@ -77,12 +79,12 @@
 
         <section class="panel">
           <div class="toolbar">
-            <button class="button primary" type="button" data-camera disabled data-t="camOn"></button>
+            <button class="button primary" type="button" data-camera data-t="camOn"></button>
             <label class="button" style="display:inline-flex">
               <span data-t="upload"></span>
-              <input type="file" accept="image/*" class="visually-hidden" data-upload disabled />
+              <input type="file" accept="image/*" class="visually-hidden" data-upload />
             </label>
-            <button class="button" type="button" data-sample disabled data-t="sample"></button>
+            <button class="button" type="button" data-sample data-t="sample"></button>
           </div>
           <p class="status" data-status aria-live="polite"></p>
           <div class="stage" data-stage><p class="empty" data-t="empty"></p></div>
@@ -92,7 +94,7 @@
             <input type="text" maxlength="40" data-name data-t-placeholder="namePh" data-t-aria="namePh" autocomplete="off" />
             <button class="button primary" type="submit" data-enroll-button disabled data-t="enroll"></button>
           </form>
-          <h3 style="margin-top:20px" data-t="people"></h3>
+          <h2 class="h3" style="margin-top:20px" data-t="people"></h2>
           <ul class="people" data-people></ul>
         </section>
 

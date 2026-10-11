@@ -264,7 +264,7 @@ function card(result) {
   const f = films[result.index];
   const pct = Math.round(result.score * 100);
   return `<article class="movie">
-    <h4>${escape(f.t)} <small>${f.y ?? ""}</small></h4>
+    <h2 class="movie-title">${escape(f.t)} <small>${f.y ?? ""}</small></h2>
     <span class="meta">${escape(f.g.slice(0, 4).join(" · "))}${f.d.length ? ` — ${t("directedBy")} ${escape(f.d.join(", "))}` : ""}</span>
     <span class="score"><span class="bar"><span style="width:${Math.min(pct * 1.6, 100)}%"></span></span>${pct}% ${t("similarity")}</span>
     <span class="terms">${t("because")} ${result.terms.map((w) => `<b>${escape(w)}</b>`).join(", ")}</span>

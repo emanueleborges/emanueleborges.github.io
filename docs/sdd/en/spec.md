@@ -134,7 +134,7 @@ The site can be installed as an app (manifest and icons) and, after the first vi
 | NFR-02 | **Performance** | Static site with no build step; first image preloaded (smaller on mobile) and the rest on demand; non-blocking fonts; third-party scripts (Turnstile) loaded on demand; repeated AI answers served from cache. Target: Lighthouse (mobile) ≥ 75 performance and 100 accessibility, best practices and SEO. |
 | NFR-03 | **Availability** | The chat must remain useful without AI (local search); the form fails with a clear message. |
 | NFR-04 | **Security** | The backend only accepts the site's origin; bot protection on every call that stores data or uses AI; per-IP limits; input validation; no secrets in the repository. The (read-only) prices route only accepts the site's origin and the demo's 15 stocks, with a per-IP limit and caching. |
-| NFR-05 | **Privacy (LGPD/GDPR-style)** | No tracking cookies; the form stores the minimum (no IP address); notices about AI use and the purpose of the data. In the face recognition demo, camera and photos are processed only on the device. |
+| NFR-05 | **Privacy (LGPD/GDPR-style)** | No tracking cookies; the form stores the minimum (no IP address); notices about AI use and the purpose of the data. In the face recognition demo, camera and photos are processed only on the device. Retention: messages deleted after 12 months and ratings after 6 months, automatically. |
 | NFR-06 | **Accessibility** | Semantic HTML, translated ARIA labels, visible focus, keyboard navigation, respects `prefers-reduced-motion`. |
 | NFR-07 | **Responsiveness** | Usable and readable from 360 px to wide desktops. |
 | NFR-08 | **AI reliability** | The AI must not invent facts; it must decline off-profile topics and resist visitor instructions that try to change its rules. |
@@ -182,7 +182,7 @@ The site can be installed as an app (manifest and icons) and, after the first vi
 - [x] Clicking 👎 on an AI answer shows "Thanks for your feedback!" and stores the record in the database.
 
 ### SEO and performance
-- [x] `sitemap.xml` and `robots.txt` return HTTP 200; the sitemap is valid XML with 20 URLs.
+- [x] `sitemap.xml` and `robots.txt` return HTTP 200; the sitemap is valid XML with 21 URLs.
 - [x] The page has an Open Graph preview (1200×630 image), `hreflang` for the 8 languages and valid `Person` JSON-LD.
 - [x] The Google Search Console verification tag is published.
 - [x] Lighthouse (mobile): performance ~80, accessibility 100, best practices 100, SEO 100.

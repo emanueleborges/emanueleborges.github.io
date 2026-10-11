@@ -85,6 +85,7 @@ Legenda: ✅ concluída · ⏳ pendente · 💡 ideia
 - ✅ **T65** Novo logo "E." por tema (verde/lima no Amazônia, laranja no Editorial), com animação de desenho, pulso do nó de IA e efeito ao passar o mouse; favicon e ícones do app refeitos — RF-15
 - ✅ **T66** Mapa de cliques: todo clique vira `clique/<área>/<elemento>` e cada seção vista `secao/<id>` (site, demos, vagas); painel com funil de atenção, cliques por área, taxa por seção e mais/menos clicados — RF-08
 - ✅ **T67** GoatCounter: páginas contadas só pelo caminho (sem dividir por `?lang=`/`?theme=`), `?ref=curriculo-<idioma>` no PDF e `?ref=github` no README, 404 registrado como evento e resumo semanal com cliques, alcance do Contato e 404 — RF-08
+- ✅ **T68** Auditoria (11/10/2026) e correções: demo facial carrega a IA só no primeiro uso (4,7 MB → 103 KB, desempenho 55 → 92), retenção automática de dados (12/6 meses), CSP e política de referenciador em todas as páginas, sem deslocamento de layout no topo (CLS 0,121 → 0,004), títulos em ordem nas demos (acessibilidade 100 em todas), links padrão na página de vagas, pré-carregamento da base de filmes e nota do match sempre numérica — RNF-02, RNF-04, RNF-05, RNF-06
 
 ---
 

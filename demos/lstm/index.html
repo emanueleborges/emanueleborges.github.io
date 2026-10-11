@@ -3,6 +3,9 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Segurança: só carrega recursos destes domínios (CSP) e não envia o endereço completo a outros sites. -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://gc.zgo.at https://challenges.cloudflare.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://images.unsplash.com https://emanueleborges.goatcounter.com; connect-src 'self' https://emanuel-portfolio-chat.emanuel-portfolio-chat.workers.dev https://api.github.com https://emanueleborges.goatcounter.com https://cdn.jsdelivr.net; frame-src https://challenges.cloudflare.com; media-src 'self' blob:; worker-src 'self' blob:; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
     <title data-t="meta.title">LSTM Stock Forecasting — Emanuel Borges</title>
     <meta name="description" data-t-content="meta.description" content="LSTM neural network that forecasts the next stock close, running in your browser in plain JavaScript and evaluated against a naive baseline." />
     <meta name="theme-color" content="#06100b" />
@@ -64,7 +67,7 @@
             <button class="button primary" type="button" data-run data-t="run">Forecast</button>
           </div>
           <p class="status" data-status aria-live="polite"></p>
-          <h3 id="forecast-title" data-t="chart">Last 30 sessions and forecast</h3>
+          <h2 class="h3" id="forecast-title" data-t="chart">Last 30 sessions and forecast</h2>
           <svg class="chart" data-chart="forecast" viewBox="0 0 900 300" role="img"></svg>
           <div class="legend"><span style="--c:var(--series-1)" data-t="real">Actual</span><span style="--c:var(--series-2)" data-t="predicted">LSTM forecast</span></div>
           <div class="table-wrap"><table data-forecast-table></table></div>
@@ -74,7 +77,7 @@
         <p class="note" data-test-note></p>
         <section class="panel">
           <div class="table-wrap"><table data-metrics-table></table></div>
-          <h3 style="margin-top:24px" data-t="backtest">Test: actual × predicted (one day ahead)</h3>
+          <h2 class="h3" style="margin-top:24px" data-t="backtest">Test: actual × predicted (one day ahead)</h2>
           <svg class="chart" data-chart="backtest" viewBox="0 0 900 300" role="img"></svg>
           <div class="legend"><span style="--c:var(--series-1)" data-t="real">Actual</span><span style="--c:var(--series-2)" data-t="predictedNext">LSTM (next day)</span></div>
         </section>
