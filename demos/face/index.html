@@ -38,6 +38,8 @@
     <!-- integrity: o navegador só executa o arquivo se ele for idêntico ao conferido (proteção contra CDN adulterado). -->
     <script src="https://cdn.jsdelivr.net/npm/@vladmandic/face-api@1.7.15/dist/face-api.js" integrity="sha384-M5nePoB6/w/a9JhtegEibSLGiJy/+QMZZMfvcxjWVCQW/HPwrQ7i21V/Px/8AyVA" crossorigin="anonymous" defer></script>
     <script src="face.js" defer></script>
+    <!-- GoatCounter: conta só o caminho (sem ?lang=, ?theme=…), para não dividir a mesma página; a origem (?ref=, utm_*) continua registrada. -->
+    <script>window.goatcounter = { path: function (p) { return p.split("?")[0].replace(/index\.html$/, "") || "/"; } };</script>
     <script data-goatcounter="https://emanueleborges.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
   </head>
   <body>

@@ -84,6 +84,7 @@ Legenda: ✅ concluída · ⏳ pendente · 💡 ideia
 - ✅ **T64** Temas Amazônia (padrão) e Editorial: cores em variáveis CSS, botão em todas as páginas (8 idiomas), sem piscar, gráficos validados para daltonismo, Lighthouse 100 de acessibilidade nos dois — RF-15
 - ✅ **T65** Novo logo "E." por tema (verde/lima no Amazônia, laranja no Editorial), com animação de desenho, pulso do nó de IA e efeito ao passar o mouse; favicon e ícones do app refeitos — RF-15
 - ✅ **T66** Mapa de cliques: todo clique vira `clique/<área>/<elemento>` e cada seção vista `secao/<id>` (site, demos, vagas); painel com funil de atenção, cliques por área, taxa por seção e mais/menos clicados — RF-08
+- ✅ **T67** GoatCounter: páginas contadas só pelo caminho (sem dividir por `?lang=`/`?theme=`), `?ref=curriculo-<idioma>` no PDF e `?ref=github` no README, 404 registrado como evento e resumo semanal com cliques, alcance do Contato e 404 — RF-08
 
 ---
 

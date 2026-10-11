@@ -484,17 +484,32 @@ async function healthCheck(env) {
   return checks;
 }
 
-async function goatCounterVisits(env) {
+// Semana no GoatCounter: visitas, cliques mais frequentes, alcance do Contato e endereços 404.
+async function goatCounterWeek(env) {
   if (!env.GOATCOUNTER_TOKEN) return null;
   try {
-    const end = new Date();
-    const start = new Date(end.getTime() - 7 * 86400000);
-    const url = `https://emanueleborges.goatcounter.com/api/v0/stats/total?start=${start.toISOString().slice(0, 10)}&end=${end.toISOString().slice(0, 10)}`;
-    const response = await fetch(url, { headers: { Authorization: `Bearer ${env.GOATCOUNTER_TOKEN}`, "Content-Type": "application/json" } });
-    if (!response.ok) return null;
-    const data = await response.json();
-    return typeof data.total === "number" ? data.total : null;
-  } catch {
+    const end = new Date(Date.now() + 86400000);
+    const start = new Date(end.getTime() - 8 * 86400000);
+    const range = `start=${start.toISOString().slice(0, 10)}&end=${end.toISOString().slice(0, 10)}`;
+    const get = async (path) => {
+      const response = await fetch(`https://emanueleborges.goatcounter.com/api/v0/${path}`, { headers: { Authorization: `Bearer ${env.GOATCOUNTER_TOKEN}`, "Content-Type": "application/json" } });
+      if (!response.ok) throw new Error(`GoatCounter ${response.status}`);
+      return response.json();
+    };
+    const [total, hits] = await Promise.all([get(`stats/total?${range}`), get(`stats/hits?${range}&limit=100`)]);
+    const events = (hits.hits ?? []).filter((h) => h.event);
+    const sum = (prefix) => events.filter((h) => h.path.startsWith(prefix)).reduce((n, h) => n + h.count, 0);
+    const clicks = events.filter((h) => h.path.startsWith("clique/")).sort((a, b) => b.count - a.count);
+    const top = sum("secao/inicio");
+    return {
+      total: typeof total.total === "number" ? total.total : null,
+      topClicks: clicks.slice(0, 5).map((h) => [h.path.slice(7).replace("/", " › "), h.count]),
+      clicks: clicks.reduce((n, h) => n + h.count, 0),
+      reachContact: top ? Math.round((sum("secao/contato") / top) * 100) : null,
+      notFound: events.filter((h) => h.path.startsWith("404/")).slice(0, 5).map((h) => [h.path.slice(3), h.count]),
+    };
+  } catch (error) {
+    console.error("Resumo semanal: GoatCounter", error?.message ?? error);
     return null;
   }
 }
@@ -507,13 +522,16 @@ async function sendWeeklySummary(env) {
     env.DB.prepare(`SELECT SUM(rating = 1) AS up, SUM(rating = -1) AS down FROM feedback WHERE ${week}`).first(),
     env.DB.prepare(`SELECT lang, question, answer FROM feedback WHERE rating = -1 AND ${week} ORDER BY id DESC LIMIT 5`).all(),
     healthCheck(env),
-    goatCounterVisits(env),
+    goatCounterWeek(env),
   ]);
   const ok = (value) => (value ? "✅ funcionando" : "❌ com problema");
   const list = (items) => (items.length ? `<ul>${items.join("")}</ul>` : "<p>Nenhuma.</p>");
   const html = `
     <h2>Resumo semanal do portfólio</h2>
-    <p><strong>Visitas (7 dias):</strong> ${visits ?? "— (configure GOATCOUNTER_TOKEN para ver aqui; veja em emanueleborges.goatcounter.com)"}</p>
+    <p><strong>Visitas (7 dias):</strong> ${visits?.total ?? "— (configure GOATCOUNTER_TOKEN para ver aqui; veja em emanueleborges.goatcounter.com)"}</p>
+    ${visits ? `<p><strong>Cliques (7 dias):</strong> ${visits.clicks}${visits.reachContact !== null ? ` · <strong>chegaram ao Contato:</strong> ${visits.reachContact}% das visitas ao topo` : ""}</p>
+    ${visits.topClicks.length ? `<p>Mais clicados:</p>${list(visits.topClicks.map(([name, n]) => `<li>${escapeHtml(name)} — ${n}</li>`))}` : ""}
+    ${visits.notFound.length ? `<p>⚠️ Páginas não encontradas (links quebrados?):</p>${list(visits.notFound.map(([path, n]) => `<li>${escapeHtml(path)} — ${n}</li>`))}` : ""}` : ""}
     <h3>Mensagens do formulário: ${messages.results.length}</h3>
     ${list(messages.results.map((m) => `<li>${escapeHtml(m.created_at)} UTC — <strong>${escapeHtml(m.name)}</strong> (${escapeHtml(m.email)}, ${escapeHtml(m.lang)})</li>`))}
     <h3>Avaliações do chat: 👍 ${ratings?.up ?? 0} · 👎 ${ratings?.down ?? 0}</h3>

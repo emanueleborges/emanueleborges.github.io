@@ -6,7 +6,7 @@
 
 Professional portfolio of **Emanuel Borges**, Senior Full Stack Developer (Java/Kotlin, Node.js, React, React Native) specializing in **applied AI (Machine Learning and NLP)**.
 
-🔗 **Live site:** https://emanueleborges.github.io · 💬 **Ask the assistant:** https://emanueleborges.github.io/#chat
+🔗 **Live site:** [emanueleborges.github.io](https://emanueleborges.github.io/?ref=github) · 💬 **Ask the assistant:** https://emanueleborges.github.io/#chat
 
 🎯 **For recruiters:** [does your role match Emanuel?](https://emanueleborges.github.io/vaga/) — paste the job description and see the match requirement by requirement
 
@@ -46,7 +46,7 @@ A framework-free static site with a serverless backend on Cloudflare for the AI 
 | **Contact form** | Messages stored in D1, invisible bot protection, **email notification** to the owner and an **automatic confirmation** to the visitor in the language of their message. |
 | **Direct contacts** | Email, WhatsApp, LinkedIn and GitHub. |
 | **SEO** | Link previews (Open Graph/Twitter), `hreflang` for 8 languages, `Person` structured data (JSON-LD), `sitemap.xml` and `robots.txt`; verified in Google Search Console. |
-| **Analytics** | Cookieless visits and events (GoatCounter) with a **click map**: every click becomes `clique/<area>/<element>` (e.g. `clique/projetos/demo/lstm`) and every section seen becomes `secao/<id>` — same names in all 8 languages, demos and job page included. The private dashboard (`npm run painel`) shows the attention funnel (how far people scroll), clicks by area, clicks per 100 views in each section and the most and least clicked elements (including those nobody clicked). Nothing the visitor types is sent. |
+| **Analytics** | Cookieless visits and events (GoatCounter) with a **click map**: every click becomes `clique/<area>/<element>` (e.g. `clique/projetos/demo/lstm`) and every section seen becomes `secao/<id>` — same names in all 8 languages, demos and job page included. The private dashboard (`npm run painel`) shows the attention funnel (how far people scroll), clicks by area, clicks per 100 views in each section and the most and least clicked elements (including those nobody clicked). Nothing the visitor types is sent. Pages counted by path only (`/?lang=pt` and `/` add up together); source via `?ref=` (the résumé PDF links with `?ref=curriculo-<lang>`); 404 addresses recorded as `404/<path>`. |
 | **Weekly summary** | Every Monday an email with the week's messages, chat ratings and a health check of the AI, vector index and database. |
 | **404 page** | Custom page in the site's style with links to the portfolio and the assistant. |
 | **AI demo: LSTM stock forecasting** | `/demos/lstm/` page (8 languages) where the FIAP project's LSTM runs **in the browser, in plain JavaScript** (weights exported from Keras, same output to ~1e-8). Recent prices come from the Worker (Yahoo Finance), with a saved copy if it fails; test metrics compared against a naive baseline. |
@@ -227,6 +227,8 @@ This (1) builds the knowledge from `i18n.js`, (2) deploys the Worker and (3) upd
 | **Open the stats dashboard** (rating and message charts, poorly rated answers, visits) | `cd worker && npm run painel` — see [Stats dashboard](#stats-dashboard) |
 | See AI usage and cache | Cloudflare dashboard → **AI → AI Gateway → default** |
 | See visits and events | https://emanueleborges.goatcounter.com |
+| **Don't count your own visits** | On each of your browsers/devices, open `https://emanueleborges.github.io/#toggle-goatcounter` once and confirm (open it again to resume counting) |
+| Know where each visit comes from | Share the link with a source: `emanueleborges.github.io/?ref=linkedin`, `?ref=whatsapp`, `?ref=email`… — shows under **Campaigns/Referrers** in GoatCounter |
 | See Google searches and indexing | [Google Search Console](https://search.google.com/search-console) → property `https://emanueleborges.github.io/` |
 | Run the chat tests | `./tests/rodar-testes-chat.sh` |
 | Run Lighthouse like CI does | `npx @lhci/cli@0.15.1 autorun` (uses `lighthouserc.json`) |

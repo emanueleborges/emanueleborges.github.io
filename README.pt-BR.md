@@ -6,7 +6,7 @@
 
 Portfólio profissional de **Emanuel Borges**, Desenvolvedor Full Stack Sênior (Java/Kotlin, Node.js, React, React Native) especializando-se em **IA aplicada (Machine Learning e NLP)**.
 
-🔗 **Site:** https://emanueleborges.github.io · 💬 **Pergunte ao assistente:** https://emanueleborges.github.io/#chat
+🔗 **Site:** [emanueleborges.github.io](https://emanueleborges.github.io/?ref=github) · 💬 **Pergunte ao assistente:** https://emanueleborges.github.io/#chat
 
 🎯 **Para recrutadores:** [sua vaga combina com o Emanuel?](https://emanueleborges.github.io/vaga/) — cole a vaga e veja a aderência requisito por requisito
 
@@ -46,7 +46,7 @@ Site estático, sem framework, com um backend *serverless* no Cloudflare para o 
 | **Formulário de contato** | Mensagens salvas no D1, proteção anti-robô invisível, **aviso por e-mail** ao dono e **confirmação automática** ao visitante no idioma da mensagem. |
 | **Contatos diretos** | E-mail, WhatsApp, LinkedIn e GitHub. |
 | **SEO** | Prévia de link (Open Graph/Twitter), `hreflang` para os 8 idiomas, dados estruturados de `Person` (JSON-LD), `sitemap.xml` e `robots.txt`; verificado no Google Search Console. |
-| **Estatísticas** | Visitas e eventos sem cookies (GoatCounter), com **mapa de cliques**: cada clique vira `clique/<área>/<elemento>` (ex.: `clique/projetos/demo/lstm`) e cada seção vista vira `secao/<id>` — nomes iguais nos 8 idiomas, incluindo demos e página de vagas. O painel privado (`npm run painel`) mostra o funil de atenção (até onde as pessoas rolam), cliques por área, cliques por 100 visualizações em cada seção e os elementos mais e menos clicados (inclusive os que ninguém clicou). Nada do que o visitante digita é enviado. |
+| **Estatísticas** | Visitas e eventos sem cookies (GoatCounter), com **mapa de cliques**: cada clique vira `clique/<área>/<elemento>` (ex.: `clique/projetos/demo/lstm`) e cada seção vista vira `secao/<id>` — nomes iguais nos 8 idiomas, incluindo demos e página de vagas. O painel privado (`npm run painel`) mostra o funil de atenção (até onde as pessoas rolam), cliques por área, cliques por 100 visualizações em cada seção e os elementos mais e menos clicados (inclusive os que ninguém clicou). Nada do que o visitante digita é enviado. Páginas contadas só pelo caminho (`/?lang=pt` e `/` somam juntas); origem por `?ref=` (o PDF do currículo leva `?ref=curriculo-<idioma>`); endereços 404 registrados como `404/<caminho>`. |
 | **Resumo semanal** | Toda segunda, um e-mail com as mensagens da semana, as avaliações do chat e um teste de saúde da IA, do índice vetorial e do banco. |
 | **Página 404** | Página personalizada no estilo do site, com links para o portfólio e o assistente. |
 | **Demo de IA: previsão de ações com LSTM** | Página `/demos/lstm/` (8 idiomas) onde o LSTM do projeto FIAP roda **no navegador, em JavaScript puro** (pesos exportados do Keras, mesma saída até ~1e-8). Preços recentes pelo Worker (Yahoo Finance), com cópia salva se ele falhar; métricas do teste comparadas com um baseline ingênuo. |
@@ -227,6 +227,8 @@ Esse comando (1) gera o conhecimento a partir do `i18n.js`, (2) publica o Worker
 | **Ver o painel de estatísticas** (gráficos de avaliações e mensagens, respostas mal avaliadas, visitas) | `cd worker && npm run painel` — veja [Painel de estatísticas](#painel-de-estatísticas) |
 | Ver uso da IA e do cache | Painel do Cloudflare → **AI → AI Gateway → default** |
 | Ver visitas e eventos | https://emanueleborges.goatcounter.com |
+| **Não contar as suas próprias visitas** | Em cada navegador/aparelho seu, abra uma vez `https://emanueleborges.github.io/#toggle-goatcounter` e confirme (abra de novo para voltar a contar) |
+| Saber de onde vem cada visita | Compartilhe o link com origem: `emanueleborges.github.io/?ref=linkedin`, `?ref=whatsapp`, `?ref=email`… — aparece em **Campaigns/Referrers** no GoatCounter |
 | Ver buscas e indexação no Google | [Google Search Console](https://search.google.com/search-console) → propriedade `https://emanueleborges.github.io/` |
 | Rodar os testes do chat | `./tests/rodar-testes-chat.sh` |
 | Rodar o Lighthouse como no CI | `npx @lhci/cli@0.15.1 autorun` (usa `lighthouserc.json`) |

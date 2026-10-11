@@ -84,6 +84,7 @@ Legend: ✅ done · ⏳ pending · 💡 idea
 - ✅ **T64** Amazon (default) and Editorial themes: colors as CSS variables, a button on every page (8 languages), no flash, charts validated for color-vision deficiency, Lighthouse accessibility 100 in both — FR-15
 - ✅ **T65** New per-theme "E." logo (green/lime in Amazon, orange in Editorial), with draw-in animation, AI-node pulse and hover effect; favicon and app icons rebuilt — FR-15
 - ✅ **T66** Click map: every click becomes `clique/<area>/<element>` and every section seen `secao/<id>` (site, demos, job page); dashboard with attention funnel, clicks by area, rate per section and most/least clicked — FR-08
+- ✅ **T67** GoatCounter: pages counted by path only (no split by `?lang=`/`?theme=`), `?ref=curriculo-<lang>` in the PDF and `?ref=github` in the README, 404 tracked as an event and weekly summary with clicks, Contact reach and 404s — FR-08
 
 ---
 
