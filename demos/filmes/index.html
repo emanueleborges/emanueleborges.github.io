@@ -9,8 +9,7 @@
     <title data-t="meta.title">Movie Recommender with TF-IDF — Emanuel Borges</title>
     <meta name="description" data-t-content="meta.description" content="Content-based movie recommendations with TF-IDF and cosine similarity over 1,500 films, computed in your browser, with the terms that explain each match." />
     <meta name="theme-color" content="#06100b" />
-    <!-- Tema antes da pintura (evita piscar): ?theme= ou o salvo; padrão "amazonia". -->
-    <script>(function(){var t;try{t=new URLSearchParams(location.search).get("theme")||localStorage.getItem("theme")}catch(e){}t=t==="editorial"?"editorial":"amazonia";document.documentElement.dataset.theme=t;var m=document.querySelector('meta[name="theme-color"]');if(m)m.content=t==="editorial"?"#f6f3ec":"#06100b"})();</script>
+    <script src="../../components/boot.js"></script>
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
@@ -49,18 +48,17 @@
     <script src="../demos.js" defer></script>
     <script src="tfidf.js" defer></script>
     <script src="filmes.js" defer></script>
-    <!-- GoatCounter: conta só o caminho (sem ?lang=, ?theme=…), para não dividir a mesma página; a origem (?ref=, utm_*) continua registrada. -->
-    <script>window.goatcounter = { path: function (p) { return p.split("?")[0].replace(/index\.html$/, "") || "/"; } };</script>
     <script data-goatcounter="https://emanueleborges.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+    <script src="../../components/components.js" defer></script>
   </head>
   <body>
     <div class="glow glow-1" aria-hidden="true"></div>
     <div class="glow glow-2" aria-hidden="true"></div>
     <div class="shell">
       <header>
-        <a class="brand" href="/"><svg class="logo brand-logo" viewBox="0 0 64 64" width="32" height="32" aria-hidden="true" focusable="false"><defs><linearGradient id="lgd-bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" style="stop-color:var(--logo-bg1)"/><stop offset="1" style="stop-color:var(--logo-bg2)"/></linearGradient><linearGradient id="lgd-edge" x1="0" y1="0" x2="1" y2="1"><stop offset="0" style="stop-color:var(--logo-edge1)"/><stop offset="1" style="stop-color:var(--logo-edge2)"/></linearGradient><linearGradient id="lgd-letter" x1="0" y1="0" x2="1" y2="1"><stop offset="0" style="stop-color:var(--logo-letter1)"/><stop offset="0.55" style="stop-color:var(--logo-letter2)"/><stop offset="1" style="stop-color:var(--logo-letter3)"/></linearGradient><radialGradient id="lgd-node" cx=".35" cy=".35" r=".75"><stop offset="0" style="stop-color:var(--logo-node1)"/><stop offset="0.55" style="stop-color:var(--logo-node2)"/><stop offset="1" style="stop-color:var(--logo-node3)"/></radialGradient><radialGradient id="lgd-shine" cx=".2" cy=".1" r=".9"><stop offset="0" stop-color="#fff" stop-opacity=".16"/><stop offset=".6" stop-color="#fff" stop-opacity="0"/></radialGradient></defs><rect x="2" y="2" width="60" height="60" rx="16" fill="url(#lgd-bg)" stroke="url(#lgd-edge)" stroke-width="2.5"/><rect x="3.5" y="3.5" width="57" height="57" rx="14.5" fill="url(#lgd-shine)"/><path class="logo-e" d="M17 46.5V17.5h19M17 32h14M17 46.5h19" fill="none" stroke="url(#lgd-letter)" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" pathLength="100"/><circle class="logo-ring" cx="49" cy="46.5" r="7" fill="none" stroke-width="1.6"/><circle class="logo-node" cx="49" cy="46.5" r="4.4" fill="url(#lgd-node)"/></svg> Emanuel Borges</a>
+        <a class="brand" href="/"><site-logo class="brand-logo" size="32"></site-logo> Emanuel Borges</a>
         <div class="header-tools">
-          <button class="theme-toggle" type="button" data-theme-toggle><span class="theme-swatch" aria-hidden="true"></span><span class="theme-name" data-theme-name>Amazônia</span></button>
+          <theme-toggle></theme-toggle>
           <label><span class="visually-hidden" data-t="lang">Language</span>
           <select data-lang>
             <option value="en" lang="en">English</option>

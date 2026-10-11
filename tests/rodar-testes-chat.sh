@@ -14,7 +14,7 @@ fi
 [ -n "$CHROME" ] || { echo "Chrome não encontrado (defina a variável CHROME)"; exit 1; }
 TMP=$(mktemp -d)
 trap 'rm -rf "$TMP"' EXIT
-cp -R index.html styles.css script.js i18n.js api.js chat.js contact.js emanuel-borges.jpg logos tests/runner.js "$TMP"/
+cp -R index.html styles.css script.js i18n.js api.js chat.js contact.js components emanuel-borges.jpg logos tests/runner.js "$TMP"/
 # Sem o contador de visitas nos testes; injeta o executor dos testes.
 # (perl funciona igual no macOS e no Linux, ao contrário de `sed -i`)
 perl -0pi -e 's#.*goatcounter.*\n##g; s#(<script src="chat.js[^"]*" defer></script>)#$1<script src="runner.js" defer></script>#' "$TMP/index.html"

@@ -32,48 +32,11 @@ window.Demo = (() => {
 
   const track = (path, title) => window.goatcounter?.count?.({ path, title, event: true });
 
-  // Tema (Amazônia padrão · Editorial): o inicial já foi aplicado no <head>; aqui fica o botão.
-  const THEME_NAMES = {
-    en: ["Amazon", "Editorial", "Theme: {current}. Switch to {next}"],
-    pt: ["Amazônia", "Editorial", "Tema: {current}. Mudar para {next}"],
-    es: ["Amazonia", "Editorial", "Tema: {current}. Cambiar a {next}"],
-    fr: ["Amazonie", "Éditorial", "Thème : {current}. Passer à {next}"],
-    it: ["Amazzonia", "Editoriale", "Tema: {current}. Passa a {next}"],
-    de: ["Amazonien", "Editorial", "Design: {current}. Zu {next} wechseln"],
-    zh: ["亚马逊", "编辑风", "主题：{current}。切换到{next}"],
-    ru: ["Амазония", "Редакционный", "Тема: {current}. Переключить на {next}"],
-  };
-  const THEME_COLORS = { amazonia: "#06100b", editorial: "#f6f3ec" };
-  const theme = () => (document.documentElement.dataset.theme === "editorial" ? "editorial" : "amazonia");
-  const updateThemeButton = () => {
-    const button = document.querySelector("[data-theme-toggle]");
-    if (!button) return;
-    const [amazonia, editorial, label] = THEME_NAMES[lang] ?? THEME_NAMES.en;
-    const names = { amazonia, editorial };
-    const next = theme() === "amazonia" ? "editorial" : "amazonia";
-    button.querySelector("[data-theme-name]").textContent = names[theme()];
-    button.setAttribute("aria-label", label.replace("{current}", names[theme()]).replace("{next}", names[next]));
-  };
-  const toggleTheme = () => {
-    const next = theme() === "amazonia" ? "editorial" : "amazonia";
-    document.documentElement.dataset.theme = next;
-    document.querySelector('meta[name="theme-color"]')?.setAttribute("content", THEME_COLORS[next]);
-    try {
-      localStorage.setItem("theme", next);
-    } catch {
-      /* navegação privada */
-    }
-    updateThemeButton();
-    document.dispatchEvent(new CustomEvent("themechange"));
-    track(`tema-${next}`, `Trocou o tema para ${next}`);
-  };
-
   const setup = (pageTexts, render) => {
     texts = pageTexts;
     lang = detectLang();
     applyTexts();
-    updateThemeButton();
-    document.querySelector("[data-theme-toggle]")?.addEventListener("click", toggleTheme);
+    document.dispatchEvent(new CustomEvent("languagechange"));
     document.querySelector("[data-lang]")?.addEventListener("change", (event) => {
       lang = event.target.value;
       try {
@@ -82,7 +45,7 @@ window.Demo = (() => {
         /* navegação privada */
       }
       applyTexts();
-      updateThemeButton();
+      document.dispatchEvent(new CustomEvent("languagechange"));
       render?.();
     });
   };

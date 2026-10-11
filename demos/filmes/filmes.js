@@ -312,6 +312,7 @@ async function init() {
     render();
   });
   $("[data-status]").textContent = t("loading");
+  renderChips(); // sugestões fixas: aparecem já, sem esperar a base (evita deslocar o layout)
   try {
     films = await (await fetch("filmes.json")).json();
   } catch {
@@ -328,7 +329,6 @@ async function init() {
   $("#titles").innerHTML = films.map((f) => `<option value="${escape(label(f))}"></option>`).join("");
 
   showReady();
-  renderChips();
 
   $("[data-pick-form]").addEventListener("submit", (event) => {
     event.preventDefault();

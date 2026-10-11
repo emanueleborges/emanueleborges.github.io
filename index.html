@@ -12,8 +12,7 @@
       content="Portfólio de Emanuel Borges — Desenvolvedor Full Stack Sênior com mais de 10 anos de experiência, especializando-se em Machine Learning e NLP."
     />
     <meta name="theme-color" content="#06100b" />
-    <!-- Tema antes da pintura (evita piscar): ?theme= ou o salvo; padrão "amazonia". -->
-    <script>(function(){var t;try{t=new URLSearchParams(location.search).get("theme")||localStorage.getItem("theme")}catch(e){}t=t==="editorial"?"editorial":"amazonia";document.documentElement.dataset.theme=t;var m=document.querySelector('meta[name="theme-color"]');if(m)m.content=t==="editorial"?"#f6f3ec":"#06100b"})();</script>
+    <script src="components/boot.js"></script>
     <!-- Verificação do Google Search Console -->
     <meta name="google-site-verification" content="4hxCxYtZIODldYdYJvIOxejABtc2_GRdp5L6Ug72eEE" />
     <link rel="alternate" hreflang="en" href="https://emanueleborges.github.io/?lang=en" />
@@ -134,15 +133,14 @@
     <!-- Primeira imagem do topo: pré-carregada, menor no celular -->
     <link rel="preload" as="image" href="https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=800&q=70" media="(max-width: 760px)" fetchpriority="high" />
     <link rel="preload" as="image" href="https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1400&q=70" media="(min-width: 761px)" fetchpriority="high" />
-    <link rel="stylesheet" href="styles.css?v=20261011110457" />
-    <script src="i18n.js?v=20261011110457" defer></script>
-    <script src="script.js?v=20261011110457" defer></script>
-    <script src="api.js?v=20261011110457" defer></script>
-    <script src="chat.js?v=20261011110457" defer></script>
-    <script src="contact.js?v=20261011110457" defer></script>
-    <!-- GoatCounter: conta só o caminho (sem ?lang=, ?theme=…), para não dividir a mesma página; a origem (?ref=, utm_*) continua registrada. -->
-    <script>window.goatcounter = { path: function (p) { return p.split("?")[0].replace(/index\.html$/, "") || "/"; } };</script>
+    <link rel="stylesheet" href="styles.css?v=20261011134457" />
+    <script src="i18n.js?v=20261011134457" defer></script>
+    <script src="script.js?v=20261011134457" defer></script>
+    <script src="api.js?v=20261011134457" defer></script>
+    <script src="chat.js?v=20261011134457" defer></script>
+    <script src="contact.js?v=20261011134457" defer></script>
     <script data-goatcounter="https://emanueleborges.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+    <script src="components/components.js" defer></script>
   </head>
   <body>
     <div class="bg-aurora" aria-hidden="true"><span></span><span></span><span></span></div>
@@ -151,7 +149,7 @@
       <div class="scroll-progress" aria-hidden="true"></div>
       <nav class="nav shell" aria-label="Navegação principal" data-i18n-aria="nav.aria">
         <a class="brand" href="#inicio" aria-label="Emanuel Borges — início" data-i18n-aria="brand.aria">
-          <svg class="logo brand-logo" viewBox="0 0 64 64" width="34" height="34" aria-hidden="true" focusable="false"><defs><linearGradient id="lgh-bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" style="stop-color:var(--logo-bg1)"/><stop offset="1" style="stop-color:var(--logo-bg2)"/></linearGradient><linearGradient id="lgh-edge" x1="0" y1="0" x2="1" y2="1"><stop offset="0" style="stop-color:var(--logo-edge1)"/><stop offset="1" style="stop-color:var(--logo-edge2)"/></linearGradient><linearGradient id="lgh-letter" x1="0" y1="0" x2="1" y2="1"><stop offset="0" style="stop-color:var(--logo-letter1)"/><stop offset="0.55" style="stop-color:var(--logo-letter2)"/><stop offset="1" style="stop-color:var(--logo-letter3)"/></linearGradient><radialGradient id="lgh-node" cx=".35" cy=".35" r=".75"><stop offset="0" style="stop-color:var(--logo-node1)"/><stop offset="0.55" style="stop-color:var(--logo-node2)"/><stop offset="1" style="stop-color:var(--logo-node3)"/></radialGradient><radialGradient id="lgh-shine" cx=".2" cy=".1" r=".9"><stop offset="0" stop-color="#fff" stop-opacity=".16"/><stop offset=".6" stop-color="#fff" stop-opacity="0"/></radialGradient></defs><rect x="2" y="2" width="60" height="60" rx="16" fill="url(#lgh-bg)" stroke="url(#lgh-edge)" stroke-width="2.5"/><rect x="3.5" y="3.5" width="57" height="57" rx="14.5" fill="url(#lgh-shine)"/><path class="logo-e" d="M17 46.5V17.5h19M17 32h14M17 46.5h19" fill="none" stroke="url(#lgh-letter)" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" pathLength="100"/><circle class="logo-ring" cx="49" cy="46.5" r="7" fill="none" stroke-width="1.6"/><circle class="logo-node" cx="49" cy="46.5" r="4.4" fill="url(#lgh-node)"/></svg>
+          <site-logo class="brand-logo" size="34"></site-logo>
           <span>Emanuel Borges</span>
         </a>
         <button
@@ -171,10 +169,7 @@
           <a href="#formacao" data-i18n="nav.education">Formação</a>
           <a class="nav-contact" href="#contato" data-i18n="nav.contact">Vamos conversar <span>↗</span></a>
         </div>
-        <button class="theme-toggle" type="button" data-theme-toggle>
-          <span class="theme-swatch" aria-hidden="true"></span>
-          <span class="theme-name" data-theme-name>Amazônia</span>
-        </button>
+        <theme-toggle></theme-toggle>
         <label class="lang-select">
           <span class="visually-hidden" data-i18n="lang.aria">Idioma</span>
           <select data-lang-select>
@@ -571,7 +566,7 @@
     </main>
 
     <footer class="footer shell">
-      <a class="brand" href="#inicio"><svg class="logo brand-logo" viewBox="0 0 64 64" width="34" height="34" aria-hidden="true" focusable="false"><defs><linearGradient id="lgf-bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" style="stop-color:var(--logo-bg1)"/><stop offset="1" style="stop-color:var(--logo-bg2)"/></linearGradient><linearGradient id="lgf-edge" x1="0" y1="0" x2="1" y2="1"><stop offset="0" style="stop-color:var(--logo-edge1)"/><stop offset="1" style="stop-color:var(--logo-edge2)"/></linearGradient><linearGradient id="lgf-letter" x1="0" y1="0" x2="1" y2="1"><stop offset="0" style="stop-color:var(--logo-letter1)"/><stop offset="0.55" style="stop-color:var(--logo-letter2)"/><stop offset="1" style="stop-color:var(--logo-letter3)"/></linearGradient><radialGradient id="lgf-node" cx=".35" cy=".35" r=".75"><stop offset="0" style="stop-color:var(--logo-node1)"/><stop offset="0.55" style="stop-color:var(--logo-node2)"/><stop offset="1" style="stop-color:var(--logo-node3)"/></radialGradient><radialGradient id="lgf-shine" cx=".2" cy=".1" r=".9"><stop offset="0" stop-color="#fff" stop-opacity=".16"/><stop offset=".6" stop-color="#fff" stop-opacity="0"/></radialGradient></defs><rect x="2" y="2" width="60" height="60" rx="16" fill="url(#lgf-bg)" stroke="url(#lgf-edge)" stroke-width="2.5"/><rect x="3.5" y="3.5" width="57" height="57" rx="14.5" fill="url(#lgf-shine)"/><path class="logo-e" d="M17 46.5V17.5h19M17 32h14M17 46.5h19" fill="none" stroke="url(#lgf-letter)" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" pathLength="100"/><circle class="logo-ring" cx="49" cy="46.5" r="7" fill="none" stroke-width="1.6"/><circle class="logo-node" cx="49" cy="46.5" r="4.4" fill="url(#lgf-node)"/></svg><span>Emanuel Borges</span></a>
+      <a class="brand" href="#inicio"><site-logo class="brand-logo" size="34"></site-logo><span>Emanuel Borges</span></a>
       <span class="footer-copy mono"><span data-i18n="footer.copy">DESENHADO E CONSTRUÍDO COM CUIDADO</span> · <span id="year">2026</span></span>
       <span class="footer-updated mono"><span data-i18n="footer.updated">ATUALIZADO EM</span> <time id="updated" datetime="2026-10-11">11/10/2026</time></span>
       <a class="back-top mono" href="#inicio" data-i18n="footer.top">VOLTAR AO TOPO ↑</a>

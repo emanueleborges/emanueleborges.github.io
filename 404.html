@@ -8,8 +8,7 @@
     <meta name="referrer" content="strict-origin-when-cross-origin" />
     <meta name="robots" content="noindex" />
     <meta name="theme-color" content="#06100b" />
-    <!-- Tema antes da pintura (evita piscar): ?theme= ou o salvo; padrão "amazonia". -->
-    <script>(function(){var t;try{t=new URLSearchParams(location.search).get("theme")||localStorage.getItem("theme")}catch(e){}t=t==="editorial"?"editorial":"amazonia";document.documentElement.dataset.theme=t;var m=document.querySelector('meta[name="theme-color"]');if(m)m.content=t==="editorial"?"#f6f3ec":"#06100b"})();</script>
+    <script src="/components/boot.js"></script>
     <title>Page not found — Emanuel Borges</title>
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png" />
@@ -26,7 +25,9 @@
       .glow-2 { width: 480px; height: 480px; right: -160px; bottom: -220px; background: var(--glow-2); }
       main { position: relative; max-width: 620px; text-align: center; }
       .brand { display: inline-block; margin-bottom: 26px; border-radius: 16px; filter: drop-shadow(0 0 18px rgba(138,89,255,.35)); }
-      .brand .logo { display: block; }
+      site-logo { display: block; line-height: 0; }
+      .logo-404 { width: 56px; height: 56px; }
+      site-logo .logo { width: 100%; height: 100%; }
       /* Logo "E." (SVG nas páginas): cores pelo tema; o E se desenha ao carregar, o nó de IA emite um pulso,
          e ao passar o mouse o logo gira e brilha. Sem efeitos com "reduzir movimento". */
       .logo { overflow: visible; }
@@ -52,12 +53,13 @@
     <!-- GoatCounter: registra o endereço que não existe (evento "404/<caminho>") para achar links quebrados. -->
     <script>window.goatcounter = { path: function () { return "404" + location.pathname; }, title: "Página não encontrada", event: true };</script>
     <script data-goatcounter="https://emanueleborges.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+    <script src="/components/components.js" defer></script>
   </head>
   <body>
     <div class="glow glow-1" aria-hidden="true"></div>
     <div class="glow glow-2" aria-hidden="true"></div>
     <main>
-      <a class="brand" href="/" aria-label="Emanuel Borges — home"><svg class="logo logo-404" viewBox="0 0 64 64" width="56" height="56" aria-hidden="true" focusable="false"><defs><linearGradient id="lgx-bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" style="stop-color:var(--logo-bg1)"/><stop offset="1" style="stop-color:var(--logo-bg2)"/></linearGradient><linearGradient id="lgx-edge" x1="0" y1="0" x2="1" y2="1"><stop offset="0" style="stop-color:var(--logo-edge1)"/><stop offset="1" style="stop-color:var(--logo-edge2)"/></linearGradient><linearGradient id="lgx-letter" x1="0" y1="0" x2="1" y2="1"><stop offset="0" style="stop-color:var(--logo-letter1)"/><stop offset="0.55" style="stop-color:var(--logo-letter2)"/><stop offset="1" style="stop-color:var(--logo-letter3)"/></linearGradient><radialGradient id="lgx-node" cx=".35" cy=".35" r=".75"><stop offset="0" style="stop-color:var(--logo-node1)"/><stop offset="0.55" style="stop-color:var(--logo-node2)"/><stop offset="1" style="stop-color:var(--logo-node3)"/></radialGradient><radialGradient id="lgx-shine" cx=".2" cy=".1" r=".9"><stop offset="0" stop-color="#fff" stop-opacity=".16"/><stop offset=".6" stop-color="#fff" stop-opacity="0"/></radialGradient></defs><rect x="2" y="2" width="60" height="60" rx="16" fill="url(#lgx-bg)" stroke="url(#lgx-edge)" stroke-width="2.5"/><rect x="3.5" y="3.5" width="57" height="57" rx="14.5" fill="url(#lgx-shine)"/><path class="logo-e" d="M17 46.5V17.5h19M17 32h14M17 46.5h19" fill="none" stroke="url(#lgx-letter)" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" pathLength="100"/><circle class="logo-ring" cx="49" cy="46.5" r="7" fill="none" stroke-width="1.6"/><circle class="logo-node" cx="49" cy="46.5" r="4.4" fill="url(#lgx-node)"/></svg></a>
+      <a class="brand" href="/" aria-label="Emanuel Borges — home"><site-logo class="logo-404" size="56"></site-logo></a>
       <p class="code">// 404</p>
       <h1>This page <span>doesn't exist.</span></h1>
       <p class="lead">The link may be broken or the page may have moved. Head back to the portfolio or ask the assistant what you were looking for.</p>

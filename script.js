@@ -176,35 +176,7 @@ if ("IntersectionObserver" in window) {
   });
 }
 
-/* ---------- Tema (Amazônia padrão · Editorial) ---------- */
-
-// O tema inicial já foi aplicado no <head> (sem piscar); aqui ficam o botão e a troca.
-const THEMES = ["amazonia", "editorial"];
-const THEME_COLORS = { amazonia: "#06100b", editorial: "#f6f3ec" };
-const themeButton = document.querySelector("[data-theme-toggle]");
-const currentTheme = () => (document.documentElement.dataset.theme === "editorial" ? "editorial" : "amazonia");
-
-function updateThemeButton() {
-  const theme = currentTheme();
-  const next = THEMES.find((name) => name !== theme);
-  themeButton.querySelector("[data-theme-name]").textContent = t(`theme.${theme}`);
-  themeButton.setAttribute("aria-label", t("theme.switch", { current: t(`theme.${theme}`), next: t(`theme.${next}`) }));
-}
-
-themeButton.addEventListener("click", () => {
-  const next = THEMES.find((name) => name !== currentTheme());
-  document.documentElement.dataset.theme = next;
-  document.querySelector('meta[name="theme-color"]')?.setAttribute("content", THEME_COLORS[next]);
-  try {
-    localStorage.setItem("theme", next);
-  } catch {
-    /* navegação privada: vale só nesta visita */
-  }
-  updateThemeButton();
-  document.dispatchEvent(new CustomEvent("themechange"));
-  track(`tema-${next}`, `Trocou o tema para ${next}`);
-});
-document.addEventListener("languagechange", updateThemeButton);
+/* O tema é aplicado por components/boot.js e trocado pelo componente <theme-toggle> (components/components.js). */
 
 /* ---------- Menu mobile ---------- */
 

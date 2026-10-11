@@ -11,6 +11,8 @@ const PRECACHE = [
   "api.js",
   "chat.js",
   "contact.js",
+  "components/boot.js",
+  "components/components.js",
   "logo.svg",
   "favicon.svg",
   "emanuel-borges.jpg",
