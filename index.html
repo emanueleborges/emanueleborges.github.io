@@ -133,12 +133,12 @@
     <!-- Primeira imagem do topo: pré-carregada, menor no celular -->
     <link rel="preload" as="image" href="https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=800&q=70" media="(max-width: 760px)" fetchpriority="high" />
     <link rel="preload" as="image" href="https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1400&q=70" media="(min-width: 761px)" fetchpriority="high" />
-    <link rel="stylesheet" href="styles.css?v=20261011134457" />
-    <script src="i18n.js?v=20261011134457" defer></script>
-    <script src="script.js?v=20261011134457" defer></script>
-    <script src="api.js?v=20261011134457" defer></script>
-    <script src="chat.js?v=20261011134457" defer></script>
-    <script src="contact.js?v=20261011134457" defer></script>
+    <link rel="stylesheet" href="styles.css?v=20261011134859" />
+    <script src="i18n.js?v=20261011134859" defer></script>
+    <script src="script.js?v=20261011134859" defer></script>
+    <script src="api.js?v=20261011134859" defer></script>
+    <script src="chat.js?v=20261011134859" defer></script>
+    <script src="contact.js?v=20261011134859" defer></script>
     <script data-goatcounter="https://emanueleborges.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
     <script src="components/components.js" defer></script>
   </head>
@@ -313,109 +313,78 @@
           <button type="button" class="filter-tab" data-filter="apps" aria-pressed="false" data-i18n="proj.tab.apps">Web &amp; Apps</button>
         </div>
         <div class="projects-grid" data-filter-items="projetos">
+          <!-- gerado: projetos (não edite aqui: data/ + node scripts/gerar-secoes.mjs) -->
           <article data-category="ia" class="project-card project-featured">
             <span class="art-number mono">01 / TCC · UFG</span>
             <p class="mono project-type" data-i18n="p1.type">RAG · LANGCHAIN · OLLAMA · SEGURANÇA DE LLM</p>
             <h3 data-i18n="p1.title">Crítico Jurídico Inteligente</h3>
-            <p class="muted" data-i18n="p1.desc">
-              Chatbot jurídico baseado em RAG que analisa petições iniciais em PDF, sugere melhorias,
-              detecta tentativas de prompt injection (OWASP LLM01) e gera relatórios em Markdown/PDF.
-              Orquestra respostas entre base RAG interna, Ollama local e busca na web.
-            </p>
+            <p class="muted" data-i18n="p1.desc">Chatbot jurídico baseado em RAG que analisa petições iniciais em PDF, sugere melhorias, detecta tentativas de prompt injection (OWASP LLM01) e gera relatórios em Markdown/PDF. Orquestra respostas entre base RAG interna, Ollama local e busca na web.</p>
             <div class="project-footer"><a class="project-link" href="https://github.com/emanueleborges/tcc-ufg" target="_blank" rel="noopener" data-repo="tcc-ufg"><span data-i18n="proj.code">Ver código</span> <span aria-hidden="true">↗</span></a><span class="project-meta mono" data-repo-meta="tcc-ufg"></span></div>
           </article>
           <article data-category="ia" class="project-card">
             <span class="art-number mono">02 / DATATHON</span>
             <p class="mono project-type">MACHINE LEARNING · SCIKIT-LEARN · DOCKER</p>
             <h3 data-i18n="p2.title">Risco de Defasagem Escolar</h3>
-            <p class="muted" data-i18n="p2.desc">
-              Modelo de classificação (Random Forest, XGBoost) com 87% de precisão para o case Passos
-              Mágicos, com API e dashboard de monitoramento de drift. Top 5% no datathon.
-            </p>
+            <p class="muted" data-i18n="p2.desc">Modelo de classificação (Random Forest, XGBoost) com 87% de precisão para o case Passos Mágicos, com API e dashboard de monitoramento de drift. Top 5% no datathon.</p>
             <div class="project-footer"><a class="project-link" href="https://github.com/emanueleborges/fiaptech5" target="_blank" rel="noopener" data-repo="fiaptech5"><span data-i18n="proj.code">Ver código</span> <span aria-hidden="true">↗</span></a><span class="project-meta mono" data-repo-meta="fiaptech5"></span></div>
           </article>
           <article data-category="ia" class="project-card">
             <span class="art-number mono">03 / FIAP</span>
             <p class="mono project-type">DEEP LEARNING · LSTM · TENSORFLOW · FLASK</p>
             <h3 data-i18n="p3.title">Previsão de Ações com LSTM</h3>
-            <p class="muted" data-i18n="p3.desc">
-              Rede LSTM que prevê o próximo fechamento de ações com erro médio de 1,1–2,2% (MAPE) em teste
-              fora da amostra, avaliada contra um baseline ingênuo. Pipeline de dados via Yahoo Finance e API
-              REST documentada com Swagger.
-            </p>
+            <p class="muted" data-i18n="p3.desc">Rede LSTM que prevê o próximo fechamento de ações com erro médio de 1,1–2,2% (MAPE) em teste fora da amostra, avaliada contra um baseline ingênuo. Pipeline de dados via Yahoo Finance e API REST documentada com Swagger.</p>
             <div class="project-footer"><span class="project-actions"><a class="project-link project-demo" href="demos/lstm/" data-demo="lstm"><span data-i18n="proj.demo">Ver demo</span> <span aria-hidden="true">▶</span></a><a class="project-link" href="https://github.com/emanueleborges/fiaptech4" target="_blank" rel="noopener" data-repo="fiaptech4"><span data-i18n="proj.code">Ver código</span> <span aria-hidden="true">↗</span></a></span><span class="project-meta mono" data-repo-meta="fiaptech4"></span></div>
           </article>
           <article data-category="ia" class="project-card">
             <span class="art-number mono">04 / IA</span>
             <p class="mono project-type">RAG · CHROMADB · FASTAPI · STREAMLIT</p>
             <h3 data-i18n="p4.title">RAG Agent — Sistema Q&amp;A</h3>
-            <p class="muted" data-i18n="p4.desc">
-              Aplicação de perguntas e respostas com LangChain, ChromaDB e LLMs (Ollama/Deepseek), com
-              ingestão de documentos, chat via WebSocket e feedback contínuo.
-            </p>
+            <p class="muted" data-i18n="p4.desc">Aplicação de perguntas e respostas com LangChain, ChromaDB e LLMs (Ollama/Deepseek), com ingestão de documentos, chat via WebSocket e feedback contínuo.</p>
             <div class="project-footer"><a class="project-link" href="https://github.com/emanueleborges/rag-llm-deepseek-documentos" target="_blank" rel="noopener" data-repo="rag-llm-deepseek-documentos"><span data-i18n="proj.code">Ver código</span> <span aria-hidden="true">↗</span></a><span class="project-meta mono" data-repo-meta="rag-llm-deepseek-documentos"></span></div>
           </article>
           <article data-category="backend" class="project-card">
             <span class="art-number mono">05 / BACKEND</span>
             <p class="mono project-type">JAVA 17 · SPRING BOOT · KAFKA · REDIS</p>
             <h3 data-i18n="p5.title">Financial Hub — Plataforma P2P</h3>
-            <p class="muted" data-i18n="p5.desc">
-              Arquitetura hexagonal com PostgreSQL (lock pessimista), Redis (cache-aside), Kafka com
-              DLQ e MongoDB, além de frontends em Angular 19 e Next.js 15.
-            </p>
+            <p class="muted" data-i18n="p5.desc">Arquitetura hexagonal com PostgreSQL (lock pessimista), Redis (cache-aside), Kafka com DLQ e MongoDB, além de frontends em Angular 19 e Next.js 15.</p>
             <div class="project-footer"><a class="project-link" href="https://github.com/emanueleborges/financial" target="_blank" rel="noopener" data-repo="financial"><span data-i18n="proj.code">Ver código</span> <span aria-hidden="true">↗</span></a><span class="project-meta mono" data-repo-meta="financial"></span></div>
           </article>
           <article data-category="backend" class="project-card">
             <span class="art-number mono">06 / BACKEND</span>
             <p class="mono project-type">NESTJS · TYPEORM · KAFKA · REDIS</p>
             <h3>Products API</h3>
-            <p class="muted" data-i18n="p6.desc">
-              API de produtos com cache em Redis, eventos no Kafka, rate limiting por rota e
-              documentação Swagger, sobre PostgreSQL.
-            </p>
+            <p class="muted" data-i18n="p6.desc">API de produtos com cache em Redis, eventos no Kafka, rate limiting por rota e documentação Swagger, sobre PostgreSQL.</p>
             <div class="project-footer"><a class="project-link" href="https://github.com/emanueleborges/nest_typeorm_postgres_redis_kafka" target="_blank" rel="noopener" data-repo="nest_typeorm_postgres_redis_kafka"><span data-i18n="proj.code">Ver código</span> <span aria-hidden="true">↗</span></a><span class="project-meta mono" data-repo-meta="nest_typeorm_postgres_redis_kafka"></span></div>
           </article>
           <article data-category="ia apps" class="project-card">
             <span class="art-number mono">07 / WEB</span>
             <p class="mono project-type">FASTAPI · POSTGRESQL · SCIKIT-LEARN</p>
             <h3>Movie Recommender System</h3>
-            <p class="muted" data-i18n="p7.desc">
-              Sistema de recomendação de filmes baseado em TF-IDF e similaridade de cossenos, com
-              interface web responsiva e banco PostgreSQL.
-            </p>
+            <p class="muted" data-i18n="p7.desc">Sistema de recomendação de filmes baseado em TF-IDF e similaridade de cossenos, com interface web responsiva e banco PostgreSQL.</p>
             <div class="project-footer"><span class="project-actions"><a class="project-link project-demo" href="demos/filmes/" data-demo="filmes"><span data-i18n="proj.demo">Ver demo</span> <span aria-hidden="true">▶</span></a><a class="project-link" href="https://github.com/emanueleborges/challenge-movies" target="_blank" rel="noopener" data-repo="challenge-movies"><span data-i18n="proj.code">Ver código</span> <span aria-hidden="true">↗</span></a></span><span class="project-meta mono" data-repo-meta="challenge-movies"></span></div>
           </article>
           <article data-category="ia apps" class="project-card">
             <span class="art-number mono">08 / POC</span>
             <p class="mono project-type">FACE-API.JS · NODE.JS · SQLITE</p>
             <h3>Face Recognition POC</h3>
-            <p class="muted" data-i18n="p8.desc">
-              Reconhecimento facial em tempo real pela webcam: captura, geração de embeddings e
-              verificação a partir de vetores salvos via API REST.
-            </p>
+            <p class="muted" data-i18n="p8.desc">Reconhecimento facial em tempo real pela webcam: captura, geração de embeddings e verificação a partir de vetores salvos via API REST.</p>
             <div class="project-footer"><span class="project-actions"><a class="project-link project-demo" href="demos/face/" data-demo="face"><span data-i18n="proj.demo">Ver demo</span> <span aria-hidden="true">▶</span></a><a class="project-link" href="https://github.com/emanueleborges/face-recognition-poc" target="_blank" rel="noopener" data-repo="face-recognition-poc"><span data-i18n="proj.code">Ver código</span> <span aria-hidden="true">↗</span></a></span><span class="project-meta mono" data-repo-meta="face-recognition-poc"></span></div>
           </article>
           <article data-category="apps" class="project-card">
             <span class="art-number mono">09 / DESKTOP</span>
             <p class="mono project-type">KOTLIN · JETPACK COMPOSE · RETROFIT</p>
             <h3>Kotlin Desktop CRUD</h3>
-            <p class="muted" data-i18n="p9.desc">
-              Aplicativo desktop moderno com Jetpack Compose for Desktop, consumindo um backend REST
-              em Kotlin e Spring Boot.
-            </p>
+            <p class="muted" data-i18n="p9.desc">Aplicativo desktop moderno com Jetpack Compose for Desktop, consumindo um backend REST em Kotlin e Spring Boot.</p>
             <div class="project-footer"><a class="project-link" href="https://github.com/emanueleborges/kotlin-desktop" target="_blank" rel="noopener" data-repo="kotlin-desktop"><span data-i18n="proj.code">Ver código</span> <span aria-hidden="true">↗</span></a><span class="project-meta mono" data-repo-meta="kotlin-desktop"></span></div>
           </article>
           <article data-category="ia apps" class="project-card">
             <span class="art-number mono">10 / PORTFOLIO</span>
             <p class="mono project-type">RAG · WORKERS AI · VECTORIZE · CLOUDFLARE</p>
             <h3 data-i18n="p10.title">Assistente com IA deste portfólio</h3>
-            <p class="muted" data-i18n="p10.desc">
-              Chat híbrido em 8 idiomas: respostas prontas, busca local (TF-IDF com correção de digitação)
-              e RAG com embeddings BGE-M3 no Vectorize e geração pelo Qwen3 30B no Workers AI, protegido
-              por Turnstile e limites por IP — tudo em planos gratuitos.
-            </p>
+            <p class="muted" data-i18n="p10.desc">Chat híbrido em 8 idiomas: respostas prontas, busca local (TF-IDF com correção de digitação) e RAG com embeddings BGE-M3 no Vectorize e geração pelo Qwen3 30B no Workers AI, protegido por Turnstile e limites por IP — tudo em planos gratuitos.</p>
             <div class="project-footer"><span class="project-actions"><a class="project-link project-demo" href="#chat" data-open-chat data-demo="chat"><span data-i18n="proj.demo">Ver demo</span> <span aria-hidden="true">▶</span></a><a class="project-link" href="https://github.com/emanueleborges/emanueleborges.github.io/tree/main/worker" target="_blank" rel="noopener" data-repo="emanueleborges.github.io"><span data-i18n="proj.code">Ver código</span> <span aria-hidden="true">↗</span></a></span><span class="project-meta mono" data-repo-meta="emanueleborges.github.io"></span></div>
           </article>
+          <!-- /gerado: projetos -->
         </div>
         <a class="button button-quiet projects-more" href="https://github.com/emanueleborges" target="_blank" rel="noopener" data-i18n="proj.more">Ver todos no GitHub <span>↗</span></a>
       </section>
@@ -438,6 +407,7 @@
           </div>
           <p class="filter-count mono" data-filter-count="habilidades" aria-live="polite"></p>
           <ul class="skills-grid" data-filter-items="habilidades">
+            <!-- gerado: habilidades (não edite aqui: data/ + node scripts/gerar-secoes.mjs) -->
             <li data-category="backend" class="skill-chip"><img class="skill-icon" src="logos/skills/openjdk.svg" alt="" loading="lazy" /><strong>Java</strong><span class="mono" data-i18n="cat.backend">BACKEND</span></li>
             <li data-category="backend" class="skill-chip"><img class="skill-icon" src="logos/skills/kotlin.svg" alt="" loading="lazy" /><strong>Kotlin</strong><span class="mono" data-i18n="cat.backend">BACKEND</span></li>
             <li data-category="backend" class="skill-chip"><img class="skill-icon" src="logos/skills/springboot.svg" alt="" loading="lazy" /><strong>Spring Boot</strong><span class="mono" data-i18n="cat.backend">BACKEND</span></li>
@@ -483,6 +453,7 @@
             <li data-category="praticas" class="skill-chip"><img class="skill-icon" src="logos/skills/review.svg" alt="" loading="lazy" /><strong>Code Review</strong><span class="mono" data-i18n="cat.praticas">PRÁTICAS</span></li>
             <li data-category="praticas" class="skill-chip"><img class="skill-icon" src="logos/skills/sonarqubeserver.svg" alt="" loading="lazy" /><strong>SonarQube</strong><span class="mono" data-i18n="cat.praticas">PRÁTICAS</span></li>
             <li data-category="praticas" class="skill-chip"><img class="skill-icon" src="logos/skills/scrum.svg" alt="" loading="lazy" /><strong>Scrum</strong><span class="mono" data-i18n="cat.praticas">PRÁTICAS</span></li>
+            <!-- /gerado: habilidades -->
           </ul>
         </div>
       </section>

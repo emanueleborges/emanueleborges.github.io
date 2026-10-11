@@ -1,0 +1,206 @@
+{
+  "_doc": "Projetos da seção Projetos. Textos em português vêm do i18n.js (pela chave); gere o HTML com: node scripts/gerar-secoes.mjs",
+  "projects": [
+    {
+      "id": "p1",
+      "categories": [
+        "ia"
+      ],
+      "featured": true,
+      "label": "01 / TCC · UFG",
+      "type": {
+        "key": "p1.type"
+      },
+      "title": {
+        "key": "p1.title"
+      },
+      "desc": {
+        "key": "p1.desc"
+      },
+      "repo": "tcc-ufg",
+      "repoUrl": "https://github.com/emanueleborges/tcc-ufg"
+    },
+    {
+      "id": "p2",
+      "categories": [
+        "ia"
+      ],
+      "label": "02 / DATATHON",
+      "type": {
+        "text": "MACHINE LEARNING · SCIKIT-LEARN · DOCKER"
+      },
+      "title": {
+        "key": "p2.title"
+      },
+      "desc": {
+        "key": "p2.desc"
+      },
+      "repo": "fiaptech5",
+      "repoUrl": "https://github.com/emanueleborges/fiaptech5"
+    },
+    {
+      "id": "p3",
+      "categories": [
+        "ia"
+      ],
+      "label": "03 / FIAP",
+      "type": {
+        "text": "DEEP LEARNING · LSTM · TENSORFLOW · FLASK"
+      },
+      "title": {
+        "key": "p3.title"
+      },
+      "desc": {
+        "key": "p3.desc"
+      },
+      "repo": "fiaptech4",
+      "repoUrl": "https://github.com/emanueleborges/fiaptech4",
+      "demo": {
+        "name": "lstm",
+        "href": "demos/lstm/"
+      }
+    },
+    {
+      "id": "p4",
+      "categories": [
+        "ia"
+      ],
+      "label": "04 / IA",
+      "type": {
+        "text": "RAG · CHROMADB · FASTAPI · STREAMLIT"
+      },
+      "title": {
+        "key": "p4.title"
+      },
+      "desc": {
+        "key": "p4.desc"
+      },
+      "repo": "rag-llm-deepseek-documentos",
+      "repoUrl": "https://github.com/emanueleborges/rag-llm-deepseek-documentos"
+    },
+    {
+      "id": "p5",
+      "categories": [
+        "backend"
+      ],
+      "label": "05 / BACKEND",
+      "type": {
+        "text": "JAVA 17 · SPRING BOOT · KAFKA · REDIS"
+      },
+      "title": {
+        "key": "p5.title"
+      },
+      "desc": {
+        "key": "p5.desc"
+      },
+      "repo": "financial",
+      "repoUrl": "https://github.com/emanueleborges/financial"
+    },
+    {
+      "id": "p6",
+      "categories": [
+        "backend"
+      ],
+      "label": "06 / BACKEND",
+      "type": {
+        "text": "NESTJS · TYPEORM · KAFKA · REDIS"
+      },
+      "title": {
+        "text": "Products API"
+      },
+      "desc": {
+        "key": "p6.desc"
+      },
+      "repo": "nest_typeorm_postgres_redis_kafka",
+      "repoUrl": "https://github.com/emanueleborges/nest_typeorm_postgres_redis_kafka"
+    },
+    {
+      "id": "p7",
+      "categories": [
+        "ia",
+        "apps"
+      ],
+      "label": "07 / WEB",
+      "type": {
+        "text": "FASTAPI · POSTGRESQL · SCIKIT-LEARN"
+      },
+      "title": {
+        "text": "Movie Recommender System"
+      },
+      "desc": {
+        "key": "p7.desc"
+      },
+      "repo": "challenge-movies",
+      "repoUrl": "https://github.com/emanueleborges/challenge-movies",
+      "demo": {
+        "name": "filmes",
+        "href": "demos/filmes/"
+      }
+    },
+    {
+      "id": "p8",
+      "categories": [
+        "ia",
+        "apps"
+      ],
+      "label": "08 / POC",
+      "type": {
+        "text": "FACE-API.JS · NODE.JS · SQLITE"
+      },
+      "title": {
+        "text": "Face Recognition POC"
+      },
+      "desc": {
+        "key": "p8.desc"
+      },
+      "repo": "face-recognition-poc",
+      "repoUrl": "https://github.com/emanueleborges/face-recognition-poc",
+      "demo": {
+        "name": "face",
+        "href": "demos/face/"
+      }
+    },
+    {
+      "id": "p9",
+      "categories": [
+        "apps"
+      ],
+      "label": "09 / DESKTOP",
+      "type": {
+        "text": "KOTLIN · JETPACK COMPOSE · RETROFIT"
+      },
+      "title": {
+        "text": "Kotlin Desktop CRUD"
+      },
+      "desc": {
+        "key": "p9.desc"
+      },
+      "repo": "kotlin-desktop",
+      "repoUrl": "https://github.com/emanueleborges/kotlin-desktop"
+    },
+    {
+      "id": "p10",
+      "categories": [
+        "ia",
+        "apps"
+      ],
+      "label": "10 / PORTFOLIO",
+      "type": {
+        "text": "RAG · WORKERS AI · VECTORIZE · CLOUDFLARE"
+      },
+      "title": {
+        "key": "p10.title"
+      },
+      "desc": {
+        "key": "p10.desc"
+      },
+      "repo": "emanueleborges.github.io",
+      "repoUrl": "https://github.com/emanueleborges/emanueleborges.github.io/tree/main/worker",
+      "demo": {
+        "name": "chat",
+        "href": "#chat",
+        "openChat": true
+      }
+    }
+  ]
+}
