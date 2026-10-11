@@ -65,14 +65,14 @@ flowchart TB
 | File | Responsibility |
 |---|---|
 | `index.html` | Structure and content in Portuguese (source language). Translatable elements are marked with `data-i18n`, `data-i18n-aria`, `data-i18n-placeholder`, `data-i18n-title`, `data-i18n-alt` and `data-i18n-content`. |
-| `i18n.js` | `window.I18N[lang][key]` for the 8 languages: site, chat (ready-made answers, labels), contact form and résumé. |
+| `i18n/` · `i18n.js` | `window.I18N[lang][key]`, one file per language (`i18n/<lang>.js`): site, chat (ready-made answers, labels), contact form and résumé. The page ships `pt` (original and fallback) and `en` (default); `I18N.load(lang)` downloads the others when chosen, and `boot.js` (with `data-i18n`) preloads the saved language. |
 | `script.js` | Applies the language (keeping the Portuguese original), language selector, mobile menu, filters, last-updated date (`Intl`), scroll animations, particles (Canvas), reading progress and GoatCounter events (`track`). |
 | `api.js` | `window.PortfolioApi`: Worker URL, on-demand Turnstile loading, one token per submission and `post(path, body)`. |
 | `chat.js` · `chat/` | Assistant. `chat.js` is the UI; `chat/texto.js` (normalization and typos), `chat/regras.js` (regex ready-made answers), `chat/busca.js` (local search) and `chat/ia.js` (Worker) expose `window.ChatCore` and load first. |
 | `components/` | Framework-free Web Components: `<site-logo>` and `<theme-toggle>` (`components.js`); `boot.js` applies the theme before paint. |
-| `data/` · `scripts/gerar-secoes.mjs` | Projects and skills as data; the generator writes static HTML into `index.html` between markers (text from `i18n.js`). CI checks it with `--check`. |
+| `data/` · `scripts/gerar-secoes.mjs` | Projects and skills as data; the generator writes static HTML into `index.html` between markers (text from `i18n/pt.js`). CI checks it with `--check`. |
 | `contact.js` | Contact form validation, submission, counter and loading/success states. |
-| `curriculo.html` | A4 résumé template, rendered per language from `i18n.js`. |
+| `curriculo.html` | A4 résumé template, rendered per language from `i18n/`. |
 | `manifest.webmanifest` · `sw.js` · `icon-*.png` | Installable, offline app (PWA). |
 | `demos/demos.css` · `demos/demos.js` | Shared demo base: look, language (`?lang` → `localStorage` → English), formatting (`Intl`) and GoatCounter events. |
 | `demos/lstm/` | `lstm.js` (plain-JS LSTM inference), `demo.js` (UI and SVG charts), `*.json` weights and `dados.json` (metrics, backtest, saved prices). |
@@ -218,7 +218,7 @@ Queries D1 for the last 7 days of messages and ratings, runs a health check (Qwe
 | `NOTIFY_EMAIL` | email that receives the notifications (the Resend account's email) |
 
 ### 3.3 AI knowledge
-`gerar-conhecimento.mjs` reads `../i18n.js` (English) and generates `src/conhecimento.js` with:
+`gerar-conhecimento.mjs` reads `../i18n/en.js` (English; `pt` as fallback) and generates `src/conhecimento.js` with:
 - **`CORE`** — fixed summary (role, location, contacts, salary/start-date rule);
 - **`CHUNKS`** — 32 excerpts (summary, strengths, roles sought, availability, contact, jobs, projects, skill groups, education with original names, certifications, languages);
 - **`PROFILE`** — everything together (fallback when RAG fails);

@@ -91,7 +91,7 @@ The **AI demos** run inference in the browser: the LSTM runs in plain JavaScript
    5. caches the answer in **AI Gateway** for 24 h (key = knowledge version + language + normalized question).
 4. **Local search** (fallback) → if the AI fails or the daily quota runs out, the chat searches the page content itself: TF-IDF-style ranking, typo tolerance (Damerau-Levenshtein), synonyms and Chinese handling.
 
-The AI knowledge is **generated from the site's own translations** (`i18n.js`): when the site changes and the Worker is deployed, the AI and the vector index follow.
+The AI knowledge is **generated from the site's own translations** (`i18n/`): when the site changes and the Worker is deployed, the AI and the vector index follow.
 
 ---
 
@@ -129,7 +129,8 @@ The AI knowledge is **generated from the site's own translations** (`i18n.js`): 
 ├── scripts/gerar-dados-filmes.py  # Builds demos/filmes/filmes.json (Wikidata + Wikipedia)
 ├── scripts/lstm/           # Training (train.py) and export (exportar_web.py) of the demo's LSTM
 ├── styles.css              # All styling (theme, layout, animations, chat, form)
-├── i18n.js                 # Text in 8 languages (site, chat, form and résumé)
+├── i18n/                   # Text, one file per language (site, chat, form and résumé)
+├── i18n.js                 # Loader: pt and en come with the page; other languages download when chosen
 ├── script.js               # Languages, menu, filters, animations, particles, analytics
 ├── api.js                  # Shared connection to the Worker and Turnstile
 ├── chat.js                 # Assistant interface (panel, messages, "Ask my AI" bar)
@@ -155,7 +156,7 @@ The AI knowledge is **generated from the site's own translations** (`i18n.js`): 
     ├── src/comum.js            # Shared: models, languages, CORS/JSON, Turnstile, rate limit, e-mail
     ├── src/agendado.js         # Weekly summary e-mail and data retention (LGPD)
     ├── src/conhecimento.js     # Generated: summary, excerpts, full profile, version
-    ├── gerar-conhecimento.mjs  # Builds the AI knowledge from i18n.js
+    ├── gerar-conhecimento.mjs  # Builds the AI knowledge from i18n/en.js
     ├── indexar-vectorize.mjs   # Generates embeddings and updates the Vectorize index
     ├── migrations/             # D1 schema (messages, feedback)
     ├── ver-mensagens.sh        # Lists contact-form messages
@@ -207,7 +208,7 @@ cd worker
 npm run deploy
 ```
 
-This (1) builds the knowledge from `i18n.js`, (2) deploys the Worker and (3) updates the Vectorize index.
+This (1) builds the knowledge from `i18n/`, (2) deploys the Worker and (3) updates the Vectorize index.
 
 **Cloudflare resources** (created once):
 
@@ -228,7 +229,7 @@ This (1) builds the knowledge from `i18n.js`, (2) deploys the Worker and (3) upd
 
 | I want to… | Do this |
 |---|---|
-| Change site text | Edit `index.html` (Portuguese) and `i18n.js` (other languages), then run `npm run deploy` in `worker/` so the AI learns it. |
+| Change site text | Edit `index.html` and `i18n/pt.js` (Portuguese) and `i18n/<lang>.js` (other languages), then run `npm run deploy` in `worker/` so the AI learns it. |
 | Update the PDF résumés | `./gerar-curriculos.sh` |
 | Read contact-form messages | `cd worker && ./ver-mensagens.sh` (or `./ver-mensagens.sh 50`) — or Cloudflare dashboard: D1 → `portfolio-contact` → Console |
 | See chat ratings 👍/👎 | `cd worker && ./ver-avaliacoes.sh` |

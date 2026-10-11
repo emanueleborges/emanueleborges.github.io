@@ -1,7 +1,7 @@
 // Gera, a partir dos dados, as partes repetitivas do index.html: os cards de projetos
 // (data/projetos.json) e os itens da caixa de ferramentas (data/habilidades.json).
 // O HTML continua estático (bom para SEO, funciona sem JavaScript e a busca do chat lê a página);
-// os textos em português vêm do i18n.js pela chave — fonte única para site, chat e currículo.
+// os textos em português vêm do i18n/pt.js pela chave — fonte única para site, chat e currículo.
 //
 // Uso:  node scripts/gerar-secoes.mjs           → atualiza o index.html
 //       node scripts/gerar-secoes.mjs --check   → só confere (sai com erro se estiver desatualizado; usado no CI)
@@ -14,16 +14,16 @@ import vm from "node:vm";
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const read = (file) => readFileSync(join(ROOT, file), "utf8");
 
-// i18n.js define window.I18N; roda num contexto isolado só para ler os textos.
+// i18n/pt.js define window.I18N.pt; roda num contexto isolado só para ler os textos.
 const sandbox = { window: {} };
-vm.runInNewContext(read("i18n.js"), sandbox);
+vm.runInNewContext(read("i18n/pt.js"), sandbox);
 const pt = sandbox.window.I18N.pt;
 const ptText = (key) => {
-  if (!(key in pt)) throw new Error(`Chave "${key}" não existe no i18n.js (pt)`);
+  if (!(key in pt)) throw new Error(`Chave "${key}" não existe no i18n/pt.js`);
   return pt[key]; // já é HTML (ex.: "&amp;"), escrito por nós
 };
 const escape = (text) => String(text).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
-// Campo de texto do JSON: { key } busca no i18n.js; { text } é escrito como está (escapado).
+// Campo de texto do JSON: { key } busca no i18n/pt.js; { text } é escrito como está (escapado).
 const field = (value) => (value.key ? { attr: ` data-i18n="${value.key}"`, html: ptText(value.key) } : { attr: "", html: escape(value.text) });
 
 function projectCard(p) {

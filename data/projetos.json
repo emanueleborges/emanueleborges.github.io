@@ -1,5 +1,5 @@
 {
-  "_doc": "Projetos da seção Projetos. Textos em português vêm do i18n.js (pela chave); gere o HTML com: node scripts/gerar-secoes.mjs",
+  "_doc": "Projetos da seção Projetos. Textos em português vêm do i18n/pt.js (pela chave); gere o HTML com: node scripts/gerar-secoes.mjs",
   "projects": [
     {
       "id": "p1",

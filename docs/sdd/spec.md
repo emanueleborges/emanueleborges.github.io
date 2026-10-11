@@ -41,7 +41,7 @@ Currículos e perfis estáticos obrigam o recrutador a ler tudo para achar uma i
 | **Recrutador(a) técnico(a)** | Verificar rapidamente tecnologias e experiência | Seções organizadas, filtros, chat com IA, currículo em PDF |
 | **Recrutador(a) internacional** | Ler no próprio idioma; entender modelo de contratação | 8 idiomas (inglês por padrão), respostas sobre remoto, fuso e CLT/PJ |
 | **Gestor(a) / tech lead** | Avaliar profundidade técnica e projetos | Projetos com descrições técnicas, resultados medidos (87%, top 5%, MAPE 1,1–2,2% contra baseline), **demos de IA ao vivo** e o próprio site como demonstração |
-| **Emanuel (dono)** | Atualizar conteúdo e acompanhar interesse | Fonte única de textos (`i18n.js`), scripts de publicação, estatísticas e mensagens do formulário |
+| **Emanuel (dono)** | Atualizar conteúdo e acompanhar interesse | Fonte única de textos (`i18n/`), scripts de publicação, estatísticas e mensagens do formulário |
 
 ---
 

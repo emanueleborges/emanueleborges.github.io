@@ -1,4 +1,4 @@
-// Gera src/conhecimento.js a partir das traduções do site (../i18n.js, em inglês),
+// Gera src/conhecimento.js a partir das traduções do site (../i18n/en.js; pt como reserva),
 // para que a IA responda com as mesmas informações do portfólio:
 //   CORE    → resumo curto, enviado em toda pergunta
 //   CHUNKS  → trechos do perfil, indexados no Vectorize (RAG) por indexar-vectorize.mjs
@@ -7,9 +7,8 @@
 import fs from "node:fs";
 import crypto from "node:crypto";
 
-const source = fs.readFileSync(new URL("../i18n.js", import.meta.url), "utf8");
 globalThis.window = {};
-new Function(source)();
+for (const lang of ["en", "pt"]) new Function(fs.readFileSync(new URL(`../i18n/${lang}.js`, import.meta.url), "utf8"))();
 const en = globalThis.window.I18N.en;
 const pt = globalThis.window.I18N.pt;
 

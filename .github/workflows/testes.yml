@@ -18,7 +18,7 @@ jobs:
 
       - name: Sintaxe dos scripts JavaScript
         run: |
-          for f in *.js components/*.js chat/*.js demos/*.js demos/*/*.js vaga/*.js worker/src/*.js worker/src/rotas/*.js worker/gerar-conhecimento.mjs worker/indexar-vectorize.mjs scripts/*.mjs; do
+          for f in *.js i18n/*.js components/*.js chat/*.js demos/*.js demos/*/*.js vaga/*.js worker/src/*.js worker/src/rotas/*.js worker/gerar-conhecimento.mjs worker/indexar-vectorize.mjs scripts/*.mjs; do
             node --check "$f"
           done
 

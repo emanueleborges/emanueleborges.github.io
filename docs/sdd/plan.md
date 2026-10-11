@@ -65,14 +65,14 @@ flowchart TB
 | Arquivo | Responsabilidade |
 |---|---|
 | `index.html` | Estrutura e conteúdo em português (idioma de origem). Elementos traduzíveis marcados com `data-i18n`, `data-i18n-aria`, `data-i18n-placeholder`, `data-i18n-title`, `data-i18n-alt`, `data-i18n-content`. |
-| `i18n.js` | `window.I18N[lang][chave]` para os 8 idiomas: site, chat (respostas prontas, rótulos), formulário e currículo. |
+| `i18n/` · `i18n.js` | `window.I18N[lang][chave]`, um arquivo por idioma (`i18n/<idioma>.js`): site, chat (respostas prontas, rótulos), formulário e currículo. A página traz `pt` (original e reserva) e `en` (padrão); `I18N.load(idioma)` baixa os demais quando escolhidos, e o `boot.js` (com `data-i18n`) já pré-carrega o idioma salvo. |
 | `script.js` | Aplica o idioma (guarda o original em português), seletor de idioma, menu mobile, filtros, data de atualização (`Intl`), animações ao rolar, partículas (Canvas), progresso de leitura e eventos do GoatCounter (`track`). |
 | `api.js` | `window.PortfolioApi`: URL do Worker, carregamento sob demanda do Turnstile, geração de token por envio e `post(path, body)`. |
 | `chat.js` · `chat/` | Assistente. `chat.js` é a interface; `chat/texto.js` (normalização e erros de digitação), `chat/regras.js` (respostas prontas por expressão regular), `chat/busca.js` (busca local) e `chat/ia.js` (Worker) expõem `window.ChatCore` e carregam antes. |
 | `components/` | Web Components sem framework: `<site-logo>` e `<theme-toggle>` (`components.js`); `boot.js` aplica o tema antes da pintura. |
-| `data/` · `scripts/gerar-secoes.mjs` | Projetos e habilidades como dados; o gerador escreve o HTML estático no `index.html` entre marcadores (textos do `i18n.js`). O CI confere com `--check`. |
+| `data/` · `scripts/gerar-secoes.mjs` | Projetos e habilidades como dados; o gerador escreve o HTML estático no `index.html` entre marcadores (textos do `i18n/pt.js`). O CI confere com `--check`. |
 | `contact.js` | Validação, envio, contador, estados de carregamento/sucesso do formulário. |
-| `curriculo.html` | Modelo A4 do currículo, renderizado por idioma a partir do `i18n.js`. |
+| `curriculo.html` | Modelo A4 do currículo, renderizado por idioma a partir do `i18n/`. |
 | `manifest.webmanifest` · `sw.js` · `icon-*.png` | App instalável e offline (PWA). |
 | `demos/demos.css` · `demos/demos.js` | Base compartilhada das demos: visual, idioma (`?lang` → `localStorage` → inglês), formatação (`Intl`) e eventos do GoatCounter. |
 | `demos/lstm/` | `lstm.js` (inferência do LSTM em JS puro), `demo.js` (tela e gráficos SVG), pesos `*.json` e `dados.json` (métricas, backtest, preços salvos). |
@@ -218,7 +218,7 @@ Consulta no D1 as mensagens e avaliações dos últimos 7 dias, testa a saúde (
 | `NOTIFY_EMAIL` | e-mail que recebe os avisos (o da conta do Resend) |
 
 ### 3.3 Conhecimento da IA
-`gerar-conhecimento.mjs` lê `../i18n.js` (inglês) e gera `src/conhecimento.js` com:
+`gerar-conhecimento.mjs` lê `../i18n/en.js` (inglês; `pt` como reserva) e gera `src/conhecimento.js` com:
 - **`CORE`** — resumo fixo (cargo, localização, contatos, regra de salário/início);
 - **`CHUNKS`** — 32 trechos (resumo, diferencial, vaga, disponibilidade, contato, empregos, projetos, grupos de habilidades, formação com nomes originais, certificações, idiomas);
 - **`PROFILE`** — tudo junto (reserva quando o RAG falha);

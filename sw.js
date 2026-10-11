@@ -7,6 +7,8 @@ const PRECACHE = [
   "./",
   "styles.css",
   "i18n.js",
+  "i18n/pt.js",
+  "i18n/en.js",
   "script.js",
   "api.js",
   "chat/texto.js",

@@ -58,7 +58,19 @@ const detectLang = () => {
   return defaultLang;
 };
 
+// Idioma escolhido por último: se o visitante trocar de novo antes do download, vale o mais recente.
+let requestedLang = null;
+
 const applyLanguage = (lang) => {
+  requestedLang = lang;
+  // Idioma ainda não baixado (só pt e en vêm na página): busca o arquivo e aplica quando chegar.
+  if (!translations[lang]) {
+    translations.load(lang).then((ok) => {
+      if (ok && requestedLang === lang) applyLanguage(lang);
+      else if (!ok) langSelect.value = currentLang;
+    });
+    return;
+  }
   currentLang = lang;
   document.documentElement.lang = htmlLang[lang];
 

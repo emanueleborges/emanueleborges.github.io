@@ -41,7 +41,7 @@ Static résumés and profiles force recruiters to read everything to find one sp
 | **Technical recruiter** | Quickly check technologies and experience | Organized sections, filters, AI chat, PDF résumé |
 | **International recruiter** | Read in their own language; understand the hiring model | 8 languages (English by default), answers about remote work, time zone and employee/contractor arrangements |
 | **Hiring manager / tech lead** | Assess technical depth and projects | Projects with technical descriptions, measured results (87%, top 5%, 1.1–2.2% MAPE vs. a baseline), **live AI demos** and the site itself as a demo |
-| **Emanuel (owner)** | Update content and track interest | Single source of text (`i18n.js`), publishing scripts, analytics and contact-form messages |
+| **Emanuel (owner)** | Update content and track interest | Single source of text (`i18n/`), publishing scripts, analytics and contact-form messages |
 
 ---
 

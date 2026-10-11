@@ -91,7 +91,7 @@ As **demos de IA** fazem a inferência no navegador: o LSTM roda em JavaScript p
    5. guarda a resposta no **AI Gateway** por 24 h (chave = versão do conhecimento + idioma + pergunta normalizada).
 4. **Busca local** (reserva) → se a IA falhar ou a cota do dia acabar, o chat procura no próprio conteúdo da página: ranking estilo TF-IDF, correção de digitação (Damerau-Levenshtein), sinônimos e tratamento de chinês.
 
-O conhecimento da IA é **gerado das próprias traduções do site** (`i18n.js`): ao mudar o site e publicar o Worker, a IA e o índice vetorial acompanham.
+O conhecimento da IA é **gerado das próprias traduções do site** (`i18n/`): ao mudar o site e publicar o Worker, a IA e o índice vetorial acompanham.
 
 ---
 
@@ -129,7 +129,8 @@ O conhecimento da IA é **gerado das próprias traduções do site** (`i18n.js`)
 ├── scripts/gerar-dados-filmes.py  # Gera demos/filmes/filmes.json (Wikidata + Wikipédia)
 ├── scripts/lstm/           # Treino (train.py) e exportação (exportar_web.py) do LSTM da demo
 ├── styles.css              # Todo o visual (tema, layout, animações, chat, formulário)
-├── i18n.js                 # Textos dos 8 idiomas (site, chat, formulário e currículo)
+├── i18n/                   # Textos, um arquivo por idioma (site, chat, formulário e currículo)
+├── i18n.js                 # Carregador: pt e en vêm com a página; os demais idiomas baixam quando escolhidos
 ├── script.js               # Idiomas, menu, filtros, animações, partículas, estatísticas
 ├── api.js                  # Conexão compartilhada com o Worker e o Turnstile
 ├── chat.js                 # Interface do assistente (painel, mensagens, barra "Pergunte à minha IA")
@@ -155,7 +156,7 @@ O conhecimento da IA é **gerado das próprias traduções do site** (`i18n.js`)
     ├── src/comum.js            # Compartilhado: modelos, idiomas, CORS/JSON, Turnstile, limite, e-mail
     ├── src/agendado.js         # Resumo semanal por e-mail e retenção de dados (LGPD)
     ├── src/conhecimento.js     # Gerado: resumo, trechos, perfil completo e versão
-    ├── gerar-conhecimento.mjs  # Gera o conhecimento da IA a partir do i18n.js
+    ├── gerar-conhecimento.mjs  # Gera o conhecimento da IA a partir do i18n/en.js
     ├── indexar-vectorize.mjs   # Gera embeddings e atualiza o índice Vectorize
     ├── migrations/             # Esquema do D1 (messages, feedback)
     ├── ver-mensagens.sh        # Lista as mensagens do formulário
@@ -207,7 +208,7 @@ cd worker
 npm run deploy
 ```
 
-Esse comando (1) gera o conhecimento a partir do `i18n.js`, (2) publica o Worker e (3) atualiza o índice do Vectorize.
+Esse comando (1) gera o conhecimento a partir do `i18n/`, (2) publica o Worker e (3) atualiza o índice do Vectorize.
 
 **Recursos do Cloudflare** (criados uma vez):
 
@@ -228,7 +229,7 @@ Esse comando (1) gera o conhecimento a partir do `i18n.js`, (2) publica o Worker
 
 | Quero… | Faça |
 |---|---|
-| Mudar um texto do site | Edite `index.html` (português) e `i18n.js` (demais idiomas); depois rode `npm run deploy` em `worker/` para a IA aprender. |
+| Mudar um texto do site | Edite `index.html` e `i18n/pt.js` (português) e `i18n/<idioma>.js` (demais idiomas); depois rode `npm run deploy` em `worker/` para a IA aprender. |
 | Atualizar os currículos em PDF | `./gerar-curriculos.sh` |
 | Ler as mensagens do formulário | `cd worker && ./ver-mensagens.sh` (ou `./ver-mensagens.sh 50`) — ou no painel: D1 → `portfolio-contact` → Console |
 | Ver as avaliações 👍/👎 do chat | `cd worker && ./ver-avaliacoes.sh` |

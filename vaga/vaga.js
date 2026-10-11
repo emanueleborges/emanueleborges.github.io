@@ -470,6 +470,8 @@ async function analyze(event) {
 }
 
 function init() {
+  // Rótulos das evidências vêm do i18n do site: ao abrir e a cada troca, baixa o idioma (se preciso) e redesenha.
+  document.addEventListener("languagechange", () => window.I18N?.load?.(Demo.lang).then((ok) => ok && renderResult()));
   Demo.setup(T, () => {
     setBusy(false);
     renderResult();
