@@ -140,9 +140,9 @@ O conhecimento da IA é **gerado das próprias traduções do site** (`i18n.js`)
 ├── contact.js              # Formulário de contato
 ├── curriculo.html          # Modelo do currículo (A4) usado para gerar os PDFs
 ├── gerar-curriculos.sh     # Gera os 8 PDFs em cv/ com Chrome headless
-├── sitemap.xml · robots.txt · og-image.jpg
+├── sitemap.xml · robots.txt
 ├── cv/                     # Currículos em PDF (um por idioma)
-├── logos/                  # Logos das instituições e ícones das habilidades
+├── imagens/                # Todas as imagens: foto, favicons, ícones do app, og-image, logo; logos/ (instituições e habilidades)
 ├── tests/                  # Testes automáticos do chat (92 casos, 8 idiomas)
 ├── .github/workflows/      # GitHub Actions: testes e Lighthouse a cada push
 ├── lighthouserc.json       # Notas mínimas do Lighthouse no CI
@@ -363,7 +363,7 @@ O projeto segue **Spec-Driven Development**: a especificação descreve o *quê*
 
 ## Créditos
 
-- Ícones das tecnologias: [Simple Icons](https://simpleicons.org) (CC0) — ver `logos/skills/LICENSE-simple-icons.md`. Oracle, SQL Server e AWS usam ícones genéricos por diretriz de marca.
+- Ícones das tecnologias: [Simple Icons](https://simpleicons.org) (CC0) — ver `imagens/logos/skills/LICENSE-simple-icons.md`. Oracle, SQL Server e AWS usam ícones genéricos por diretriz de marca.
 - Logos de UFG, FIAP, Descomplica e FUCAPI: obtidos dos sites oficiais, usados apenas para identificar a formação.
 - Imagens de fundo: [Unsplash](https://unsplash.com).
 - Fontes: Manrope e DM Mono (Google Fonts).

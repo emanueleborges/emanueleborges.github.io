@@ -6,8 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="robots" content="noindex" />
     <title>Emanuel Borges — CV</title>
-    <link rel="icon" href="favicon.svg" type="image/svg+xml" />
-    <link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png" />
+    <link rel="icon" href="imagens/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="imagens/favicon-32.png" sizes="32x32" type="image/png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -95,17 +95,17 @@
       ];
 
       const education = [
-        ["edu.d1", "Universidade Federal de Goiás (UFG) · 2025 — 2026", "logos/ufg.svg"],
-        ["edu.d2", "FIAP · 2025 — 2026", "logos/fiap.svg"],
-        ["edu.d3", "Descomplica · 2024 — 2025", "logos/descomplica-dark.svg"],
-        ["edu.d4", "FUCAPI · 2000 — 2010", "logos/fucapi.png"],
+        ["edu.d1", "Universidade Federal de Goiás (UFG) · 2025 — 2026", "imagens/logos/ufg.svg"],
+        ["edu.d2", "FIAP · 2025 — 2026", "imagens/logos/fiap.svg"],
+        ["edu.d3", "Descomplica · 2024 — 2025", "imagens/logos/descomplica-dark.svg"],
+        ["edu.d4", "FUCAPI · 2000 — 2010", "imagens/logos/fucapi.png"],
       ];
 
       const escapeText = (text) => text.replace(/&(?!amp;|lt;|gt;)/g, "&amp;");
 
       document.querySelector("#cv").innerHTML = `
         <header>
-          <div class="photo"><img src="emanuel-borges.jpg" alt="${tr("about.photoAlt")}" /></div>
+          <div class="photo"><img src="imagens/emanuel-borges.jpg" alt="${tr("about.photoAlt")}" /></div>
           <div>
             <h1>Emanuel Borges</h1>
             <p class="role">${tr("cv.role")}</p>

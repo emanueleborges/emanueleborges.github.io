@@ -464,7 +464,7 @@ function init() {
 
   $("[data-camera]").addEventListener("click", withAI(() => (stream ? stopCamera() : startCamera())));
   $("[data-sample]").addEventListener("click", withAI(() => {
-    showImage("/emanuel-borges.jpg");
+    showImage("/imagens/emanuel-borges.jpg");
     $("[data-name]").value ||= "Emanuel";
   }));
   $("[data-upload]").addEventListener("change", (event) => {

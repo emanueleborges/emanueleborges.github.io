@@ -107,7 +107,7 @@ question
 ---
 
 ### 2.4 SEO and sharing
-- **Link previews:** static Open Graph and Twitter Card tags (in English) with `og-image.jpg` (1200×630).
+- **Link previews:** static Open Graph and Twitter Card tags (in English) with `imagens/og-image.jpg` (1200×630).
 - **Languages:** `<link rel="alternate" hreflang>` for `?lang=en|pt|es|fr|it|de|zh|ru` + `x-default`. No `canonical` (it would conflict with the per-language alternates).
 - **Structured data:** `Person` JSON-LD (role, employer, city, education, technologies, languages, LinkedIn and GitHub).
 - **Crawling:** `sitemap.xml` (page in 8 languages + 8 PDFs + 3 demos) and `robots.txt` (blocks `worker/`, `tests/`, `scripts/`, `apps-script/`, `docs/`, `curriculo.html`).
@@ -144,7 +144,7 @@ All run **in the visitor's browser**, with no AI server.
 - **Switching:** `script.js` (site) and `demos/demos.js` (demos and job match) toggle the theme, save it, update the label/ARIA in 8 languages and fire `themechange` (particles re-read their colors). SVG charts use `style="stroke:var(--series-n)"` and follow instantly.
 - **Charts:** series validated for color-vision deficiency — Amazon blue `#3987e5` × lime `#65a30d`; Editorial blue `#2a78d6` × orange `#d9420c`.
 - **CI:** Lighthouse checks `index.html` and `index.html?theme=editorial`.
-- **"E." logo:** inline SVG on every page (header, footer, chat, demos, job match, 404) colored by each theme's `--logo-*` variables; the E draws itself on load (`stroke-dashoffset`), the AI node pops in and pulses every 3.2 s, and on hover it tilts and glows — all off with "reduce motion". Favicon, `logo.svg` and app icons use the Amazon version.
+- **"E." logo:** inline SVG on every page (header, footer, chat, demos, job match, 404) colored by each theme's `--logo-*` variables; the E draws itself on load (`stroke-dashoffset`), the AI node pops in and pulses every 3.2 s, and on hover it tilts and glows — all off with "reduce motion". Favicon, `imagens/logo.svg` and app icons use the Amazon version.
 
 ## 3. Backend — Cloudflare Worker
 

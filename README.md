@@ -140,9 +140,9 @@ The AI knowledge is **generated from the site's own translations** (`i18n.js`): 
 ├── contact.js              # Contact form
 ├── curriculo.html          # A4 résumé template used to generate the PDFs
 ├── gerar-curriculos.sh     # Generates the 8 PDFs in cv/ with headless Chrome
-├── sitemap.xml · robots.txt · og-image.jpg
+├── sitemap.xml · robots.txt
 ├── cv/                     # PDF résumés (one per language)
-├── logos/                  # Institution logos and skill icons
+├── imagens/                # All images: photo, favicons, PWA icons, og-image, logo; logos/ (institutions and skills)
 ├── tests/                  # Automated chat tests (92 cases, 8 languages)
 ├── .github/workflows/      # GitHub Actions: tests and Lighthouse on every push
 ├── lighthouserc.json       # Minimum Lighthouse scores in CI
@@ -363,7 +363,7 @@ The project follows **Spec-Driven Development**: the specification describes the
 
 ## Credits
 
-- Technology icons: [Simple Icons](https://simpleicons.org) (CC0) — see `logos/skills/LICENSE-simple-icons.md`. Oracle, SQL Server and AWS use generic icons per brand guidelines.
+- Technology icons: [Simple Icons](https://simpleicons.org) (CC0) — see `imagens/logos/skills/LICENSE-simple-icons.md`. Oracle, SQL Server and AWS use generic icons per brand guidelines.
 - UFG, FIAP, Descomplica and FUCAPI logos: taken from the official websites, used only to identify the education.
 - Background images: [Unsplash](https://unsplash.com).
 - Fonts: Manrope and DM Mono (Google Fonts).
