@@ -210,5 +210,18 @@ window.I18N.pt = {
   "hero.askLabel": "Pergunte à minha IA",
   "hero.match": "<strong>Recrutador?</strong> Cole sua vaga e veja a aderência em segundos",
   "hero.askExamples": "Ele tem experiência com Kafka?|Que tipo de vaga ele procura?|Quais projetos de IA ele fez?|Ele trabalha remoto?",
-  "chat.toggleLabel": "Pergunte à IA"
+  "chat.toggleLabel": "Pergunte à IA",
+  "guide.kicker": "GUIA RÁPIDO",
+  "guide.title": "Explore o portfólio",
+  "guide.open": "Guia rápido",
+  "guide.close": "Fechar guia",
+  "guide.step1": "Veja um resumo da minha experiência e use os botões para ir aos projetos ou entrar em contato.",
+  "guide.step2": "Use o menu para navegar pelas seções. No cabeçalho, você também pode trocar o tema e o idioma.",
+  "guide.step3": "Explore os projetos, abra o código no GitHub e experimente as demonstrações interativas.",
+  "guide.step4": "Abra o assistente pelo botão flutuante para perguntar sobre minha experiência, projetos e disponibilidade. Recrutadores também podem comparar uma vaga com meu perfil.",
+  "guide.step5": "Use o formulário para falar comigo sobre oportunidades ou projetos. Seus dados são usados para responder e apagados automaticamente após 12 meses.",
+  "guide.progress": "{current} de {total}",
+  "guide.previous": "Voltar",
+  "guide.next": "Próximo",
+  "guide.finish": "Concluir"
 };

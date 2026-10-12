@@ -318,6 +318,95 @@ if (location.protocol.startsWith("http")) loadRepoData().catch(() => {});
 
 applyLanguage(detectLang());
 
+/* ---------- Guia rápido do portfólio ---------- */
+
+const guide = document.querySelector("[data-quick-guide]");
+const guideOpen = document.querySelector("[data-guide-open]");
+const guideText = document.querySelector("[data-guide-text]");
+const guideProgress = document.querySelector("[data-guide-progress]");
+const guidePrevious = document.querySelector("[data-guide-previous]");
+const guideNext = document.querySelector("[data-guide-next]");
+const guideSteps = [
+  { target: "#inicio .hero-actions", key: "guide.step1" },
+  { target: ".site-header .nav", key: "guide.step2" },
+  { target: "#projetos .section-topline", key: "guide.step3" },
+  { target: ".chat-toggle, [data-hero-ask]:not([hidden]), .hero-match", key: "guide.step4" },
+  { target: "#contato .contact-inner h2", key: "guide.step5" },
+];
+let guideIndex = 0;
+let guideTarget = null;
+
+const clearGuideTarget = () => {
+  guideTarget?.removeAttribute("data-guide-highlight");
+  guideTarget = null;
+};
+
+const renderGuideStep = () => {
+  const step = guideSteps[guideIndex];
+  clearGuideTarget();
+  guideTarget = document.querySelector(step.target);
+  guideTarget?.setAttribute("data-guide-highlight", "");
+  guideText.textContent = t(step.key);
+  guideProgress.textContent = t("guide.progress", { current: guideIndex + 1, total: guideSteps.length });
+  guidePrevious.disabled = guideIndex === 0;
+  guideNext.textContent = t(guideIndex === guideSteps.length - 1 ? "guide.finish" : "guide.next");
+  guideTarget?.scrollIntoView({ behavior: prefersReducedMotion ? "instant" : "smooth", block: "center" });
+};
+
+const closeGuide = () => {
+  guide.hidden = true;
+  clearGuideTarget();
+  try {
+    localStorage.setItem("portfolio-guide-seen", "true");
+  } catch {
+    /* navegação privada: o guia continua disponível pelo botão */
+  }
+  guideOpen.focus();
+};
+
+guideOpen.hidden = false;
+guideOpen.addEventListener("click", () => {
+  guideIndex = 0;
+  guide.hidden = false;
+  renderGuideStep();
+  guideNext.focus();
+});
+
+guidePrevious.addEventListener("click", () => {
+  if (guideIndex === 0) return;
+  guideIndex -= 1;
+  renderGuideStep();
+});
+
+guideNext.addEventListener("click", () => {
+  if (guideIndex === guideSteps.length - 1) {
+    closeGuide();
+    return;
+  }
+  guideIndex += 1;
+  renderGuideStep();
+});
+
+guide.querySelector("[data-guide-close]").addEventListener("click", closeGuide);
+guide.addEventListener("keydown", (event) => {
+  if (event.key === "Escape") closeGuide();
+});
+document.addEventListener("languagechange", () => {
+  if (!guide.hidden) renderGuideStep();
+});
+
+try {
+  if (!localStorage.getItem("portfolio-guide-seen") && !location.hash) {
+    setTimeout(() => {
+      guide.hidden = false;
+      renderGuideStep();
+      guideNext.focus();
+    }, 1200);
+  }
+} catch {
+  /* navegação privada: o guia continua disponível pelo botão */
+}
+
 /* ---------- Cabeçalho: sombra e progresso de leitura ---------- */
 
 const header = document.querySelector(".site-header");

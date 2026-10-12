@@ -210,5 +210,18 @@ window.I18N.it = {
   "hero.askLabel": "Chiedi alla mia IA",
   "hero.match": "<strong>Recruiter?</strong> Incolla il tuo annuncio e vedi la compatibilità in pochi secondi",
   "hero.askExamples": "Ha esperienza con Kafka?|Che tipo di ruolo cerca?|Quali progetti di IA ha realizzato?|Lavora da remoto?",
-  "chat.toggleLabel": "Chiedi all’IA"
+  "chat.toggleLabel": "Chiedi all’IA",
+  "guide.kicker": "GUIDA RAPIDA",
+  "guide.title": "Esplora il portfolio",
+  "guide.open": "Guida rapida",
+  "guide.close": "Chiudi la guida",
+  "guide.step1": "Scopri una panoramica della mia esperienza e usa i pulsanti per vedere i progetti o contattarmi.",
+  "guide.step2": "Usa il menu per esplorare le sezioni. Nell’intestazione puoi anche cambiare tema e lingua.",
+  "guide.step3": "Esplora i progetti, consulta il codice su GitHub e prova le demo interattive.",
+  "guide.step4": "Apri l’assistente flottante per chiedere informazioni sulla mia esperienza, sui progetti e sulla disponibilità. I recruiter possono confrontare un’offerta con il mio profilo.",
+  "guide.step5": "Usa il modulo per contattarmi per opportunità o progetti. I dati servono solo per rispondere e vengono eliminati automaticamente dopo 12 mesi.",
+  "guide.progress": "{current} di {total}",
+  "guide.previous": "Indietro",
+  "guide.next": "Avanti",
+  "guide.finish": "Termina"
 };

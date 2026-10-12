@@ -210,5 +210,18 @@ window.I18N.zh = {
   "hero.askLabel": "问问我的 AI",
   "hero.match": "<strong>招聘者？</strong>粘贴职位描述，几秒钟即可查看匹配度",
   "hero.askExamples": "他有 Kafka 经验吗？|他在找什么样的职位？|他做过哪些 AI 项目？|他可以远程工作吗？",
-  "chat.toggleLabel": "问 AI"
+  "chat.toggleLabel": "问 AI",
+  "guide.kicker": "快速指南",
+  "guide.title": "探索作品集",
+  "guide.open": "快速指南",
+  "guide.close": "关闭指南",
+  "guide.step1": "快速了解我的工作经历，然后使用按钮浏览项目或联系我。",
+  "guide.step2": "使用菜单浏览各个板块。你也可以在页眉切换主题和语言。",
+  "guide.step3": "浏览项目、查看 GitHub 源代码并体验交互式演示。",
+  "guide.step4": "点击悬浮助手，询问我的经历、项目和求职意向。招聘者还可以将职位要求与我的个人资料进行匹配。",
+  "guide.step5": "使用表单联系我，讨论工作机会或项目。你的信息仅用于回复，并会在 12 个月后自动删除。",
+  "guide.progress": "第 {current} 步，共 {total} 步",
+  "guide.previous": "上一步",
+  "guide.next": "下一步",
+  "guide.finish": "完成"
 };

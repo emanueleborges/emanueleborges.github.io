@@ -210,5 +210,18 @@ window.I18N.de = {
   "hero.askLabel": "Frag meine KI",
   "hero.match": "<strong>Recruiter?</strong> Stellenbeschreibung einfügen und die Übereinstimmung in Sekunden sehen",
   "hero.askExamples": "Hat er Erfahrung mit Kafka?|Welche Art von Stelle sucht er?|Welche KI-Projekte hat er umgesetzt?|Arbeitet er remote?",
-  "chat.toggleLabel": "KI fragen"
+  "chat.toggleLabel": "KI fragen",
+  "guide.kicker": "KURZANLEITUNG",
+  "guide.title": "Portfolio entdecken",
+  "guide.open": "Kurzanleitung",
+  "guide.close": "Anleitung schließen",
+  "guide.step1": "Verschaffe dir einen Überblick über meine Erfahrung und nutze die Schaltflächen für Projekte oder Kontakt.",
+  "guide.step2": "Mit dem Menü kannst du die Bereiche durchstöbern. In der Kopfzeile lassen sich auch Thema und Sprache ändern.",
+  "guide.step3": "Entdecke Projekte, sieh dir den Quellcode auf GitHub an und probiere die interaktiven Demos aus.",
+  "guide.step4": "Öffne den schwebenden Assistenten für Fragen zu meiner Erfahrung, meinen Projekten und meiner Verfügbarkeit. Recruiter können außerdem eine Stelle mit meinem Profil abgleichen.",
+  "guide.step5": "Über das Formular kannst du mich zu Chancen oder Projekten kontaktieren. Deine Angaben werden zur Beantwortung verwendet und nach 12 Monaten automatisch gelöscht.",
+  "guide.progress": "{current} von {total}",
+  "guide.previous": "Zurück",
+  "guide.next": "Weiter",
+  "guide.finish": "Fertig"
 };

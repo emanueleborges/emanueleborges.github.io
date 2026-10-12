@@ -201,5 +201,18 @@ window.I18N.en = {
   "hero.askLabel": "Ask my AI",
   "hero.match": "<strong>Recruiter?</strong> Paste your job description and see the match in seconds",
   "hero.askExamples": "Does he have Kafka experience?|What kind of role is he looking for?|What AI projects has he built?|Does he work remotely?",
-  "chat.toggleLabel": "Ask AI"
+  "chat.toggleLabel": "Ask AI",
+  "guide.kicker": "QUICK GUIDE",
+  "guide.title": "Explore the portfolio",
+  "guide.open": "Quick guide",
+  "guide.close": "Close guide",
+  "guide.step1": "Get a quick overview of my experience, then use the buttons to explore projects or get in touch.",
+  "guide.step2": "Use the menu to browse the sections. You can also change the theme and language in the header.",
+  "guide.step3": "Explore projects, browse the source code on GitHub and try the interactive demos.",
+  "guide.step4": "Open the floating assistant to ask about my experience, projects and availability. Recruiters can also compare a job posting with my profile.",
+  "guide.step5": "Use the form to contact me about opportunities or projects. Your details are used to reply and are automatically deleted after 12 months.",
+  "guide.progress": "{current} of {total}",
+  "guide.previous": "Back",
+  "guide.next": "Next",
+  "guide.finish": "Finish"
 };

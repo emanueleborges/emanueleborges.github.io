@@ -12,7 +12,7 @@
     if (!LANGS.includes(lang)) return Promise.resolve(false);
     pending[lang] ??= new Promise((resolve) => {
       const script = document.createElement("script");
-      script.src = new URL(`${lang}.js`, base).href;
+      script.src = new URL(`${lang}.js?v=20261011214315`, base).href;
       script.onload = () => resolve(Boolean(I18N[lang]));
       // Sem rede: tenta de novo na próxima escolha do idioma.
       script.onerror = () => {
