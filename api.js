@@ -82,5 +82,20 @@ export const PortfolioApi = (() => {
     if (!response.ok) throw new Error(`Contagem regional indisponível (${response.status})`);
   };
 
-  return { enabled: Boolean(BASE), loadTurnstile, post, recordVisit };
+  // Total diário de cliques num link (só após consentimento). keepalive: o envio continua
+  // mesmo se o clique sair da página; text/plain evita a pré-checagem de CORS.
+  const recordClick = async (target) => {
+    const response = await fetch(`${BASE}/click`, {
+      method: "POST",
+      headers: { "Content-Type": "text/plain" },
+      body: JSON.stringify({ target }),
+      credentials: "omit",
+      referrerPolicy: "no-referrer",
+      cache: "no-store",
+      keepalive: true,
+    });
+    if (!response.ok) throw new Error(`Contagem de cliques indisponível (${response.status})`);
+  };
+
+  return { enabled: Boolean(BASE), loadTurnstile, post, recordVisit, recordClick };
 })();

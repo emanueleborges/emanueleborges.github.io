@@ -3,6 +3,8 @@
 //   POST /feedback → total diário agregado de avaliações 👍/👎, sem texto associado
 //   POST /match    → "Essa vaga combina?": requisitos da vaga × perfil, com evidências e nota
 //   POST /visit    → contagem agregada por continente, somente após consentimento
+//   POST /score    → total diário por nota (0–100) dada ao portfólio na barra de avaliação
+//   POST /click    → total diário de cliques por link (LinkedIn, GitHub…), somente após consentimento
 //   GET  /prices   → preços das ações da demo do LSTM (Yahoo Finance)
 //   Cron (horário) → limpeza de dados expirados; (segunda 12:00 UTC) resumo agregado semanal
 //
@@ -13,6 +15,7 @@ import { handleFeedback } from "./rotas/avaliacao.js";
 import { handleMatch } from "./rotas/vaga.js";
 import { handlePrices } from "./rotas/precos.js";
 import { handleVisit } from "./rotas/visitas.js";
+import { handleClick, handleScore } from "./rotas/metricas.js";
 import { purgeOldData, sendWeeklySummary } from "./agendado.js";
 
 // Rotas POST: caminho → função (payload, ip, env, origin, ctx, request).
@@ -20,6 +23,8 @@ const POST_ROUTES = {
   "/": handleChat,
   "/feedback": handleFeedback,
   "/match": handleMatch,
+  "/score": handleScore,
+  "/click": handleClick,
   "/visit": (_payload, _ip, env, origin, _ctx, request) => handleVisit(request, env, origin),
 };
 

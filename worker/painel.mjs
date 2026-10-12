@@ -1,4 +1,5 @@
-// Painel local de dados operacionais: totais de avaliações e visitas por continente.
+// Painel local de dados operacionais: avaliações do chat, nota do portfólio, cliques por link
+// e visitas por continente.
 // Busca os agregados no D1, gera painel.html fora do git e abre no navegador. Nada é publicado.
 //
 // Uso:  cd worker && npm run painel
@@ -7,6 +8,7 @@ import { execFileSync } from "node:child_process";
 import { writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
+import { CLICK_TARGETS } from "./src/rotas/metricas.js";
 
 const DIR = dirname(fileURLToPath(import.meta.url));
 const OUT = join(DIR, "painel.html");
@@ -92,10 +94,12 @@ const legend = (series) => `<div class="legend">${series.map((s) => `<span><i st
 
 /* ---------- Dados ---------- */
 
-console.log("Buscando totais agregados de avaliações e acessos no D1…");
+console.log("Buscando totais agregados de avaliações, notas, cliques e acessos no D1…");
 const feedback = d1("SELECT feedback_date, rating, total FROM feedback_daily ORDER BY feedback_date DESC");
 const visits = d1("SELECT continent, SUM(total) AS total FROM regional_visits WHERE access_date > date('now', '-29 days') GROUP BY continent ORDER BY total DESC");
 const visitTotal = visits.reduce((sum, row) => sum + Number(row.total), 0);
+const scores = d1("SELECT score, SUM(total) AS total FROM score_daily WHERE score_date > date('now', '-29 days') GROUP BY score");
+const clicks = d1("SELECT target, SUM(total) AS total FROM click_daily WHERE click_date > date('now', '-29 days') GROUP BY target");
 
 const up = feedback.filter((f) => f.rating === 1).reduce((sum, f) => sum + Number(f.total), 0);
 const down = feedback.filter((f) => f.rating === -1).reduce((sum, f) => sum + Number(f.total), 0);
@@ -115,6 +119,56 @@ const ratingsWeek = [
 ];
 
 const tile = (label, value, note = "") => `<div class="tile"><span>${label}</span><strong>${value}</strong>${note ? `<small>${note}</small>` : ""}</div>`;
+
+/* ---------- Nota do portfólio ---------- */
+
+const scoreCount = scores.reduce((sum, row) => sum + Number(row.total), 0);
+const scoreAverage = scoreCount ? Math.round(scores.reduce((sum, row) => sum + row.score * Number(row.total), 0) / scoreCount) : 0;
+// Faixas de 10 pontos (0–9, 10–19 … 90–100) para ver a distribuição das notas.
+const scoreBands = Array.from({ length: 10 }, (_, i) => i * 10);
+const scoreBandValues = scoreBands.map((start) =>
+  scores.filter((row) => Math.min(9, Math.floor(row.score / 10)) === start / 10).reduce((sum, row) => sum + Number(row.total), 0),
+);
+const scoreSeries = [{ name: "Avaliações", color: "var(--s1)", values: scoreBandValues }];
+const scoreLabel = (start) => (start === 90 ? "90–100" : `${start}–${start + 9}`);
+const scoreHtml = `<div class="tiles">
+    ${tile("Nota média (30 dias)", scoreCount ? `${scoreAverage}%` : "—")}
+    ${tile("Avaliações recebidas", scoreCount.toLocaleString("pt-BR"))}
+  </div>
+  <div class="card" style="margin-top:12px"><h3>Distribuição das notas</h3>${bars(scoreBands.map(scoreLabel), scoreSeries)}</div>
+  <p class="muted">Somente o total diário de cada nota (0–100), sem IP, idioma ou identificadores, por até 30 dias.</p>`;
+
+/* ---------- Cliques por link ---------- */
+
+const clickNames = {
+  "nav-contact": "Menu · Vamos conversar",
+  "hero-projects": "Topo · Explorar projetos",
+  "hero-contact": "Topo · Entre em contato",
+  "hero-cv": "Topo · Baixar currículo",
+  "hero-chat": "Topo · Pergunte à minha IA",
+  "projects-github": "Projetos · Ver todos no GitHub",
+  "contact-email": "Contato · E-mail",
+  "contact-cv": "Contato · Baixar currículo",
+  "contact-whatsapp": "Contato · WhatsApp",
+  "contact-github": "Contato · GitHub",
+  "contact-linkedin": "Contato · LinkedIn",
+};
+const clickName = (target) => {
+  if (clickNames[target]) return clickNames[target];
+  const [kind, name] = target.split(":");
+  return `${kind === "demo" ? "Demo" : "Código"} · ${name}`;
+};
+// Links fixos sem nenhum clique também aparecem (com 0), para mostrar o que menos atrai.
+const clickTotals = new Map([...CLICK_TARGETS].map((target) => [target, 0]));
+clicks.forEach((row) => clickTotals.set(row.target, Number(row.total)));
+const clickRows = [...clickTotals].sort((a, b) => b[1] - a[1] || clickName(a[0]).localeCompare(clickName(b[0]), "pt-BR"));
+const clickTotal = clickRows.reduce((sum, [, total]) => sum + total, 0);
+const clickMax = Math.max(1, ...clickRows.map(([, total]) => total));
+const clicksHtml = `<div class="tiles">${tile("Cliques consentidos (30 dias)", clickTotal.toLocaleString("pt-BR"))}</div>
+  <div class="card" style="margin-top:12px"><h3>Do mais ao menos clicado</h3><div class="hbars">
+    ${clickRows.map(([target, total]) => `<div class="hbar"><span title="${escape(clickName(target))}">${escape(clickName(target))}</span><i style="width:${(total / clickMax) * 100}%"></i><b>${total}</b></div>`).join("")}
+  </div></div>
+  <p class="muted">Somente totais diários por link, após consentimento, sem IP, página, idioma ou identificadores. Projetos aparecem quando recebem o primeiro clique.</p>`;
 
 const continentNames = { AF: "África", AN: "Antártida", AS: "Ásia", EU: "Europa", NA: "América do Norte", OC: "Oceania", SA: "América do Sul" };
 const visitsHtml = `<div class="tiles">${tile("Acessos regionais consentidos (30 dias)", visitTotal.toLocaleString("pt-BR"))}</div>
@@ -160,7 +214,7 @@ const html = `<!doctype html>
   td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
   td.text { min-width: 260px; }
   .hbars { display: grid; gap: 8px; margin-top: 6px; }
-  .hbar { display: grid; grid-template-columns: 110px 1fr 40px; align-items: center; gap: 10px; font-size: 13px; }
+  .hbar { display: grid; grid-template-columns: minmax(110px, 240px) 1fr 40px; align-items: center; gap: 10px; font-size: 13px; }
   .hbar span { color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .hbar i { display: block; height: 14px; min-width: 2px; border-radius: 0 4px 4px 0; background: var(--s1); }
   .hbar b { font-weight: 600; font-variant-numeric: tabular-nums; text-align: right; }
@@ -185,6 +239,12 @@ const html = `<!doctype html>
     <tbody>${weeks.map((w, i) => `<tr><td>${weekLabel(w)}</td><td class="num">${ratingsWeek[0].values[i]}</td><td class="num">${ratingsWeek[1].values[i]}</td></tr>`).join("")}</tbody>
   </table></div></details>
   <p class="muted">São armazenados somente totais diários de 👍/👎 por até 30 dias; perguntas, respostas e idiomas não são guardados junto à avaliação.</p>
+
+  <h2>Nota do portfólio</h2>
+  ${scoreHtml}
+
+  <h2>Cliques por link</h2>
+  ${clicksHtml}
 
   <h2>Acessos por continente</h2>
   ${visitsHtml}
