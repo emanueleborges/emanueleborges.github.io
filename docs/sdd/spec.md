@@ -120,6 +120,7 @@ Páginas próprias (`/demos/…`), nos 8 idiomas, no estilo do site, com link de
 - RF-12.2 **Reconhecimento facial:** pela webcam ou por foto; o visitante cadastra rostos com um nome e vê o reconhecimento com a distância. **Nenhuma imagem sai do aparelho** e nada é salvo; a página informa isso.
 - RF-12.3 **Recomendação de filmes:** por um filme escolhido ou por descrição livre (em inglês), mostrando para cada resultado a similaridade e **os termos que explicam a recomendação**. Base de filmes de licença livre, com crédito às fontes.
 - RF-12.4 As demos rodam no navegador do visitante; nenhuma exige conta, cadastro ou servidor pago.
+- RF-12.5 **Segurança RAG contra prompt injection:** demo local e interativa que compara respostas simuladas para ataques na pergunta e em documentos recuperados, mostra conceitos de defesa em camadas, não executa modelo de IA, não envia o texto digitado e identifica claramente que o segredo exibido é fictício.
 
 ### RF-13 — App instalável e offline
 O site pode ser instalado como app (manifest e ícones) e, depois da primeira visita, abre sem internet com a última versão salva; o chat usa a busca local quando offline.

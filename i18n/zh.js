@@ -82,6 +82,8 @@ window.I18N.zh = {
   "p9.desc": "使用 Jetpack Compose for Desktop 构建的现代桌面应用，对接 Kotlin 和 Spring Boot 编写的 REST 后端。",
   "p10.title": "本作品集的 AI 助手",
   "p10.desc": "支持 8 种语言的混合式聊天：预设回答、本地搜索（带拼写纠错的 TF-IDF），以及基于 Vectorize 中 BGE-M3 嵌入向量和 Workers AI 上 Qwen3 30B 生成的 RAG，并由 Turnstile 和按 IP 限流保护——全部使用免费套餐。",
+  "p11.title": "RAG 安全实验室",
+  "p11.desc": "本地交互式演示，展示问题和检索文档中的提示注入：比较易受攻击和设有防护的流程，并了解分层防御。无 AI 推理或用户文本上传，仅使用虚构秘密。",
   "proj.more": "在 GitHub 查看全部 <span>↗</span>",
   "proj.code": "查看代码",
   "proj.demo": "在线演示",

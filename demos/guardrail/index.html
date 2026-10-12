@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://gc.zgo.at; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://emanueleborges.goatcounter.com; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <title data-t="meta.title">RAG Security Lab — Prompt Injection — Emanuel Borges</title>
+    <meta name="description" data-t-content="meta.description" content="An interactive, local-only simulation showing how prompt injection can affect RAG systems and how defensive boundaries help." />
+    <meta name="theme-color" content="#06100b" />
+    <script src="../../components/boot.js"></script>
+    <link rel="icon" href="/imagens/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/imagens/favicon-32.png" sizes="32x32" type="image/png" />
+    <link rel="apple-touch-icon" href="/imagens/apple-touch-icon.png" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="../demos.css" />
+    <style>
+      .notice { margin-top: 22px; padding: 14px 16px; border: 1px solid var(--warn-line); border-radius: 12px; background: var(--warn-bg); color: var(--warn-text); font-size: 13px; }
+      .scenario-grid, .compare-grid, .defense-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+      .scenario-grid { margin-bottom: 16px; }
+      .compare-grid { margin-top: 20px; }
+      .field { min-width: 0; }
+      .field textarea, .scenario-select { width: 100%; min-height: 112px; padding: 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface-2); color: var(--text); font: 500 13px/1.55 "DM Mono", monospace; resize: vertical; }
+      .scenario-select { min-height: 44px; font-family: Manrope, sans-serif; }
+      .field label { margin-bottom: 7px; color: var(--text); font-weight: 700; }
+      .result { min-height: 132px; padding: 16px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface-2); overflow-wrap: anywhere; }
+      .result h3 { display: flex; align-items: center; gap: 8px; }
+      .result p { margin: 0; font-size: 14px; }
+      .result.vulnerable { border-color: var(--warn-line); }
+      .result.defended { border-color: rgba(var(--accent-2-rgb), .4); }
+      .badge { padding: 3px 8px; border-radius: 999px; background: var(--warn-bg); color: var(--warn-text); font: 600 11px "DM Mono", monospace; }
+      .trace { margin-top: 20px; padding: 16px; border-radius: 12px; background: var(--surface-2); }
+      .trace ol { margin: 10px 0 0; padding-left: 22px; color: var(--muted); font-size: 13px; }
+      .trace li + li { margin-top: 6px; }
+      .defense-grid { margin-top: 14px; }
+      .defense-grid article { padding: 14px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface-2); }
+      .defense-grid p { margin: 0; color: var(--muted); font-size: 13px; }
+      @media (max-width: 640px) { .scenario-grid, .compare-grid, .defense-grid { grid-template-columns: 1fr; } }
+    </style>
+    <script type="module" src="guardrail.js"></script>
+    <script data-goatcounter="https://emanueleborges.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+    <script src="../../components/components.js" defer></script>
+  </head>
+  <body>
+    <div class="glow glow-1" aria-hidden="true"></div>
+    <div class="glow glow-2" aria-hidden="true"></div>
+    <div class="shell">
+      <header>
+        <a class="brand" href="/"><site-logo class="brand-logo" size="32"></site-logo> Emanuel Borges</a>
+        <div class="header-tools">
+          <theme-toggle></theme-toggle>
+          <label><span class="visually-hidden" data-t="lang">Language</span>
+            <select data-lang>
+              <option value="en" lang="en">English</option>
+              <option value="pt" lang="pt-BR">Português</option>
+              <option value="es" lang="es">Español</option>
+              <option value="fr" lang="fr">Français</option>
+              <option value="it" lang="it">Italiano</option>
+              <option value="de" lang="de">Deutsch</option>
+              <option value="zh" lang="zh-CN">中文</option>
+              <option value="ru" lang="ru">Русский</option>
+            </select>
+          </label>
+        </div>
+      </header>
+
+      <main>
+        <p class="kicker" data-t="kicker"></p>
+        <h1 data-t="title"></h1>
+        <p class="lead" data-t="lead"></p>
+        <div class="links">
+          <a class="button" href="/#projetos" data-t="back"></a>
+          <a class="button" href="https://github.com/emanueleborges/emanueleborges.github.io/tree/main/demos/guardrail" target="_blank" rel="noopener" data-t="code"></a>
+        </div>
+        <p class="notice" data-t="disclaimer"></p>
+
+        <section class="panel">
+          <div class="field">
+            <label for="scenario" data-t="scenarioLabel"></label>
+            <select id="scenario" class="scenario-select" data-scenario></select>
+          </div>
+          <div class="scenario-grid" style="margin-top:16px">
+            <div class="field">
+              <label for="question" data-t="questionLabel"></label>
+              <textarea id="question" maxlength="1000" data-question></textarea>
+            </div>
+            <div class="field">
+              <label for="document" data-t="documentLabel"></label>
+              <textarea id="document" maxlength="1600" data-document></textarea>
+            </div>
+          </div>
+          <button class="button primary" type="button" data-run data-t="run"></button>
+          <div class="compare-grid" aria-live="polite">
+            <article class="result vulnerable">
+              <h3><span data-t="vulnerableTitle"></span><span class="badge" data-t="simulated"></span></h3>
+              <p data-vulnerable-result data-t="initial"></p>
+            </article>
+            <article class="result defended">
+              <h3 data-t="defendedTitle"></h3>
+              <p data-defended-result data-t="initial"></p>
+            </article>
+          </div>
+          <div class="trace">
+            <strong data-t="traceTitle"></strong>
+            <ol data-trace>
+              <li data-t="traceInitial"></li>
+            </ol>
+          </div>
+        </section>
+
+        <h2 data-t="defensesTitle"></h2>
+        <div class="defense-grid">
+          <article><h3 data-t="defense1Title"></h3><p data-t="defense1Text"></p></article>
+          <article><h3 data-t="defense2Title"></h3><p data-t="defense2Text"></p></article>
+          <article><h3 data-t="defense3Title"></h3><p data-t="defense3Text"></p></article>
+        </div>
+        <p class="note" data-t="limits"></p>
+      </main>
+    </div>
+  </body>
+</html>

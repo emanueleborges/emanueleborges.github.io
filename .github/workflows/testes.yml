@@ -53,6 +53,9 @@ jobs:
       - name: Comparação de vagas
         run: node --test worker/tests/*.test.js
 
+      - name: Demo de segurança RAG
+        run: node --test demos/guardrail/core.test.js
+
       - name: Testes do assistente (chat)
         run: ./tests/rodar-testes-chat.sh
 

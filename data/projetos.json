@@ -201,6 +201,28 @@
         "href": "#chat",
         "openChat": true
       }
+    },
+    {
+      "id": "p11",
+      "categories": [
+        "ia"
+      ],
+      "label": "11 / SEGURANÇA DE IA",
+      "type": {
+        "text": "RAG · PROMPT INJECTION · SEGURANÇA DE LLM"
+      },
+      "title": {
+        "key": "p11.title"
+      },
+      "desc": {
+        "key": "p11.desc"
+      },
+      "repo": "emanueleborges.github.io",
+      "repoUrl": "https://github.com/emanueleborges/emanueleborges.github.io/tree/main/demos/guardrail",
+      "demo": {
+        "name": "guardrail",
+        "href": "demos/guardrail/"
+      }
     }
   ]
 }

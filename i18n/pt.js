@@ -70,6 +70,8 @@ window.I18N.pt = {
   "p9.desc": "Aplicativo desktop moderno com Jetpack Compose for Desktop, consumindo um backend REST em Kotlin e Spring Boot.",
   "p10.title": "Assistente com IA deste portfólio",
   "p10.desc": "Chat híbrido em 8 idiomas: respostas prontas, busca local (TF-IDF com correção de digitação) e RAG com embeddings BGE-M3 no Vectorize e geração pelo Qwen3 30B no Workers AI, protegido por Turnstile e limites por IP — tudo em planos gratuitos.",
+  "p11.title": "Laboratório de Segurança RAG",
+  "p11.desc": "Demo local e interativa de prompt injection em perguntas e documentos recuperados: compara um fluxo vulnerável com outro protegido e explica defesas em camadas. Sem inferência de IA ou envio do texto digitado; usa apenas um segredo fictício.",
   "proj.more": "Ver todos no GitHub <span>↗</span>",
   "proj.code": "Ver código",
   "proj.demo": "Ver demo",

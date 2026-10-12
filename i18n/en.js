@@ -78,6 +78,8 @@ window.I18N.en = {
   "p9.desc": "Modern desktop app built with Jetpack Compose for Desktop, consuming a REST backend in Kotlin and Spring Boot.",
   "p10.title": "This portfolio's AI assistant",
   "p10.desc": "Hybrid chat in 8 languages: ready-made answers, local search (TF-IDF with typo correction) and RAG with BGE-M3 embeddings in Vectorize and generation by Qwen3 30B on Workers AI, protected by Turnstile and per-IP limits — all on free plans.",
+  "p11.title": "RAG Security Lab",
+  "p11.desc": "A local interactive demo of prompt injection in questions and retrieved documents: compare a vulnerable flow with a guarded one and learn layered defenses. No AI inference or user-text uploads; it uses only a fake secret.",
   "proj.more": "See all on GitHub <span>↗</span>",
   "proj.code": "View code",
   "proj.demo": "Live demo",

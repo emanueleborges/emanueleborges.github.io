@@ -10,9 +10,9 @@ Portfólio profissional de **Emanuel Borges**, Desenvolvedor Full Stack Sênior 
 
 🎯 **Para recrutadores:** [sua vaga combina com o Emanuel?](https://emanueleborges.github.io/vaga/) — cole a vaga e veja a aderência requisito por requisito
 
-🧪 **Demos de IA ao vivo:** [previsão de ações (LSTM)](https://emanueleborges.github.io/demos/lstm/) · [reconhecimento facial](https://emanueleborges.github.io/demos/face/) · [recomendação de filmes](https://emanueleborges.github.io/demos/filmes/)
+🧪 **Demos interativas:** [previsão de ações (LSTM)](https://emanueleborges.github.io/demos/lstm/) · [reconhecimento facial](https://emanueleborges.github.io/demos/face/) · [recomendação de filmes](https://emanueleborges.github.io/demos/filmes/) · [segurança de RAG contra prompt injection](https://emanueleborges.github.io/demos/guardrail/)
 
-Site estático, sem framework, com um backend *serverless* no Cloudflare para o chat com IA e o formulário de contato, e **3 demos de IA que rodam no navegador do visitante**. **Toda a infraestrutura roda em planos gratuitos.**
+Site estático, sem framework, com um backend *serverless* no Cloudflare para o chat com IA e o formulário de contato, além de demos que rodam no navegador. A demo de segurança RAG é uma simulação local e não chama modelos de IA. **Toda a infraestrutura roda em planos gratuitos.**
 
 ---
 
@@ -53,6 +53,7 @@ Site estático, sem framework, com um backend *serverless* no Cloudflare para o 
 | **"Sua vaga combina?" (para recrutadores)** | Página `/vaga/` (8 idiomas): o recrutador cola a vaga e vê a **nota de aderência**, cada requisito como ✅ atende / 🟡 parcial / ⚪ não encontrado com **evidências clicáveis** no portfólio, e um resumo "por que o Emanuel" para copiar. A IA extrai os requisitos lendo só a vaga e depois avalia cada um; o Worker confere as evidências, rebaixa tecnologias ausentes do perfil e calcula a nota por regra. O texto da vaga não é salvo. |
 | **Demo de IA: reconhecimento facial** | Página `/demos/face/` com face-api.js (TensorFlow.js): detecção, embeddings de 128 números e reconhecimento pela webcam ou por foto. **Nada sai do aparelho** do visitante. |
 | **Demo de IA: recomendação de filmes** | Página `/demos/filmes/`: TF-IDF + cosseno em JavaScript puro sobre ~1.500 filmes (Wikidata CC0 + resumos da Wikipédia CC BY-SA), por filme ou por descrição livre, mostrando os termos que explicam cada recomendação. |
+| **Demo de segurança RAG** | Página `/demos/guardrail/`: comparação local e interativa de prompt injection na pergunta e em documentos recuperados, com exemplos de defesas em camadas. As respostas são simuladas; nenhum modelo roda e o texto digitado não é enviado. |
 | **App instalável (PWA)** | Pode ser instalado no celular ou computador (ícone próprio) e abre sem internet: a página e os arquivos ficam salvos pelo *service worker*. |
 
 ---
@@ -77,7 +78,7 @@ flowchart LR
   GP -->|demo facial: face-api.js + modelos| CDN[jsDelivr]
 ```
 
-As **demos de IA** fazem a inferência no navegador: o LSTM roda em JavaScript puro com pesos exportados do Keras, o reconhecimento facial usa face-api.js (TensorFlow.js) e a recomendação de filmes calcula TF-IDF + cosseno em JS. O *service worker* (`sw.js`) guarda o site para abrir offline.
+As **demos de IA** fazem a inferência no navegador: o LSTM roda em JavaScript puro com pesos exportados do Keras, o reconhecimento facial usa face-api.js (TensorFlow.js) e a recomendação de filmes calcula TF-IDF + cosseno em JS. A demo de segurança RAG é uma simulação local, sem inferência de IA. O *service worker* (`sw.js`) guarda o site para abrir offline.
 
 ### Como o assistente responde
 
@@ -124,7 +125,8 @@ O conhecimento da IA é **gerado das próprias traduções do site** (`i18n/`): 
 ├── demos/                  # Demos de IA no navegador (demos.css/demos.js compartilhados)
 │   ├── lstm/               # Previsão de ações: lstm.js (inferência), pesos e dados
 │   ├── face/               # Reconhecimento facial com face-api.js
-│   └── filmes/             # Recomendação de filmes: tfidf.js e filmes.json
+│   ├── filmes/             # Recomendação de filmes: tfidf.js e filmes.json
+│   └── guardrail/          # Simulação local de prompt injection contra RAG
 ├── scripts/conferir-modulos.mjs # CI: todo módulo ES importado pelo index.html está no importmap
 ├── scripts/gerar-secoes.mjs # Gera os cards de projetos e as habilidades a partir de data/ (--check no CI)
 ├── scripts/gerar-dados-filmes.py  # Gera demos/filmes/filmes.json (Wikidata + Wikipédia)

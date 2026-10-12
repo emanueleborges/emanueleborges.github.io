@@ -70,6 +70,8 @@ window.I18N.de = {
   "p9.desc": "Moderne Desktop-App mit Jetpack Compose for Desktop, angebunden an ein REST-Backend in Kotlin und Spring Boot.",
   "p10.title": "Der KI-Assistent dieses Portfolios",
   "p10.desc": "Hybrider Chat in 8 Sprachen: vorgefertigte Antworten, lokale Suche (TF-IDF mit Tippfehlerkorrektur) und RAG mit BGE-M3-Embeddings in Vectorize und Generierung durch Qwen3 30B auf Workers AI, geschützt durch Turnstile und IP-Limits – alles in kostenlosen Tarifen.",
+  "p11.title": "RAG-Sicherheitslabor",
+  "p11.desc": "Eine lokale interaktive Demo für Prompt Injection in Fragen und abgerufenen Dokumenten: Vergleiche einen angreifbaren mit einem geschützten Ablauf und lerne mehrschichtige Schutzmaßnahmen kennen. Ohne KI-Inferenz oder Übertragung deines Textes; verwendet wird nur ein erfundenes Geheimnis.",
   "proj.more": "Alle auf GitHub ansehen <span>↗</span>",
   "proj.code": "Code ansehen",
   "proj.demo": "Live-Demo",
