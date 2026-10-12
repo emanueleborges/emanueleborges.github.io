@@ -28,7 +28,7 @@
   }
   document.documentElement.dataset.theme = theme;
   var meta = document.querySelector('meta[name="theme-color"]');
-  if (meta) meta.content = theme === "editorial" ? "#f6f3ec" : "#06100b";
+  if (meta) meta.content = theme === "editorial" ? "#e1dbd0" : "#06100b";
   window.goatcounter = window.goatcounter || {
     path: function (p) {
       return p.split("?")[0].replace(/index\.html$/, "") || "/";
