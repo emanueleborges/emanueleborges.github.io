@@ -228,10 +228,16 @@ const guideText = document.querySelector("[data-guide-text]");
 const guideProgress = document.querySelector("[data-guide-progress]");
 const guidePrevious = document.querySelector("[data-guide-previous]");
 const guideNext = document.querySelector("[data-guide-next]");
+const guideDemo = document.querySelector("[data-guide-demo]");
+// Passos com "demo" destacam o card do projeto e mostram o botão "Abrir demo".
 const guideSteps = [
   { target: "#inicio .hero-actions", key: "guide.step1" },
   { target: ".site-header .nav", key: "guide.step2" },
   { target: "#projetos .section-topline", key: "guide.step3" },
+  { demo: "lstm", key: "guide.demoLstm" },
+  { demo: "filmes", key: "guide.demoFilmes" },
+  { demo: "face", key: "guide.demoFace" },
+  { demo: "guardrail", key: "guide.demoGuardrail" },
   { target: ".chat-toggle, [data-hero-ask]:not([hidden]), .hero-match", key: "guide.step4" },
   { target: "#contato .contact-inner h2", key: "guide.step5" },
 ];
@@ -243,10 +249,20 @@ const clearGuideTarget = () => {
   guideTarget = null;
 };
 
+const demoLink = (demo) => document.querySelector(`.project-card [data-demo="${demo}"]`);
+
+// Card do projeto da demo; se um filtro de categoria o esconde, volta para "Todos".
+const demoCard = (demo) => {
+  const card = demoLink(demo)?.closest(".project-card");
+  if (card?.hidden) document.querySelector('[data-filter-group="projetos"] [data-filter="todos"]')?.click();
+  return card;
+};
+
 const renderGuideStep = () => {
   const step = guideSteps[guideIndex];
   clearGuideTarget();
-  guideTarget = document.querySelector(step.target);
+  guideTarget = step.demo ? demoCard(step.demo) : document.querySelector(step.target);
+  guideDemo.hidden = !step.demo;
   guideTarget?.setAttribute("data-guide-highlight", "");
   guideText.textContent = t(step.key);
   guideProgress.textContent = t("guide.progress", { current: guideIndex + 1, total: guideSteps.length });
@@ -287,6 +303,13 @@ guideNext.addEventListener("click", () => {
   }
   guideIndex += 1;
   renderGuideStep();
+});
+
+// Abre a demo pelo próprio link do card (navegação e contagem de cliques iguais às do card).
+guideDemo.addEventListener("click", () => {
+  const link = demoLink(guideSteps[guideIndex].demo);
+  closeGuide();
+  link?.click();
 });
 
 guide.querySelector("[data-guide-close]").addEventListener("click", closeGuide);
