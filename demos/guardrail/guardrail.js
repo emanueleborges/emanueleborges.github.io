@@ -466,9 +466,12 @@ function run() {
   track(`demo-guardrail-${id}`, `RAG security demo: ${id}`);
 }
 
-Demo.setup(T, () => {
+const render = () => {
   populateScenarios();
   loadExample();
-});
+};
+
+Demo.setup(T, render);
+render();
 $("[data-scenario]").addEventListener("change", loadExample);
 $("[data-run]").addEventListener("click", run);
