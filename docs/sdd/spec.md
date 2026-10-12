@@ -83,7 +83,7 @@ O site deve apresentar: topo (nome, cargo, resumo, localização, anos de experi
 E-mail, WhatsApp, LinkedIn e GitHub visíveis na seção de contato e no assistente. Não há formulário; as mensagens não são enviadas nem armazenadas pelo site.
 
 ### RF-08 — Estatísticas
-Contagem opcional somente após consentimento explícito. O Worker usa a região continental fornecida pela Cloudflare e o D1 armazena apenas o total diário por continente; não registrar IP, URL, idioma, cliques ou identificadores. Os agregados são removidos antes de completar 30 dias. A pessoa pode alterar ou retirar a escolha nas preferências de privacidade.
+Contagem opcional somente após consentimento explícito. O Worker usa a região continental fornecida pela Cloudflare e o D1 armazena apenas o total diário por continente; não registrar IP, URL, idioma, cliques ou identificadores. Os agregados são removidos antes de completar 30 dias. A escolha fica salva no navegador; para alterá-la depois, é necessário limpar os dados salvos deste site nas configurações do navegador.
 
 ### RF-09 — SEO e compartilhamento
 - RF-09.1 Ao compartilhar o link (LinkedIn, WhatsApp, X), exibir prévia com imagem, título e descrição.

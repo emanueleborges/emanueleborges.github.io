@@ -45,7 +45,7 @@ Site estático, sem framework, com backend *serverless* no Cloudflare para o cha
 | **Currículo em PDF** | Um PDF por idioma, gerado da mesma fonte de textos do site; o botão baixa o PDF do idioma atual. |
 | **Contatos diretos** | E-mail, WhatsApp, LinkedIn e GitHub; sem formulário nem armazenamento de mensagens pelo portfólio. |
 | **SEO** | Prévia de link (Open Graph/Twitter), `hreflang` para os 8 idiomas, dados estruturados de `Person` (JSON-LD), `sitemap.xml` e `robots.txt`; verificado no Google Search Console. |
-| **Estatísticas** | Contagem opcional, somente após consentimento explícito. O Worker da Cloudflare usa o IP da conexão para estimar o continente e grava no D1 apenas um total diário por continente; não grava IP, URL, idioma, cliques ou identificadores. Os agregados são removidos antes de completar 30 dias. A escolha pode ser alterada nas preferências de privacidade. |
+| **Estatísticas** | Contagem opcional, somente após consentimento explícito. O Worker da Cloudflare usa o IP da conexão para estimar o continente e grava no D1 apenas um total diário por continente; não grava IP, URL, idioma, cliques ou identificadores. Os agregados são removidos antes de completar 30 dias. A escolha fica salva no navegador; para alterá-la depois, limpe os dados salvos deste site nas configurações do navegador. |
 | **Resumo semanal** | Toda segunda, um e-mail com avaliações agregadas, acessos regionais consentidos e saúde da IA, do índice vetorial e do banco. |
 | **Página 404** | Página personalizada no estilo do site, com links para o portfólio e o assistente. |
 | **Demo de IA: previsão de ações com LSTM** | Página `/demos/lstm/` (8 idiomas) onde o LSTM do projeto FIAP roda **no navegador, em JavaScript puro** (pesos exportados do Keras, mesma saída até ~1e-8). Preços recentes pelo Worker (Yahoo Finance), com cópia salva se ele falhar; métricas do teste comparadas com um baseline ingênuo. |
@@ -232,7 +232,7 @@ Quando houver uma migração D1 pendente, aplique-a **antes** de publicar o Work
 | **Ver o painel de estatísticas** (totais diários de avaliações e visitas) | `cd worker && npm run painel` — veja [Painel de estatísticas](#painel-de-estatísticas) |
 | Ver uso da IA e métricas do Gateway | Painel do Cloudflare → **AI → AI Gateway → default** |
 | Ver contagem por continente (somente acessos consentidos) | `cd worker && npm run painel` |
-| **Excluir as suas próprias visitas** | Recuse as estatísticas opcionais nas preferências de privacidade do site em cada navegador/aparelho |
+| **Excluir as suas próprias visitas** | Recuse as estatísticas opcionais no aviso de consentimento em cada navegador/aparelho. Se já aceitou, limpe os dados salvos deste site nas configurações do navegador para escolher novamente |
 | Ver buscas e indexação no Google | [Google Search Console](https://search.google.com/search-console) → propriedade `https://emanueleborges.github.io/` |
 | Rodar os testes do chat | `./tests/rodar-testes-chat.sh` |
 | Rodar o Lighthouse como no CI | `npx @lhci/cli@0.15.1 autorun` (usa `lighthouserc.json`) |

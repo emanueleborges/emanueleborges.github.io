@@ -83,7 +83,7 @@ The site must present: hero (name, role, summary, location, years of experience)
 Email, WhatsApp, LinkedIn and GitHub visible in the contact section and in the assistant. There is no form; messages are not submitted to or stored by the site.
 
 ### FR-08 — Analytics
-Optional counting only after explicit consent. The Worker uses the continent provided by Cloudflare, and D1 stores only a daily total per continent; do not store IP, URL, language, clicks, or identifiers. Aggregates are deleted before they reach 30 days. Visitors can change or withdraw their choice through privacy settings.
+Optional counting only after explicit consent. The Worker uses the continent provided by Cloudflare, and D1 stores only a daily total per continent; do not store IP, URL, language, clicks, or identifiers. Aggregates are deleted before they reach 30 days. The choice is saved in the browser; to change it later, visitors must clear this site's saved data in browser settings.
 
 ### FR-09 — SEO and sharing
 - FR-09.1 When the link is shared (LinkedIn, WhatsApp, X), show a preview with image, title and description.

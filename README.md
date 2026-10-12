@@ -45,7 +45,7 @@ A framework-free static site with a Cloudflare serverless backend for the AI cha
 | **PDF résumé** | One PDF per language, generated from the same text source as the site; the button downloads the PDF for the current language. |
 | **Direct contacts** | Email, WhatsApp, LinkedIn and GitHub; the portfolio has no form and does not store contact messages. |
 | **SEO** | Link previews (Open Graph/Twitter), `hreflang` for 8 languages, `Person` structured data (JSON-LD), `sitemap.xml` and `robots.txt`; verified in Google Search Console. |
-| **Analytics** | Optional counting, only after explicit consent. The Cloudflare Worker uses the connection IP to estimate the continent and stores only a daily total per continent in D1; it does not store IP, URL, language, clicks, or identifiers. Aggregates are deleted before they reach 30 days. Visitors can change their choice in privacy settings. |
+| **Analytics** | Optional counting, only after explicit consent. The Cloudflare Worker uses the connection IP to estimate the continent and stores only a daily total per continent in D1; it does not store IP, URL, language, clicks, or identifiers. Aggregates are deleted before they reach 30 days. The choice is saved in the browser; to change it later, clear this site's saved data in browser settings. |
 | **Weekly summary** | Every Monday an email with aggregate chat ratings, consented regional counts and a health check of the AI, vector index and database. |
 | **404 page** | Custom page in the site's style with links to the portfolio and the assistant. |
 | **AI demo: LSTM stock forecasting** | `/demos/lstm/` page (8 languages) where the FIAP project's LSTM runs **in the browser, in plain JavaScript** (weights exported from Keras, same output to ~1e-8). Recent prices come from the Worker (Yahoo Finance), with a saved copy if it fails; test metrics compared against a naive baseline. |
@@ -232,7 +232,7 @@ If a D1 migration is pending, apply it **before** deploying the Worker: `npx wra
 | **Open the stats dashboard** (daily rating totals and visits) | `cd worker && npm run painel` — see [Stats dashboard](#stats-dashboard) |
 | See AI usage and Gateway metrics | Cloudflare dashboard → **AI → AI Gateway → default** |
 | See consented continent counts | `cd worker && npm run painel` |
-| **Exclude your own visits** | Reject optional statistics in the site's privacy settings on each browser/device |
+| **Exclude your own visits** | Reject optional statistics in the consent notice on each browser/device. If already accepted, clear this site's saved data in browser settings to choose again. |
 | See Google searches and indexing | [Google Search Console](https://search.google.com/search-console) → property `https://emanueleborges.github.io/` |
 | Run the chat tests | `./tests/rodar-testes-chat.sh` |
 | Run Lighthouse like CI does | `npx @lhci/cli@0.15.1 autorun` (uses `lighthouserc.json`) |
