@@ -23,7 +23,7 @@ jobs:
             node --check "$f"
           done
           # Módulos ES (site, demos, Worker e geradores)
-          for f in script.js api.js chat.js contact.js chat/*.js demos/*.js demos/*/*.js vaga/*.js worker/src/*.js worker/src/rotas/*.js; do
+          for f in script.js api.js chat.js analytics-consent.js chat/*.js demos/*.js demos/*/*.js vaga/*.js worker/src/*.js worker/src/rotas/*.js; do
             node --input-type=module --check < "$f" || { echo "Erro de sintaxe em $f"; exit 1; }
           done
           for f in worker/gerar-conhecimento.mjs worker/indexar-vectorize.mjs scripts/*.mjs; do

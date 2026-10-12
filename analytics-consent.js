@@ -138,7 +138,9 @@ import { PortfolioApi } from "./api.js";
     <button class="settings" type="button" aria-expanded="false" hidden></button>`;
 
   const panel = root.shadowRoot.querySelector(".panel");
-  const settings = root.shadowRoot.querySelector(".settings");
+  const floatingSettings = root.shadowRoot.querySelector(".settings");
+  const settings = document.querySelector("[data-privacy-settings]") ?? floatingSettings;
+  if (settings !== floatingSettings) floatingSettings.remove();
   const updateText = () => {
     const copy = COPY[language()];
     root.shadowRoot.querySelector("#consent-title").textContent = copy.title;

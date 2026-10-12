@@ -8,7 +8,7 @@ import { dirname, join } from "node:path";
 const source = readFileSync(join(dirname(fileURLToPath(import.meta.url)), "../../analytics-consent.js"), "utf8")
   .replace('import { PortfolioApi } from "./api.js";\n', "");
 
-function loadConsent({ stored = null, lang = "pt-BR" } = {}) {
+function loadConsent({ stored = null, lang = "pt-BR", hasFooterSettings = true } = {}) {
   const values = new Map(stored ? [["portfolio-region-consent-v2", stored]] : []);
   const calls = [];
   const elements = {};
@@ -23,7 +23,7 @@ function loadConsent({ stored = null, lang = "pt-BR" } = {}) {
   const accepted = makeButton("accepted");
   const rejected = makeButton("rejected");
   const panel = { hidden: false };
-  const settings = {
+  const makeSettings = () => ({
     hidden: false,
     attributes: {},
     listeners: {},
@@ -34,7 +34,10 @@ function loadConsent({ stored = null, lang = "pt-BR" } = {}) {
       this.attributes[name] = value;
     },
     focus() {},
-  };
+    remove() { this.removed = true; },
+  });
+  const floatingSettings = makeSettings();
+  const footerSettings = hasFooterSettings ? makeSettings() : null;
   const title = {};
   const description = {};
   const shadow = {
@@ -45,7 +48,7 @@ function loadConsent({ stored = null, lang = "pt-BR" } = {}) {
         ".panel": panel,
         '[data-choice="accepted"]': accepted,
         '[data-choice="rejected"]': rejected,
-        ".settings": settings,
+        ".settings": floatingSettings,
       }[selector];
     },
     querySelectorAll(selector) {
@@ -63,6 +66,9 @@ function loadConsent({ stored = null, lang = "pt-BR" } = {}) {
     body: { append(element) { elements.root = element; } },
     documentElement: { lang },
     createElement() { return root; },
+    querySelector(selector) {
+      return selector === "[data-privacy-settings]" ? footerSettings : null;
+    },
     addEventListener() {},
   };
   const window = {};
@@ -85,7 +91,7 @@ function loadConsent({ stored = null, lang = "pt-BR" } = {}) {
   };
 
   runInNewContext(source, context);
-  return { accepted, calls, description, elements, settings, values, window };
+  return { accepted, calls, description, elements, floatingSettings, footerSettings, values, window };
 }
 
 test("does not record a visit until the visitor accepts", () => {
@@ -103,7 +109,7 @@ test("does not record a visit until the visitor accepts", () => {
   assert.match(consent.description.textContent, /30 dias/);
 });
 
-test("stores rejection and allows reopening the choice", () => {
+test("footer privacy control reopens a rejected choice without a floating button", () => {
   const consent = loadConsent();
   const panel = consent.elements.root.shadowRoot.querySelector(".panel");
 
@@ -111,8 +117,9 @@ test("stores rejection and allows reopening the choice", () => {
   assert.equal(consent.values.get("portfolio-region-consent-v2"), "rejected");
   assert.equal(consent.calls.length, 0);
   assert.equal(panel.hidden, true);
+  assert.equal(consent.floatingSettings.removed, true);
 
-  consent.settings.listeners.click();
+  consent.footerSettings.listeners.click();
   assert.equal(panel.hidden, false);
 });
 
@@ -120,4 +127,14 @@ test("records an aggregate count for a previously accepted choice", () => {
   const consent = loadConsent({ stored: "accepted" });
 
   assert.deepEqual(consent.calls, ["visit"]);
+  assert.equal(consent.footerSettings.hidden, false);
+  assert.equal(consent.floatingSettings.removed, true);
+});
+
+test("keeps the floating privacy control on pages without a footer link", () => {
+  const consent = loadConsent({ stored: "rejected", hasFooterSettings: false });
+
+  assert.equal(consent.floatingSettings.hidden, false);
+  consent.floatingSettings.listeners.click();
+  assert.equal(consent.elements.root.shadowRoot.querySelector(".panel").hidden, false);
 });
