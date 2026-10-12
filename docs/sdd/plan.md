@@ -16,7 +16,6 @@ flowchart TB
     SCRIPT[script.js]
     API[api.js]
     CHAT[chat.js]
-    CONTACT[contact.js]
     SW[sw.js — offline]
     DEMOS["demos/ — LSTM, facial, filmes<br/>(inferência no navegador)"]
   end
@@ -29,7 +28,7 @@ flowchart TB
     GATE[AI Gateway default]
     WAI[Workers AI]
     VEC[Vectorize portfolio-profile]
-    DB[(D1 portfolio-contact)]
+    DB[(D1 portfolio-contact<br/>totais agregados)]
     RL[Rate Limiting]
   end
   GH[API pública do GitHub]
@@ -40,8 +39,7 @@ flowchart TB
   STATIC --> DEMOS
   SW -. cache .-> STATIC
   CHAT --> API
-  CONTACT --> API
-  API -->|POST / e /contact| WORKER
+  API -->|POST / e /feedback| WORKER
   API -->|token invisível| TURN
   WORKER --> TURN
   WORKER --> RL
@@ -64,13 +62,12 @@ flowchart TB
 | Arquivo | Responsabilidade |
 |---|---|
 | `index.html` | Estrutura e conteúdo em português (idioma de origem). Elementos traduzíveis marcados com `data-i18n`, `data-i18n-aria`, `data-i18n-placeholder`, `data-i18n-title`, `data-i18n-alt`, `data-i18n-content`. |
-| `i18n/` · `i18n.js` | `window.I18N[lang][chave]`, um arquivo por idioma (`i18n/<idioma>.js`): site, chat (respostas prontas, rótulos), formulário e currículo. A página traz `pt` (original e reserva) e `en` (padrão); `I18N.load(idioma)` baixa os demais quando escolhidos, e o `boot.js` (com `data-i18n`) já pré-carrega o idioma salvo. |
+| `i18n/` · `i18n.js` | `window.I18N[lang][chave]`, um arquivo por idioma (`i18n/<idioma>.js`): site, chat (respostas prontas, rótulos), contato direto e currículo. A página traz `pt` (original e reserva) e `en` (padrão); `I18N.load(idioma)` baixa os demais quando escolhidos, e o `boot.js` (com `data-i18n`) já pré-carrega o idioma salvo. |
 | `script.js` | Aplica o idioma (guarda o original em português), seletor de idioma, menu mobile, filtros, data de atualização (`Intl`), animações ao rolar, partículas (Canvas) e progresso de leitura. |
 | `api.js` | Módulo `PortfolioApi`: URL do Worker, carregamento sob demanda do Turnstile, geração de token por envio e `post(path, body)`. |
 | `chat.js` · `chat/` | Assistente. `chat.js` é a interface; `chat/texto.js` (normalização e erros de digitação), `chat/regras.js` (respostas prontas por expressão regular), `chat/busca.js` (busca local) e `chat/ia.js` (Worker) são módulos ES importados pelo `chat.js`. |
 | `components/` | Web Components sem framework: `<site-logo>` e `<theme-toggle>` (`components.js`); `boot.js` aplica o tema antes da pintura. |
 | `data/` · `scripts/gerar-secoes.mjs` | Projetos e habilidades como dados; o gerador escreve o HTML estático no `index.html` entre marcadores (textos do `i18n/pt.js`). O CI confere com `--check`. |
-| `contact.js` | Validação, envio, contador, estados de carregamento/sucesso do formulário. |
 | `curriculo.html` | Modelo A4 do currículo, renderizado por idioma a partir do `i18n/`. |
 | `manifest.webmanifest` · `sw.js` · `icon-*.png` | App instalável e offline (PWA). |
 | `demos/demos.css` · `demos/demos.js` | Base compartilhada das demos: visual, idioma (`?lang` → `localStorage` → inglês) e formatação (`Intl`). |
@@ -83,7 +80,7 @@ flowchart TB
 - Chave ausente num idioma → mantém o texto em português (fallback).
 - **Módulos:** o código do site, das demos e da página de vagas é de módulos ES (`import`/`export`), sem variáveis globais entre arquivos. No `index.html`, um `<script type="importmap">` aplica a versão `?v=` também aos imports (o hook de pre-commit atualiza) e `modulepreload` baixa o chat em paralelo; `scripts/conferir-modulos.mjs` (CI) garante que todo módulo importado esteja no mapa. Ficam como scripts clássicos só os dados de tradução (`i18n/`, lidos também pelo currículo e pelos geradores), o `boot.js` (precisa rodar antes da pintura) e os Web Components. Os testes do chat servem o site num servidor local, porque módulos não carregam por `file://`.
 - Idioma inicial: `?lang` → `localStorage` → **inglês**.
-- Evento `languagechange` notifica chat, filtros e formulário.
+- Evento `languagechange` notifica chat e filtros.
 
 ### 2.2 Busca local do assistente
 1. **Índice:** construído a partir do DOM no idioma atual (Sobre, cada emprego, cada projeto + categoria e marca do card, grupos de habilidades, formação, certificações, idiomas).
@@ -163,24 +160,14 @@ Todas rodam **no navegador do visitante**, sem servidor de IA.
 
 **Fluxo:** origem → limite (10/min/IP) → validação → Turnstile → normalização da pergunta → **RAG** (embedding BGE-M3 → Vectorize top 6 → contexto = resumo fixo + trechos; em falha, perfil completo) → Qwen3 30B (`temperature 0.1`, `max_tokens 600`, `/no_think`) via AI Gateway, sem cache de perguntas ou respostas → limpeza (`<think>`, Markdown).
 
-#### `POST /contact` — formulário
-**Requisição**
-```json
-{ "name": "2–100", "email": "e-mail válido ≤ 200", "message": "5–2000", "lang": "…", "website": "campo-armadilha (vazio)", "turnstileToken": "string" }
-```
-**Resposta 200:** `{ "ok": true }`
-**Erros:** `400 invalid_fields` · `403 forbidden_origin` · `403 turnstile_failed` · `429 rate_limited` · `503 unavailable`
-
-**Fluxo:** origem → limite (3/min/IP) → campo-armadilha preenchido ⇒ `200` sem salvar → validação → Turnstile → `INSERT` no D1 → aviso por e-mail via **Resend** em segundo plano (`ctx.waitUntil`), com `reply_to` = e-mail do visitante → **confirmação ao visitante** via Google Apps Script (do Gmail do Emanuel), no idioma detectado no texto da mensagem (ou no do site, sem confiança), sem repetir o texto, só com o primeiro nome e no máximo 1 por e-mail a cada 24 h.
-
 #### `POST /feedback` — avaliação da resposta da IA
 **Requisição**
 ```json
-{ "rating": 1, "question": "1–500", "answer": "1–3000", "lang": "…", "turnstileToken": "string" }
+{ "rating": 1, "turnstileToken": "string" }
 ```
 `rating`: `1` (👍) ou `-1` (👎). **Resposta 200:** `{ "ok": true }` · **Erros:** `400 invalid_fields` · `403` · `429 rate_limited` (20/min/IP) · `503 unavailable`
 
-Gravado só quando o visitante clica; o painel do chat avisa que a pergunta e a resposta serão salvas.
+Ao clicar, incrementa somente um total diário de 👍 ou 👎; pergunta, resposta, idioma e identificadores não são enviados nem armazenados junto à avaliação. Os totais são apagados antes de completar 30 dias.
 
 #### `POST /match` — "Sua vaga combina?"
 **Requisição:** `{ "job": "80–8000 caracteres", "lang": "…", "turnstileToken": "…" }`
@@ -199,7 +186,7 @@ Gravado só quando o visitante clica; o painel do chat avisa que a pergunta e a 
 Só leitura e sem Turnstile; limite de 30/min por IP; aceita apenas a origem do site e as 15 ações da demo (`PRICE_SYMBOLS`: 8 da B3 e 7 da NASDAQ). Busca 1 ano de fechamentos ajustados no Yahoo Finance (`v8/finance/chart`), converte as datas para o fuso da bolsa e responde com `Cache-Control: max-age=3600`.
 
 #### Cron — resumo semanal (`0 12 * * 1`, segunda 12:00 UTC)
-Consulta no D1 as mensagens, avaliações e acessos regionais consentidos dos últimos 7 dias, testa a saúde (geração com Qwen3, embedding BGE-M3, consulta no Vectorize e `SELECT 1` no D1) e envia um e-mail pelo Resend para `NOTIFY_EMAIL`. O assunto ganha ⚠️ se algum serviço falhar.
+Consulta no D1 somente os totais de avaliações e acessos regionais consentidos dos últimos 7 dias, testa a saúde (geração com Qwen3, embedding BGE-M3, consulta no Vectorize e `SELECT 1` no D1) e envia o resumo agregado pelo Resend para `NOTIFY_EMAIL`. O assunto ganha ⚠️ se algum serviço falhar.
 
 ### 3.2 Configuração (`wrangler.jsonc`)
 
@@ -209,13 +196,12 @@ Consulta no D1 as mensagens, avaliações e acessos regionais consentidos dos ú
 | `VECTORIZE` | Índice `portfolio-profile` (1024 dimensões, cosseno) |
 | `DB` | D1 `portfolio-contact` |
 | `CHAT_LIMITER` | 10 req / 60 s |
-| `CONTACT_LIMITER` | 3 req / 60 s |
 | `FEEDBACK_LIMITER` | 20 req / 60 s |
 | `PRICES_LIMITER` | 30 req / 60 s |
 | `ALLOWED_ORIGIN` | `https://emanueleborges.github.io` |
 | `TURNSTILE_SECRET` | *secret* (fora do repositório) |
 | `RESEND_API_KEY` | *secret* — chave do Resend (plano gratuito) |
-| `NOTIFY_EMAIL` | e-mail que recebe os avisos (o da conta do Resend) |
+| `NOTIFY_EMAIL` | e-mail que recebe o resumo semanal (o da conta do Resend) |
 
 ### 3.3 Conhecimento da IA
 `gerar-conhecimento.mjs` lê `../i18n/en.js` (inglês; `pt` como reserva) e gera `src/conhecimento.js` com:
@@ -233,30 +219,16 @@ Responder **só** com base no perfil fornecido · se a informação não existir
 
 ## 4. Modelo de dados
 
-### D1 — `messages`
+Não há tabela de mensagens de contato. A migração `worker/migrations/0005_remover_mensagens.sql` elimina a tabela antiga e seus registros.
+
+### D1 — `feedback_daily`
 | Coluna | Tipo | Observação |
 |---|---|---|
-| `id` | INTEGER PK AUTOINCREMENT | |
-| `created_at` | TEXT | `datetime('now')`, UTC |
-| `name` | TEXT | 2–100 |
-| `email` | TEXT | ≤ 200 |
-| `message` | TEXT | 5–2000 |
-| `lang` | TEXT | idioma do site no envio |
-| `read` | INTEGER | 0/1 (reservado) |
+| `feedback_date` | TEXT | dia UTC, parte da chave composta |
+| `rating` | INTEGER | `1` ou `-1`, parte da chave composta |
+| `total` | INTEGER | quantidade diária para o tipo de avaliação |
 
-Índice: `idx_messages_created_at`. Migração: `worker/migrations/0001_criar_mensagens.sql`.
-
-### D1 — `feedback`
-| Coluna | Tipo | Observação |
-|---|---|---|
-| `id` | INTEGER PK AUTOINCREMENT | |
-| `created_at` | TEXT | UTC |
-| `rating` | INTEGER | `1` ou `-1` |
-| `lang` | TEXT | idioma do site |
-| `question` | TEXT | ≤ 500 |
-| `answer` | TEXT | ≤ 3000 |
-
-Migração: `worker/migrations/0002_criar_avaliacoes.sql`.
+Não armazena avaliações individuais, perguntas, respostas, idioma ou identificadores. Limpeza horária remove totais com 30 dias. Migração inicial: `worker/migrations/0002_criar_avaliacoes.sql`; migração de minimização e descarte dos registros antigos: `worker/migrations/0004_agregar_avaliacoes.sql`.
 
 ### D1 — `regional_visits`
 Totais diários (`access_date`, `continent`, `total`) com chave composta por dia e continente. A API recebe apenas `POST /visit` após consentimento; deriva o continente de `request.cf`, não lê o corpo, e não persiste IP ou identificadores. Um limite por IP protege a cota gratuita de gravações do D1; a limpeza horária remove agregados com margem para não exceder 30 dias. Migração: `worker/migrations/0003_contagem_regional.sql`.
@@ -308,12 +280,11 @@ Vetor de 1024 dimensões por trecho; `id` estável (ex.: `job1`, `p5`, `edu4`); 
 | ADR-08 | Formação sempre com resposta pronta | Deixar para a IA | O modelo gratuito traduzia errado nomes de cursos e universidades. |
 | ADR-09 | AI Gateway sem cache de conteúdo enviado pelo visitante | Cache de prompts ou KV próprio | Evita manter perguntas/respostas e textos de vagas em cache; requests continuam processados pela IA para responder. |
 | ADR-10 | Turnstile invisível em toda chamada | CAPTCHA visível / nenhum | Protege a cota gratuita sem atrito para o visitante. |
-| ADR-11 | Mensagens no D1, lidas por comando/painel | Página administrativa | Evita superfície de ataque. |
+| ADR-11 | Sem formulário nem armazenamento de mensagens de contato; links diretos | Formulário com retenção em D1 | Minimiza os dados tratados pelo portfólio. |
 | ADR-12 | Métrica regional própria no Worker/D1 | Analytics de terceiros | Contagem por continente/dia após consentimento explícito; sem IP persistido, URL, idioma ou eventos detalhados; expurgo antes de 30 dias. |
 | ADR-13 | Versão `?v=` automática nos arquivos | Instruir limpeza de cache | Garante que HTML novo nunca use CSS/JS antigos. |
 | ADR-14 | Simple Icons + ícones genéricos | Logos oficiais de todas as marcas | Respeita diretrizes de marca de Oracle, Microsoft e AWS. |
-| ADR-15 | Aviso por e-mail com Resend (remetente de testes `onboarding@resend.dev`) | Cloudflare Email Routing, domínio próprio | Gratuito e sem domínio: o remetente de testes entrega só para o e-mail da conta, que é exatamente o destinatário. |
-| ADR-16 | Confirmação ao visitante pelo Google Apps Script (Gmail do dono) | Resend com domínio próprio | Gratuito e sem domínio; contra abuso: sem eco do texto, só primeiro nome, 1 por e-mail a cada 24 h. |
+| ADR-15 | Resumo semanal agregado via Resend (remetente de testes `onboarding@resend.dev`) | E-mails individuais por envio do visitante | Envia apenas totais de avaliações/acessos e estado dos serviços, sem conteúdo ou dados individuais. |
 | ADR-17 | `hreflang` sem `canonical` | `canonical` para a página inicial | O Lighthouse apontou conflito: cada versão de idioma deve ser a sua própria referência. |
 | ADR-18 | Imagens do topo sob demanda e responsivas | Carregar as 4 no início | Reduziu o tempo do conteúdo principal de ~6 s para ~3,5 s no celular. |
 | ADR-19 | GitHub Actions para os testes | Rodar só localmente | Gratuito em repositório público; impede publicar algo que quebre o chat. |

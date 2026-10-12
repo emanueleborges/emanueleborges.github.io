@@ -46,15 +46,15 @@ Legenda: ✅ concluída · ⏳ pendente · 💡 ideia
 
 ### Contato e métricas
 - ✅ **T25** WhatsApp, e-mail, LinkedIn, GitHub — RF-07
-- ✅ **T26** Formulário com D1, Turnstile, campo-armadilha, limite por IP, contador e confirmação — RF-06
-- ✅ **T27** `ver-mensagens.sh` — RF-06.4
+- ✅ **T26** Formulário de contato aposentado na revisão de privacidade; links diretos mantidos e mensagens antigas removidas pelo D1 — RF-07, RNF-05
+- ✅ **T27** Leitor de mensagens do formulário removido após a exclusão da tabela antiga — RNF-05
 - ✅ **T28** Contagem agregada de acessos do site — RF-08
 - ✅ **T29** Data de atualização no rodapé e versão `?v=` automática (hook) — RNF-10
 
 ### Documentação
 - ✅ **T30** README e documentos SDD (spec, plan, tasks) em português e inglês
-- ✅ **T38** Aviso de nova mensagem por e-mail (Resend, gratuito) — RF-06.5
-- ✅ **T36** Avaliação 👍/👎 das respostas da IA salva no D1 + `ver-avaliacoes.sh` — RNF-08
+- ✅ **T38** Aviso de novas mensagens aposentado junto com o formulário — RNF-05
+- ✅ **T36** Avaliações 👍/👎 agregadas por dia no D1 + `ver-avaliacoes.sh`; sem pergunta/resposta individual — RNF-05
 - ✅ **T34** Prévia de link (Open Graph/Twitter), `hreflang`, JSON-LD `Person`, `sitemap.xml` e `robots.txt` — RNF-02
 - ✅ **T39** README em inglês (principal) + português — documentação
 - ✅ **T40** GitHub Actions: sintaxe, SEO, conhecimento da IA e 92 testes a cada push — Critérios de aceite
@@ -66,8 +66,8 @@ Legenda: ✅ concluída · ⏳ pendente · 💡 ideia
 - ✅ **T49** Destaque do assistente: barra "Pergunte à minha IA" no topo (pergunta de exemplo digitada) e botão do chat com texto no desktop — RF-05
 - ✅ **T50** Responsividade validada em smartphone (390 px), tablet (768 px), laptop (1366 px) e desktop (1920 px): menu ☰ até 1.100 px, sem rolagem lateral — RNF-07
 - ✅ **T51** Regras de custo zero documentadas (README e RNF-01); verificado: Workers Free, sem cartão em nenhum serviço — RNF-01
-- ✅ **T44** Confirmação automática ao visitante no idioma da mensagem (Google Apps Script) — RF-06.6
-- ✅ **T52** Alemão como 8º idioma: site, chat (respostas prontas e busca), currículo PDF, IA, confirmação por e-mail e 13 testes — RF-02
+- ✅ **T44** Confirmação automática aposentada junto com o formulário — RNF-05
+- ✅ **T52** Alemão como 8º idioma: site, chat (respostas prontas e busca), currículo PDF, IA e 13 testes — RF-02
 - ✅ **T31** Link "Ver código" nos 9 cards de projetos, apontando para o repositório de cada um (8 idiomas) — RF-01
 - ✅ **T32** Cards com linguagem, estrelas e data da última atualização via API pública do GitHub (sem chave, guardado na sessão) — RF-01
 - ✅ **T53** App instalável e offline (PWA): manifest, ícones 192/512/maskable e *service worker* — RNF-02
@@ -78,7 +78,7 @@ Legenda: ✅ concluída · ⏳ pendente · 💡 ideia
 - ✅ **T58** Card 10: o assistente do portfólio como projeto (RAG com Workers AI e Vectorize), com botão que abre o chat — RF-01
 - ✅ **T59** Documentação atualizada (README, especificação RF-12/RF-13, plano §2.6–2.8, `GET /prices`, ADR-24 a 26) e scripts de treino do LSTM trazidos para `scripts/lstm/` — RNF-09
 - ✅ **T60** Segurança: limite por IP na rota `GET /prices` (30/min) e SRI no face-api.js da demo facial (testado com arquivo adulterado) — RNF-04
-- ✅ **T61** Painel privado (`npm run painel` em `worker/`): avaliações, mensagens e visitas regionais do D1; arquivo local, fora do git — RF-08
+- ✅ **T61** Painel local (`npm run painel` em `worker/`): somente totais agregados de avaliações e visitas regionais — RF-08, RNF-05
 - ✅ **T62** Demo do LSTM com 15 ações (8 da B3, 7 da NASDAQ), menu por bolsa e preços na moeda de cada bolsa; card atualizado para o MAPE de 1,1–2,2% — RF-12
 - ✅ **T63** "Sua vaga combina?" (`/vaga/` + `POST /match`): match de vaga em duas etapas com conferências no Worker, nota por regra, evidências clicáveis, 8 idiomas e convite no topo do site — RF-14
 - ✅ **T64** Temas Amazônia (padrão) e Editorial: cores em variáveis CSS, botão em todas as páginas (8 idiomas), sem piscar, gráficos validados para daltonismo, Lighthouse 100 de acessibilidade nos dois — RF-15
@@ -97,8 +97,6 @@ Legenda: ✅ concluída · ⏳ pendente · 💡 ideia
 |---|---|---|---|
 | ⏳ **T33** | Números de impacto nas experiências (ex.: tempo de deploy, % de bugs) | Dados do Emanuel | RF-01 |
 | ⏳ **T35** | Revisão das traduções por falantes nativos (prioridade: chinês e russo) | Revisor | RF-02 |
-| ⏳ **T37** | Testar em produção o limite de 3 mensagens por minuto do formulário | — | RNF-04 |
-| ⏳ **T46** | Liberar o App da Web do Apps Script para "Qualquer pessoa" e testar a confirmação | Emanuel | RF-06.6 |
 
 ## Ideias
 

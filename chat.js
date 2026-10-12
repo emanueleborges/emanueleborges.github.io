@@ -249,7 +249,7 @@ function initChat() {
   };
 
   // Avaliação 👍/👎 de uma resposta da IA (salva no D1 só quando o visitante clica).
-  const ratingRow = (question, answerText) => {
+  const ratingRow = () => {
     const row = el("div", "chat-rate");
     const label = el("span", "chat-rate-ask", tc("rateAsk"));
     const note = el("small", "chat-rate-note", tc("rateNote"));
@@ -264,7 +264,7 @@ function initChat() {
       button.addEventListener("click", async () => {
         buttons.forEach((other) => (other.disabled = true));
         button.setAttribute("aria-pressed", "true");
-        const ok = await ai.rate({ question, answer: answerText, rating, lang: currentLang });
+        const ok = await ai.rate({ rating });
         label.textContent = tc(ok ? "rateThanks" : "rateError");
         note.remove();
         if (!ok) buttons.forEach((other) => (other.disabled = false));
@@ -289,7 +289,7 @@ function initChat() {
       button.addEventListener("click", () => goTo(best.target));
       nodes.push(button);
     }
-    nodes.push(ratingRow(question, reply));
+    nodes.push(ratingRow());
     return nodes;
   };
 

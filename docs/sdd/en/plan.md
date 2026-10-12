@@ -16,7 +16,6 @@ flowchart TB
     SCRIPT[script.js]
     API[api.js]
     CHAT[chat.js]
-    CONTACT[contact.js]
     SW[sw.js — offline]
     DEMOS["demos/ — LSTM, face, movies<br/>(in-browser inference)"]
   end
@@ -40,8 +39,7 @@ flowchart TB
   STATIC --> DEMOS
   SW -. cache .-> STATIC
   CHAT --> API
-  CONTACT --> API
-  API -->|POST / and /contact| WORKER
+  API -->|POST / and /feedback| WORKER
   API -->|invisible token| TURN
   WORKER --> TURN
   WORKER --> RL
@@ -64,13 +62,12 @@ flowchart TB
 | File | Responsibility |
 |---|---|
 | `index.html` | Structure and content in Portuguese (source language). Translatable elements are marked with `data-i18n`, `data-i18n-aria`, `data-i18n-placeholder`, `data-i18n-title`, `data-i18n-alt` and `data-i18n-content`. |
-| `i18n/` · `i18n.js` | `window.I18N[lang][key]`, one file per language (`i18n/<lang>.js`): site, chat (ready-made answers, labels), contact form and résumé. The page ships `pt` (original and fallback) and `en` (default); `I18N.load(lang)` downloads the others when chosen, and `boot.js` (with `data-i18n`) preloads the saved language. |
+| `i18n/` · `i18n.js` | `window.I18N[lang][key]`, one file per language (`i18n/<lang>.js`): site, chat (ready-made answers, labels), direct-contact links and résumé. The page ships `pt` (original and fallback) and `en` (default); `I18N.load(lang)` downloads the others when chosen, and `boot.js` (with `data-i18n`) preloads the saved language. |
 | `script.js` | Applies the language (keeping the Portuguese original), language selector, mobile menu, filters, last-updated date (`Intl`), scroll animations, particles (Canvas) and reading progress. |
 | `api.js` | `PortfolioApi` module: Worker URL, on-demand Turnstile loading, one token per submission and `post(path, body)`. |
 | `chat.js` · `chat/` | Assistant. `chat.js` is the UI; `chat/texto.js` (normalization and typos), `chat/regras.js` (regex ready-made answers), `chat/busca.js` (local search) and `chat/ia.js` (Worker) are ES modules imported by `chat.js`. |
 | `components/` | Framework-free Web Components: `<site-logo>` and `<theme-toggle>` (`components.js`); `boot.js` applies the theme before paint. |
 | `data/` · `scripts/gerar-secoes.mjs` | Projects and skills as data; the generator writes static HTML into `index.html` between markers (text from `i18n/pt.js`). CI checks it with `--check`. |
-| `contact.js` | Contact form validation, submission, counter and loading/success states. |
 | `curriculo.html` | A4 résumé template, rendered per language from `i18n/`. |
 | `manifest.webmanifest` · `sw.js` · `icon-*.png` | Installable, offline app (PWA). |
 | `demos/demos.css` · `demos/demos.js` | Shared demo base: look, language (`?lang` → `localStorage` → English) and formatting (`Intl`). |
@@ -83,7 +80,7 @@ flowchart TB
 - Missing key in a language → the Portuguese text is kept (fallback).
 - **Modules:** the site, demo and job-match code are ES modules (`import`/`export`) with no globals shared between files. In `index.html`, a `<script type="importmap">` applies the `?v=` version to imports too (the pre-commit hook updates it) and `modulepreload` fetches the chat in parallel; `scripts/conferir-modulos.mjs` (CI) ensures every imported module is in the map. Only the translation data (`i18n/`, also read by the résumé and generators), `boot.js` (must run before paint) and the Web Components remain classic scripts. Chat tests serve the site from a local server, since modules don't load over `file://`.
 - Initial language: `?lang` → `localStorage` → **English**.
-- A `languagechange` event notifies the chat, filters and contact form.
+- A `languagechange` event notifies the chat and filters.
 
 ### 2.2 Assistant local search
 1. **Index:** built from the DOM in the current language (About, each job, each project + category and card badge, skill groups, education, certifications, languages).
@@ -163,24 +160,14 @@ All run **in the visitor's browser**, with no AI server.
 
 **Flow:** origin → rate limit (10/min/IP) → validation → Turnstile → question normalization → **RAG** (BGE-M3 embedding → Vectorize top 6 → context = fixed summary + excerpts; on failure, the full profile) → Qwen3 30B (`temperature 0.1`, `max_tokens 600`, `/no_think`) through AI Gateway without caching visitor questions or answers → cleanup (`<think>`, Markdown).
 
-#### `POST /contact` — contact form
-**Request**
-```json
-{ "name": "2–100", "email": "valid email ≤ 200", "message": "5–2000", "lang": "…", "website": "honeypot field (empty)", "turnstileToken": "string" }
-```
-**200 response:** `{ "ok": true }`
-**Errors:** `400 invalid_fields` · `403 forbidden_origin` · `403 turnstile_failed` · `429 rate_limited` · `503 unavailable`
-
-**Flow:** origin → rate limit (3/min/IP) → honeypot filled ⇒ `200` without saving → validation → Turnstile → `INSERT` into D1 → email notification via **Resend** in the background (`ctx.waitUntil`), with `reply_to` = the visitor's email → **confirmation to the visitor** via Google Apps Script (from Emanuel's Gmail), in the language detected from the message text (or the site language when unsure), without echoing the text, first name only and at most 1 per email address every 24 h.
-
 #### `POST /feedback` — AI answer rating
 **Request**
 ```json
-{ "rating": 1, "question": "1–500", "answer": "1–3000", "lang": "…", "turnstileToken": "string" }
+{ "rating": 1, "turnstileToken": "string" }
 ```
 `rating`: `1` (👍) or `-1` (👎). **200 response:** `{ "ok": true }` · **Errors:** `400 invalid_fields` · `403` · `429 rate_limited` (20/min/IP) · `503 unavailable`
 
-Stored only when the visitor clicks; the chat panel notes that the question and answer will be saved.
+Clicking increments only a daily total of 👍 or 👎; the question, answer, language and identifiers are not sent or stored with the rating. Totals are deleted before reaching 30 days.
 
 #### `POST /match` — "Does your role match?"
 **Request:** `{ "job": "80–8000 characters", "lang": "…", "turnstileToken": "…" }`
@@ -199,7 +186,7 @@ Stored only when the visitor clicks; the chat panel notes that the question and 
 Read-only and without Turnstile; 30/min per-IP limit; it only accepts the site's origin and the demo's 15 stocks (`PRICE_SYMBOLS`: 8 from B3 and 7 from NASDAQ). It fetches 1 year of adjusted closes from Yahoo Finance (`v8/finance/chart`), converts dates to the exchange's time zone and responds with `Cache-Control: max-age=3600`.
 
 #### Cron — weekly summary (`0 12 * * 1`, Mondays 12:00 UTC)
-Queries D1 for the last 7 days of messages, ratings and consented regional access, runs a health check (Qwen3 generation, BGE-M3 embedding, Vectorize query and `SELECT 1` on D1), and sends an email through Resend to `NOTIFY_EMAIL`. The subject gets a ⚠️ when any service fails.
+Queries D1 for only the last 7 days of ratings and consented regional access, runs a health check (Qwen3 generation, BGE-M3 embedding, Vectorize query and `SELECT 1` on D1), and sends the aggregate summary through Resend to `NOTIFY_EMAIL`. The subject gets a ⚠️ when any service fails.
 
 ### 3.2 Configuration (`wrangler.jsonc`)
 
@@ -209,13 +196,12 @@ Queries D1 for the last 7 days of messages, ratings and consented regional acces
 | `VECTORIZE` | `portfolio-profile` index (1024 dimensions, cosine) |
 | `DB` | D1 `portfolio-contact` |
 | `CHAT_LIMITER` | 10 req / 60 s |
-| `CONTACT_LIMITER` | 3 req / 60 s |
 | `FEEDBACK_LIMITER` | 20 req / 60 s |
 | `PRICES_LIMITER` | 30 req / 60 s |
 | `ALLOWED_ORIGIN` | `https://emanueleborges.github.io` |
 | `TURNSTILE_SECRET` | secret (outside the repository) |
 | `RESEND_API_KEY` | secret — Resend key (free plan) |
-| `NOTIFY_EMAIL` | email that receives the notifications (the Resend account's email) |
+| `NOTIFY_EMAIL` | email that receives the weekly summary (the Resend account's email) |
 
 ### 3.3 AI knowledge
 `gerar-conhecimento.mjs` reads `../i18n/en.js` (English; `pt` as fallback) and generates `src/conhecimento.js` with:
@@ -233,30 +219,16 @@ Answer **only** from the provided profile · if the information isn't there, say
 
 ## 4. Data model
 
-### D1 — `messages`
+There is no contact-message table. Migration `worker/migrations/0005_remover_mensagens.sql` drops the old table and its records.
+
+### D1 — `feedback_daily`
 | Column | Type | Notes |
 |---|---|---|
-| `id` | INTEGER PK AUTOINCREMENT | |
-| `created_at` | TEXT | `datetime('now')`, UTC |
-| `name` | TEXT | 2–100 |
-| `email` | TEXT | ≤ 200 |
-| `message` | TEXT | 5–2000 |
-| `lang` | TEXT | site language at submission |
-| `read` | INTEGER | 0/1 (reserved) |
+| `feedback_date` | TEXT | UTC day, part of the composite key |
+| `rating` | INTEGER | `1` or `-1`, part of the composite key |
+| `total` | INTEGER | daily count for the rating |
 
-Index: `idx_messages_created_at`. Migration: `worker/migrations/0001_criar_mensagens.sql`.
-
-### D1 — `feedback`
-| Column | Type | Notes |
-|---|---|---|
-| `id` | INTEGER PK AUTOINCREMENT | |
-| `created_at` | TEXT | UTC |
-| `rating` | INTEGER | `1` or `-1` |
-| `lang` | TEXT | site language |
-| `question` | TEXT | ≤ 500 |
-| `answer` | TEXT | ≤ 3000 |
-
-Migration: `worker/migrations/0002_criar_avaliacoes.sql`.
+Does not store individual ratings, questions, answers, language or identifiers. Hourly cleanup removes totals at 30 days. Initial migration: `worker/migrations/0002_criar_avaliacoes.sql`; minimization migration that deletes old records: `worker/migrations/0004_agregar_avaliacoes.sql`.
 
 ### D1 — `regional_visits`
 Daily totals (`access_date`, `continent`, `total`) with a composite key by date and continent. The API receives only `POST /visit` after consent; it derives the continent from `request.cf`, does not read the body, and does not persist IPs or identifiers. A per-IP limit protects the D1 Free write quota; hourly cleanup removes aggregates with a safety margin to remain under 30 days. Migration: `worker/migrations/0003_contagem_regional.sql`.
@@ -308,12 +280,11 @@ One 1024-dimension vector per excerpt; stable `id` (e.g. `job1`, `p5`, `edu4`); 
 | ADR-08 | Education always uses a ready-made answer | Leave it to the AI | The free model mistranslated degree and university names. |
 | ADR-09 | AI Gateway without visitor-content caching | Prompt cache or custom KV | Avoids retaining questions, answers and job-posting text in a cache; requests still go to AI for processing. |
 | ADR-10 | Invisible Turnstile on every call | Visible CAPTCHA / none | Protects the free quota with no friction for visitors. |
-| ADR-11 | Messages in D1, read via command/dashboard | Admin web page | Avoids attack surface. |
+| ADR-11 | No contact form or contact-message storage; direct links only | Form with D1 retention | Minimizes data processed by the portfolio. |
 | ADR-12 | First-party regional count in Worker/D1 | Third-party analytics | Continent/day totals after explicit consent; no persisted IP, URL, language or detailed event data; purged before 30 days. |
 | ADR-13 | Automatic `?v=` file versions | Asking users to clear the cache | Guarantees new HTML never uses old CSS/JS. |
 | ADR-14 | Simple Icons + generic icons | Official logos for every brand | Respects Oracle, Microsoft and AWS brand guidelines. |
-| ADR-15 | Email notification with Resend (test sender `onboarding@resend.dev`) | Cloudflare Email Routing, custom domain | Free and domain-less: the test sender only delivers to the account's own email, which is exactly the recipient. |
-| ADR-16 | Visitor confirmation via Google Apps Script (owner's Gmail) | Resend with a custom domain | Free and domain-less; abuse protection: no echoed text, first name only, 1 per email every 24 h. |
+| ADR-15 | Aggregate weekly summary via Resend (test sender `onboarding@resend.dev`) | Individual email on each visitor submission | Sends only rating/visit totals and service status, with no content or individual records. |
 | ADR-17 | `hreflang` without `canonical` | `canonical` pointing to the home page | Lighthouse flagged a conflict: each language version must reference itself. |
 | ADR-18 | On-demand, responsive hero images | Loading all 4 upfront | Cut the main-content time on mobile from ~6 s to ~3.5 s. |
 | ADR-19 | GitHub Actions for tests | Running them only locally | Free for public repositories; prevents publishing a change that breaks the chat. |

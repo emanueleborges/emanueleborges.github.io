@@ -24,12 +24,12 @@ Static résumés and profiles force recruiters to read everything to find one sp
 ### 1.2 Goals
 1. Communicate the profile within 30 seconds (hero section + summary).
 2. Answer visitors' questions in natural language, in 8 languages.
-3. Make contact easy (email, WhatsApp, LinkedIn, contact form, PDF résumé).
+3. Make contact easy through direct links (email, WhatsApp, LinkedIn and PDF résumé), without an on-site contact form.
 4. Demonstrate front-end, serverless back-end and applied AI skills on the site itself.
 5. Run at **zero cost**.
 
 ### 1.3 Out of scope
-- Web admin area (messages are read via the terminal or the Cloudflare dashboard).
+- Contact-message storage by the site.
 - Blog, user accounts or payments.
 
 ---
@@ -41,7 +41,7 @@ Static résumés and profiles force recruiters to read everything to find one sp
 | **Technical recruiter** | Quickly check technologies and experience | Organized sections, filters, AI chat, PDF résumé |
 | **International recruiter** | Read in their own language; understand the hiring model | 8 languages (English by default), answers about remote work, time zone and employee/contractor arrangements |
 | **Hiring manager / tech lead** | Assess technical depth and projects | Projects with technical descriptions, measured results (87%, top 5%, 1.1–2.2% MAPE vs. a baseline), **live AI demos** and the site itself as a demo |
-| **Emanuel (owner)** | Update content and track interest | Single source of text (`i18n/`), publishing scripts, analytics and contact-form messages |
+| **Emanuel (owner)** | Update content and track interest | Single source of text (`i18n/`), publishing scripts and aggregate statistics |
 
 ---
 
@@ -57,7 +57,7 @@ The site must present: hero (name, role, summary, location, years of experience)
 - FR-02.1 Available in **English (default)**, Portuguese, Spanish, French, Italian, German, Simplified Chinese and Russian.
 - FR-02.2 Visitors switch language with a selector in the header; the choice is remembered.
 - FR-02.3 The language can be set via the link (`?lang=xx`).
-- FR-02.4 All visible text, accessibility attributes, chat, contact form and résumé follow the selected language.
+- FR-02.4 All visible text, accessibility attributes, chat and résumé follow the selected language.
 
 ### FR-03 — Filters
 - FR-03.1 Projects can be filtered by category (All, AI/ML, Backend & APIs, Web & Apps).
@@ -77,18 +77,10 @@ The site must present: hero (name, role, summary, location, years of experience)
 - FR-05.7 Local search tolerates typos and synonyms and works in all 8 languages.
 - FR-05.8 Questions about contact show contact buttons; questions about the résumé show the PDF link.
 - FR-05.9 The `/#chat` link opens the site with the assistant open.
-- FR-05.10 AI answers can be rated 👍/👎; a rating (question + answer) is stored only when the visitor clicks, with a notice next to the buttons.
-
-### FR-06 — Contact form
-- FR-06.1 Fields: name, email and message (required), with a character counter.
-- FR-06.2 Validation in the browser and on the server.
-- FR-06.3 Valid messages are stored; the visitor sees a confirmation ("Message sent!").
-- FR-06.4 The owner reads messages with a command or in the Cloudflare dashboard.
-- FR-06.5 For each new message, the owner receives an email notification, with "Reply" addressed to the visitor.
-- FR-06.6 The visitor receives an automatic confirmation in the language of the message.
+- FR-05.10 AI answers can be rated 👍/👎; only daily totals per rating are stored for up to 30 days, without questions, answers, language or identifiers, with a notice next to the buttons.
 
 ### FR-07 — Direct contacts
-Email, WhatsApp, LinkedIn and GitHub visible in the contact section and in the assistant.
+Email, WhatsApp, LinkedIn and GitHub visible in the contact section and in the assistant. There is no form; messages are not submitted to or stored by the site.
 
 ### FR-08 — Analytics
 Optional counting only after explicit consent. The Worker uses the continent provided by Cloudflare, and D1 stores only a daily total per continent; do not store IP, URL, language, clicks, or identifiers. Aggregates are deleted before they reach 30 days. Visitors can change or withdraw their choice through privacy settings.
@@ -99,7 +91,7 @@ Optional counting only after explicit consent. The Worker uses the continent pro
 - FR-09.3 Publish `sitemap.xml` (page in 8 languages, 8 PDFs and 3 demos) and `robots.txt`; the site is verified in Google Search Console.
 
 ### FR-10 — Weekly summary
-Every Monday the owner receives an email with aggregate counts of messages, ratings and consented regional access, plus the health of the AI, vector index and database. The summary contains no personal data or message content. Contact messages and chat ratings are retained for 30 days, with hourly cleanup checks.
+Every Monday the owner receives an email with aggregate chat ratings and consented regional access, plus the health of the AI, vector index and database. The summary contains only aggregates. Ratings and regional totals are removed before reaching 30 days, with hourly cleanup checks.
 
 ### FR-11 — Not-found page
 Unknown addresses show a 404 page in the site's style, with links to the portfolio and the assistant.
@@ -132,9 +124,9 @@ The site can be installed as an app (manifest and icons) and, after the first vi
 |---|---|---|
 | NFR-01 | **Cost** | Zero-cost infrastructure: free tiers only, **with no payment method on file** (the owner cannot incur costs). When a free limit is reached, the feature must pause and the site keep working (graceful degradation), never generate a charge. New services are added only if they have a free plan with no card required. AI demos run in the visitor's browser (no server cost). |
 | NFR-02 | **Performance** | Static site with no build step; first image preloaded (smaller on mobile) and the rest on demand; non-blocking fonts; third-party scripts (Turnstile) loaded on demand; repeated AI answers served from cache. Target: Lighthouse (mobile) ≥ 75 performance and 100 accessibility, best practices and SEO. |
-| NFR-03 | **Availability** | The chat must remain useful without AI (local search); the form fails with a clear message. |
+| NFR-03 | **Availability** | The chat must remain useful without AI (local search); contact is through direct links, with no message processing by the site. |
 | NFR-04 | **Security** | The backend only accepts the site's origin; bot protection on every call that stores data or uses AI; per-IP limits; input validation; no secrets in the repository. The (read-only) prices route only accepts the site's origin and the demo's 15 stocks, with a per-IP limit and caching. |
-| NFR-05 | **Privacy (LGPD/GDPR-style)** | No tracking cookies; the form stores the minimum (no IP address); notices about AI use and the purpose of the data. In the face recognition demo, camera and photos are processed only on the device. Retention: messages and ratings are automatically deleted after 30 days, with hourly checks. |
+| NFR-05 | **Privacy (LGPD/GDPR-style)** | No contact form. D1 stores only consented regional totals and daily 👍/👎 totals; no question, answer, language or identifier is stored with a rating. Chat questions and job-description text are processed by Cloudflare Workers AI to generate answers/analyses but are not written to D1; Cloudflare processes connection IPs for security, Turnstile and rate limits. Totals are deleted before reaching 30 days. In the face demo, camera and photos are processed only on the device. |
 | NFR-06 | **Accessibility** | Semantic HTML, translated ARIA labels, visible focus, keyboard navigation, respects `prefers-reduced-motion`. |
 | NFR-07 | **Responsiveness** | Usable and readable from 360 px to wide desktops. |
 | NFR-08 | **AI reliability** | The AI must not invent facts; it must decline off-profile topics and resist visitor instructions that try to change its rules. |
@@ -161,11 +153,9 @@ The site can be installed as an app (manifest and icons) and, after the first vi
 - [x] With the AI unavailable, the question is answered by local search.
 - [x] All 92 cases in `tests/chat-casos.json` pass.
 
-### Contact form
-- [x] Submitting an empty form shows a required-fields notice and highlights the fields.
-- [x] A valid submission shows the confirmation card and is saved in the database.
-- [x] A submission with the honeypot field filled in saves nothing.
-- [ ] More than 3 submissions per minute from the same IP return "too many messages in a row" (implemented; not yet tested in production).
+### Contact and privacy
+- [x] The contact section keeps direct links and has no form or message-submission route to the Worker.
+- [x] The migration permanently removes the existing contact-message table from D1.
 
 ### Security
 - [x] A backend request from another origin → `403 forbidden_origin`.
@@ -179,7 +169,7 @@ The site can be installed as an app (manifest and icons) and, after the first vi
 - [x] A profile change automatically invalidates the AI answer cache.
 
 ### Ratings
-- [x] Clicking 👎 on an AI answer shows "Thanks for your feedback!" and stores the record in the database.
+- [x] Clicking 👍/👎 on an AI answer shows "Thanks for your feedback!" and increments a daily aggregate without storing the question or answer.
 
 ### SEO and performance
 - [x] `sitemap.xml` and `robots.txt` return HTTP 200; the sitemap is valid XML with 21 URLs.
@@ -203,7 +193,5 @@ The site can be installed as an app (manifest and icons) and, after the first vi
 ### Installable app
 - [x] After the first visit, the site reloads offline, with its look and projects.
 
-### Emails
-- [x] A new contact-form message triggers a notification to the owner's Gmail, with "Reply" addressed to the visitor.
-- [ ] The visitor receives a confirmation in the message's language (waiting for the Apps Script web app to be set to "Anyone").
-- [ ] The weekly summary arrives on Monday (test run completed without errors; delivery to be confirmed).
+### Metrics email
+- [ ] The aggregate weekly summary arrives on Monday (test run completed without errors; delivery to be confirmed).

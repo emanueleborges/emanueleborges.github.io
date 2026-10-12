@@ -314,35 +314,6 @@ blockquote { margin: 32px 0 0; padding: 12px 0 12px 16px; border-left: 2px solid
 .button-whatsapp { color: #fff; background: linear-gradient(115deg, #25d366, #128c7e); box-shadow: 0 8px 30px rgba(37,211,102,.22), inset 0 1px 0 rgba(255,255,255,.24); }
 .button-whatsapp:hover { box-shadow: 0 10px 38px rgba(37,211,102,.38); }
 .wa-icon { width: 18px; height: 18px; margin-right: -12px; }
-.contact-form { max-width: 620px; margin: 48px auto 0; padding: 28px; border: 1px solid var(--line); border-radius: 20px; background: var(--surface-2); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); text-align: left; }
-.contact-form h3 { margin: 0 0 18px; font-size: 18px; letter-spacing: -.02em; }
-.contact-form label { display: grid; gap: 6px; margin-bottom: 14px; color: var(--text-soft); font-size: 13px; font-weight: 600; }
-.contact-form input, .contact-form textarea { width: 100%; padding: 12px 14px; border: 1px solid var(--line); border-radius: 12px; background: rgba(var(--bg-rgb),.6); color: var(--text); font: 14px var(--sans); resize: vertical; transition: border-color .2s; }
-.contact-form input:focus, .contact-form textarea:focus { outline: none; border-color: rgba(var(--accent-2-rgb),.6); }
-.contact-form [aria-invalid="true"] { border-color: var(--error); }
-.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-.form-required { color: var(--cyan-soft); text-decoration: none; cursor: help; }
-.contact-form input::placeholder, .contact-form textarea::placeholder { color: var(--subtle); }
-.contact-form input:focus, .contact-form textarea:focus { box-shadow: 0 0 0 3px rgba(var(--accent-2-rgb),.15); }
-.form-counter { margin: -8px 0 12px; color: var(--muted); font: 11px var(--mono); text-align: right; }
-.form-counter.is-near { color: var(--warn); }
-.form-spinner { display: none; width: 14px; height: 14px; border: 2px solid rgba(255,255,255,.35); border-top-color: #fff; border-radius: 50%; animation: form-spin .8s linear infinite; }
-.contact-form button[aria-busy="true"] .form-spinner { display: inline-block; }
-.contact-form button[aria-busy="true"] .form-arrow { display: none; }
-@keyframes form-spin { to { transform: rotate(360deg); } }
-.form-success { padding: 18px 8px 6px; text-align: center; animation: chat-in .35s ease; }
-.form-success-icon { display: inline-grid; place-items: center; width: 56px; height: 56px; margin-bottom: 14px; border-radius: 50%; background: var(--grad-primary); color: var(--on-primary); font-size: 26px; font-weight: 800; box-shadow: 0 10px 30px rgba(var(--glow-rgb),.35); }
-.form-success h3 { margin: 0 0 8px; }
-.form-success p { margin: 0 0 20px; color: var(--muted); font-size: 14px; line-height: 1.6; }
-.form-again { border: 1px solid var(--line-strong); font-family: var(--sans); cursor: pointer; }
-.form-trap { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
-.form-privacy { margin: 0 0 16px; color: var(--muted); font-size: 12px; }
-.contact-form .button { border: 0; font-family: var(--sans); font-size: 13px; cursor: pointer; }
-.contact-form .button .form-send { font-size: 13px; font-weight: 700; }
-.contact-form button[disabled] { opacity: .6; cursor: progress; }
-.form-status { min-height: 1.4em; margin: 12px 0 0; font-size: 13px; }
-.form-status.is-success { color: var(--success); }
-.form-status.is-error { color: var(--error); }
 .contact-social { display: flex; flex-wrap: wrap; justify-content: center; gap: 16px; margin-top: 36px; }
 .social-card { display: flex; align-items: center; gap: 14px; min-width: 240px; padding: 14px 20px; border: 1px solid var(--line-strong); border-radius: 16px; background: var(--surface-2); color: var(--text); text-align: left; backdrop-filter: blur(8px); transition: transform .25s, border-color .25s, background .25s, box-shadow .25s; }
 .social-card svg { flex: none; width: 30px; height: 30px; }
@@ -518,8 +489,6 @@ main, .footer { position: relative; z-index: 1; }
   .about-section, .skills-section, .experience-section, .education-section { grid-template-columns: 1fr; gap: 30px; }
   .education-extra { grid-template-columns: 1fr; gap: 22px; }
   .education-list li { grid-template-columns: 74px 1fr; gap: 14px; }
-  .contact-form { padding: 20px; }
-  .form-row { grid-template-columns: 1fr; gap: 0; }
   .edu-logo { height: 44px; padding: 6px 8px; }
   .section-heading h2, .skills-intro h2 { font-size: 46px; }
   .about-lead { font-size: 18px; }

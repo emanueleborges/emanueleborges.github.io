@@ -46,15 +46,15 @@ Legend: ✅ done · ⏳ pending · 💡 idea
 
 ### Contact and analytics
 - ✅ **T25** WhatsApp, email, LinkedIn, GitHub — FR-07
-- ✅ **T26** Contact form with D1, Turnstile, honeypot, per-IP limit, counter and confirmation — FR-06
-- ✅ **T27** `ver-mensagens.sh` — FR-06.4
+- ✅ **T26** Contact form retired during the privacy review; direct links kept and old D1 messages removed — FR-07, NFR-05
+- ✅ **T27** Contact-message reader removed after dropping the old table — NFR-05
 - ✅ **T28** Aggregate website access count — FR-08
 - ✅ **T29** Last-updated date in the footer and automatic `?v=` versioning (hook) — NFR-10
 
 ### Documentation
 - ✅ **T30** README and SDD documents (spec, plan, tasks) in Portuguese and English
-- ✅ **T38** Email notification for new messages (Resend, free) — FR-06.5
-- ✅ **T36** 👍/👎 rating of AI answers stored in D1 + `ver-avaliacoes.sh` — NFR-08
+- ✅ **T38** New-message notification retired with the contact form — NFR-05
+- ✅ **T36** Daily aggregate 👍/👎 ratings in D1 + `ver-avaliacoes.sh`; no individual question/answer — NFR-05
 - ✅ **T34** Link previews (Open Graph/Twitter), `hreflang`, `Person` JSON-LD, `sitemap.xml` and `robots.txt` — NFR-02
 - ✅ **T39** English README (main) + Portuguese — documentation
 - ✅ **T40** GitHub Actions: syntax, SEO, AI knowledge build and 92 tests on every push — Acceptance criteria
@@ -66,8 +66,8 @@ Legend: ✅ done · ⏳ pending · 💡 idea
 - ✅ **T49** Assistant highlight: "Ask my AI" bar in the hero (auto-typed example question) and labeled chat button on desktop — FR-05
 - ✅ **T50** Responsiveness validated on smartphone (390 px), tablet (768 px), laptop (1366 px) and desktop (1920 px): ☰ menu up to 1,100 px, no horizontal scroll — NFR-07
 - ✅ **T51** Zero-cost rules documented (README and NFR-01); verified: Workers Free, no card in any service — NFR-01
-- ✅ **T44** Automatic confirmation to the visitor in the message's language (Google Apps Script) — FR-06.6
-- ✅ **T52** German as the 8th language: site, chat (ready-made answers and search), PDF résumé, AI, email confirmation and 13 tests — FR-02
+- ✅ **T44** Automatic visitor confirmation retired with the contact form — NFR-05
+- ✅ **T52** German as the 8th language: site, chat (ready-made answers and search), PDF résumé, AI and 13 tests — FR-02
 - ✅ **T31** "View code" link on the 9 project cards, pointing to each repository (8 languages) — FR-01
 - ✅ **T32** Cards show language, stars and last-update date from the public GitHub API (no key, cached per session) — FR-01
 - ✅ **T53** Installable, offline app (PWA): manifest, 192/512/maskable icons and a service worker — NFR-02
@@ -78,7 +78,7 @@ Legend: ✅ done · ⏳ pending · 💡 idea
 - ✅ **T58** Card 10: the portfolio assistant as a project (RAG with Workers AI and Vectorize), with a button that opens the chat — FR-01
 - ✅ **T59** Documentation updated (README, spec FR-12/FR-13, plan §2.6–2.8, `GET /prices`, ADR-24 to 26) and LSTM training scripts brought into `scripts/lstm/` — NFR-09
 - ✅ **T60** Security: per-IP limit on `GET /prices` (30/min) and SRI on the face demo's face-api.js (tested with a tampered file) — NFR-04
-- ✅ **T61** Private dashboard (`npm run painel` in `worker/`): ratings, messages and regional D1 visits; local file, git-ignored — FR-08
+- ✅ **T61** Local dashboard (`npm run painel` in `worker/`): aggregate rating totals and regional visits only — FR-08, NFR-05
 - ✅ **T62** LSTM demo with 15 stocks (8 from B3, 7 from NASDAQ), menu by exchange and prices in each exchange's currency; card updated to the 1.1–2.2% MAPE — FR-12
 - ✅ **T63** "Does your role match?" (`/vaga/` + `POST /match`): two-step job match with Worker checks, rule-based score, clickable evidence, 8 languages and an invite at the top of the site — FR-14
 - ✅ **T64** Amazon (default) and Editorial themes: colors as CSS variables, a button on every page (8 languages), no flash, charts validated for color-vision deficiency, Lighthouse accessibility 100 in both — FR-15
@@ -97,8 +97,6 @@ Legend: ✅ done · ⏳ pending · 💡 idea
 |---|---|---|---|
 | ⏳ **T33** | Impact numbers in the experience section (e.g. deployment time, % fewer bugs) | Data from Emanuel | FR-01 |
 | ⏳ **T35** | Translation review by native speakers (priority: Chinese and Russian) | Reviewer | FR-02 |
-| ⏳ **T37** | Test the contact form's 3-per-minute limit in production | — | NFR-04 |
-| ⏳ **T46** | Set the Apps Script web app access to "Anyone" and test the confirmation | Emanuel | FR-06.6 |
 
 ## Ideas
 

@@ -1,4 +1,4 @@
-// Assistente (4/4) — IA: perguntas ao Worker e avaliações 👍/👎.
+// Assistente (4/4) — IA: perguntas ao Worker e avaliações 👍/👎 agregadas.
 // Em qualquer falha devolve null/false, e a interface segue com a busca local.
 
 import { PortfolioApi as api } from "../api.js";
@@ -12,8 +12,8 @@ const ask = async (question, lang) => {
   return typeof text === "string" && text.trim() ? text.trim() : null;
 };
 
-// Salva a avaliação no D1 (só quando o visitante clica).
-const rate = async ({ question, answer, rating, lang }) => (await api.post("/feedback", { question, answer, rating, lang })).ok;
+// Registra apenas o total diário de avaliações positivas ou negativas.
+const rate = async ({ rating }) => (await api.post("/feedback", { rating })).ok;
 
 const prepare = () => (enabled ? api.loadTurnstile().catch(() => {}) : undefined);
 

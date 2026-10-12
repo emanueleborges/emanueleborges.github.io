@@ -1,6 +1,5 @@
-// Painel privado de dados operacionais: avaliações do chat, mensagens do formulário e visitas por continente.
-// Busca os dados no D1, gera painel.html (fora do git,
-// porque tem nomes e e-mails de visitantes) e abre no navegador. Nada é publicado.
+// Painel local de dados operacionais: totais de avaliações e visitas por continente.
+// Busca os agregados no D1, gera painel.html fora do git e abre no navegador. Nada é publicado.
 //
 // Uso:  cd worker && npm run painel
 
@@ -13,8 +12,6 @@ const DIR = dirname(fileURLToPath(import.meta.url));
 const OUT = join(DIR, "painel.html");
 
 const WEEKS = 12;
-const LANGS = { en: "Inglês", pt: "Português", es: "Espanhol", fr: "Francês", it: "Italiano", de: "Alemão", zh: "Chinês", ru: "Russo" };
-
 const d1 = (sql) => {
   const output = execFileSync("npx", ["wrangler", "d1", "execute", "portfolio-contact", "--remote", "--json", "--command", sql], {
     encoding: "utf8",
@@ -24,7 +21,6 @@ const d1 = (sql) => {
 };
 
 const escape = (text) => String(text ?? "").replace(/[&<>"']/g, (c) => `&#${c.charCodeAt(0)};`);
-const fmtDate = (utc) => new Date(`${utc.replace(" ", "T")}Z`).toLocaleString("pt-BR", { timeZone: "America/Manaus", dateStyle: "short", timeStyle: "short" });
 const pct = (part, total) => (total ? Math.round((part / total) * 100) : 0);
 
 // Segunda-feira (UTC) da semana de uma data "AAAA-MM-DD HH:MM:SS".
@@ -96,30 +92,27 @@ const legend = (series) => `<div class="legend">${series.map((s) => `<span><i st
 
 /* ---------- Dados ---------- */
 
-console.log("Buscando avaliações e mensagens no D1…");
-const feedback = d1("SELECT created_at, rating, lang, question, answer FROM feedback ORDER BY id DESC LIMIT 1000");
-const messages = d1("SELECT created_at, name, email, lang, message FROM messages ORDER BY id DESC LIMIT 1000");
+console.log("Buscando totais agregados de avaliações e acessos no D1…");
+const feedback = d1("SELECT feedback_date, rating, total FROM feedback_daily ORDER BY feedback_date DESC");
 const visits = d1("SELECT continent, SUM(total) AS total FROM regional_visits WHERE access_date > date('now', '-29 days') GROUP BY continent ORDER BY total DESC");
 const visitTotal = visits.reduce((sum, row) => sum + Number(row.total), 0);
 
-const up = feedback.filter((f) => f.rating === 1).length;
-const down = feedback.filter((f) => f.rating === -1).length;
+const up = feedback.filter((f) => f.rating === 1).reduce((sum, f) => sum + Number(f.total), 0);
+const down = feedback.filter((f) => f.rating === -1).reduce((sum, f) => sum + Number(f.total), 0);
+const feedbackTotal = up + down;
 const weeks = lastWeeks();
-const byWeek = (rows, filter = () => true) => weeks.map((w) => rows.filter((r) => filter(r) && weekOf(r.created_at) === w).length);
-const since30 = (rows) => rows.filter((r) => Date.now() - new Date(`${r.created_at.replace(" ", "T")}Z`) < 30 * 86400000).length;
+const ratingsByWeek = (rating) => weeks.map((w) =>
+  feedback
+    .filter((row) => row.rating === rating && weekOf(`${row.feedback_date} 00:00:00`) === w)
+    .reduce((sum, row) => sum + Number(row.total), 0),
+);
 const UP = { name: "👍 Positivas", color: "var(--s1)" };
 const DOWN = { name: "👎 Negativas", color: "var(--s2)" };
 
-const langs = Object.keys(LANGS).filter((l) => feedback.some((f) => f.lang === l));
 const ratingsWeek = [
-  { ...UP, values: byWeek(feedback, (f) => f.rating === 1) },
-  { ...DOWN, values: byWeek(feedback, (f) => f.rating === -1) },
+  { ...UP, values: ratingsByWeek(1) },
+  { ...DOWN, values: ratingsByWeek(-1) },
 ];
-const ratingsLang = [
-  { ...UP, values: langs.map((l) => feedback.filter((f) => f.lang === l && f.rating === 1).length) },
-  { ...DOWN, values: langs.map((l) => feedback.filter((f) => f.lang === l && f.rating === -1).length) },
-];
-const messagesWeek = [{ name: "Mensagens", color: "var(--s1)", values: byWeek(messages) }];
 
 const tile = (label, value, note = "") => `<div class="tile"><span>${label}</span><strong>${value}</strong>${note ? `<small>${note}</small>` : ""}</div>`;
 
@@ -178,40 +171,20 @@ const html = `<!doctype html>
 <body>
 <main>
   <h1>Painel do portfólio</h1>
-  <p class="muted">Gerado em ${new Date().toLocaleString("pt-BR", { timeZone: "America/Manaus" })} (horário de Manaus) · arquivo local, não publicado · contém dados pessoais de visitantes (LGPD).</p>
+  <p class="muted">Gerado em ${new Date().toLocaleString("pt-BR", { timeZone: "America/Manaus" })} (horário de Manaus) · arquivo local, não publicado.</p>
 
   <div class="tiles">
-    ${tile("Avaliações do chat", feedback.length, `${up} 👍 · ${down} 👎`)}
-    ${tile("Aprovação", `${pct(up, feedback.length)}%`, "avaliações positivas")}
-    ${tile("Mensagens recebidas", messages.length, `${since30(messages)} nos últimos 30 dias`)}
-    ${tile("Avaliações (30 dias)", since30(feedback))}
+    ${tile("Avaliações de IA (30 dias)", feedbackTotal.toLocaleString("pt-BR"), `${up} 👍 · ${down} 👎`)}
+    ${tile("Aprovação", `${pct(up, feedbackTotal)}%`, "avaliações positivas")}
   </div>
 
   <h2>Avaliações do chat</h2>
-  <div class="grid2">
-    <div class="card"><h3>Por semana (últimas ${WEEKS})</h3>${bars(weeks.map(weekLabel), ratingsWeek, { labelEvery: 2 })}${legend(ratingsWeek)}</div>
-    <div class="card"><h3>Por idioma</h3>${langs.length ? bars(langs.map((l) => l.toUpperCase()), ratingsLang) + legend(ratingsLang) : '<p class="muted">Sem avaliações ainda.</p>'}</div>
-  </div>
+  <div class="card"><h3>Por semana (últimas ${WEEKS})</h3>${bars(weeks.map(weekLabel), ratingsWeek, { labelEvery: 2 })}${legend(ratingsWeek)}</div>
   <details><summary>Ver como tabela</summary><div class="table-wrap"><table>
     <thead><tr><th>Semana de</th><th class="num">👍</th><th class="num">👎</th></tr></thead>
     <tbody>${weeks.map((w, i) => `<tr><td>${weekLabel(w)}</td><td class="num">${ratingsWeek[0].values[i]}</td><td class="num">${ratingsWeek[1].values[i]}</td></tr>`).join("")}</tbody>
   </table></div></details>
-
-  <h2>Respostas avaliadas com 👎 (para melhorar)</h2>
-  ${down ? `<div class="table-wrap"><table><thead><tr><th>Data</th><th>Idioma</th><th>Pergunta</th><th>Resposta da IA</th></tr></thead><tbody>
-    ${feedback.filter((f) => f.rating === -1).slice(0, 30).map((f) => `<tr><td>${fmtDate(f.created_at)}</td><td>${escape(f.lang)}</td><td class="text">${escape(f.question)}</td><td class="text">${escape(f.answer)}</td></tr>`).join("")}
-  </tbody></table></div>` : '<p class="muted">Nenhuma resposta mal avaliada. 🎉</p>'}
-
-  <h2>Últimas respostas avaliadas com 👍</h2>
-  ${up ? `<div class="table-wrap"><table><thead><tr><th>Data</th><th>Idioma</th><th>Pergunta</th></tr></thead><tbody>
-    ${feedback.filter((f) => f.rating === 1).slice(0, 10).map((f) => `<tr><td>${fmtDate(f.created_at)}</td><td>${escape(f.lang)}</td><td class="text">${escape(f.question)}</td></tr>`).join("")}
-  </tbody></table></div>` : '<p class="muted">Nenhuma ainda.</p>'}
-
-  <h2>Mensagens do formulário</h2>
-  <div class="card"><h3>Por semana (últimas ${WEEKS})</h3>${bars(weeks.map(weekLabel), messagesWeek, { labelEvery: 2, height: 180 })}</div>
-  ${messages.length ? `<div class="table-wrap" style="margin-top:12px"><table><thead><tr><th>Data</th><th>Nome</th><th>E-mail</th><th>Idioma</th><th>Mensagem</th></tr></thead><tbody>
-    ${messages.slice(0, 30).map((m) => `<tr><td>${fmtDate(m.created_at)}</td><td>${escape(m.name)}</td><td><a href="mailto:${escape(m.email)}">${escape(m.email)}</a></td><td>${escape(m.lang)}</td><td class="text">${escape(m.message)}</td></tr>`).join("")}
-  </tbody></table></div>` : ""}
+  <p class="muted">São armazenados somente totais diários de 👍/👎 por até 30 dias; perguntas, respostas e idiomas não são guardados junto à avaliação.</p>
 
   <h2>Acessos por continente</h2>
   ${visitsHtml}

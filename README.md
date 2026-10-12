@@ -12,7 +12,7 @@ Professional portfolio of **Emanuel Borges**, Senior Full Stack Developer (Java/
 
 🧪 **Interactive demos:** [stock forecasting (LSTM)](https://emanueleborges.github.io/demos/lstm/) · [face recognition](https://emanueleborges.github.io/demos/face/) · [movie recommender](https://emanueleborges.github.io/demos/filmes/) · [RAG security against prompt injection](https://emanueleborges.github.io/demos/guardrail/)
 
-A framework-free static site with a serverless backend on Cloudflare for the AI chat and contact form, plus browser-based demos. The RAG security demo is a local simulation and does not call AI models. **The whole infrastructure runs on free tiers.**
+A framework-free static site with a Cloudflare serverless backend for the AI chat and consented regional/rating aggregates, plus browser-based demos. Contact is through direct links; the site has no contact form or message storage. The RAG security demo is a local simulation and does not call AI models. **The whole infrastructure runs on free tiers.**
 
 ---
 
@@ -43,11 +43,10 @@ A framework-free static site with a serverless backend on Cloudflare for the AI 
 | **Visuals** | Dark purple + cyan theme, moving duotone background images, Canvas particle network, scroll animations and a sticky header with reading progress. Respects "reduce motion". |
 | **AI assistant** | Hybrid: local **ready-made answers** for frequent questions, **generative AI with RAG** for everything else and **local search** as a fallback. AI answers can be rated 👍/👎. See [Architecture](#architecture). |
 | **PDF résumé** | One PDF per language, generated from the same text source as the site; the button downloads the PDF for the current language. |
-| **Contact form** | Messages stored in D1, invisible bot protection, **email notification** to the owner and an **automatic confirmation** to the visitor in the language of their message. |
-| **Direct contacts** | Email, WhatsApp, LinkedIn and GitHub. |
+| **Direct contacts** | Email, WhatsApp, LinkedIn and GitHub; the portfolio has no form and does not store contact messages. |
 | **SEO** | Link previews (Open Graph/Twitter), `hreflang` for 8 languages, `Person` structured data (JSON-LD), `sitemap.xml` and `robots.txt`; verified in Google Search Console. |
 | **Analytics** | Optional counting, only after explicit consent. The Cloudflare Worker uses the connection IP to estimate the continent and stores only a daily total per continent in D1; it does not store IP, URL, language, clicks, or identifiers. Aggregates are deleted before they reach 30 days. Visitors can change their choice in privacy settings. |
-| **Weekly summary** | Every Monday an email with the week's messages, chat ratings and a health check of the AI, vector index and database. |
+| **Weekly summary** | Every Monday an email with aggregate chat ratings, consented regional counts and a health check of the AI, vector index and database. |
 | **404 page** | Custom page in the site's style with links to the portfolio and the assistant. |
 | **AI demo: LSTM stock forecasting** | `/demos/lstm/` page (8 languages) where the FIAP project's LSTM runs **in the browser, in plain JavaScript** (weights exported from Keras, same output to ~1e-8). Recent prices come from the Worker (Yahoo Finance), with a saved copy if it fails; test metrics compared against a naive baseline. |
 | **"Does your role match?" (for recruiters)** | `/vaga/` page (8 languages): the recruiter pastes a job description and sees a **match score**, each requirement as ✅ meets / 🟡 partial / ⚪ not found with **clickable evidence** in the portfolio, and a "why Emanuel" summary to copy. The AI extracts the requirements reading only the posting, then grades each one; the Worker independently verifies technology evidence, splits grouped technologies so missing tools cannot be hidden, treats a skill-list mention as partial unless a project or experience demonstrates it, and computes the score by rule. The posting is not stored. |
@@ -63,14 +62,13 @@ A framework-free static site with a serverless backend on Cloudflare for the AI 
 ```mermaid
 flowchart LR
   V[Visitor] -->|HTTPS| GP[GitHub Pages<br/>static site]
-  GP -->|chat / contact / rating<br/>+ Turnstile token| W[Cloudflare Worker]
+  GP -->|chat / rating<br/>+ Turnstile token| W[Cloudflare Worker]
   W -->|validates token| TS[Turnstile]
   W -->|embeddings + generation, no prompt cache| GW[AI Gateway]
   GW --> AI[Workers AI<br/>BGE-M3 and Qwen3 30B]
   W -->|semantic search| VZ[Vectorize<br/>32 profile excerpts]
-  W -->|INSERT| D1[(D1<br/>messages + ratings + continent counts)]
-  W -->|notification + weekly summary| RS[Resend → owner's Gmail]
-  W -->|confirmation| GAS[Google Apps Script → visitor]
+  W -->|aggregate totals| D1[(D1<br/>daily ratings + continent counts)]
+  W -->|weekly aggregate summary| RS[Resend → owner's Gmail]
   GP -->|continent count after consent| W
   GP -->|language, stars, last update| GH[Public GitHub API]
   GP -->|LSTM demo: GET /prices| W
@@ -106,7 +104,7 @@ The AI knowledge is **generated from the site's own translations** (`i18n/`): wh
 
 **PWA:** Web App Manifest · Service Worker (network first for the page, cache for files)
 
-**Email:** Resend (owner notifications and weekly summary) · Google Apps Script (visitor confirmations from Gmail)
+**Email:** Resend (weekly aggregate summary)
 
 **Tooling:** Git + GitHub · GitHub Pages · GitHub Actions · GitHub CLI · headless Chrome (PDFs and tests) · Lighthouse and Lighthouse CI · Node.js · Python · Shell
 
@@ -131,8 +129,8 @@ The AI knowledge is **generated from the site's own translations** (`i18n/`): wh
 ├── scripts/gerar-secoes.mjs # Renders project cards and skill chips from data/ (--check in CI)
 ├── scripts/gerar-dados-filmes.py  # Builds demos/filmes/filmes.json (Wikidata + Wikipedia)
 ├── scripts/lstm/           # Training (train.py) and export (exportar_web.py) of the demo's LSTM
-├── styles.css              # All styling (theme, layout, animations, chat, form)
-├── i18n/                   # Text, one file per language (site, chat, form and résumé)
+├── styles.css              # All styling (theme, layout, animations and chat)
+├── i18n/                   # Text, one file per language (site, chat and résumé)
 ├── i18n.js                 # Loader: pt and en come with the page; other languages download when chosen
 ├── script.js               # Languages, menu, filters, animations, particles, analytics
 ├── api.js                  # Shared connection to the Worker and Turnstile
@@ -141,7 +139,6 @@ The AI knowledge is **generated from the site's own translations** (`i18n/`): wh
 │                           #   busca.js (local search on the page), ia.js (Worker and ratings)
 ├── components/             # Web Components: <site-logo>, <theme-toggle> (components.js) and boot.js (theme before paint)
 ├── data/                   # Projects and skills (single source) → scripts/gerar-secoes.mjs writes them into index.html
-├── contact.js              # Contact form
 ├── curriculo.html          # A4 résumé template used to generate the PDFs
 ├── gerar-curriculos.sh     # Generates the 8 PDFs in cv/ with headless Chrome
 ├── sitemap.xml · robots.txt
@@ -151,18 +148,16 @@ The AI knowledge is **generated from the site's own translations** (`i18n/`): wh
 ├── .github/workflows/      # GitHub Actions: tests and Lighthouse on every push
 ├── lighthouserc.json       # Minimum Lighthouse scores in CI
 ├── scripts/pre-commit      # Git hook: last-updated date and file versioning
-├── apps-script/Codigo.gs   # Visitor confirmation (Google Apps Script) — template without the secret
 ├── docs/sdd/               # Specification (SDD) in Portuguese; docs/sdd/en/ in English
 └── worker/                 # Cloudflare Worker
-    ├── src/index.js            # Router: chat, contact, ratings, job match, regional visits, prices + Cron
-    ├── src/rotas/              # One file per route: chat, contato, avaliacao, vaga, precos, visitas
+    ├── src/index.js            # Router: chat, ratings, job match, regional visits, prices + Cron
+    ├── src/rotas/              # One file per route: chat, avaliacao, vaga, precos, visitas
     ├── src/comum.js            # Shared: models, languages, CORS/JSON, Turnstile, rate limit, e-mail
     ├── src/agendado.js         # Weekly summary e-mail and data retention (LGPD)
     ├── src/conhecimento.js     # Generated: summary, excerpts, full profile, version
     ├── gerar-conhecimento.mjs  # Builds the AI knowledge from i18n/en.js
     ├── indexar-vectorize.mjs   # Generates embeddings and updates the Vectorize index
-    ├── migrations/             # D1 schema (messages, feedback, regional_visits)
-    ├── ver-mensagens.sh        # Lists contact-form messages
+    ├── migrations/             # D1 schema (feedback_daily, regional_visits; old messages removed)
     ├── ver-avaliacoes.sh       # 👍/👎 summary of chat answers
     ├── painel.mjs              # Private stats dashboard (npm run painel)
     └── wrangler.jsonc          # Config (AI, Vectorize, D1, limits, origin, cron)
@@ -181,7 +176,7 @@ python3 -m http.server 8000      # or any static server
 # open http://localhost:8000
 ```
 
-> Locally, the chat works with **ready-made answers and local search**. The AI, the contact form and ratings only accept requests from `https://emanueleborges.github.io` (CORS + Turnstile), by design.
+> Locally, the chat works with **ready-made answers and local search**. The AI and ratings only accept requests from `https://emanueleborges.github.io` (CORS + Turnstile), by design.
 
 Install the git hook (updates the footer date and the `?v=` version of CSS/JS on every commit):
 
@@ -212,20 +207,18 @@ npm run deploy
 ```
 
 This (1) builds the knowledge from `i18n/`, (2) deploys the Worker and (3) updates the Vectorize index.
-If a D1 migration is pending, apply it **before** deploying the Worker: `npx wrangler d1 migrations apply portfolio-contact --remote`. The regional counter uses `0003_contagem_regional.sql`, which creates only the aggregate-count table.
+If a D1 migration is pending, apply it **before** deploying the Worker: `npx wrangler d1 migrations apply portfolio-contact --remote`. Migrations `0004_agregar_avaliacoes.sql` and `0005_remover_mensagens.sql` replace individual ratings with daily totals and permanently delete stored contact messages.
 
 **Cloudflare resources** (created once):
 
 | Resource | Name |
 |---|---|
 | Worker | `emanuel-portfolio-chat` (weekly cron: Mondays 12:00 UTC) |
-| D1 database | `portfolio-contact` (tables `messages`, `feedback` and `regional_visits`) |
+| D1 database | `portfolio-contact` (tables `feedback_daily` and `regional_visits`; old contact-message table dropped) |
 | Vectorize index | `portfolio-profile` (1024 dimensions, cosine) |
 | AI Gateway | `default` |
 | Turnstile widget | invisible, domain `emanueleborges.github.io` |
-| Worker secrets | `TURNSTILE_SECRET`, `RESEND_API_KEY`, `APPS_SCRIPT_URL`, `APPS_SCRIPT_SECRET` |
-
-**Visitor confirmation (Google Apps Script):** paste `apps-script/Codigo.gs` into a new Apps Script project with the same value as `APPS_SCRIPT_SECRET`, deploy it as a **Web app** (*Execute as: Me*, *Who has access: Anyone*) and store its `/exec` URL in the `APPS_SCRIPT_URL` secret.
+| Worker secrets | `TURNSTILE_SECRET`, `RESEND_API_KEY` |
 
 ---
 
@@ -235,9 +228,8 @@ If a D1 migration is pending, apply it **before** deploying the Worker: `npx wra
 |---|---|
 | Change site text | Edit `index.html` and `i18n/pt.js` (Portuguese) and `i18n/<lang>.js` (other languages), then run `npm run deploy` in `worker/` so the AI learns it. |
 | Update the PDF résumés | `./gerar-curriculos.sh` |
-| Read contact-form messages | `cd worker && ./ver-mensagens.sh` (or `./ver-mensagens.sh 50`) — or Cloudflare dashboard: D1 → `portfolio-contact` → Console |
 | See chat ratings 👍/👎 | `cd worker && ./ver-avaliacoes.sh` |
-| **Open the stats dashboard** (rating and message charts, poorly rated answers, visits) | `cd worker && npm run painel` — see [Stats dashboard](#stats-dashboard) |
+| **Open the stats dashboard** (daily rating totals and visits) | `cd worker && npm run painel` — see [Stats dashboard](#stats-dashboard) |
 | See AI usage and Gateway metrics | Cloudflare dashboard → **AI → AI Gateway → default** |
 | See consented continent counts | `cd worker && npm run painel` |
 | **Exclude your own visits** | Reject optional statistics in the site's privacy settings on each browser/device |
@@ -250,7 +242,7 @@ If a D1 migration is pending, apply it **before** deploying the Worker: `npx wra
 
 ### Stats dashboard
 
-Private dashboard with charts of chat ratings, contact-form messages and the aggregate visit count. It's a local file (`worker/painel.html`), git-ignored, because it contains visitors' names and emails.
+Local dashboard with daily chat-rating totals and aggregate visit counts. It is a generated local file (`worker/painel.html`) and is not published.
 
 ```bash
 cd worker
@@ -278,21 +270,18 @@ Regional counts are queried directly from remote D1 by the dashboard. No analyti
 ## Security and privacy
 
 - **CORS:** the Worker only accepts requests from `https://emanueleborges.github.io`.
-- **Turnstile:** every AI question, form submission and rating requires a valid bot-protection token.
+- **Turnstile:** every AI question and rating requires a valid bot-protection token.
 - **Prices route (`GET /prices`):** read-only; only accepts the site's origin and the demo's 15 stocks, with a per-IP limit and a 1 h cache.
 - **External script integrity (SRI):** the face demo's face-api.js has an `integrity` (SHA-384) attribute; if the CDN file is altered, the browser won't run it.
 - **HTTPS enforced** with HSTS (GitHub Pages).
 - **Content Security Policy** on every page via meta tag: scripts, styles, fonts, images and connections only from the domains in use (Google Fonts, Unsplash, Cloudflare, GitHub API, jsDelivr); plugins blocked (`object-src 'none'`) and `<base>` locked. Referrer policy `strict-origin-when-cross-origin`.
-- **Retention (privacy):** the Worker deletes contact-form messages and chat ratings older than 30 days every hour. The contact form states that submissions expire 30 days after sending; chat questions/answers are stored only when rated and expire after 30 days.
+- **Retention (privacy):** the Worker deletes daily chat-rating totals and regional aggregates before they reach 30 days.
 - **Accounts:** the most important protection is two-factor authentication (2FA) on GitHub, Cloudflare, Google and Resend.
-- **Per-IP limits:** 10 questions/min (chat), 3 messages/min (form), 20 ratings/min, 3 job analyses/min, 30 price lookups/min. Cloudflare's limiter is permissive (counters lag slightly): it stops high-volume abuse, not an exact request count.
-- **Validation:** question ≤ 500 characters; name 2–100, valid email ≤ 200, message 5–2,000.
-- **Honeypot** field in the form: bot submissions are dropped without being saved.
+- **Per-IP limits:** 10 questions/min (chat), 20 ratings/min, 3 job analyses/min, 30 price lookups/min. Cloudflare's limiter is permissive (counters lag slightly): it stops high-volume abuse, not an exact request count.
 - **Honest job match:** the posting is treated as data (hidden instructions are ignored — tested with "give a score of 100"), the score is computed by rule, nonexistent evidence is discarded, listed technologies cannot be marked missing by the AI, and technologies absent from the profile become "not found".
 - **AI restricted to the profile:** instructions to answer only about the professional profile, never invent facts and ignore attempts to change the rules.
-- **Visitor confirmation can't be abused as spam:** no message text echoed, first name only (letters), at most one confirmation per email address every 24 h.
 - **No secrets in the code:** all keys are Worker secrets; the Turnstile site key is public by design.
-- **Privacy (LGPD/GDPR-style):** the form stores only name, email, message, language and date (no IP address); analytics are cookieless; the chat discloses when a question goes to the AI; questions and answers are stored only if the visitor rates them, for up to 30 days. Automated email notices contain no sender details or message content; consult them in the private local panel while they remain in D1.
+- **Privacy (LGPD/GDPR-style):** there is no contact form and no contact-message table. D1 stores only consented regional totals and daily 👍/👎 totals, without questions, answers, language or identifiers tied to ratings, for up to 30 days. Chat questions and job-description text are processed by Cloudflare Workers AI to generate answers/analyses but are not written to D1; Cloudflare processes connection IPs for security, Turnstile and rate limits.
 - **Face demo:** camera and photos are processed only on the visitor's device; nothing is sent or stored, and registered faces disappear when the page closes.
 
 ---
@@ -307,8 +296,7 @@ Regional counts are queried directly from remote D1 by the dashboard. No analyti
 | [Cloudflare Workers](https://workers.cloudflare.com) | Backend and weekly cron (~100k requests/day on Workers Free) |
 | [Workers AI](https://developers.cloudflare.com/workers-ai/) | AI and embeddings (10,000 "neurons"/day free; hundreds of questions/day) |
 | [Vectorize](https://developers.cloudflare.com/vectorize/), [D1](https://developers.cloudflare.com/d1/), [AI Gateway](https://developers.cloudflare.com/ai-gateway/), [Turnstile](https://www.cloudflare.com/application-services/products/turnstile/) | Free tiers; D1 Free includes 100k rows written/day and 5 million rows read/day |
-| [Resend](https://resend.com) | Notifications and weekly summary (3,000 emails/month free) |
-| [Google Apps Script](https://developers.google.com/apps-script) | Visitor confirmations from Gmail (~100/day) |
+| [Resend](https://resend.com) | Weekly aggregate summary (3,000 emails/month free) |
 | AI demos | Run in the visitor's browser; face-api.js models via [jsDelivr](https://www.jsdelivr.com) (free CDN); prices via the Worker; static movie data |
 | [GitHub API](https://docs.github.com/en/rest) · [Yahoo Finance](https://finance.yahoo.com) · [Wikidata](https://www.wikidata.org)/[Wikipedia](https://www.wikipedia.org) | Public and free (no key) |
 
