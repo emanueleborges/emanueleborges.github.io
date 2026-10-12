@@ -43,11 +43,11 @@ Site estático, sem framework, com um backend *serverless* no Cloudflare para o 
 | **Visual** | Tema escolhido pelo visitante, imagens de fundo em movimento (duotone), rede de partículas em Canvas, animações ao rolar e cabeçalho fixo com barra de progresso. Respeita "reduzir movimento". |
 | **Assistente com IA** | Híbrido: **respostas prontas** locais para perguntas frequentes, **IA generativa com RAG** para o resto e **busca local** como reserva. Respostas da IA podem ser avaliadas com 👍/👎. Veja [Arquitetura](#arquitetura). |
 | **Currículo em PDF** | Um PDF por idioma, gerado da mesma fonte de textos do site; o botão baixa o PDF do idioma atual. |
-| **Formulário de contato** | Mensagens salvas no D1, proteção anti-robô invisível, **aviso por e-mail** ao dono e **confirmação automática** ao visitante no idioma da mensagem. |
+| **Formulário de contato** | Mensagens salvas no D1 por até 30 dias, proteção anti-robô invisível, aviso sem dados pessoais por e-mail ao dono e confirmação automática ao visitante no idioma da mensagem. |
 | **Contatos diretos** | E-mail, WhatsApp, LinkedIn e GitHub. |
 | **SEO** | Prévia de link (Open Graph/Twitter), `hreflang` para os 8 idiomas, dados estruturados de `Person` (JSON-LD), `sitemap.xml` e `robots.txt`; verificado no Google Search Console. |
 | **Estatísticas** | Visitas e eventos sem cookies (GoatCounter), com **mapa de cliques**: cada clique vira `clique/<área>/<elemento>` (ex.: `clique/projetos/demo/lstm`) e cada seção vista vira `secao/<id>` — nomes iguais nos 8 idiomas, incluindo demos e página de vagas. O painel privado (`npm run painel`) mostra o funil de atenção (até onde as pessoas rolam), cliques por área, cliques por 100 visualizações em cada seção e os elementos mais e menos clicados (inclusive os que ninguém clicou). Nada do que o visitante digita é enviado. Páginas contadas só pelo caminho (`/?lang=pt` e `/` somam juntas); origem por `?ref=` (o PDF do currículo leva `?ref=curriculo-<idioma>`); endereços 404 registrados como `404/<caminho>`. |
-| **Resumo semanal** | Toda segunda, um e-mail com as mensagens da semana, as avaliações do chat e um teste de saúde da IA, do índice vetorial e do banco. |
+| **Resumo semanal** | Toda segunda, um e-mail com contagens agregadas de mensagens/avaliações, estatísticas do site e saúde da IA, do índice vetorial e do banco — sem nomes, e-mails ou conteúdo de mensagens. |
 | **Página 404** | Página personalizada no estilo do site, com links para o portfólio e o assistente. |
 | **Demo de IA: previsão de ações com LSTM** | Página `/demos/lstm/` (8 idiomas) onde o LSTM do projeto FIAP roda **no navegador, em JavaScript puro** (pesos exportados do Keras, mesma saída até ~1e-8). Preços recentes pelo Worker (Yahoo Finance), com cópia salva se ele falhar; métricas do teste comparadas com um baseline ingênuo. |
 | **"Sua vaga combina?" (para recrutadores)** | Página `/vaga/` (8 idiomas): o recrutador cola a vaga e vê a **nota de aderência**, cada requisito como ✅ atende / 🟡 parcial / ⚪ não encontrado com **evidências clicáveis** no portfólio, e um resumo "por que o Emanuel" para copiar. A IA extrai os requisitos lendo só a vaga e depois avalia cada um; o Worker confere as evidências, rebaixa tecnologias ausentes do perfil e calcula a nota por regra. O texto da vaga não é salvo. |
@@ -309,7 +309,7 @@ npm run painel        # ou: npm run panel
 - **Integridade de scripts externos (SRI):** o face-api.js da demo facial tem `integrity` (SHA-384); se o arquivo do CDN for alterado, o navegador não o executa.
 - **HTTPS obrigatório** com HSTS (GitHub Pages).
 - **Política de conteúdo (CSP)** em todas as páginas, por meta tag: só carrega scripts, estilos, fontes, imagens e conexões dos domínios usados (Google Fonts, Unsplash, GoatCounter, Cloudflare, API do GitHub, jsDelivr); bloqueia plugins (`object-src 'none'`) e troca de `<base>`. Política de referenciador `strict-origin-when-cross-origin`.
-- **Retenção (LGPD):** toda semana o Worker apaga mensagens do formulário com mais de 12 meses e avaliações do chat com mais de 6 meses; os avisos do formulário e do chat informam os prazos.
+- **Retenção (LGPD):** o Worker apaga a cada hora mensagens do formulário e avaliações do chat com mais de 30 dias. O formulário avisa que os dados expiram 30 dias após o envio; pergunta/resposta do chat só são gravadas quando a pessoa avalia e expiram 30 dias depois.
 - **Contas:** a proteção mais importante é a verificação em duas etapas (2FA) no GitHub, Cloudflare, Google e Resend.
 - **Limites por IP:** 10 perguntas/min (chat), 3 mensagens/min (formulário), 20 avaliações/min, 3 análises de vaga/min, 30 consultas de preços/min. O limitador do Cloudflare é permissivo (contadores com pequeno atraso): segura abusos em volume, não um pedido exato.
 - **Validação:** pergunta ≤ 500 caracteres; nome 2–100, e-mail válido ≤ 200, mensagem 5–2.000.
@@ -318,7 +318,7 @@ npm run painel        # ou: npm run panel
 - **IA restrita ao perfil:** instruções para responder só sobre o perfil profissional, nunca inventar dados e ignorar tentativas de mudar as regras.
 - **Confirmação ao visitante não vira canal de spam:** não repete o texto da mensagem, usa só o primeiro nome (letras) e envia no máximo 1 por e-mail a cada 24 h.
 - **Sem segredos no código:** todas as chaves são *secrets* do Worker; a site key do Turnstile é pública por natureza.
-- **LGPD:** o formulário guarda só nome, e-mail, mensagem, idioma e data (sem IP); estatísticas sem cookies; o chat avisa quando a pergunta vai para a IA; pergunta e resposta só são salvas se o visitante avaliar, com aviso ao lado dos botões.
+- **LGPD:** o formulário guarda só nome, e-mail, mensagem, idioma e data (sem IP); estatísticas sem cookies; o chat avisa quando a pergunta vai para a IA; pergunta e resposta só são salvas se o visitante avaliar, por até 30 dias. Avisos automáticos por e-mail não incluem o conteúdo nem os dados pessoais do remetente; consulte-os no painel local privado enquanto estiverem no D1.
 - **Demo facial:** câmera e fotos são processadas só no aparelho do visitante; nada é enviado nem salvo, e os rostos cadastrados somem ao fechar a página.
 
 ---

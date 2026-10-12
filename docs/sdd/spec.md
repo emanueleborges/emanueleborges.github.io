@@ -84,7 +84,7 @@ O site deve apresentar: topo (nome, cargo, resumo, localização, anos de experi
 - RF-06.2 Validação no navegador e no servidor.
 - RF-06.3 Mensagens válidas são armazenadas; o visitante vê confirmação ("Mensagem enviada!").
 - RF-06.4 O dono lê as mensagens por um comando ou pelo painel do Cloudflare.
-- RF-06.5 A cada mensagem nova, o dono recebe um aviso por e-mail, com "Responder" direcionado ao visitante.
+- RF-06.5 A cada mensagem nova, o dono recebe um aviso genérico por e-mail, sem nome, endereço ou conteúdo; ele consulta os dados no painel local privado.
 - RF-06.6 O visitante recebe uma confirmação automática no idioma da mensagem.
 
 ### RF-07 — Contatos diretos
@@ -99,7 +99,7 @@ Registrar visitas, **cada clique por área e elemento**, as **seções vistas** 
 - RF-09.3 Publicar `sitemap.xml` (página em 8 idiomas, 8 PDFs e 3 demos) e `robots.txt`; o site é verificado no Google Search Console.
 
 ### RF-10 — Resumo semanal
-Toda segunda-feira, o dono recebe por e-mail: mensagens da semana, avaliações do chat (com as respostas mal avaliadas) e a saúde da IA, do índice vetorial e do banco; visitas, se houver token do GoatCounter.
+Toda segunda-feira, o dono recebe por e-mail: contagens agregadas de mensagens e avaliações, saúde da IA, do índice vetorial e do banco; visitas, se houver token do GoatCounter. O resumo não inclui dados pessoais nem conteúdo de mensagens. A retenção de mensagens do formulário e avaliações do chat é de 30 dias, verificada a cada hora.
 
 ### RF-11 — Página não encontrada
 Endereços inexistentes mostram uma página 404 no estilo do site, com links para o portfólio e o assistente.
@@ -135,7 +135,7 @@ O site pode ser instalado como app (manifest e ícones) e, depois da primeira vi
 | RNF-02 | **Desempenho** | Site estático sem build; primeira imagem pré-carregada (menor no celular) e demais sob demanda; fontes sem bloquear a exibição; scripts de terceiros (Turnstile) carregados sob demanda; respostas repetidas da IA servidas do cache. Meta: Lighthouse (celular) ≥ 75 em desempenho e 100 em acessibilidade, boas práticas e SEO. |
 | RNF-03 | **Disponibilidade** | O chat deve continuar útil mesmo sem IA (busca local); o formulário falha com mensagem clara. |
 | RNF-04 | **Segurança** | Backend aceita só a origem do site; anti-robô em toda chamada que grava dados ou usa IA; limites por IP; validação de entrada; nenhum segredo no repositório. A rota de preços (só leitura) aceita apenas a origem do site e as 15 ações da demo, com limite por IP e cache. |
-| RNF-05 | **Privacidade (LGPD)** | Sem cookies de rastreamento; formulário guarda o mínimo (sem IP); aviso de uso de IA e de finalidade dos dados. Na demo de reconhecimento facial, câmera e fotos são processadas só no aparelho. Retenção: mensagens apagadas após 12 meses e avaliações após 6 meses, automaticamente. |
+| RNF-05 | **Privacidade (LGPD)** | Sem cookies de rastreamento; formulário guarda o mínimo (sem IP); aviso de uso de IA e de finalidade dos dados. Na demo de reconhecimento facial, câmera e fotos são processadas só no aparelho. Retenção: mensagens e avaliações apagadas após 30 dias, automaticamente, com verificação horária. |
 | RNF-06 | **Acessibilidade** | HTML semântico, rótulos ARIA traduzidos, foco visível, navegação por teclado, respeito a `prefers-reduced-motion`. |
 | RNF-07 | **Responsividade** | Funcional e legível de 360 px a desktop largo. |
 | RNF-08 | **Confiabilidade da IA** | A IA não pode inventar fatos; deve recusar temas fora do perfil e resistir a instruções do visitante que tentem mudar as regras. |

@@ -309,7 +309,7 @@ npm run painel        # or: npm run panel
 - **External script integrity (SRI):** the face demo's face-api.js has an `integrity` (SHA-384) attribute; if the CDN file is altered, the browser won't run it.
 - **HTTPS enforced** with HSTS (GitHub Pages).
 - **Content Security Policy** on every page via meta tag: scripts, styles, fonts, images and connections only from the domains in use (Google Fonts, Unsplash, GoatCounter, Cloudflare, GitHub API, jsDelivr); plugins blocked (`object-src 'none'`) and `<base>` locked. Referrer policy `strict-origin-when-cross-origin`.
-- **Retention (privacy):** every week the Worker deletes contact-form messages older than 12 months and chat ratings older than 6 months; the form and chat notices state these periods.
+- **Retention (privacy):** the Worker deletes contact-form messages and chat ratings older than 30 days every hour. The contact form states that submissions expire 30 days after sending; chat questions/answers are stored only when rated and expire after 30 days.
 - **Accounts:** the most important protection is two-factor authentication (2FA) on GitHub, Cloudflare, Google and Resend.
 - **Per-IP limits:** 10 questions/min (chat), 3 messages/min (form), 20 ratings/min, 3 job analyses/min, 30 price lookups/min. Cloudflare's limiter is permissive (counters lag slightly): it stops high-volume abuse, not an exact request count.
 - **Validation:** question ≤ 500 characters; name 2–100, valid email ≤ 200, message 5–2,000.
@@ -318,7 +318,7 @@ npm run painel        # or: npm run panel
 - **AI restricted to the profile:** instructions to answer only about the professional profile, never invent facts and ignore attempts to change the rules.
 - **Visitor confirmation can't be abused as spam:** no message text echoed, first name only (letters), at most one confirmation per email address every 24 h.
 - **No secrets in the code:** all keys are Worker secrets; the Turnstile site key is public by design.
-- **Privacy (LGPD/GDPR-style):** the form stores only name, email, message, language and date (no IP address); analytics are cookieless; the chat discloses when a question goes to the AI; questions and answers are stored only if the visitor rates them, with a notice next to the buttons.
+- **Privacy (LGPD/GDPR-style):** the form stores only name, email, message, language and date (no IP address); analytics are cookieless; the chat discloses when a question goes to the AI; questions and answers are stored only if the visitor rates them, for up to 30 days. Automated email notices contain no sender details or message content; consult them in the private local panel while they remain in D1.
 - **Face demo:** camera and photos are processed only on the visitor's device; nothing is sent or stored, and registered faces disappear when the page closes.
 
 ---

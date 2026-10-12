@@ -99,7 +99,7 @@ Record visits, **every click by area and element**, the **sections seen** (atten
 - FR-09.3 Publish `sitemap.xml` (page in 8 languages, 8 PDFs and 3 demos) and `robots.txt`; the site is verified in Google Search Console.
 
 ### FR-10 — Weekly summary
-Every Monday the owner receives an email with the week's messages, chat ratings (including poorly rated answers) and the health of the AI, vector index and database; visits too, if a GoatCounter token is set.
+Every Monday the owner receives an email with aggregate counts of messages and ratings, the health of the AI, vector index and database, and visits if a GoatCounter token is set. The summary contains no personal data or message content. Contact messages and chat ratings are retained for 30 days, with hourly cleanup checks.
 
 ### FR-11 — Not-found page
 Unknown addresses show a 404 page in the site's style, with links to the portfolio and the assistant.
@@ -134,7 +134,7 @@ The site can be installed as an app (manifest and icons) and, after the first vi
 | NFR-02 | **Performance** | Static site with no build step; first image preloaded (smaller on mobile) and the rest on demand; non-blocking fonts; third-party scripts (Turnstile) loaded on demand; repeated AI answers served from cache. Target: Lighthouse (mobile) ≥ 75 performance and 100 accessibility, best practices and SEO. |
 | NFR-03 | **Availability** | The chat must remain useful without AI (local search); the form fails with a clear message. |
 | NFR-04 | **Security** | The backend only accepts the site's origin; bot protection on every call that stores data or uses AI; per-IP limits; input validation; no secrets in the repository. The (read-only) prices route only accepts the site's origin and the demo's 15 stocks, with a per-IP limit and caching. |
-| NFR-05 | **Privacy (LGPD/GDPR-style)** | No tracking cookies; the form stores the minimum (no IP address); notices about AI use and the purpose of the data. In the face recognition demo, camera and photos are processed only on the device. Retention: messages deleted after 12 months and ratings after 6 months, automatically. |
+| NFR-05 | **Privacy (LGPD/GDPR-style)** | No tracking cookies; the form stores the minimum (no IP address); notices about AI use and the purpose of the data. In the face recognition demo, camera and photos are processed only on the device. Retention: messages and ratings are automatically deleted after 30 days, with hourly checks. |
 | NFR-06 | **Accessibility** | Semantic HTML, translated ARIA labels, visible focus, keyboard navigation, respects `prefers-reduced-motion`. |
 | NFR-07 | **Responsiveness** | Usable and readable from 360 px to wide desktops. |
 | NFR-08 | **AI reliability** | The AI must not invent facts; it must decline off-profile topics and resist visitor instructions that try to change its rules. |

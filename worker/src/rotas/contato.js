@@ -1,18 +1,17 @@
 // POST /contact — formulário de contato: salva no D1, avisa o Emanuel por e-mail (Resend)
 // e envia uma confirmação ao visitante (Google Apps Script).
-import { emailEnabled, escapeHtml, isHuman, json, languageOf, rateLimited, sendEmail } from "../comum.js";
+import { emailEnabled, isHuman, json, languageOf, rateLimited, sendEmail } from "../comum.js";
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 export const clean = (value, max) => (typeof value === "string" ? value.trim().slice(0, max + 1) : "");
 
-async function notifyByEmail({ name, email, message, lang }, env) {
+async function notifyByEmail(env) {
   if (!emailEnabled(env)) return;
   try {
     await sendEmail(env, {
-      replyTo: email,
-      subject: `Nova mensagem no portfólio: ${name.slice(0, 60)}`,
-      text: `Nome: ${name}\nE-mail: ${email}\nIdioma do site: ${lang}\n\n${message}\n\n— Responda este e-mail para falar direto com ${name}.`,
-      html: `<p><strong>Nome:</strong> ${escapeHtml(name)}<br><strong>E-mail:</strong> ${escapeHtml(email)}<br><strong>Idioma do site:</strong> ${escapeHtml(lang)}</p><p style="white-space:pre-wrap">${escapeHtml(message)}</p><p style="color:#666">Responda este e-mail para falar direto com ${escapeHtml(name)}.</p>`,
+      subject: "Nova mensagem no formulário do portfólio",
+      text: "Uma nova mensagem aguarda consulta no banco D1. Para acessar os dados, execute o painel privado local: cd worker && npm run painel.",
+      html: "<p>Uma nova mensagem aguarda consulta no banco D1.</p><p>Para acessar os dados, execute o painel privado local: <code>cd worker &amp;&amp; npm run painel</code>.</p>",
     });
   } catch (error) {
     console.error("Falha ao enviar o aviso por e-mail:", error?.message ?? error);
@@ -95,7 +94,7 @@ export async function handleContact(payload, ip, env, origin, ctx) {
       .bind(name, email, message, lang)
       .run();
     // A mensagem já está salva; o aviso por e-mail segue em segundo plano.
-    ctx.waitUntil(notifyByEmail({ name, email, message, lang }, env));
+    ctx.waitUntil(notifyByEmail(env));
     ctx.waitUntil(sendConfirmation({ name, email, message, lang }, env));
     return json({ ok: true }, 200, origin);
   } catch (error) {

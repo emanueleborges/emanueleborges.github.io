@@ -1,11 +1,11 @@
 // Cloudflare Worker do portfólio (tudo no plano gratuito do Cloudflare):
 //   POST /         → chat com IA (Workers AI), usando só o perfil do Emanuel (src/conhecimento.js)
-//   POST /contact  → formulário de contato, salvo no banco D1 + aviso por e-mail (Resend)
+//   POST /contact  → formulário de contato, salvo no D1 + aviso sem dados pessoais por e-mail
 //                    + confirmação ao visitante (Google Apps Script)
 //   POST /feedback → avaliação 👍/👎 das respostas da IA, salva no banco D1
 //   POST /match    → "Essa vaga combina?": requisitos da vaga × perfil, com evidências e nota
 //   GET  /prices   → preços das ações da demo do LSTM (Yahoo Finance)
-//   Cron (segunda 12:00 UTC) → resumo semanal por e-mail com saúde do sistema
+//   Cron (horário) → limpeza de dados expirados; (segunda 12:00 UTC) resumo agregado semanal
 //
 // Cada rota fica em src/rotas/; as peças comuns em src/comum.js; o cron em src/agendado.js.
 import { corsHeaders, json } from "./comum.js";
@@ -26,7 +26,9 @@ const POST_ROUTES = {
 
 export default {
   async scheduled(event, env, ctx) {
-    ctx.waitUntil(Promise.all([sendWeeklySummary(env), purgeOldData(env)]));
+    const tasks = [purgeOldData(env)];
+    if (event.cron === "0 12 * * 1") tasks.push(sendWeeklySummary(env));
+    ctx.waitUntil(Promise.all(tasks));
   },
 
   async fetch(request, env, ctx) {
