@@ -2,7 +2,7 @@
 // classifica cada um contra os trechos do perfil. O Worker confere tudo: só aceita evidências
 // que existem, rebaixa requisito sem evidência para "none" e calcula a nota por regra (não pela IA).
 // O texto da vaga não é salvo.
-import { CHUNKS, CORE, PROFILE, VERSION } from "../conhecimento.js";
+import { CHUNKS, CORE, VERSION } from "../conhecimento.js";
 import { LANGUAGES, MODEL, aiText, isHuman, json, languageOf, rateLimited } from "../comum.js";
 
 const MIN_JOB_LENGTH = 80;
@@ -45,6 +45,7 @@ Return ONLY JSON: {"grades":[{"index":1,"level":"strong|partial|none","evidence"
 Rules:
 - level "strong": the profile clearly shows it. "partial": only related or adjacent experience. "none": not in the profile.
 - evidence: ids (1 to 3) of excerpts whose text explicitly mentions the requirement. Read each excerpt before citing it; never cite one that doesn't mention it.
+- A technology listed in a skills excerpt is evidence of a listed skill, but not by itself proof of professional use or a specific project. Grade that as "partial"; use "strong" only when an experience or project excerpt demonstrates it.
 - When the profile states his level and it falls short (for example a spoken language below what is asked, or a location he isn't in), use "none", cite that excerpt and say so in the reason.
 - reason: one short sentence using only facts written in the cited excerpts (name the job or project). Never invent facts, numbers, projects or skills. Never write excerpt ids (like job1, p4 or skills-ai) in any text field.
 - pitch: 3 to 4 sentences, in the third person, on how Emanuel fits this role, honest about the gaps.
@@ -111,9 +112,44 @@ const escapeRegExp = (value) => value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 // do termo não conta ("Go-to-market" não é a linguagem Go).
 const termPattern = (term) =>
   new RegExp(`${term.startsWith(".") ? "" : "(^|[^\\p{L}\\p{N}])"}${escapeRegExp(term)}(?=$|[^\\p{L}\\p{N}+#-])`, term.length <= 3 ? "u" : "iu");
-const TECH_PATTERNS = TECH_TERMS.map((term) => [term, termPattern(term)]);
-const inProfile = (term) => termPattern(term).test(PROFILE);
-const techTerms = (requirement) => TECH_PATTERNS.filter(([, pattern]) => pattern.test(requirement)).map(([term]) => term);
+const TECH_PATTERNS = [...TECH_TERMS].sort((a, b) => b.length - a.length).map((term) => [term, termPattern(term)]);
+const techTerms = (requirement) => {
+  const matches = TECH_PATTERNS.filter(([, pattern]) => pattern.test(requirement)).map(([term]) => term);
+  return matches
+    .filter((term) => !matches.some((other) => other.length > term.length && other.toLowerCase().includes(term.toLowerCase())))
+    .sort((a, b) => requirement.toLowerCase().indexOf(a.toLowerCase()) - requirement.toLowerCase().indexOf(b.toLowerCase()));
+};
+const SKILL_CHUNK_IDS = new Set(["skills-backend", "skills-frontend", "skills-ai", "skills-data", "skills-devops", "skills-practices", "certifications"]);
+const TECH_REASON = {
+  skill: {
+    en: "Listed in the profile's skills; the portfolio does not detail a specific project using it.",
+    pt: "Listada nas habilidades do perfil; o portfólio não detalha um projeto específico com essa tecnologia.",
+    es: "Aparece en las habilidades del perfil; el portafolio no detalla un proyecto específico con esta tecnología.",
+    fr: "Cette compétence figure dans le profil, mais le portfolio ne détaille pas de projet précis qui l’utilise.",
+    it: "È elencata tra le competenze del profilo, ma il portfolio non descrive un progetto specifico che la utilizzi.",
+    de: "Die Technologie ist im Kompetenzprofil aufgeführt; ein konkretes Projekt damit wird im Portfolio nicht beschrieben.",
+    zh: "该技术列在个人资料的技能中，但作品集没有介绍使用它的具体项目。",
+    ru: "Технология указана среди навыков, но в портфолио нет описания конкретного проекта с её использованием.",
+  },
+  mentioned: {
+    en: "The profile mentions this technology, but the listed evidence does not establish the required level of experience.",
+    pt: "A tecnologia aparece no perfil, mas as evidências disponíveis não confirmam o nível de experiência exigido.",
+    es: "La tecnología aparece en el perfil, pero las evidencias disponibles no confirman el nivel de experiencia requerido.",
+    fr: "La technologie apparaît dans le profil, mais les éléments disponibles ne confirment pas le niveau d’expérience requis.",
+    it: "La tecnologia compare nel profilo, ma le prove disponibili non confermano il livello di esperienza richiesto.",
+    de: "Die Technologie wird im Profil erwähnt, aber die Belege bestätigen nicht das geforderte Erfahrungsniveau.",
+    zh: "个人资料中提到了该技术，但现有证据无法确认所要求的经验水平。",
+    ru: "Технология упоминается в профиле, но имеющиеся данные не подтверждают требуемый уровень опыта.",
+  },
+};
+const techEvidence = (term) => CHUNKS.filter((chunk) => termPattern(term).test(chunk.text));
+
+function expandTechnologyRequirements(requirements) {
+  return requirements.flatMap((requirement) => {
+    const terms = techTerms(requirement.requirement);
+    return terms.length > 1 ? terms.map((term) => ({ ...requirement, requirement: term })) : [requirement];
+  }).slice(0, 14);
+}
 
 function parseJson(raw) {
   const json = String(typeof raw === "string" ? raw : JSON.stringify(raw ?? "")).replace(/<think>[\s\S]*?<\/think>/g, "");
@@ -129,10 +165,11 @@ function parseJson(raw) {
 
 // Junta a lista de requisitos (etapa 1) com as avaliações (etapa 2) e confere tudo.
 export function buildMatch(extraction, grading) {
-  const items = (Array.isArray(extraction?.requirements) ? extraction.requirements : [])
+  const extractedItems = (Array.isArray(extraction?.requirements) ? extraction.requirements : [])
     .map((r) => ({ requirement: text(r?.requirement, 160), importance: r?.importance === "nice" ? "nice" : "must" }))
     .filter((r) => r.requirement)
     .slice(0, 14);
+  const items = expandTechnologyRequirements(extractedItems);
   if (!items.length) return null;
   const grades = new Map((Array.isArray(grading?.grades) ? grading.grades : []).map((g) => [Number(g?.index), g]));
   const requirements = items.map((item, i) => {
@@ -142,18 +179,25 @@ export function buildMatch(extraction, grading) {
     let reason = text(g.reason, 260);
     if (!evidence.length) level = "none"; // sem prova no perfil, não conta (lacunas podem citar o trecho que as mostra)
     const terms = techTerms(item.requirement);
-    const present = terms.filter(inProfile);
-    // Tecnologia que não aparece em lugar nenhum do perfil: lacuna, diga a IA o que disser.
-    if (terms.length && !present.length) return { ...item, level: "none", evidence: [], reason: "" };
-    if (present.length) {
-      // Evidência só vale se o trecho cita alguma das tecnologias do requisito.
-      const mentions = (id) => present.some((term) => termPattern(term).test(CHUNKS.find((c) => c.id === id)?.text ?? ""));
-      const cited = CHUNKS.filter((c) => mentions(c.id)).map((c) => c.id);
-      const kept = evidence.filter(mentions);
-      // A IA disse "não encontrado", mas a tecnologia está no perfil: vira "parcial" com os trechos que a citam.
-      if (level === "none") return cited.length ? { ...item, level: "partial", evidence: cited.slice(0, 3), reason: "" } : { ...item, level, evidence, reason };
-      // Se a IA citou um trecho que não menciona a tecnologia, a justificativa dela também não é confiável.
-      return { ...item, level, evidence: kept.length ? kept : cited.slice(0, 3), reason: kept.length === evidence.length ? reason : "" };
+    if (terms.length) {
+      const cited = [...new Set(terms.flatMap((term) => techEvidence(term).map((chunk) => chunk.id)))];
+      if (!cited.length) return { ...item, level: "none", evidence: [], reason: "" };
+
+      const kept = evidence.filter((id) => cited.includes(id));
+      const skillOnly = cited.every((id) => SKILL_CHUNK_IDS.has(id));
+      const hasSpecificCitation = kept.some((id) => !SKILL_CHUNK_IDS.has(id));
+      const level = !skillOnly && hasSpecificCitation && g.level === "strong" ? "strong" : "partial";
+      const reasonSupported = kept.length > 0 && kept.length === evidence.length && reason;
+      return {
+        ...item,
+        level,
+        evidence: (kept.length ? kept : cited).slice(0, 3),
+        reason: skillOnly
+          ? TECH_REASON.skill[extraction?.lang] ?? TECH_REASON.skill.en
+          : reasonSupported
+            ? reason
+            : TECH_REASON.mentioned[extraction?.lang] ?? TECH_REASON.mentioned.en,
+      };
     }
     return { ...item, level, evidence, reason };
   });
@@ -173,7 +217,7 @@ export async function handleMatch(payload, ip, env, origin) {
   const lang = languageOf(payload);
   if (!(await isHuman(payload?.turnstileToken, ip, env))) return json({ error: "turnstile_failed" }, 403, origin);
 
-  const key = `${VERSION}:match8:${lang}:${await sha1(job)}`;
+  const key = `${VERSION}:match9:${lang}:${await sha1(job)}`;
   const ask = (system, user, schema, step) =>
     env.AI.run(MODEL, {
       messages: [{ role: "system", content: system.replace("LANGUAGE", LANGUAGES[lang]) }, { role: "user", content: `${user} /no_think` }],
@@ -185,11 +229,15 @@ export async function handleMatch(payload, ip, env, origin) {
 
   try {
     const extraction = parseJson(aiText(await ask(EXTRACT_INSTRUCTIONS, `<job_posting>\n${job}\n</job_posting>\n\nReturn the JSON in ${LANGUAGES[lang]}.`, EXTRACT_SCHEMA, "1")));
-    const list = (extraction?.requirements ?? []).slice(0, 14).map((r, i) => `${i + 1}. ${text(r?.requirement, 160)}`).join("\n");
+    const requirements = expandTechnologyRequirements((extraction?.requirements ?? []).map((r) => ({
+      requirement: text(r?.requirement, 160),
+      importance: r?.importance === "nice" ? "nice" : "must",
+    })).filter((r) => r.requirement).slice(0, 14));
+    const list = requirements.map((r, i) => `${i + 1}. ${r.requirement}`).join("\n");
     if (!list) return json({ error: "empty_answer" }, 502, origin);
     const excerpts = CHUNKS.map((c) => `[${c.id}] ${c.title}: ${c.text}`).join("\n");
     const grading = parseJson(aiText(await ask(GRADE_INSTRUCTIONS, `<profile>\n${CORE}\n${excerpts}\n</profile>\n\n<role>${text(extraction?.role, 120)}</role>\n<requirements>\n${list}\n</requirements>\n\nReturn the JSON in ${LANGUAGES[lang]}.`, GRADE_SCHEMA, "2")));
-    const match = buildMatch(extraction, grading);
+    const match = buildMatch({ ...extraction, requirements, lang }, grading);
     if (!match) return json({ error: "empty_answer" }, 502, origin);
     return json(match, 200, origin);
   } catch (error) {

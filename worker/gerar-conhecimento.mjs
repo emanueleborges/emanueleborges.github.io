@@ -13,6 +13,10 @@ const en = globalThis.window.I18N.en;
 const pt = globalThis.window.I18N.pt;
 
 const get = (key) => (en[key] ?? pt[key] ?? "").replace(/<br\s*\/?>/g, " ").replace(/<[^>]+>/g, "").replace(/&amp;/g, "&").trim();
+const backendSkills = JSON.parse(fs.readFileSync(new URL("../data/habilidades.json", import.meta.url), "utf8"))
+  .skills.filter((skill) => skill.category === "backend")
+  .map((skill) => skill.name)
+  .join(", ");
 
 const CORE = `Emanuel Borges is a Senior Full Stack Developer (Java/Kotlin, Node.js, React, React Native) based in Manaus, Brazil (UTC−4), with 10+ years of experience, currently at INDT and specializing in applied AI (Machine Learning and NLP). Contact: emanuel.eborges@gmail.com · WhatsApp +55 92 99977-1376 · linkedin.com/in/borgesemmanuell · github.com/emanueleborges · emanueleborges.github.io. Salary and start date are not public — visitors should contact him directly.`;
 
@@ -42,7 +46,7 @@ const CHUNKS = [
   { id: "p8", title: "Project: Face Recognition POC", text: `Face Recognition POC (face-api.js, Node.js, SQLite): ${get("p8.desc")}` },
   { id: "p9", title: "Project: Kotlin Desktop CRUD", text: `Kotlin Desktop CRUD (Kotlin, Jetpack Compose, Retrofit): ${get("p9.desc")}` },
   { id: "portfolio", title: "Project: this portfolio website", text: "This portfolio itself: static site (HTML, CSS, vanilla JavaScript, Canvas) in 8 languages, local search assistant (TF-IDF, typo tolerance), AI chat with Cloudflare Workers AI and RAG over Vectorize, contact form stored in Cloudflare D1, Turnstile bot protection, PDF résumés generated with headless Chrome, hosted on GitHub Pages." },
-  { id: "skills-backend", title: "Skills: backend", text: "Backend: Java, Kotlin, Spring Boot, Node.js, NestJS, Express, PHP/Laravel, Python, Flask, FastAPI." },
+  { id: "skills-backend", title: "Skills: backend", text: `Backend skills listed in the portfolio: ${backendSkills}.` },
   { id: "skills-frontend", title: "Skills: frontend and mobile", text: `Frontend and mobile: TypeScript, JavaScript, React, React Native, Vue.js, Angular, HTML & CSS. ${get("chat.faq.mobile")}` },
   { id: "skills-ai", title: "Skills: AI and machine learning", text: `AI and ML: NLP, LLM, RAG, LangChain, TensorFlow, Scikit-learn, Pandas, Hugging Face. ${get("chat.faq.ai")}` },
   { id: "skills-data", title: "Skills: databases", text: `Data: PostgreSQL, Oracle, MySQL, MongoDB, SQL Server, Redis. ${get("chat.faq.databases")}` },

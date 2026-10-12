@@ -50,6 +50,9 @@ jobs:
       - name: Conhecimento da IA é gerado sem erros
         run: node worker/gerar-conhecimento.mjs
 
+      - name: Comparação de vagas
+        run: node --test worker/tests/*.test.js
+
       - name: Testes do assistente (chat)
         run: ./tests/rodar-testes-chat.sh
 
