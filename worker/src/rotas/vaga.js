@@ -2,7 +2,7 @@
 // classifica cada um contra os trechos do perfil. O Worker confere tudo: só aceita evidências
 // que existem, rebaixa requisito sem evidência para "none" e calcula a nota por regra (não pela IA).
 // O texto da vaga não é salvo.
-import { CHUNKS, CORE, VERSION } from "../conhecimento.js";
+import { CHUNKS, VERSION } from "../conhecimento.js";
 import { LANGUAGES, MODEL, aiText, isHuman, json, languageOf, rateLimited } from "../comum.js";
 
 const MIN_JOB_LENGTH = 80;
@@ -45,10 +45,11 @@ Return ONLY JSON: {"grades":[{"index":1,"level":"strong|partial|none","evidence"
 Rules:
 - level "strong": the profile clearly shows it. "partial": only related or adjacent experience. "none": not in the profile.
 - evidence: ids (1 to 3) of excerpts whose text explicitly mentions the requirement. Read each excerpt before citing it; never cite one that doesn't mention it.
+- The supplied excerpts are selected for these requirements. Grade only from their contents; if they do not support a requirement, use "none" and do not cite an unrelated excerpt.
 - A technology listed in a skills excerpt is evidence of a listed skill, but not by itself proof of professional use or a specific project. Grade that as "partial"; use "strong" only when an experience or project excerpt demonstrates it.
 - When the profile states his level and it falls short (for example a spoken language below what is asked, or a location he isn't in), use "none", cite that excerpt and say so in the reason.
-- reason: one short sentence using only facts written in the cited excerpts (name the job or project). Never invent facts, numbers, projects or skills. Never write excerpt ids (like job1, p4 or skills-ai) in any text field.
-- pitch: 3 to 4 sentences, in the third person, on how Emanuel fits this role, honest about the gaps.
+- reason: one concise sentence of at most 12 words, using only facts in cited excerpts (name the job or project when relevant). Never invent facts, numbers, projects or skills. Never write excerpt ids (like job1, p4 or skills-ai) in any text field.
+- pitch: at most 2 concise sentences and 35 words total, in the third person, on how Emanuel fits this role, honest about the gaps.
 - Write "reason" and "pitch" in LANGUAGE. Keep names of technologies, companies, projects and universities as written.`;
 
 const GRADE_SCHEMA = {
@@ -151,6 +152,40 @@ function expandTechnologyRequirements(requirements) {
   }).slice(0, 14);
 }
 
+const normalizeText = (value) => value.normalize("NFD").replace(/\p{Diacritic}/gu, "").toLowerCase();
+const STOP_WORDS = new Set(`a an and are as at be by for from in into is it of on or the to with years year experience required requirement requirements proficiency knowledge using use plus nice preferred must proficient advanced senior mid-level junior ability abilities work working team teams role position candidate developer engineer bachelor's bachelor degree postgraduate graduate university college spoken language languages fluent fluency level minimum at least more than menos anos experiencia requisito requisitos conhecimento habilidades habilidade trabalho vaga desejavel obrigatorio nivel formacao idioma idiomas ingles portugues espanhol frances italiano alemao`.split(/\s+/));
+const requirementWords = (value) => [...new Set(normalizeText(value).match(/[\p{L}\p{N}+#.]+/gu) ?? [])]
+  .filter((word) => word.length > 2 && !STOP_WORDS.has(word));
+
+// Limit each requirement to a small, directly relevant profile context instead of sending all 32 excerpts.
+export function relevantProfileChunks(requirements) {
+  const primary = [];
+  const secondary = [];
+  for (const requirement of requirements) {
+    const terms = techTerms(requirement.requirement);
+    let candidates;
+    if (terms.length) {
+      const matches = CHUNKS.filter((chunk) => terms.some((term) => termPattern(term).test(chunk.text)));
+      const concrete = matches.filter((chunk) => /^(job|p)\d+$/.test(chunk.id));
+      const skills = matches.filter((chunk) => SKILL_CHUNK_IDS.has(chunk.id));
+      candidates = (concrete.length ? concrete : skills.length ? skills : matches).slice(0, 2);
+    } else {
+      const words = requirementWords(requirement.requirement);
+      const scored = CHUNKS.map((chunk) => {
+        const content = normalizeText(`${chunk.title} ${chunk.text}`);
+        const score = words.reduce((total, word) => total + (new RegExp(`(^|[^\\p{L}\\p{N}])${escapeRegExp(word)}(?=$|[^\\p{L}\\p{N}])`, "u").test(content) ? 1 : 0), 0);
+        return { chunk, score };
+      }).filter(({ score }) => score > 0).sort((a, b) => b.score - a.score);
+      candidates = scored.slice(0, 2).map(({ chunk }) => chunk);
+    }
+    if (candidates[0]) primary.push(candidates[0]);
+    if (candidates[1]) secondary.push(candidates[1]);
+  }
+  const unique = new Map([...primary, ...secondary].map((chunk) => [chunk.id, chunk]));
+  const budget = Math.min(18, Math.max(6, requirements.length + 4));
+  return [...unique.values()].slice(0, budget);
+}
+
 function parseJson(raw) {
   const json = String(typeof raw === "string" ? raw : JSON.stringify(raw ?? "")).replace(/<think>[\s\S]*?<\/think>/g, "");
   const start = json.indexOf("{");
@@ -217,11 +252,11 @@ export async function handleMatch(payload, ip, env, origin) {
   const lang = languageOf(payload);
   if (!(await isHuman(payload?.turnstileToken, ip, env))) return json({ error: "turnstile_failed" }, 403, origin);
 
-  const key = `${VERSION}:match9:${lang}:${await sha1(job)}`;
+  const key = `${VERSION}:match10:${lang}:${await sha1(job)}`;
   const ask = (system, user, schema, step) =>
     env.AI.run(MODEL, {
       messages: [{ role: "system", content: system.replace("LANGUAGE", LANGUAGES[lang]) }, { role: "user", content: `${user} /no_think` }],
-      max_tokens: 1500,
+      max_tokens: 1000,
       temperature: 0.1,
       // Modo JSON: a plataforma garante um JSON válido no formato do schema.
       response_format: { type: "json_schema", json_schema: schema },
@@ -235,8 +270,8 @@ export async function handleMatch(payload, ip, env, origin) {
     })).filter((r) => r.requirement).slice(0, 14));
     const list = requirements.map((r, i) => `${i + 1}. ${r.requirement}`).join("\n");
     if (!list) return json({ error: "empty_answer" }, 502, origin);
-    const excerpts = CHUNKS.map((c) => `[${c.id}] ${c.title}: ${c.text}`).join("\n");
-    const grading = parseJson(aiText(await ask(GRADE_INSTRUCTIONS, `<profile>\n${CORE}\n${excerpts}\n</profile>\n\n<role>${text(extraction?.role, 120)}</role>\n<requirements>\n${list}\n</requirements>\n\nReturn the JSON in ${LANGUAGES[lang]}.`, GRADE_SCHEMA, "2")));
+    const excerpts = relevantProfileChunks(requirements).map((c) => `[${c.id}] ${c.title}: ${c.text}`).join("\n");
+    const grading = parseJson(aiText(await ask(GRADE_INSTRUCTIONS, `<profile_excerpts>\n${excerpts}\n</profile_excerpts>\n\n<role>${text(extraction?.role, 120)}</role>\n<requirements>\n${list}\n</requirements>\n\nReturn the JSON in ${LANGUAGES[lang]}.`, GRADE_SCHEMA, "2")));
     const match = buildMatch({ ...extraction, requirements, lang }, grading);
     if (!match) return json({ error: "empty_answer" }, 502, origin);
     return json(match, 200, origin);

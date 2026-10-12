@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { buildMatch } from "../src/rotas/vaga.js";
+import { buildMatch, relevantProfileChunks } from "../src/rotas/vaga.js";
 
 const match = (requirements, grades) => buildMatch(
   { lang: "pt", role: "Desenvolvedor", requirements },
@@ -59,4 +59,23 @@ test("specific project evidence can support a strong React Native match", () => 
   assert.equal(result.requirements.length, 1);
   assert.equal(result.requirements[0].level, "strong");
   assert.deepEqual(result.requirements[0].evidence, ["job1"]);
+});
+
+test("grading context contains only excerpts relevant to the extracted requirements", () => {
+  const excerpts = relevantProfileChunks([
+    { requirement: "Python", importance: "must" },
+    { requirement: "remote work from Manaus", importance: "nice" },
+    { requirement: "postgraduate in Natural Language Processing", importance: "must" },
+  ]);
+  const ids = excerpts.map(({ id }) => id);
+
+  assert.ok(ids.includes("skills-backend"));
+  assert.ok(ids.includes("availability") || ids.includes("seeking"));
+  assert.ok(ids.includes("edu1"));
+  assert.ok(excerpts.length < 32);
+  assert.ok(!ids.includes("contact"));
+});
+
+test("unrelated requirements do not send the full profile to the grading model", () => {
+  assert.deepEqual(relevantProfileChunks([{ requirement: "work on Mars", importance: "must" }]), []);
 });
