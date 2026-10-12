@@ -91,7 +91,7 @@ The site must present: hero (name, role, summary, location, years of experience)
 Email, WhatsApp, LinkedIn and GitHub visible in the contact section and in the assistant.
 
 ### FR-08 — Analytics
-Record visits, **every click by area and element**, the **sections seen** (attention funnel) and events (chat opened, question answered by the AI, résumé download by language, contact clicks, language change, form submission, ratings, "View code" and "Live demo" clicks, demo usage) **without cookies and without the text of the questions**.
+Optional counting only after explicit consent. The Worker uses the continent provided by Cloudflare, and D1 stores only a daily total per continent; do not store IP, URL, language, clicks, or identifiers. Aggregates are deleted before they reach 30 days. Visitors can change or withdraw their choice through privacy settings.
 
 ### FR-09 — SEO and sharing
 - FR-09.1 When the link is shared (LinkedIn, WhatsApp, X), show a preview with image, title and description.
@@ -99,7 +99,7 @@ Record visits, **every click by area and element**, the **sections seen** (atten
 - FR-09.3 Publish `sitemap.xml` (page in 8 languages, 8 PDFs and 3 demos) and `robots.txt`; the site is verified in Google Search Console.
 
 ### FR-10 — Weekly summary
-Every Monday the owner receives an email with aggregate counts of messages and ratings, the health of the AI, vector index and database, and visits if a GoatCounter token is set. The summary contains no personal data or message content. Contact messages and chat ratings are retained for 30 days, with hourly cleanup checks.
+Every Monday the owner receives an email with aggregate counts of messages, ratings and consented regional access, plus the health of the AI, vector index and database. The summary contains no personal data or message content. Contact messages and chat ratings are retained for 30 days, with hourly cleanup checks.
 
 ### FR-11 — Not-found page
 Unknown addresses show a 404 page in the site's style, with links to the portfolio and the assistant.

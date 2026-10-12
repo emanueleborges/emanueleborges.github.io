@@ -6,5 +6,3 @@ worker/.dev.vars
 scripts/lstm/models/
 scripts/lstm/data/
 worker/painel.html
-goalcounter.txt
-goatcounter.txt

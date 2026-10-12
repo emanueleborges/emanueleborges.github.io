@@ -2,7 +2,7 @@
 // classifica cada um contra os trechos do perfil. O Worker confere tudo: só aceita evidências
 // que existem, rebaixa requisito sem evidência para "none" e calcula a nota por regra (não pela IA).
 // O texto da vaga não é salvo.
-import { CHUNKS, VERSION } from "../conhecimento.js";
+import { CHUNKS } from "../conhecimento.js";
 import { LANGUAGES, MODEL, aiText, isHuman, json, languageOf, rateLimited } from "../comum.js";
 
 const MIN_JOB_LENGTH = 80;
@@ -72,9 +72,6 @@ const GRADE_SCHEMA = {
   },
   required: ["grades", "pitch"],
 };
-
-const sha1 = async (text) =>
-  [...new Uint8Array(await crypto.subtle.digest("SHA-1", new TextEncoder().encode(text)))].map((b) => b.toString(16).padStart(2, "0")).join("");
 
 // Remove ids internos que escapem para o texto: entre aspas (qualquer id) ou com número/hífen
 // (ex.: job1, skills-ai). Ids que são palavras comuns ("languages", "summary") só saem entre aspas.
@@ -252,18 +249,17 @@ export async function handleMatch(payload, ip, env, origin) {
   const lang = languageOf(payload);
   if (!(await isHuman(payload?.turnstileToken, ip, env))) return json({ error: "turnstile_failed" }, 403, origin);
 
-  const key = `${VERSION}:match10:${lang}:${await sha1(job)}`;
-  const ask = (system, user, schema, step) =>
+  const ask = (system, user, schema) =>
     env.AI.run(MODEL, {
       messages: [{ role: "system", content: system.replace("LANGUAGE", LANGUAGES[lang]) }, { role: "user", content: `${user} /no_think` }],
       max_tokens: 1000,
       temperature: 0.1,
       // Modo JSON: a plataforma garante um JSON válido no formato do schema.
       response_format: { type: "json_schema", json_schema: schema },
-    }, { gateway: { id: "default", cacheTtl: 86400, cacheKey: `${key}:${step}` } });
+    }, { gateway: { id: "default" } });
 
   try {
-    const extraction = parseJson(aiText(await ask(EXTRACT_INSTRUCTIONS, `<job_posting>\n${job}\n</job_posting>\n\nReturn the JSON in ${LANGUAGES[lang]}.`, EXTRACT_SCHEMA, "1")));
+    const extraction = parseJson(aiText(await ask(EXTRACT_INSTRUCTIONS, `<job_posting>\n${job}\n</job_posting>\n\nReturn the JSON in ${LANGUAGES[lang]}.`, EXTRACT_SCHEMA)));
     const requirements = expandTechnologyRequirements((extraction?.requirements ?? []).map((r) => ({
       requirement: text(r?.requirement, 160),
       importance: r?.importance === "nice" ? "nice" : "must",
@@ -271,7 +267,7 @@ export async function handleMatch(payload, ip, env, origin) {
     const list = requirements.map((r, i) => `${i + 1}. ${r.requirement}`).join("\n");
     if (!list) return json({ error: "empty_answer" }, 502, origin);
     const excerpts = relevantProfileChunks(requirements).map((c) => `[${c.id}] ${c.title}: ${c.text}`).join("\n");
-    const grading = parseJson(aiText(await ask(GRADE_INSTRUCTIONS, `<profile_excerpts>\n${excerpts}\n</profile_excerpts>\n\n<role>${text(extraction?.role, 120)}</role>\n<requirements>\n${list}\n</requirements>\n\nReturn the JSON in ${LANGUAGES[lang]}.`, GRADE_SCHEMA, "2")));
+    const grading = parseJson(aiText(await ask(GRADE_INSTRUCTIONS, `<profile_excerpts>\n${excerpts}\n</profile_excerpts>\n\n<role>${text(extraction?.role, 120)}</role>\n<requirements>\n${list}\n</requirements>\n\nReturn the JSON in ${LANGUAGES[lang]}.`, GRADE_SCHEMA)));
     const match = buildMatch({ ...extraction, requirements, lang }, grading);
     if (!match) return json({ error: "empty_answer" }, 502, origin);
     return json(match, 200, origin);

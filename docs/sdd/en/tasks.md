@@ -38,7 +38,7 @@ Legend: ✅ done · ⏳ pending · 💡 idea
 - ✅ **T17** 19 ready-made answer topics with follow-up buttons — FR-05.2
 - ✅ **T18** Invitation bubble (3 s, once) — FR-05.1
 - ✅ **T19** Worker with Workers AI (Qwen3 30B), CORS and per-IP limit — FR-05.4, NFR-01, NFR-04
-- ✅ **T20** AI Gateway with 24 h cache and a versioned key — NFR-02
+- ✅ **T20** AI Gateway 24 h cache initially implemented; prompt/answer caching removed in a later privacy review — NFR-02
 - ✅ **T21** Invisible Turnstile — NFR-04
 - ✅ **T22** RAG with Vectorize + BGE-M3 (32 excerpts) — FR-05.4, NFR-09
 - ✅ **T23** Education with a verified ready-made answer — NFR-08
@@ -48,7 +48,7 @@ Legend: ✅ done · ⏳ pending · 💡 idea
 - ✅ **T25** WhatsApp, email, LinkedIn, GitHub — FR-07
 - ✅ **T26** Contact form with D1, Turnstile, honeypot, per-IP limit, counter and confirmation — FR-06
 - ✅ **T27** `ver-mensagens.sh` — FR-06.4
-- ✅ **T28** GoatCounter with events — FR-08
+- ✅ **T28** Aggregate website access count — FR-08
 - ✅ **T29** Last-updated date in the footer and automatic `?v=` versioning (hook) — NFR-10
 
 ### Documentation
@@ -78,15 +78,16 @@ Legend: ✅ done · ⏳ pending · 💡 idea
 - ✅ **T58** Card 10: the portfolio assistant as a project (RAG with Workers AI and Vectorize), with a button that opens the chat — FR-01
 - ✅ **T59** Documentation updated (README, spec FR-12/FR-13, plan §2.6–2.8, `GET /prices`, ADR-24 to 26) and LSTM training scripts brought into `scripts/lstm/` — NFR-09
 - ✅ **T60** Security: per-IP limit on `GET /prices` (30/min) and SRI on the face demo's face-api.js (tested with a tampered file) — NFR-04
-- ✅ **T61** Private stats dashboard (`npm run painel` in `worker/`): ratings by week and language, poorly rated answers, messages and visits (with a GoatCounter token); local file, git-ignored — FR-08
+- ✅ **T61** Private dashboard (`npm run painel` in `worker/`): ratings, messages and regional D1 visits; local file, git-ignored — FR-08
 - ✅ **T62** LSTM demo with 15 stocks (8 from B3, 7 from NASDAQ), menu by exchange and prices in each exchange's currency; card updated to the 1.1–2.2% MAPE — FR-12
 - ✅ **T63** "Does your role match?" (`/vaga/` + `POST /match`): two-step job match with Worker checks, rule-based score, clickable evidence, 8 languages and an invite at the top of the site — FR-14
 - ✅ **T64** Amazon (default) and Editorial themes: colors as CSS variables, a button on every page (8 languages), no flash, charts validated for color-vision deficiency, Lighthouse accessibility 100 in both — FR-15
 - ✅ **T65** New per-theme "E." logo (green/lime in Amazon, orange in Editorial), with draw-in animation, AI-node pulse and hover effect; favicon and app icons rebuilt — FR-15
-- ✅ **T66** Click map: every click becomes `clique/<area>/<element>` and every section seen `secao/<id>` (site, demos, job page); dashboard with attention funnel, clicks by area, rate per section and most/least clicked — FR-08
-- ✅ **T67** GoatCounter: pages counted by path only (no split by `?lang=`/`?theme=`), `?ref=curriculo-<lang>` in the PDF and `?ref=github` in the README, 404 tracked as an event and weekly summary with clicks, Contact reach and 404s — FR-08
+- ✅ **T66** Click map removed during a privacy review; do not collect events, pages or sections.
+- ✅ **T67** First-party regional count by continent/day after consent; no IP, URL or event is persisted.
 - ✅ **T68** Audit (2026-10-11) and fixes: face demo loads the AI only on first use (4.7 MB → 103 KB, performance 55 → 92), initial automatic data retention (12/6 months; reduced to 30 days in a later review), CSP and referrer policy on every page, no layout shift at the top (CLS 0.121 → 0.004), heading order in demos (accessibility 100 everywhere), default links on the job page, movie data preload and a numeric match score — NFR-02, NFR-04, NFR-05, NFR-06
 - ✅ **T69** Componentization in 5 stages: `<site-logo>`/`<theme-toggle>` Web Components and `boot.js`; projects and skills in `data/` with an HTML generator (checked in CI); chat split into modules (`chat/`) and one Worker file per route; one translation file per language, loaded on demand (~42 KB → ~13 KB on first visit); ES modules with an import map instead of globals. Images gathered in `imagens/` — NFR-02, NFR-09
+- ✅ **T70** External-provider-free analytics: consent refreshed, continent/day aggregates in D1, per-IP limit, purge before 30 days, and dashboard/summary migrated — FR-08, LGPD
 
 ---
 
@@ -98,7 +99,6 @@ Legend: ✅ done · ⏳ pending · 💡 idea
 | ⏳ **T35** | Translation review by native speakers (priority: Chinese and Russian) | Reviewer | FR-02 |
 | ⏳ **T37** | Test the contact form's 3-per-minute limit in production | — | NFR-04 |
 | ⏳ **T46** | Set the Apps Script web app access to "Anyone" and test the confirmation | Emanuel | FR-06.6 |
-| ⏳ **T47** | GoatCounter token (`GOATCOUNTER_TOKEN`) to include visits in the weekly summary | Emanuel | FR-08 |
 
 ## Ideas
 

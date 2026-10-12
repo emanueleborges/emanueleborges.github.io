@@ -38,7 +38,7 @@ Legenda: ✅ concluída · ⏳ pendente · 💡 ideia
 - ✅ **T17** 19 temas de respostas prontas com botões de continuação — RF-05.2
 - ✅ **T18** Balão de convite (3 s, uma vez) — RF-05.1
 - ✅ **T19** Worker com Workers AI (Qwen3 30B), CORS e limite por IP — RF-05.4, RNF-01, RNF-04
-- ✅ **T20** AI Gateway com cache de 24 h e chave versionada — RNF-02
+- ✅ **T20** AI Gateway com cache de 24 h implementado inicialmente; cache de prompts/respostas removido em revisão posterior de privacidade — RNF-02
 - ✅ **T21** Turnstile invisível — RNF-04
 - ✅ **T22** RAG com Vectorize + BGE-M3 (32 trechos) — RF-05.4, RNF-09
 - ✅ **T23** Formação com resposta pronta conferida — RNF-08
@@ -48,7 +48,7 @@ Legenda: ✅ concluída · ⏳ pendente · 💡 ideia
 - ✅ **T25** WhatsApp, e-mail, LinkedIn, GitHub — RF-07
 - ✅ **T26** Formulário com D1, Turnstile, campo-armadilha, limite por IP, contador e confirmação — RF-06
 - ✅ **T27** `ver-mensagens.sh` — RF-06.4
-- ✅ **T28** GoatCounter com eventos — RF-08
+- ✅ **T28** Contagem agregada de acessos do site — RF-08
 - ✅ **T29** Data de atualização no rodapé e versão `?v=` automática (hook) — RNF-10
 
 ### Documentação
@@ -78,15 +78,16 @@ Legenda: ✅ concluída · ⏳ pendente · 💡 ideia
 - ✅ **T58** Card 10: o assistente do portfólio como projeto (RAG com Workers AI e Vectorize), com botão que abre o chat — RF-01
 - ✅ **T59** Documentação atualizada (README, especificação RF-12/RF-13, plano §2.6–2.8, `GET /prices`, ADR-24 a 26) e scripts de treino do LSTM trazidos para `scripts/lstm/` — RNF-09
 - ✅ **T60** Segurança: limite por IP na rota `GET /prices` (30/min) e SRI no face-api.js da demo facial (testado com arquivo adulterado) — RNF-04
-- ✅ **T61** Painel privado de estatísticas (`npm run painel` em `worker/`): avaliações por semana e idioma, respostas mal avaliadas, mensagens e visitas (com token do GoatCounter); arquivo local, fora do git — RF-08
+- ✅ **T61** Painel privado (`npm run painel` em `worker/`): avaliações, mensagens e visitas regionais do D1; arquivo local, fora do git — RF-08
 - ✅ **T62** Demo do LSTM com 15 ações (8 da B3, 7 da NASDAQ), menu por bolsa e preços na moeda de cada bolsa; card atualizado para o MAPE de 1,1–2,2% — RF-12
 - ✅ **T63** "Sua vaga combina?" (`/vaga/` + `POST /match`): match de vaga em duas etapas com conferências no Worker, nota por regra, evidências clicáveis, 8 idiomas e convite no topo do site — RF-14
 - ✅ **T64** Temas Amazônia (padrão) e Editorial: cores em variáveis CSS, botão em todas as páginas (8 idiomas), sem piscar, gráficos validados para daltonismo, Lighthouse 100 de acessibilidade nos dois — RF-15
 - ✅ **T65** Novo logo "E." por tema (verde/lima no Amazônia, laranja no Editorial), com animação de desenho, pulso do nó de IA e efeito ao passar o mouse; favicon e ícones do app refeitos — RF-15
-- ✅ **T66** Mapa de cliques: todo clique vira `clique/<área>/<elemento>` e cada seção vista `secao/<id>` (site, demos, vagas); painel com funil de atenção, cliques por área, taxa por seção e mais/menos clicados — RF-08
-- ✅ **T67** GoatCounter: páginas contadas só pelo caminho (sem dividir por `?lang=`/`?theme=`), `?ref=curriculo-<idioma>` no PDF e `?ref=github` no README, 404 registrado como evento e resumo semanal com cliques, alcance do Contato e 404 — RF-08
+- ✅ **T66** Mapa de cliques removido em revisão de privacidade; não coletar eventos, páginas ou seções.
+- ✅ **T67** Contagem regional própria, por continente/dia, após consentimento; nenhum IP, URL ou evento é persistido.
 - ✅ **T68** Auditoria (11/10/2026) e correções: demo facial carrega a IA só no primeiro uso (4,7 MB → 103 KB, desempenho 55 → 92), retenção automática inicial (12/6 meses; reduzida a 30 dias em revisão posterior), CSP e política de referenciador em todas as páginas, sem deslocamento de layout no topo (CLS 0,121 → 0,004), títulos em ordem nas demos (acessibilidade 100 em todas), links padrão na página de vagas, pré-carregamento da base de filmes e nota do match sempre numérica — RNF-02, RNF-04, RNF-05, RNF-06
 - ✅ **T69** Componentização em 5 etapas: Web Components `<site-logo>`/`<theme-toggle>` e `boot.js`; projetos e habilidades em `data/` com gerador do HTML (conferido no CI); chat em módulos (`chat/`) e Worker com um arquivo por rota; um arquivo de tradução por idioma, carregado sob demanda (~42 KB → ~13 KB no primeiro acesso); módulos ES com importmap no lugar das variáveis globais. Imagens reunidas em `imagens/` — RNF-02, RNF-09
+- ✅ **T70** Estatísticas sem provedor externo: consentimento atualizado, agregados continente/dia no D1, limite por IP, expurgo antes de 30 dias e resumo/painel migrados — RF-08, LGPD
 
 ---
 
@@ -98,7 +99,6 @@ Legenda: ✅ concluída · ⏳ pendente · 💡 ideia
 | ⏳ **T35** | Revisão das traduções por falantes nativos (prioridade: chinês e russo) | Revisor | RF-02 |
 | ⏳ **T37** | Testar em produção o limite de 3 mensagens por minuto do formulário | — | RNF-04 |
 | ⏳ **T46** | Liberar o App da Web do Apps Script para "Qualquer pessoa" e testar a confirmação | Emanuel | RF-06.6 |
-| ⏳ **T47** | Token do GoatCounter (`GOATCOUNTER_TOKEN`) para incluir visitas no resumo semanal | Emanuel | RF-08 |
 
 ## Ideias
 

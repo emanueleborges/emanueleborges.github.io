@@ -1,7 +1,7 @@
 // Assistente do portfólio — interface: painel, mensagens, sugestões e a barra "Pergunte à minha IA".
 // A lógica fica em chat/: texto.js (normalização), regras.js (respostas prontas),
 // busca.js (busca local na página) e ia.js (Worker).
-import { currentLang, prefersReducedMotion, t, track } from "./script.js";
+import { currentLang, prefersReducedMotion, t } from "./script.js";
 import { normalize } from "./chat/texto.js";
 import { LOCAL_ONLY, intents, faqs, findFaq } from "./chat/regras.js";
 import { text, search } from "./chat/busca.js";
@@ -267,8 +267,7 @@ function initChat() {
         const ok = await ai.rate({ question, answer: answerText, rating, lang: currentLang });
         label.textContent = tc(ok ? "rateThanks" : "rateError");
         note.remove();
-        if (ok) track(rating === 1 ? "chat-avaliacao-positiva" : "chat-avaliacao-negativa", rating === 1 ? "Avaliou resposta da IA com 👍" : "Avaliou resposta da IA com 👎");
-        else buttons.forEach((other) => (other.disabled = false));
+        if (!ok) buttons.forEach((other) => (other.disabled = false));
       });
       return button;
     });
@@ -280,7 +279,6 @@ function initChat() {
   const aiReply = async (question) => {
     const reply = await ai.ask(question, currentLang);
     if (!reply) return answer(question);
-    track("chat-ia", "Pergunta respondida pela IA");
     const nodes = [el("span", "chat-ai-label", tc("aiLabel"))];
     reply.split(/\n{2,}/).forEach((paragraph) => nodes.push(el("p", null, paragraph)));
     const { results } = search(question);
@@ -365,8 +363,6 @@ function initChat() {
     if (open) {
       hideHint();
       markHintSeen();
-      // Só conta a abertura; o texto digitado nunca sai do navegador.
-      if (panel.hidden) track("chat-aberto", "Abriu o assistente");
     }
     panel.hidden = !open;
     toggle.setAttribute("aria-expanded", String(open));
@@ -441,7 +437,6 @@ function initChat() {
     heroAsk.addEventListener("click", () => {
       const index = Math.max(0, examples.findIndex((example) => example.startsWith(current) && current));
       const question = examples[index] ?? examples[0];
-      track("chat-barra-topo", "Clicou na barra Pergunte à IA");
       setOpen(true);
       ask(question);
     });

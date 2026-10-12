@@ -363,7 +363,7 @@ const T = {
   },
 };
 
-const { t, escape, track } = Demo;
+const { t, escape } = Demo;
 const $ = (selector) => document.querySelector(selector);
 const ICON = { strong: "✅", partial: "🟡", none: "⚪" };
 let lastResult = null;
@@ -468,7 +468,6 @@ async function analyze(event) {
   renderResult();
   $("[data-result]").hidden = false;
   $("[data-result]").scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "start" });
-  track("vaga-analisada", "Analisou uma vaga");
 }
 
 function init() {

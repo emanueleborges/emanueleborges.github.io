@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://gc.zgo.at; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://emanueleborges.goatcounter.com; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests" />
     <meta name="referrer" content="strict-origin-when-cross-origin" />
     <title data-t="meta.title">RAG Security Lab — Prompt Injection — Emanuel Borges</title>
     <meta name="description" data-t-content="meta.description" content="An interactive, local-only simulation showing how prompt injection can affect RAG systems and how defensive boundaries help." />
@@ -41,7 +41,7 @@
       @media (max-width: 640px) { .scenario-grid, .compare-grid, .defense-grid { grid-template-columns: 1fr; } }
     </style>
     <script type="module" src="guardrail.js"></script>
-    <script data-goatcounter="https://emanueleborges.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+    <script type="module" src="../../analytics-consent.js"></script>
     <script src="../../components/components.js" defer></script>
   </head>
   <body>

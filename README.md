@@ -46,7 +46,7 @@ A framework-free static site with a serverless backend on Cloudflare for the AI 
 | **Contact form** | Messages stored in D1, invisible bot protection, **email notification** to the owner and an **automatic confirmation** to the visitor in the language of their message. |
 | **Direct contacts** | Email, WhatsApp, LinkedIn and GitHub. |
 | **SEO** | Link previews (Open Graph/Twitter), `hreflang` for 8 languages, `Person` structured data (JSON-LD), `sitemap.xml` and `robots.txt`; verified in Google Search Console. |
-| **Analytics** | Cookieless visits and events (GoatCounter) with a **click map**: every click becomes `clique/<area>/<element>` (e.g. `clique/projetos/demo/lstm`) and every section seen becomes `secao/<id>` — same names in all 8 languages, demos and job page included. The private dashboard (`npm run painel`) shows the attention funnel (how far people scroll), clicks by area, clicks per 100 views in each section and the most and least clicked elements (including those nobody clicked). Nothing the visitor types is sent. Pages counted by path only (`/?lang=pt` and `/` add up together); source via `?ref=` (the résumé PDF links with `?ref=curriculo-<lang>`); 404 addresses recorded as `404/<path>`. |
+| **Analytics** | Optional counting, only after explicit consent. The Cloudflare Worker uses the connection IP to estimate the continent and stores only a daily total per continent in D1; it does not store IP, URL, language, clicks, or identifiers. Aggregates are deleted before they reach 30 days. Visitors can change their choice in privacy settings. |
 | **Weekly summary** | Every Monday an email with the week's messages, chat ratings and a health check of the AI, vector index and database. |
 | **404 page** | Custom page in the site's style with links to the portfolio and the assistant. |
 | **AI demo: LSTM stock forecasting** | `/demos/lstm/` page (8 languages) where the FIAP project's LSTM runs **in the browser, in plain JavaScript** (weights exported from Keras, same output to ~1e-8). Recent prices come from the Worker (Yahoo Finance), with a saved copy if it fails; test metrics compared against a naive baseline. |
@@ -65,13 +65,13 @@ flowchart LR
   V[Visitor] -->|HTTPS| GP[GitHub Pages<br/>static site]
   GP -->|chat / contact / rating<br/>+ Turnstile token| W[Cloudflare Worker]
   W -->|validates token| TS[Turnstile]
-  W -->|embeddings + generation| GW[AI Gateway<br/>24 h cache]
+  W -->|embeddings + generation, no prompt cache| GW[AI Gateway]
   GW --> AI[Workers AI<br/>BGE-M3 and Qwen3 30B]
   W -->|semantic search| VZ[Vectorize<br/>32 profile excerpts]
-  W -->|INSERT| D1[(D1<br/>messages + ratings)]
+  W -->|INSERT| D1[(D1<br/>messages + ratings + continent counts)]
   W -->|notification + weekly summary| RS[Resend → owner's Gmail]
   W -->|confirmation| GAS[Google Apps Script → visitor]
-  GP -->|cookieless events| GC[GoatCounter]
+  GP -->|continent count after consent| W
   GP -->|language, stars, last update| GH[Public GitHub API]
   GP -->|LSTM demo: GET /prices| W
   W -->|adjusted closes| YF[Yahoo Finance]
@@ -89,7 +89,7 @@ The **AI demos** run inference in the browser: the LSTM runs in plain JavaScript
    2. embeds the question with **BGE-M3** (multilingual);
    3. retrieves from **Vectorize** the 6 profile excerpts closest in meaning;
    4. sends **Qwen3 30B** a fixed profile summary + those excerpts, with rules to answer only about the profile and never invent facts;
-   5. caches the answer in **AI Gateway** for 24 h (key = knowledge version + language + normalized question).
+   5. sends the request through **AI Gateway** without caching visitor questions or answers.
 4. **Local search** (fallback) → if the AI fails or the daily quota runs out, the chat searches the page content itself: TF-IDF-style ranking, typo tolerance (Damerau-Levenshtein), synonyms and Chinese handling.
 
 The AI knowledge is **generated from the site's own translations** (`i18n/`): when the site changes and the Worker is deployed, the AI and the vector index follow.
@@ -108,7 +108,7 @@ The AI knowledge is **generated from the site's own translations** (`i18n/`): wh
 
 **Email:** Resend (owner notifications and weekly summary) · Google Apps Script (visitor confirmations from Gmail)
 
-**Tooling:** Git + GitHub · GitHub Pages · GitHub Actions · GitHub CLI · headless Chrome (PDFs and tests) · Lighthouse and Lighthouse CI · Node.js · Python · Shell · GoatCounter
+**Tooling:** Git + GitHub · GitHub Pages · GitHub Actions · GitHub CLI · headless Chrome (PDFs and tests) · Lighthouse and Lighthouse CI · Node.js · Python · Shell
 
 **External assets:** Google Fonts (Manrope, DM Mono) · Simple Icons (CC0) · Unsplash · public GitHub API · Yahoo Finance · Wikidata and Wikipedia · jsDelivr
 
@@ -154,14 +154,14 @@ The AI knowledge is **generated from the site's own translations** (`i18n/`): wh
 ├── apps-script/Codigo.gs   # Visitor confirmation (Google Apps Script) — template without the secret
 ├── docs/sdd/               # Specification (SDD) in Portuguese; docs/sdd/en/ in English
 └── worker/                 # Cloudflare Worker
-    ├── src/index.js            # Router: POST / (chat), /contact, /feedback, /match (job), GET /prices + weekly Cron
-    ├── src/rotas/              # One file per route: chat, contato, avaliacao, vaga, precos
+    ├── src/index.js            # Router: chat, contact, ratings, job match, regional visits, prices + Cron
+    ├── src/rotas/              # One file per route: chat, contato, avaliacao, vaga, precos, visitas
     ├── src/comum.js            # Shared: models, languages, CORS/JSON, Turnstile, rate limit, e-mail
     ├── src/agendado.js         # Weekly summary e-mail and data retention (LGPD)
     ├── src/conhecimento.js     # Generated: summary, excerpts, full profile, version
     ├── gerar-conhecimento.mjs  # Builds the AI knowledge from i18n/en.js
     ├── indexar-vectorize.mjs   # Generates embeddings and updates the Vectorize index
-    ├── migrations/             # D1 schema (messages, feedback)
+    ├── migrations/             # D1 schema (messages, feedback, regional_visits)
     ├── ver-mensagens.sh        # Lists contact-form messages
     ├── ver-avaliacoes.sh       # 👍/👎 summary of chat answers
     ├── painel.mjs              # Private stats dashboard (npm run painel)
@@ -212,17 +212,18 @@ npm run deploy
 ```
 
 This (1) builds the knowledge from `i18n/`, (2) deploys the Worker and (3) updates the Vectorize index.
+If a D1 migration is pending, apply it **before** deploying the Worker: `npx wrangler d1 migrations apply portfolio-contact --remote`. The regional counter uses `0003_contagem_regional.sql`, which creates only the aggregate-count table.
 
 **Cloudflare resources** (created once):
 
 | Resource | Name |
 |---|---|
 | Worker | `emanuel-portfolio-chat` (weekly cron: Mondays 12:00 UTC) |
-| D1 database | `portfolio-contact` (tables `messages` and `feedback`) |
+| D1 database | `portfolio-contact` (tables `messages`, `feedback` and `regional_visits`) |
 | Vectorize index | `portfolio-profile` (1024 dimensions, cosine) |
 | AI Gateway | `default` |
 | Turnstile widget | invisible, domain `emanueleborges.github.io` |
-| Worker secrets | `TURNSTILE_SECRET`, `RESEND_API_KEY`, `APPS_SCRIPT_URL`, `APPS_SCRIPT_SECRET`, optional `GOATCOUNTER_TOKEN` |
+| Worker secrets | `TURNSTILE_SECRET`, `RESEND_API_KEY`, `APPS_SCRIPT_URL`, `APPS_SCRIPT_SECRET` |
 
 **Visitor confirmation (Google Apps Script):** paste `apps-script/Codigo.gs` into a new Apps Script project with the same value as `APPS_SCRIPT_SECRET`, deploy it as a **Web app** (*Execute as: Me*, *Who has access: Anyone*) and store its `/exec` URL in the `APPS_SCRIPT_URL` secret.
 
@@ -237,10 +238,9 @@ This (1) builds the knowledge from `i18n/`, (2) deploys the Worker and (3) updat
 | Read contact-form messages | `cd worker && ./ver-mensagens.sh` (or `./ver-mensagens.sh 50`) — or Cloudflare dashboard: D1 → `portfolio-contact` → Console |
 | See chat ratings 👍/👎 | `cd worker && ./ver-avaliacoes.sh` |
 | **Open the stats dashboard** (rating and message charts, poorly rated answers, visits) | `cd worker && npm run painel` — see [Stats dashboard](#stats-dashboard) |
-| See AI usage and cache | Cloudflare dashboard → **AI → AI Gateway → default** |
-| See visits and events | https://emanueleborges.goatcounter.com |
-| **Don't count your own visits** | On each of your browsers/devices, open `https://emanueleborges.github.io/#toggle-goatcounter` once and confirm (open it again to resume counting) |
-| Know where each visit comes from | Share the link with a source: `emanueleborges.github.io/?ref=linkedin`, `?ref=whatsapp`, `?ref=email`… — shows under **Campaigns/Referrers** in GoatCounter |
+| See AI usage and Gateway metrics | Cloudflare dashboard → **AI → AI Gateway → default** |
+| See consented continent counts | `cd worker && npm run painel` |
+| **Exclude your own visits** | Reject optional statistics in the site's privacy settings on each browser/device |
 | See Google searches and indexing | [Google Search Console](https://search.google.com/search-console) → property `https://emanueleborges.github.io/` |
 | Run the chat tests | `./tests/rodar-testes-chat.sh` |
 | Run Lighthouse like CI does | `npx @lhci/cli@0.15.1 autorun` (uses `lighthouserc.json`) |
@@ -250,40 +250,14 @@ This (1) builds the knowledge from `i18n/`, (2) deploys the Worker and (3) updat
 
 ### Stats dashboard
 
-Private dashboard with charts of chat ratings, contact-form messages and visits. It's a local file (`worker/painel.html`), git-ignored, because it contains visitors' names and emails.
+Private dashboard with charts of chat ratings, contact-form messages and the aggregate visit count. It's a local file (`worker/painel.html`), git-ignored, because it contains visitors' names and emails.
 
 ```bash
 cd worker
 npm run painel        # or: npm run panel
 ```
 
-**To include visits (GoatCounter):**
-
-1. Create a key at https://emanueleborges.goatcounter.com/user/api (permission to read statistics).
-2. Pick one way to use it:
-
-   **Option A — save it once (recommended):** store the key in `worker/.dev.vars`, a file git ignores:
-   ```bash
-   cd worker
-   echo 'GOATCOUNTER_TOKEN=YOUR_KEY' >> .dev.vars
-   npm run painel
-   ```
-
-   **Option B — pass it each time**, on the same line as the command:
-   ```bash
-   cd worker
-   GOATCOUNTER_TOKEN=YOUR_KEY npm run painel
-   ```
-
-   or on two lines, with `export` (lasts until you close the terminal):
-   ```bash
-   export GOATCOUNTER_TOKEN=YOUR_KEY
-   npm run painel
-   ```
-
-> ⚠️ Replace `YOUR_KEY` with the real key **only in the terminal or in `.dev.vars`** — never in this README or any file in git. Without `export`, a key set on a separate line does **not** reach `npm run painel`.
-
-**Bonus:** the same key adds visits to the weekly email summary: `cd worker && npx wrangler secret put GOATCOUNTER_TOKEN` (paste the key when asked).
+Regional counts are queried directly from remote D1 by the dashboard. No analytics account, token, or external analytics service is needed.
 
 ---
 
@@ -308,7 +282,7 @@ npm run painel        # or: npm run panel
 - **Prices route (`GET /prices`):** read-only; only accepts the site's origin and the demo's 15 stocks, with a per-IP limit and a 1 h cache.
 - **External script integrity (SRI):** the face demo's face-api.js has an `integrity` (SHA-384) attribute; if the CDN file is altered, the browser won't run it.
 - **HTTPS enforced** with HSTS (GitHub Pages).
-- **Content Security Policy** on every page via meta tag: scripts, styles, fonts, images and connections only from the domains in use (Google Fonts, Unsplash, GoatCounter, Cloudflare, GitHub API, jsDelivr); plugins blocked (`object-src 'none'`) and `<base>` locked. Referrer policy `strict-origin-when-cross-origin`.
+- **Content Security Policy** on every page via meta tag: scripts, styles, fonts, images and connections only from the domains in use (Google Fonts, Unsplash, Cloudflare, GitHub API, jsDelivr); plugins blocked (`object-src 'none'`) and `<base>` locked. Referrer policy `strict-origin-when-cross-origin`.
 - **Retention (privacy):** the Worker deletes contact-form messages and chat ratings older than 30 days every hour. The contact form states that submissions expire 30 days after sending; chat questions/answers are stored only when rated and expire after 30 days.
 - **Accounts:** the most important protection is two-factor authentication (2FA) on GitHub, Cloudflare, Google and Resend.
 - **Per-IP limits:** 10 questions/min (chat), 3 messages/min (form), 20 ratings/min, 3 job analyses/min, 30 price lookups/min. Cloudflare's limiter is permissive (counters lag slightly): it stops high-volume abuse, not an exact request count.
@@ -330,22 +304,23 @@ npm run painel        # or: npm run panel
 | Service | Use |
 |---|---|
 | [GitHub Pages](https://pages.github.com) · [GitHub Actions](https://github.com/features/actions) | Hosting and CI (public repository) |
-| [Cloudflare Workers](https://workers.cloudflare.com) | Backend and weekly cron (~100k requests/day free) |
+| [Cloudflare Workers](https://workers.cloudflare.com) | Backend and weekly cron (~100k requests/day on Workers Free) |
 | [Workers AI](https://developers.cloudflare.com/workers-ai/) | AI and embeddings (10,000 "neurons"/day free; hundreds of questions/day) |
-| [Vectorize](https://developers.cloudflare.com/vectorize/), [D1](https://developers.cloudflare.com/d1/), [AI Gateway](https://developers.cloudflare.com/ai-gateway/), [Turnstile](https://www.cloudflare.com/application-services/products/turnstile/) | Free tiers |
+| [Vectorize](https://developers.cloudflare.com/vectorize/), [D1](https://developers.cloudflare.com/d1/), [AI Gateway](https://developers.cloudflare.com/ai-gateway/), [Turnstile](https://www.cloudflare.com/application-services/products/turnstile/) | Free tiers; D1 Free includes 100k rows written/day and 5 million rows read/day |
 | [Resend](https://resend.com) | Notifications and weekly summary (3,000 emails/month free) |
 | [Google Apps Script](https://developers.google.com/apps-script) | Visitor confirmations from Gmail (~100/day) |
-| [GoatCounter](https://www.goatcounter.com) | Free for personal use |
 | AI demos | Run in the visitor's browser; face-api.js models via [jsDelivr](https://www.jsdelivr.com) (free CDN); prices via the Worker; static movie data |
 | [GitHub API](https://docs.github.com/en/rest) · [Yahoo Finance](https://finance.yahoo.com) · [Wikidata](https://www.wikidata.org)/[Wikipedia](https://www.wikipedia.org) | Public and free (no key) |
 
 If the daily AI quota runs out, the chat keeps working with local search until it resets (00:00 UTC).
 
+Regional counting adds no paid service: each consented access uses one request to the existing Worker and one aggregate D1 write. On Workers Free, quotas are shared with other routes (100k Worker requests/day; D1 Free includes 100k rows written/day). Free-tier operations can fail until quotas reset; do not upgrade if avoiding charges is required.
+
 ### Zero-cost rules
 
 > ⚠️ This project **must not generate any cost**. Verified on 2026-10-10: Cloudflare on the **Workers Free** plan and **no card on file** in any service.
 
-1. **Never add a card** or any other payment method (Cloudflare, Resend, Google, GitHub, GoatCounter).
+1. **Never add a card** or any other payment method (Cloudflare, Resend, Google or GitHub).
 2. **Ignore** "Upgrade", "Workers Paid", "Add payment method" and similar buttons.
 3. Without a payment method, **no service can charge**: when a free limit is reached, the feature **pauses** (e.g. Workers AI returns error 3036 and the chat falls back to local search) and resumes the next day.
 4. Before adding any new service, confirm it has a **free plan with no card required** and what happens when the limit is exceeded.

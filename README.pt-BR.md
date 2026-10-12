@@ -46,7 +46,7 @@ Site estático, sem framework, com um backend *serverless* no Cloudflare para o 
 | **Formulário de contato** | Mensagens salvas no D1 por até 30 dias, proteção anti-robô invisível, aviso sem dados pessoais por e-mail ao dono e confirmação automática ao visitante no idioma da mensagem. |
 | **Contatos diretos** | E-mail, WhatsApp, LinkedIn e GitHub. |
 | **SEO** | Prévia de link (Open Graph/Twitter), `hreflang` para os 8 idiomas, dados estruturados de `Person` (JSON-LD), `sitemap.xml` e `robots.txt`; verificado no Google Search Console. |
-| **Estatísticas** | Visitas e eventos sem cookies (GoatCounter), com **mapa de cliques**: cada clique vira `clique/<área>/<elemento>` (ex.: `clique/projetos/demo/lstm`) e cada seção vista vira `secao/<id>` — nomes iguais nos 8 idiomas, incluindo demos e página de vagas. O painel privado (`npm run painel`) mostra o funil de atenção (até onde as pessoas rolam), cliques por área, cliques por 100 visualizações em cada seção e os elementos mais e menos clicados (inclusive os que ninguém clicou). Nada do que o visitante digita é enviado. Páginas contadas só pelo caminho (`/?lang=pt` e `/` somam juntas); origem por `?ref=` (o PDF do currículo leva `?ref=curriculo-<idioma>`); endereços 404 registrados como `404/<caminho>`. |
+| **Estatísticas** | Contagem opcional, somente após consentimento explícito. O Worker da Cloudflare usa o IP da conexão para estimar o continente e grava no D1 apenas um total diário por continente; não grava IP, URL, idioma, cliques ou identificadores. Os agregados são removidos antes de completar 30 dias. A escolha pode ser alterada nas preferências de privacidade. |
 | **Resumo semanal** | Toda segunda, um e-mail com contagens agregadas de mensagens/avaliações, estatísticas do site e saúde da IA, do índice vetorial e do banco — sem nomes, e-mails ou conteúdo de mensagens. |
 | **Página 404** | Página personalizada no estilo do site, com links para o portfólio e o assistente. |
 | **Demo de IA: previsão de ações com LSTM** | Página `/demos/lstm/` (8 idiomas) onde o LSTM do projeto FIAP roda **no navegador, em JavaScript puro** (pesos exportados do Keras, mesma saída até ~1e-8). Preços recentes pelo Worker (Yahoo Finance), com cópia salva se ele falhar; métricas do teste comparadas com um baseline ingênuo. |
@@ -65,13 +65,13 @@ flowchart LR
   V[Visitante] -->|HTTPS| GP[GitHub Pages<br/>site estático]
   GP -->|chat / contato / avaliação<br/>+ token Turnstile| W[Cloudflare Worker]
   W -->|valida token| TS[Turnstile]
-  W -->|embeddings + geração| GW[AI Gateway<br/>cache 24 h]
+  W -->|embeddings + geração, sem cache de prompts| GW[AI Gateway]
   GW --> AI[Workers AI<br/>BGE-M3 e Qwen3 30B]
   W -->|busca semântica| VZ[Vectorize<br/>32 trechos do perfil]
-  W -->|INSERT| D1[(D1<br/>mensagens + avaliações)]
+  W -->|INSERT| D1[(D1<br/>mensagens + avaliações + contagens por continente)]
   W -->|aviso + resumo semanal| RS[Resend → Gmail do dono]
   W -->|confirmação| GAS[Google Apps Script → visitante]
-  GP -->|eventos sem cookies| GC[GoatCounter]
+  GP -->|contagem por continente após consentimento| W
   GP -->|linguagem, estrelas, atualização| GH[API pública do GitHub]
   GP -->|demo LSTM: GET /prices| W
   W -->|fechamentos ajustados| YF[Yahoo Finance]
@@ -89,7 +89,7 @@ As **demos de IA** fazem a inferência no navegador: o LSTM roda em JavaScript p
    2. gera o vetor da pergunta com **BGE-M3** (multilíngue);
    3. busca no **Vectorize** os 6 trechos do perfil mais parecidos em significado;
    4. envia ao **Qwen3 30B** um resumo fixo do perfil + esses trechos, com regras para responder só sobre o perfil e nunca inventar dados;
-   5. guarda a resposta no **AI Gateway** por 24 h (chave = versão do conhecimento + idioma + pergunta normalizada).
+   5. envia a solicitação pelo **AI Gateway**, sem armazenar perguntas ou respostas em cache.
 4. **Busca local** (reserva) → se a IA falhar ou a cota do dia acabar, o chat procura no próprio conteúdo da página: ranking estilo TF-IDF, correção de digitação (Damerau-Levenshtein), sinônimos e tratamento de chinês.
 
 O conhecimento da IA é **gerado das próprias traduções do site** (`i18n/`): ao mudar o site e publicar o Worker, a IA e o índice vetorial acompanham.
@@ -108,7 +108,7 @@ O conhecimento da IA é **gerado das próprias traduções do site** (`i18n/`): 
 
 **E-mail:** Resend (avisos ao dono e resumo semanal) · Google Apps Script (confirmações ao visitante pelo Gmail)
 
-**Ferramentas:** Git + GitHub · GitHub Pages · GitHub Actions · GitHub CLI · Chrome headless (PDFs e testes) · Lighthouse e Lighthouse CI · Node.js · Python · Shell · GoatCounter
+**Ferramentas:** Git + GitHub · GitHub Pages · GitHub Actions · GitHub CLI · Chrome headless (PDFs e testes) · Lighthouse e Lighthouse CI · Node.js · Python · Shell
 
 **Recursos externos:** Google Fonts (Manrope, DM Mono) · Simple Icons (CC0) · Unsplash · API pública do GitHub · Yahoo Finance · Wikidata e Wikipédia · jsDelivr
 
@@ -154,14 +154,14 @@ O conhecimento da IA é **gerado das próprias traduções do site** (`i18n/`): 
 ├── apps-script/Codigo.gs   # Confirmação ao visitante (Google Apps Script) — modelo sem a senha
 ├── docs/sdd/               # Especificação (SDD) em português; docs/sdd/en/ em inglês
 └── worker/                 # Cloudflare Worker
-    ├── src/index.js            # Roteador: POST / (chat), /contact, /feedback, /match (vaga), GET /prices + Cron semanal
-    ├── src/rotas/              # Um arquivo por rota: chat, contato, avaliacao, vaga, precos
+    ├── src/index.js            # Roteador: chat, contato, avaliações, vaga, visitas regionais, preços + Cron
+    ├── src/rotas/              # Um arquivo por rota: chat, contato, avaliacao, vaga, precos, visitas
     ├── src/comum.js            # Compartilhado: modelos, idiomas, CORS/JSON, Turnstile, limite, e-mail
     ├── src/agendado.js         # Resumo semanal por e-mail e retenção de dados (LGPD)
     ├── src/conhecimento.js     # Gerado: resumo, trechos, perfil completo e versão
     ├── gerar-conhecimento.mjs  # Gera o conhecimento da IA a partir do i18n/en.js
     ├── indexar-vectorize.mjs   # Gera embeddings e atualiza o índice Vectorize
-    ├── migrations/             # Esquema do D1 (messages, feedback)
+    ├── migrations/             # Esquema do D1 (messages, feedback, regional_visits)
     ├── ver-mensagens.sh        # Lista as mensagens do formulário
     ├── ver-avaliacoes.sh       # Resumo das avaliações 👍/👎 do chat
     ├── painel.mjs              # Painel privado de estatísticas (npm run painel)
@@ -212,17 +212,18 @@ npm run deploy
 ```
 
 Esse comando (1) gera o conhecimento a partir do `i18n/`, (2) publica o Worker e (3) atualiza o índice do Vectorize.
+Quando houver uma migração D1 pendente, aplique-a **antes** de publicar o Worker: `npx wrangler d1 migrations apply portfolio-contact --remote`. O contador regional usa `0003_contagem_regional.sql`; a migração cria somente a tabela de totais agregados.
 
 **Recursos do Cloudflare** (criados uma vez):
 
 | Recurso | Nome |
 |---|---|
 | Worker | `emanuel-portfolio-chat` (cron semanal: segundas 12:00 UTC) |
-| Banco D1 | `portfolio-contact` (tabelas `messages` e `feedback`) |
+| Banco D1 | `portfolio-contact` (tabelas `messages`, `feedback` e `regional_visits`) |
 | Índice Vectorize | `portfolio-profile` (1024 dimensões, cosseno) |
 | AI Gateway | `default` |
 | Widget Turnstile | invisível, domínio `emanueleborges.github.io` |
-| Secrets do Worker | `TURNSTILE_SECRET`, `RESEND_API_KEY`, `APPS_SCRIPT_URL`, `APPS_SCRIPT_SECRET`, opcional `GOATCOUNTER_TOKEN` |
+| Secrets do Worker | `TURNSTILE_SECRET`, `RESEND_API_KEY`, `APPS_SCRIPT_URL`, `APPS_SCRIPT_SECRET` |
 
 **Confirmação ao visitante (Google Apps Script):** cole `apps-script/Codigo.gs` num projeto novo do Apps Script com o mesmo valor do `APPS_SCRIPT_SECRET`, implante como **App da Web** (*Executar como: Eu*, *Quem pode acessar: Qualquer pessoa*) e guarde a URL `/exec` no secret `APPS_SCRIPT_URL`.
 
@@ -237,10 +238,9 @@ Esse comando (1) gera o conhecimento a partir do `i18n/`, (2) publica o Worker e
 | Ler as mensagens do formulário | `cd worker && ./ver-mensagens.sh` (ou `./ver-mensagens.sh 50`) — ou no painel: D1 → `portfolio-contact` → Console |
 | Ver as avaliações 👍/👎 do chat | `cd worker && ./ver-avaliacoes.sh` |
 | **Ver o painel de estatísticas** (gráficos de avaliações e mensagens, respostas mal avaliadas, visitas) | `cd worker && npm run painel` — veja [Painel de estatísticas](#painel-de-estatísticas) |
-| Ver uso da IA e do cache | Painel do Cloudflare → **AI → AI Gateway → default** |
-| Ver visitas e eventos | https://emanueleborges.goatcounter.com |
-| **Não contar as suas próprias visitas** | Em cada navegador/aparelho seu, abra uma vez `https://emanueleborges.github.io/#toggle-goatcounter` e confirme (abra de novo para voltar a contar) |
-| Saber de onde vem cada visita | Compartilhe o link com origem: `emanueleborges.github.io/?ref=linkedin`, `?ref=whatsapp`, `?ref=email`… — aparece em **Campaigns/Referrers** no GoatCounter |
+| Ver uso da IA e métricas do Gateway | Painel do Cloudflare → **AI → AI Gateway → default** |
+| Ver contagem por continente (somente acessos consentidos) | `cd worker && npm run painel` |
+| **Excluir as suas próprias visitas** | Recuse as estatísticas opcionais nas preferências de privacidade do site em cada navegador/aparelho |
 | Ver buscas e indexação no Google | [Google Search Console](https://search.google.com/search-console) → propriedade `https://emanueleborges.github.io/` |
 | Rodar os testes do chat | `./tests/rodar-testes-chat.sh` |
 | Rodar o Lighthouse como no CI | `npx @lhci/cli@0.15.1 autorun` (usa `lighthouserc.json`) |
@@ -250,40 +250,14 @@ Esse comando (1) gera o conhecimento a partir do `i18n/`, (2) publica o Worker e
 
 ### Painel de estatísticas
 
-Painel privado com gráficos de avaliações do chat, mensagens do formulário e visitas. É um arquivo local (`worker/painel.html`), fora do git, porque contém nomes e e-mails de visitantes.
+Painel privado com gráficos de avaliações do chat, mensagens do formulário e contagem agregada de visitas. É um arquivo local (`worker/painel.html`), fora do git, porque contém nomes e e-mails de visitantes.
 
 ```bash
 cd worker
 npm run painel        # ou: npm run panel
 ```
 
-**Para incluir as visitas (GoatCounter):**
-
-1. Crie uma chave em https://emanueleborges.goatcounter.com/user/api (permissão de leitura de estatísticas).
-2. Escolha uma forma de usar a chave:
-
-   **Opção A — salvar uma vez (recomendado):** grave a chave em `worker/.dev.vars`, arquivo que o git ignora:
-   ```bash
-   cd worker
-   echo 'GOATCOUNTER_TOKEN=SUA_CHAVE' >> .dev.vars
-   npm run painel
-   ```
-
-   **Opção B — informar a cada uso**, na mesma linha do comando:
-   ```bash
-   cd worker
-   GOATCOUNTER_TOKEN=SUA_CHAVE npm run painel
-   ```
-
-   ou em duas linhas, com `export` (vale até fechar o terminal):
-   ```bash
-   export GOATCOUNTER_TOKEN=SUA_CHAVE
-   npm run painel
-   ```
-
-> ⚠️ Troque `SUA_CHAVE` pela chave real **só no terminal ou no `.dev.vars`** — nunca neste README nem em arquivos do git. Sem `export`, a chave escrita numa linha separada **não** chega ao `npm run painel`.
-
-**Bônus:** a mesma chave inclui as visitas no resumo semanal por e-mail: `cd worker && npx wrangler secret put GOATCOUNTER_TOKEN` (cole a chave quando pedir).
+As contagens regionais são consultadas diretamente no D1 remoto pelo painel. Não é necessário criar conta, token ou serviço externo de analytics.
 
 ---
 
@@ -308,7 +282,7 @@ npm run painel        # ou: npm run panel
 - **Rota de preços (`GET /prices`):** só leitura, aceita apenas a origem do site e as 15 ações da demo, com limite por IP e cache de 1 h.
 - **Integridade de scripts externos (SRI):** o face-api.js da demo facial tem `integrity` (SHA-384); se o arquivo do CDN for alterado, o navegador não o executa.
 - **HTTPS obrigatório** com HSTS (GitHub Pages).
-- **Política de conteúdo (CSP)** em todas as páginas, por meta tag: só carrega scripts, estilos, fontes, imagens e conexões dos domínios usados (Google Fonts, Unsplash, GoatCounter, Cloudflare, API do GitHub, jsDelivr); bloqueia plugins (`object-src 'none'`) e troca de `<base>`. Política de referenciador `strict-origin-when-cross-origin`.
+- **Política de conteúdo (CSP)** em todas as páginas, por meta tag: só carrega scripts, estilos, fontes, imagens e conexões dos domínios usados (Google Fonts, Unsplash, Cloudflare, API do GitHub, jsDelivr); bloqueia plugins (`object-src 'none'`) e troca de `<base>`. Política de referenciador `strict-origin-when-cross-origin`.
 - **Retenção (LGPD):** o Worker apaga a cada hora mensagens do formulário e avaliações do chat com mais de 30 dias. O formulário avisa que os dados expiram 30 dias após o envio; pergunta/resposta do chat só são gravadas quando a pessoa avalia e expiram 30 dias depois.
 - **Contas:** a proteção mais importante é a verificação em duas etapas (2FA) no GitHub, Cloudflare, Google e Resend.
 - **Limites por IP:** 10 perguntas/min (chat), 3 mensagens/min (formulário), 20 avaliações/min, 3 análises de vaga/min, 30 consultas de preços/min. O limitador do Cloudflare é permissivo (contadores com pequeno atraso): segura abusos em volume, não um pedido exato.
@@ -330,22 +304,23 @@ npm run painel        # ou: npm run panel
 | Serviço | Uso |
 |---|---|
 | [GitHub Pages](https://pages.github.com) · [GitHub Actions](https://github.com/features/actions) | Hospedagem e testes (repositório público) |
-| [Cloudflare Workers](https://workers.cloudflare.com) | Backend e cron semanal (~100 mil requisições/dia grátis) |
+| [Cloudflare Workers](https://workers.cloudflare.com) | Backend e cron semanal (~100 mil requisições/dia no plano Free) |
 | [Workers AI](https://developers.cloudflare.com/workers-ai/) | IA e embeddings (10.000 "neurônios"/dia grátis; centenas de perguntas/dia) |
-| [Vectorize](https://developers.cloudflare.com/vectorize/), [D1](https://developers.cloudflare.com/d1/), [AI Gateway](https://developers.cloudflare.com/ai-gateway/), [Turnstile](https://www.cloudflare.com/application-services/products/turnstile/) | Planos gratuitos |
+| [Vectorize](https://developers.cloudflare.com/vectorize/), [D1](https://developers.cloudflare.com/d1/), [AI Gateway](https://developers.cloudflare.com/ai-gateway/), [Turnstile](https://www.cloudflare.com/application-services/products/turnstile/) | Planos gratuitos; D1 Free inclui 100 mil linhas escritas/dia e 5 milhões lidas/dia |
 | [Resend](https://resend.com) | Avisos e resumo semanal (3.000 e-mails/mês grátis) |
 | [Google Apps Script](https://developers.google.com/apps-script) | Confirmações ao visitante pelo Gmail (~100/dia) |
-| [GoatCounter](https://www.goatcounter.com) | Gratuito para uso pessoal |
 | Demos de IA | Rodam no navegador do visitante; modelos do face-api.js pelo [jsDelivr](https://www.jsdelivr.com) (CDN grátis); preços pelo Worker; base de filmes estática |
 | [API do GitHub](https://docs.github.com/pt/rest) · [Yahoo Finance](https://finance.yahoo.com) · [Wikidata](https://www.wikidata.org)/[Wikipédia](https://www.wikipedia.org) | Públicas e gratuitas (sem chave) |
 
 Se a cota diária da IA acabar, o chat continua com a busca local até a renovação (00:00 UTC).
 
+A contagem regional não cria serviço pago: cada acesso consentido usa uma requisição do Worker e uma gravação agregada no D1 já existentes. No Workers Free, os limites são compartilhados com as demais rotas (100 mil requisições/dia no Worker; D1 Free inclui 100 mil linhas escritas/dia). Ao atingir cotas Free, operações podem falhar até a renovação; não faça upgrade para evitar cobranças.
+
 ### Regras para manter o custo zero
 
 > ⚠️ O projeto **não pode gerar custo**. Verificado em 10/10/2026: Cloudflare no plano **Workers Free** e **nenhum cartão cadastrado** em nenhum serviço.
 
-1. **Nunca cadastrar cartão** ou outra forma de pagamento (Cloudflare, Resend, Google, GitHub, GoatCounter).
+1. **Nunca cadastrar cartão** ou outra forma de pagamento (Cloudflare, Resend, Google ou GitHub).
 2. **Ignorar** botões de "Upgrade", "Workers Paid", "Add payment method" ou similares.
 3. Sem forma de pagamento, **nenhum serviço consegue cobrar**: ao atingir um limite grátis, o recurso **pausa** (ex.: Workers AI responde com erro 3036 e o chat usa a busca local) e volta no dia seguinte.
 4. Antes de adicionar qualquer serviço novo, confirmar que ele tem **plano gratuito sem cartão** e o que acontece ao passar do limite.

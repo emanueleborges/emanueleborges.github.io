@@ -1,7 +1,7 @@
 // Formulário de contato: envia ao Worker (salvo no banco D1 do Cloudflare),
 // com Turnstile invisível contra robôs.
 import { PortfolioApi } from "./api.js";
-import { currentLang, t, track } from "./script.js";
+import { currentLang, t } from "./script.js";
 
 function initContactForm() {
   const form = document.querySelector(".contact-form");
@@ -83,7 +83,6 @@ function initContactForm() {
       body.hidden = true;
       success.hidden = false;
       success.querySelector(".form-again").focus();
-      track("contato-formulario", "Enviou mensagem pelo formulário");
     } else if (code === 429) {
       setStatus("form.rate", "error");
     } else if (code === 400) {

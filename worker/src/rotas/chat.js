@@ -1,5 +1,5 @@
 // POST / — chat com IA (Workers AI) sobre o perfil do Emanuel, com RAG no Vectorize.
-import { CORE, PROFILE, VERSION } from "../conhecimento.js";
+import { CORE, PROFILE } from "../conhecimento.js";
 import { EMBEDDING_MODEL, MAX_QUESTION_LENGTH, LANGUAGES, MODEL, aiText, isHuman, json, languageOf, rateLimited } from "../comum.js";
 
 const TOP_K = 6;
@@ -16,9 +16,7 @@ Only discuss Emanuel's professional profile, experience, skills, projects, educa
 // Em qualquer falha, usa o perfil completo (resposta continua funcionando).
 async function profileContext(question, env) {
   try {
-    const embedding = await env.AI.run(EMBEDDING_MODEL, { text: [question] }, {
-      gateway: { id: "default", cacheTtl: 86400, cacheKey: `emb:v1:${question}` },
-    });
+    const embedding = await env.AI.run(EMBEDDING_MODEL, { text: [question] }, { gateway: { id: "default" } });
     const vector = embedding?.data?.[0];
     if (!vector) return PROFILE;
     const { matches } = await env.VECTORIZE.query(vector, { topK: TOP_K, returnMetadata: "all" });
@@ -42,7 +40,6 @@ export async function handleChat(payload, ip, env, origin) {
   // Turnstile: confirma que a pergunta veio de uma pessoa no site, não de um robô.
   if (!(await isHuman(payload?.turnstileToken, ip, env))) return json({ error: "turnstile_failed" }, 403, origin);
 
-  // Pergunta normalizada: perguntas iguais reaproveitam a resposta guardada no AI Gateway.
   const normalized = question.toLowerCase().replace(/\s+/g, " ").replace(/[\s?!.。？！]+$/u, "");
   const userText = `Visitor question: ${normalized}\n\nAnswer in ${LANGUAGES[lang]}.`;
 
@@ -55,10 +52,7 @@ export async function handleChat(payload, ip, env, origin) {
       ],
       max_tokens: 600,
       temperature: 0.1,
-    }, {
-      // AI Gateway (gratuito): cache de 24 h, logs e métricas no painel do Cloudflare.
-      gateway: { id: "default", cacheTtl: 86400, cacheKey: `${VERSION}:${lang}:${normalized}` },
-    });
+    }, { gateway: { id: "default" } });
     const answer = String(aiText(result))
       .replace(/<think>[\s\S]*?<\/think>/g, "")
       .replace(/\*\*|^#+\s*/gm, "")

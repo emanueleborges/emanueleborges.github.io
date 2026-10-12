@@ -32,7 +32,6 @@ flowchart TB
     DB[(D1 portfolio-contact)]
     RL[Rate Limiting]
   end
-  GOAT[GoatCounter]
   GH[API pública do GitHub]
   YF[Yahoo Finance]
   CDN[jsDelivr — face-api.js e modelos]
@@ -66,7 +65,7 @@ flowchart TB
 |---|---|
 | `index.html` | Estrutura e conteúdo em português (idioma de origem). Elementos traduzíveis marcados com `data-i18n`, `data-i18n-aria`, `data-i18n-placeholder`, `data-i18n-title`, `data-i18n-alt`, `data-i18n-content`. |
 | `i18n/` · `i18n.js` | `window.I18N[lang][chave]`, um arquivo por idioma (`i18n/<idioma>.js`): site, chat (respostas prontas, rótulos), formulário e currículo. A página traz `pt` (original e reserva) e `en` (padrão); `I18N.load(idioma)` baixa os demais quando escolhidos, e o `boot.js` (com `data-i18n`) já pré-carrega o idioma salvo. |
-| `script.js` | Aplica o idioma (guarda o original em português), seletor de idioma, menu mobile, filtros, data de atualização (`Intl`), animações ao rolar, partículas (Canvas), progresso de leitura e eventos do GoatCounter (`track`). |
+| `script.js` | Aplica o idioma (guarda o original em português), seletor de idioma, menu mobile, filtros, data de atualização (`Intl`), animações ao rolar, partículas (Canvas) e progresso de leitura. |
 | `api.js` | Módulo `PortfolioApi`: URL do Worker, carregamento sob demanda do Turnstile, geração de token por envio e `post(path, body)`. |
 | `chat.js` · `chat/` | Assistente. `chat.js` é a interface; `chat/texto.js` (normalização e erros de digitação), `chat/regras.js` (respostas prontas por expressão regular), `chat/busca.js` (busca local) e `chat/ia.js` (Worker) são módulos ES importados pelo `chat.js`. |
 | `components/` | Web Components sem framework: `<site-logo>` e `<theme-toggle>` (`components.js`); `boot.js` aplica o tema antes da pintura. |
@@ -74,7 +73,7 @@ flowchart TB
 | `contact.js` | Validação, envio, contador, estados de carregamento/sucesso do formulário. |
 | `curriculo.html` | Modelo A4 do currículo, renderizado por idioma a partir do `i18n/`. |
 | `manifest.webmanifest` · `sw.js` · `icon-*.png` | App instalável e offline (PWA). |
-| `demos/demos.css` · `demos/demos.js` | Base compartilhada das demos: visual, idioma (`?lang` → `localStorage` → inglês), formatação (`Intl`) e eventos do GoatCounter. |
+| `demos/demos.css` · `demos/demos.js` | Base compartilhada das demos: visual, idioma (`?lang` → `localStorage` → inglês) e formatação (`Intl`). |
 | `demos/lstm/` | `lstm.js` (inferência do LSTM em JS puro), `demo.js` (tela e gráficos SVG), pesos `*.json` e `dados.json` (métricas, backtest, preços salvos). |
 | `demos/face/` | `face.js`: reconhecimento facial com face-api.js (CDN jsDelivr). |
 | `demos/filmes/` | `tfidf.js` (TF-IDF + cosseno), `filmes.js` (tela) e `filmes.json` (~1.500 filmes). |
@@ -162,7 +161,7 @@ Todas rodam **no navegador do visitante**, sem servidor de IA.
 ```
 **Erros:** `400 invalid_question` · `403 forbidden_origin` · `403 turnstile_failed` · `429 rate_limited` · `502 empty_answer` · `503 unavailable`
 
-**Fluxo:** origem → limite (10/min/IP) → validação → Turnstile → normalização da pergunta → **RAG** (embedding BGE-M3 → Vectorize top 6 → contexto = resumo fixo + trechos; em falha, perfil completo) → Qwen3 30B (`temperature 0.1`, `max_tokens 600`, `/no_think`) via AI Gateway (cache 24 h) → limpeza (`<think>`, Markdown).
+**Fluxo:** origem → limite (10/min/IP) → validação → Turnstile → normalização da pergunta → **RAG** (embedding BGE-M3 → Vectorize top 6 → contexto = resumo fixo + trechos; em falha, perfil completo) → Qwen3 30B (`temperature 0.1`, `max_tokens 600`, `/no_think`) via AI Gateway, sem cache de perguntas ou respostas → limpeza (`<think>`, Markdown).
 
 #### `POST /contact` — formulário
 **Requisição**
@@ -188,7 +187,7 @@ Gravado só quando o visitante clica; o painel do chat avisa que a pergunta e a 
 **Resposta 200:** `{ "role": "…", "score": 0-100, "requirements": [{ "requirement", "importance": "must|nice", "level": "strong|partial|none", "evidence": ["id do trecho"], "reason" }], "pitch": "…" }`
 **Erros:** `400 invalid_job` · `403 forbidden_origin` · `403 turnstile_failed` · `429 rate_limited` (3/min/IP) · `502 empty_answer` · `503 unavailable`
 
-**Fluxo:** limite → validação → Turnstile → **etapa 1:** Qwen3 extrai cargo e requisitos lendo só a vaga (modo JSON com schema) → **etapa 2:** Qwen3 avalia a lista numerada contra no máximo 18 trechos relevantes do perfil (até 2 por requisito; modo JSON); justificativas solicitadas com até 12 palavras e resumo com até 2 frases/35 palavras; saída limitada a 1.000 tokens → **conferência no Worker:** descarta ids inexistentes; separa tecnologias agrupadas; skills citadas só na lista de habilidades ⇒ "partial"; "strong" técnico requer citação válida de experiência ou projeto; tecnologia ausente do perfil ⇒ "none"; justificativas e evidências incompatíveis são descartadas; ids que vazem para o texto são apagados → nota = Σ(peso × valor)/Σ peso (obrigatório 2, diferencial 1; forte 1, parcial 0,5, ausente 0). Cache no AI Gateway por 24 h (versão do perfil + idioma + SHA-1 da vaga + versão da lógica).
+**Fluxo:** limite → validação → Turnstile → **etapa 1:** Qwen3 extrai cargo e requisitos lendo só a vaga (modo JSON com schema) → **etapa 2:** Qwen3 avalia a lista numerada contra no máximo 18 trechos relevantes do perfil (até 2 por requisito; modo JSON); justificativas solicitadas com até 12 palavras e resumo com até 2 frases/35 palavras; saída limitada a 1.000 tokens → **conferência no Worker:** descarta ids inexistentes; separa tecnologias agrupadas; skills citadas só na lista de habilidades ⇒ "partial"; "strong" técnico requer citação válida de experiência ou projeto; tecnologia ausente do perfil ⇒ "none"; justificativas e evidências incompatíveis são descartadas; ids que vazem para o texto são apagados → nota = Σ(peso × valor)/Σ peso (obrigatório 2, diferencial 1; forte 1, parcial 0,5, ausente 0). Vaga e respostas não são armazenadas em cache.
 
 #### `GET /prices?symbol=` — preços da demo do LSTM
 **Resposta 200**
@@ -200,7 +199,7 @@ Gravado só quando o visitante clica; o painel do chat avisa que a pergunta e a 
 Só leitura e sem Turnstile; limite de 30/min por IP; aceita apenas a origem do site e as 15 ações da demo (`PRICE_SYMBOLS`: 8 da B3 e 7 da NASDAQ). Busca 1 ano de fechamentos ajustados no Yahoo Finance (`v8/finance/chart`), converte as datas para o fuso da bolsa e responde com `Cache-Control: max-age=3600`.
 
 #### Cron — resumo semanal (`0 12 * * 1`, segunda 12:00 UTC)
-Consulta no D1 as mensagens e avaliações dos últimos 7 dias, testa a saúde (geração com Qwen3, embedding BGE-M3, consulta no Vectorize e `SELECT 1` no D1), busca visitas no GoatCounter (se houver `GOATCOUNTER_TOKEN`) e envia um e-mail pelo Resend para `NOTIFY_EMAIL`. O assunto ganha ⚠️ se algum serviço falhar.
+Consulta no D1 as mensagens, avaliações e acessos regionais consentidos dos últimos 7 dias, testa a saúde (geração com Qwen3, embedding BGE-M3, consulta no Vectorize e `SELECT 1` no D1) e envia um e-mail pelo Resend para `NOTIFY_EMAIL`. O assunto ganha ⚠️ se algum serviço falhar.
 
 ### 3.2 Configuração (`wrangler.jsonc`)
 
@@ -259,6 +258,9 @@ Responder **só** com base no perfil fornecido · se a informação não existir
 
 Migração: `worker/migrations/0002_criar_avaliacoes.sql`.
 
+### D1 — `regional_visits`
+Totais diários (`access_date`, `continent`, `total`) com chave composta por dia e continente. A API recebe apenas `POST /visit` após consentimento; deriva o continente de `request.cf`, não lê o corpo, e não persiste IP ou identificadores. Um limite por IP protege a cota gratuita de gravações do D1; a limpeza horária remove agregados com margem para não exceder 30 dias. Migração: `worker/migrations/0003_contagem_regional.sql`.
+
 ### Vectorize — `portfolio-profile`
 Vetor de 1024 dimensões por trecho; `id` estável (ex.: `job1`, `p5`, `edu4`); metadados `{ title, text }`.
 
@@ -272,7 +274,7 @@ Vetor de 1024 dimensões por trecho; `id` estável (ex.: `job1`, `p5`, `edu4`); 
 | Data de atualização e versão `?v=` dos arquivos | Hook `scripts/pre-commit` (copiar para `.git/hooks/`) |
 | Currículos | `./gerar-curriculos.sh` (Chrome headless → `cv/*.pdf`) |
 | Worker + conhecimento + índice | `cd worker && npm run deploy` |
-| Banco | `npx wrangler d1 migrations apply portfolio-contact --remote` |
+| Banco | `npx wrangler d1 migrations apply portfolio-contact --remote` (aplicar antes do Worker) |
 | Testes automáticos | GitHub Actions (`.github/workflows/testes.yml`) a cada push e pull request: testes + Lighthouse (`lighthouserc.json`) |
 | Base da demo de filmes | `python3 scripts/gerar-dados-filmes.py` |
 | Modelos da demo do LSTM | `pip install -r scripts/lstm/requirements.txt` → `python scripts/lstm/train.py` → `python scripts/lstm/exportar_web.py demos/lstm` |
@@ -304,10 +306,10 @@ Vetor de 1024 dimensões por trecho; `id` estável (ex.: `job1`, `p5`, `edu4`); 
 | ADR-06 | **Workers AI (Qwen3 30B)** | Claude API, OpenRouter grátis | Custo zero (Claude é pago); ~12× mais perguntas/dia que o OpenRouter grátis; sem chave de API. |
 | ADR-07 | RAG com Vectorize + BGE-M3 | Enviar o perfil inteiro | Contexto mais focado, menos tokens; BGE-M3 permite pergunta em qualquer idioma × trechos em inglês. |
 | ADR-08 | Formação sempre com resposta pronta | Deixar para a IA | O modelo gratuito traduzia errado nomes de cursos e universidades. |
-| ADR-09 | Cache no AI Gateway com chave versionada | Sem cache / KV próprio | Economiza cota; a versão (hash do perfil) invalida respostas antigas automaticamente. |
+| ADR-09 | AI Gateway sem cache de conteúdo enviado pelo visitante | Cache de prompts ou KV próprio | Evita manter perguntas/respostas e textos de vagas em cache; requests continuam processados pela IA para responder. |
 | ADR-10 | Turnstile invisível em toda chamada | CAPTCHA visível / nenhum | Protege a cota gratuita sem atrito para o visitante. |
 | ADR-11 | Mensagens no D1, lidas por comando/painel | Página administrativa | Evita superfície de ataque. |
-| ADR-12 | GoatCounter | Google Analytics | Sem cookies (sem banner de LGPD). |
+| ADR-12 | Métrica regional própria no Worker/D1 | Analytics de terceiros | Contagem por continente/dia após consentimento explícito; sem IP persistido, URL, idioma ou eventos detalhados; expurgo antes de 30 dias. |
 | ADR-13 | Versão `?v=` automática nos arquivos | Instruir limpeza de cache | Garante que HTML novo nunca use CSS/JS antigos. |
 | ADR-14 | Simple Icons + ícones genéricos | Logos oficiais de todas as marcas | Respeita diretrizes de marca de Oracle, Microsoft e AWS. |
 | ADR-15 | Aviso por e-mail com Resend (remetente de testes `onboarding@resend.dev`) | Cloudflare Email Routing, domínio próprio | Gratuito e sem domínio: o remetente de testes entrega só para o e-mail da conta, que é exatamente o destinatário. |

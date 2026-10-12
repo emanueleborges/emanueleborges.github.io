@@ -412,7 +412,7 @@ const T = {
   },
 };
 
-const { t, track } = Demo;
+const { t } = Demo;
 const $ = (selector) => document.querySelector(selector);
 const SCENARIOS = ["direct", "document", "normal"];
 
@@ -463,7 +463,6 @@ function run() {
     makeStep(result.injectionDetected ? t("trace2Attack") : t("trace2Normal")),
     makeStep(t("trace3")),
   );
-  track(`demo-guardrail-${id}`, `RAG security demo: ${id}`);
 }
 
 const render = () => {

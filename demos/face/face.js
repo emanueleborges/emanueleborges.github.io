@@ -277,7 +277,7 @@ const T = {
   },
 };
 
-const { t, fmtNum, track, escape } = Demo;
+const { t, fmtNum, escape } = Demo;
 const $ = (selector) => document.querySelector(selector);
 const stage = $("[data-stage]");
 const people = []; // { name, descriptor: Float32Array }
@@ -394,7 +394,6 @@ async function startCamera() {
   $("[data-camera]").textContent = t("camOff");
   looping = true;
   loop();
-  track("demo-face-camera", "Demo facial: ligou a câmera");
 }
 
 async function showImage(url) {
@@ -483,7 +482,6 @@ function init() {
     setStatus(t("enrolled", { name: escape(name) }));
     renderPeople();
     if (!looping) analyze();
-    track("demo-face-cadastro", "Demo facial: cadastrou um rosto");
   });
   $("[data-people]").addEventListener("click", (event) => {
     const button = event.target.closest("[data-remove]");

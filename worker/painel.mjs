@@ -1,26 +1,17 @@
-// Painel privado de estatísticas: avaliações do chat, mensagens do formulário e visitas.
-// Busca os dados no D1 (e no GoatCounter, se houver token), gera painel.html (fora do git,
+// Painel privado de dados operacionais: avaliações do chat, mensagens do formulário e visitas por continente.
+// Busca os dados no D1, gera painel.html (fora do git,
 // porque tem nomes e e-mails de visitantes) e abre no navegador. Nada é publicado.
 //
 // Uso:  cd worker && npm run painel
-//       GOATCOUNTER_TOKEN=... npm run painel   (opcional: inclui as visitas)
-//       ou guarde a chave em worker/.dev.vars (fora do git): GOATCOUNTER_TOKEN=...
 
 import { execFileSync } from "node:child_process";
-import { existsSync, readFileSync, writeFileSync } from "node:fs";
+import { writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 
 const DIR = dirname(fileURLToPath(import.meta.url));
 const OUT = join(DIR, "painel.html");
 
-// Chave do GoatCounter: variável de ambiente ou worker/.dev.vars (arquivo fora do git).
-const devVar = (name) => {
-  const file = join(DIR, ".dev.vars");
-  if (!existsSync(file)) return undefined;
-  const line = readFileSync(file, "utf8").split("\n").find((l) => l.trim().startsWith(`${name}=`));
-  return line?.slice(line.indexOf("=") + 1).trim().replace(/^["']|["']$/g, "") || undefined;
-};
 const WEEKS = 12;
 const LANGS = { en: "Inglês", pt: "Português", es: "Espanhol", fr: "Francês", it: "Italiano", de: "Alemão", zh: "Chinês", ru: "Russo" };
 
@@ -49,37 +40,6 @@ const lastWeeks = () => {
   return weeks;
 };
 const weekLabel = (iso) => new Date(`${iso}T12:00:00Z`).toLocaleDateString("pt-BR", { day: "2-digit", month: "short" }).replace(".", "");
-
-async function goatCounter() {
-  const token = process.env.GOATCOUNTER_TOKEN || devVar("GOATCOUNTER_TOKEN");
-  if (!token) return null;
-  const end = new Date(Date.now() + 86400000); // inclui hoje
-  const start = new Date(end.getTime() - 31 * 86400000);
-  const range = `start=${start.toISOString().slice(0, 10)}&end=${end.toISOString().slice(0, 10)}`;
-  const get = async (path) => {
-    const response = await fetch(`https://emanueleborges.goatcounter.com/api/v0/${path}`, { headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" } });
-    if (!response.ok) throw new Error(`GoatCounter ${response.status}`);
-    return response.json();
-  };
-  try {
-    // Todas as páginas e eventos do período (a API devolve em lotes; exclude_paths pagina).
-    const all = [];
-    const seen = [];
-    for (let page = 0; page < 30; page += 1) {
-      const exclude = seen.length ? `&exclude_paths=${seen.join(",")}` : "";
-      const batch = await get(`stats/hits?${range}&limit=100${exclude}`);
-      for (const h of batch.hits ?? []) {
-        seen.push(h.path_id);
-        all.push({ path: h.path, title: h.title, event: h.event, count: h.count });
-      }
-      if (!batch.more || !(batch.hits ?? []).length) break;
-    }
-    const total = await get(`stats/total?${range}`);
-    return { total: total.total, all, hits: [...all].sort((a, b) => b.count - a.count).slice(0, 15) };
-  } catch (error) {
-    return { error: String(error.message ?? error) };
-  }
-}
 
 /* ---------- Gráficos de barras (desenhados no navegador, na largura real) ---------- */
 
@@ -139,7 +99,8 @@ const legend = (series) => `<div class="legend">${series.map((s) => `<span><i st
 console.log("Buscando avaliações e mensagens no D1…");
 const feedback = d1("SELECT created_at, rating, lang, question, answer FROM feedback ORDER BY id DESC LIMIT 1000");
 const messages = d1("SELECT created_at, name, email, lang, message FROM messages ORDER BY id DESC LIMIT 1000");
-const visits = await goatCounter();
+const visits = d1("SELECT continent, SUM(total) AS total FROM regional_visits WHERE access_date > date('now', '-29 days') GROUP BY continent ORDER BY total DESC");
+const visitTotal = visits.reduce((sum, row) => sum + Number(row.total), 0);
 
 const up = feedback.filter((f) => f.rating === 1).length;
 const down = feedback.filter((f) => f.rating === -1).length;
@@ -160,103 +121,14 @@ const ratingsLang = [
 ];
 const messagesWeek = [{ name: "Mensagens", color: "var(--s1)", values: byWeek(messages) }];
 
-/* ---------- Mapa de cliques (eventos "clique/<área>/<elemento>" e "secao/<id>" do site) ---------- */
-
-const SECTIONS = { inicio: "Topo", sobre: "Sobre", experiencia: "Experiência", projetos: "Projetos", habilidades: "Habilidades", formacao: "Formação", contato: "Contato" };
-const AREAS = { ...SECTIONS, cabecalho: "Cabeçalho", rodape: "Rodapé", chat: "Chat", "demos-lstm": "Demo LSTM", "demos-face": "Demo facial", "demos-filmes": "Demo filmes", vaga: "Match de vaga" };
-
-// Elementos clicáveis que existem no site (lidos do index.html), para achar os que ninguém clicou.
-function siteCatalog() {
-  const html = readFileSync(join(DIR, "..", "index.html"), "utf8");
-  const uniq = (list) => [...new Set(list)];
-  const grab = (re) => uniq([...html.matchAll(re)].map((m) => m[1]));
-  const catalog = [
-    ...[...(html.match(/class="nav-links"[\s\S]*?<\/div>/)?.[0] ?? "").matchAll(/href="#([^"]+)"/g)].map((m) => `menu/${m[1]}`),
-    ...grab(/data-demo="([^"]+)"/g).map((d) => `demo/${d}`),
-    ...grab(/data-repo="([^"]+)"/g).map((r) => `codigo/${r}`),
-    ...grab(/data-repo="([^"]+)"/g).map((r) => `card/${r}`),
-    ...[...html.matchAll(/data-filter-group="([^"]+)"[\s\S]*?<\/div>/g)].flatMap((m) => [...m[0].matchAll(/data-filter="([^"]+)"/g)].map((f) => `filtro/${m[1]}/${f[1]}`)),
-    "match-vaga", "curriculo", "email", "whatsapp", "linkedin", "github", "tema", "pergunte-ia", "abrir", "logo",
-  ];
-  return uniq(catalog);
-}
-
-// Barras horizontais em HTML (nomes longos de categoria ficam legíveis em qualquer largura).
-const hbars = (rows) => {
-  const max = Math.max(1, ...rows.map(([, n]) => n));
-  return `<div class="hbars">${rows.map(([name, n]) => `<div class="hbar"><span>${escape(name)}</span><i style="width:${(n / max) * 100}%"></i><b>${n}</b></div>`).join("")}</div>`;
-};
-
-function clickMap(all) {
-  if (!all) return "";
-  const events = all.filter((h) => h.event);
-  const views = Object.fromEntries(Object.keys(SECTIONS).map((id) => [id, 0]));
-  const byArea = {};
-  const byElement = {};
-  const byLabel = {};
-  for (const h of events) {
-    const parts = h.path.split("/");
-    if (parts[0] === "secao" && parts[1] in views) views[parts[1]] += h.count;
-    if (parts[0] !== "clique" || parts.length < 3) continue;
-    const area = parts[1];
-    const label = parts.slice(2).join("/");
-    byArea[area] = (byArea[area] ?? 0) + h.count;
-    byElement[`${area} › ${label}`] = (byElement[`${area} › ${label}`] ?? 0) + h.count;
-    const key = label.startsWith("curriculo/") ? "curriculo" : label;
-    byLabel[key] = (byLabel[key] ?? 0) + h.count;
-  }
-  const totalClicks = Object.values(byArea).reduce((a, b) => a + b, 0);
-  if (!totalClicks && !views.inicio) {
-    return '<p class="muted">Ainda não há dados de cliques. O rastreamento começa a contar a partir da publicação desta versão do site — volte em alguns dias.</p>';
-  }
-  const top = Object.entries(byElement).sort((a, b) => b[1] - a[1]);
-  const catalog = siteCatalog();
-  const zero = catalog.filter((label) => !byLabel[label]);
-  // "Menos clicados": os que ninguém clicou + os clicados abaixo da mediana.
-  const clicked = Object.entries(byLabel).filter(([label]) => catalog.includes(label)).sort((a, b) => a[1] - b[1]);
-  const median = clicked.length ? clicked[Math.floor(clicked.length / 2)][1] : 0;
-  const low = clicked.filter(([, n]) => n < median).slice(0, 10);
-  const sectionIds = Object.keys(SECTIONS);
-  const reach = (id) => (views.inicio ? Math.round((views[id] / views.inicio) * 100) : 0);
-  const areaRows = Object.entries(byArea).sort((a, b) => b[1] - a[1]);
-
-  return `
-  <div class="tiles">
-    ${tile("Cliques (30 dias)", totalClicks.toLocaleString("pt-BR"))}
-    ${tile("Visitas ao topo", views.inicio.toLocaleString("pt-BR"), "base do funil")}
-    ${tile("Chegam ao Contato", `${reach("contato")}%`, "das visitas ao topo")}
-    ${tile("Elementos sem clique", zero.length, `de ${catalog.length} no site`)}
-  </div>
-  <div class="grid2" style="margin-top:12px">
-    <div class="card"><h3>Até onde as pessoas rolam (visualizações por seção)</h3>${bars(sectionIds.map((id) => SECTIONS[id]), [{ name: "Visualizações", color: "var(--s1)", values: sectionIds.map((id) => views[id]) }], { height: 220 })}</div>
-    <div class="card"><h3>Cliques por área</h3>${areaRows.length ? hbars(areaRows.slice(0, 10).map(([a, n]) => [AREAS[a] ?? a, n])) : '<p class="muted">Sem cliques ainda.</p>'}</div>
-  </div>
-  <h3 style="margin-top:22px">Interesse por seção</h3>
-  <div class="table-wrap"><table><thead><tr><th>Seção</th><th class="num">Visualizações</th><th class="num">Alcance</th><th class="num">Cliques</th><th class="num">Cliques por 100 visualizações</th></tr></thead><tbody>
-    ${sectionIds.map((id) => `<tr><td>${SECTIONS[id]}</td><td class="num">${views[id]}</td><td class="num">${reach(id)}%</td><td class="num">${byArea[id] ?? 0}</td><td class="num">${views[id] ? Math.round(((byArea[id] ?? 0) / views[id]) * 100) : "—"}</td></tr>`).join("")}
-  </tbody></table></div>
-  <p class="muted" style="font-size:13px">Alcance = visualizações da seção ÷ visitas ao topo. Seção pouco clicada mas muito vista = conteúdo que não convida à ação; seção pouco vista = está "abaixo da dobra" para a maioria.</p>
-  <div class="grid2" style="margin-top:16px">
-    <div><h3>Mais clicados</h3><div class="table-wrap"><table><thead><tr><th>Elemento (área › elemento)</th><th class="num">Cliques</th></tr></thead><tbody>
-      ${top.slice(0, 20).map(([name, n]) => `<tr><td>${escape(name)}</td><td class="num">${n}</td></tr>`).join("") || '<tr><td colspan="2" class="muted">Sem cliques ainda.</td></tr>'}
-    </tbody></table></div></div>
-    <div><h3>Menos clicados</h3><div class="table-wrap"><table><thead><tr><th>Elemento</th><th class="num">Cliques</th></tr></thead><tbody>
-      ${zero.slice(0, 25).map((label) => `<tr><td>${escape(label)}</td><td class="num">0</td></tr>`).join("")}
-      ${low.map(([label, n]) => `<tr><td>${escape(label)}</td><td class="num">${n}</td></tr>`).join("")}
-    </tbody></table></div></div>
-  </div>`;
-}
-
 const tile = (label, value, note = "") => `<div class="tile"><span>${label}</span><strong>${value}</strong>${note ? `<small>${note}</small>` : ""}</div>`;
 
-const visitsHtml = !visits
-  ? `<p class="muted">Para ver as visitas aqui, crie um token em <a href="https://emanueleborges.goatcounter.com/user/api" target="_blank" rel="noopener">GoatCounter → API</a> (permissão de leitura) e guarde-o em <code>worker/.dev.vars</code> como <code>GOATCOUNTER_TOKEN=seu_token</code> (ou rode <code>GOATCOUNTER_TOKEN=seu_token npm run painel</code>). Enquanto isso: <a href="https://emanueleborges.goatcounter.com" target="_blank" rel="noopener">painel do GoatCounter</a>.</p>`
-  : visits.error
-    ? `<p class="muted">Não foi possível ler o GoatCounter (${escape(visits.error)}).</p>`
-    : `<div class="tiles">${tile("Visitas (30 dias)", visits.total.toLocaleString("pt-BR"))}</div>
-       <table><thead><tr><th>Página ou evento</th><th>Tipo</th><th class="num">Contagem</th></tr></thead><tbody>
-       ${visits.hits.map((h) => `<tr><td>${escape(h.title || h.path)}</td><td>${h.event ? "Evento" : "Página"}</td><td class="num">${h.count}</td></tr>`).join("")}
-       </tbody></table>`;
+const continentNames = { AF: "África", AN: "Antártida", AS: "Ásia", EU: "Europa", NA: "América do Norte", OC: "Oceania", SA: "América do Sul" };
+const visitsHtml = `<div class="tiles">${tile("Acessos regionais consentidos (30 dias)", visitTotal.toLocaleString("pt-BR"))}</div>
+  <div class="table-wrap"><table><thead><tr><th>Continente</th><th class="num">Acessos</th></tr></thead><tbody>
+    ${visits.map((row) => `<tr><td>${continentNames[row.continent] ?? "Desconhecido"}</td><td class="num">${Number(row.total).toLocaleString("pt-BR")}</td></tr>`).join("") || '<tr><td colspan="2">Nenhum acesso consentido registrado.</td></tr>'}
+  </tbody></table></div>
+  <p class="muted">Somente totais diários por continente, sem IP, URL, idioma, cliques ou identificadores. Os agregados são removidos antes de completar 30 dias.</p>`;
 
 const html = `<!doctype html>
 <html lang="pt-BR">
@@ -341,10 +213,7 @@ const html = `<!doctype html>
     ${messages.slice(0, 30).map((m) => `<tr><td>${fmtDate(m.created_at)}</td><td>${escape(m.name)}</td><td><a href="mailto:${escape(m.email)}">${escape(m.email)}</a></td><td>${escape(m.lang)}</td><td class="text">${escape(m.message)}</td></tr>`).join("")}
   </tbody></table></div>` : ""}
 
-  <h2>Mapa de cliques (últimos 30 dias)</h2>
-  ${visits && !visits.error ? clickMap(visits.all) : '<p class="muted">Precisa da chave do GoatCounter (veja abaixo).</p>'}
-
-  <h2>Visitas (GoatCounter)</h2>
+  <h2>Acessos por continente</h2>
   ${visitsHtml}
 </main>
 <script>

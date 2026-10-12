@@ -15,9 +15,9 @@ fi
 TMP=$(mktemp -d)
 trap 'rm -rf "$TMP"' EXIT
 cp -R index.html styles.css script.js i18n.js i18n api.js chat.js chat contact.js components imagens tests/runner.js "$TMP"/
-# Sem o contador de visitas nos testes; injeta o executor dos testes.
+# Sem consentimento de analytics nos testes; injeta o executor dos testes.
 # (perl funciona igual no macOS e no Linux, ao contrário de `sed -i`)
-perl -0pi -e 's#.*goatcounter.*\n##g; s#</head>#<script src="runner.js" defer></script></head>#' "$TMP/index.html"
+perl -0pi -e 's#</head>#<script src="runner.js" defer></script></head>#' "$TMP/index.html"
 python3 -I - "$TMP" "$CHROME" tests/chat-casos.json <<'PY'
 import functools, html, http.server, json, os, re, subprocess, sys, threading, urllib.parse
 tmp, chrome, cases_file = sys.argv[1:4]

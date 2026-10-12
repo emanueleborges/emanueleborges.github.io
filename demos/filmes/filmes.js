@@ -249,7 +249,7 @@ const T = {
   },
 };
 
-const { t, escape, track } = Demo;
+const { t, escape } = Demo;
 const $ = (selector) => document.querySelector(selector);
 let films = [];
 let engine = null;
@@ -296,7 +296,6 @@ function pick(title) {
   current = { type: "film", index };
   $("[data-pick]").value = label(films[index]);
   render();
-  track("demo-filmes-recomendar", "Demo filmes: recomendou por filme");
 }
 
 function search(text) {
@@ -304,7 +303,6 @@ function search(text) {
   current = { type: "search", text: text.trim() };
   $("[data-search]").value = current.text;
   render();
-  track("demo-filmes-buscar", "Demo filmes: buscou por descrição");
 }
 
 async function init() {

@@ -53,6 +53,12 @@
       "name": "PRICES_LIMITER",
       "namespace_id": "1004",
       "simple": { "limit": 30, "period": 60 }
+    },
+    // Evita que um mesmo IP gere volume excessivo de contagens regionais.
+    {
+      "name": "VISIT_LIMITER",
+      "namespace_id": "1006",
+      "simple": { "limit": 20, "period": 60 }
     }
   ],
   // Retenção verificada a cada hora; resumo agregado semanal na segunda às 12:00 UTC.

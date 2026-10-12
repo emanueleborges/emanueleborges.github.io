@@ -32,7 +32,6 @@ flowchart TB
     DB[(D1 portfolio-contact)]
     RL[Rate Limiting]
   end
-  GOAT[GoatCounter]
   GH[Public GitHub API]
   YF[Yahoo Finance]
   CDN[jsDelivr — face-api.js and models]
@@ -66,7 +65,7 @@ flowchart TB
 |---|---|
 | `index.html` | Structure and content in Portuguese (source language). Translatable elements are marked with `data-i18n`, `data-i18n-aria`, `data-i18n-placeholder`, `data-i18n-title`, `data-i18n-alt` and `data-i18n-content`. |
 | `i18n/` · `i18n.js` | `window.I18N[lang][key]`, one file per language (`i18n/<lang>.js`): site, chat (ready-made answers, labels), contact form and résumé. The page ships `pt` (original and fallback) and `en` (default); `I18N.load(lang)` downloads the others when chosen, and `boot.js` (with `data-i18n`) preloads the saved language. |
-| `script.js` | Applies the language (keeping the Portuguese original), language selector, mobile menu, filters, last-updated date (`Intl`), scroll animations, particles (Canvas), reading progress and GoatCounter events (`track`). |
+| `script.js` | Applies the language (keeping the Portuguese original), language selector, mobile menu, filters, last-updated date (`Intl`), scroll animations, particles (Canvas) and reading progress. |
 | `api.js` | `PortfolioApi` module: Worker URL, on-demand Turnstile loading, one token per submission and `post(path, body)`. |
 | `chat.js` · `chat/` | Assistant. `chat.js` is the UI; `chat/texto.js` (normalization and typos), `chat/regras.js` (regex ready-made answers), `chat/busca.js` (local search) and `chat/ia.js` (Worker) are ES modules imported by `chat.js`. |
 | `components/` | Framework-free Web Components: `<site-logo>` and `<theme-toggle>` (`components.js`); `boot.js` applies the theme before paint. |
@@ -74,7 +73,7 @@ flowchart TB
 | `contact.js` | Contact form validation, submission, counter and loading/success states. |
 | `curriculo.html` | A4 résumé template, rendered per language from `i18n/`. |
 | `manifest.webmanifest` · `sw.js` · `icon-*.png` | Installable, offline app (PWA). |
-| `demos/demos.css` · `demos/demos.js` | Shared demo base: look, language (`?lang` → `localStorage` → English), formatting (`Intl`) and GoatCounter events. |
+| `demos/demos.css` · `demos/demos.js` | Shared demo base: look, language (`?lang` → `localStorage` → English) and formatting (`Intl`). |
 | `demos/lstm/` | `lstm.js` (plain-JS LSTM inference), `demo.js` (UI and SVG charts), `*.json` weights and `dados.json` (metrics, backtest, saved prices). |
 | `demos/face/` | `face.js`: face recognition with face-api.js (jsDelivr CDN). |
 | `demos/filmes/` | `tfidf.js` (TF-IDF + cosine), `filmes.js` (UI) and `filmes.json` (~1,500 films). |
@@ -162,7 +161,7 @@ All run **in the visitor's browser**, with no AI server.
 ```
 **Errors:** `400 invalid_question` · `403 forbidden_origin` · `403 turnstile_failed` · `429 rate_limited` · `502 empty_answer` · `503 unavailable`
 
-**Flow:** origin → rate limit (10/min/IP) → validation → Turnstile → question normalization → **RAG** (BGE-M3 embedding → Vectorize top 6 → context = fixed summary + excerpts; on failure, the full profile) → Qwen3 30B (`temperature 0.1`, `max_tokens 600`, `/no_think`) through AI Gateway (24 h cache) → cleanup (`<think>`, Markdown).
+**Flow:** origin → rate limit (10/min/IP) → validation → Turnstile → question normalization → **RAG** (BGE-M3 embedding → Vectorize top 6 → context = fixed summary + excerpts; on failure, the full profile) → Qwen3 30B (`temperature 0.1`, `max_tokens 600`, `/no_think`) through AI Gateway without caching visitor questions or answers → cleanup (`<think>`, Markdown).
 
 #### `POST /contact` — contact form
 **Request**
@@ -188,7 +187,7 @@ Stored only when the visitor clicks; the chat panel notes that the question and 
 **200 response:** `{ "role": "…", "score": 0-100, "requirements": [{ "requirement", "importance": "must|nice", "level": "strong|partial|none", "evidence": ["excerpt id"], "reason" }], "pitch": "…" }`
 **Errors:** `400 invalid_job` · `403 forbidden_origin` · `403 turnstile_failed` · `429 rate_limited` (3/min/IP) · `502 empty_answer` · `503 unavailable`
 
-**Flow:** limit → validation → Turnstile → **step 1:** Qwen3 extracts the role and requirements reading only the posting (JSON mode with schema) → **step 2:** Qwen3 grades the numbered list against at most 18 relevant profile excerpts (up to 2 per requirement; JSON mode); reasons are requested to stay within 12 words and the pitch within 2 sentences/35 words; output is capped at 1,000 tokens → **Worker checks:** drops unknown ids; splits grouped technologies; a technology listed only in the skills excerpt is "partial"; a "strong" technical match requires a valid citation to a project or experience; technologies absent from the profile are "none"; incompatible evidence and reasons are discarded; ids leaking into text are stripped → score = Σ(weight × value)/Σ weight (required 2, nice 1; strong 1, partial 0.5, none 0). AI Gateway cache for 24 h (profile version + language + SHA-1 of the posting + logic version).
+**Flow:** limit → validation → Turnstile → **step 1:** Qwen3 extracts the role and requirements reading only the posting (JSON mode with schema) → **step 2:** Qwen3 grades the numbered list against at most 18 relevant profile excerpts (up to 2 per requirement; JSON mode); reasons are requested to stay within 12 words and the pitch within 2 sentences/35 words; output is capped at 1,000 tokens → **Worker checks:** drops unknown ids; splits grouped technologies; a technology listed only in the skills excerpt is "partial"; a "strong" technical match requires a valid citation to a project or experience; technologies absent from the profile are "none"; incompatible evidence and reasons are discarded; ids leaking into text are stripped → score = Σ(weight × value)/Σ weight (required 2, nice 1; strong 1, partial 0.5, none 0). Job postings and AI responses are not cached.
 
 #### `GET /prices?symbol=` — LSTM demo prices
 **200 response**
@@ -200,7 +199,7 @@ Stored only when the visitor clicks; the chat panel notes that the question and 
 Read-only and without Turnstile; 30/min per-IP limit; it only accepts the site's origin and the demo's 15 stocks (`PRICE_SYMBOLS`: 8 from B3 and 7 from NASDAQ). It fetches 1 year of adjusted closes from Yahoo Finance (`v8/finance/chart`), converts dates to the exchange's time zone and responds with `Cache-Control: max-age=3600`.
 
 #### Cron — weekly summary (`0 12 * * 1`, Mondays 12:00 UTC)
-Queries D1 for the last 7 days of messages and ratings, runs a health check (Qwen3 generation, BGE-M3 embedding, Vectorize query and `SELECT 1` on D1), fetches visits from GoatCounter (if `GOATCOUNTER_TOKEN` is set) and sends an email through Resend to `NOTIFY_EMAIL`. The subject gets a ⚠️ when any service fails.
+Queries D1 for the last 7 days of messages, ratings and consented regional access, runs a health check (Qwen3 generation, BGE-M3 embedding, Vectorize query and `SELECT 1` on D1), and sends an email through Resend to `NOTIFY_EMAIL`. The subject gets a ⚠️ when any service fails.
 
 ### 3.2 Configuration (`wrangler.jsonc`)
 
@@ -259,6 +258,9 @@ Index: `idx_messages_created_at`. Migration: `worker/migrations/0001_criar_mensa
 
 Migration: `worker/migrations/0002_criar_avaliacoes.sql`.
 
+### D1 — `regional_visits`
+Daily totals (`access_date`, `continent`, `total`) with a composite key by date and continent. The API receives only `POST /visit` after consent; it derives the continent from `request.cf`, does not read the body, and does not persist IPs or identifiers. A per-IP limit protects the D1 Free write quota; hourly cleanup removes aggregates with a safety margin to remain under 30 days. Migration: `worker/migrations/0003_contagem_regional.sql`.
+
 ### Vectorize — `portfolio-profile`
 One 1024-dimension vector per excerpt; stable `id` (e.g. `job1`, `p5`, `edu4`); metadata `{ title, text }`.
 
@@ -272,7 +274,7 @@ One 1024-dimension vector per excerpt; stable `id` (e.g. `job1`, `p5`, `edu4`); 
 | Last-updated date and `?v=` file versions | `scripts/pre-commit` hook (copy to `.git/hooks/`) |
 | Résumés | `./gerar-curriculos.sh` (headless Chrome → `cv/*.pdf`) |
 | Worker + knowledge + index | `cd worker && npm run deploy` |
-| Database | `npx wrangler d1 migrations apply portfolio-contact --remote` |
+| Database | `npx wrangler d1 migrations apply portfolio-contact --remote` (apply before deploying the Worker) |
 | Automated tests | GitHub Actions (`.github/workflows/testes.yml`) on every push and pull request: tests + Lighthouse (`lighthouserc.json`) |
 | Movie demo data | `python3 scripts/gerar-dados-filmes.py` |
 | LSTM demo models | `pip install -r scripts/lstm/requirements.txt` → `python scripts/lstm/train.py` → `python scripts/lstm/exportar_web.py demos/lstm` |
@@ -304,10 +306,10 @@ One 1024-dimension vector per excerpt; stable `id` (e.g. `job1`, `p5`, `edu4`); 
 | ADR-06 | **Workers AI (Qwen3 30B)** | Claude API, free OpenRouter | Zero cost (Claude is paid); ~12× more questions/day than free OpenRouter; no API key. |
 | ADR-07 | RAG with Vectorize + BGE-M3 | Sending the whole profile | More focused context, fewer tokens; BGE-M3 matches questions in any language against English excerpts. |
 | ADR-08 | Education always uses a ready-made answer | Leave it to the AI | The free model mistranslated degree and university names. |
-| ADR-09 | AI Gateway cache with a versioned key | No cache / custom KV | Saves quota; the version (profile hash) invalidates old answers automatically. |
+| ADR-09 | AI Gateway without visitor-content caching | Prompt cache or custom KV | Avoids retaining questions, answers and job-posting text in a cache; requests still go to AI for processing. |
 | ADR-10 | Invisible Turnstile on every call | Visible CAPTCHA / none | Protects the free quota with no friction for visitors. |
 | ADR-11 | Messages in D1, read via command/dashboard | Admin web page | Avoids attack surface. |
-| ADR-12 | GoatCounter | Google Analytics | Cookieless (no consent banner needed). |
+| ADR-12 | First-party regional count in Worker/D1 | Third-party analytics | Continent/day totals after explicit consent; no persisted IP, URL, language or detailed event data; purged before 30 days. |
 | ADR-13 | Automatic `?v=` file versions | Asking users to clear the cache | Guarantees new HTML never uses old CSS/JS. |
 | ADR-14 | Simple Icons + generic icons | Official logos for every brand | Respects Oracle, Microsoft and AWS brand guidelines. |
 | ADR-15 | Email notification with Resend (test sender `onboarding@resend.dev`) | Cloudflare Email Routing, custom domain | Free and domain-less: the test sender only delivers to the account's own email, which is exactly the recipient. |

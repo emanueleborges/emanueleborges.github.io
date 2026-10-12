@@ -73,7 +73,6 @@
         /* navegação privada: vale só nesta visita */
       }
       document.dispatchEvent(new CustomEvent("themechange", { detail: { theme: next } }));
-      window.goatcounter?.count?.({ path: `tema-${next}`, title: `Trocou o tema para ${next}`, event: true });
     }
   }
 

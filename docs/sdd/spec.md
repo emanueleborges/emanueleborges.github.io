@@ -91,7 +91,7 @@ O site deve apresentar: topo (nome, cargo, resumo, localização, anos de experi
 E-mail, WhatsApp, LinkedIn e GitHub visíveis na seção de contato e no assistente.
 
 ### RF-08 — Estatísticas
-Registrar visitas, **cada clique por área e elemento**, as **seções vistas** (funil de atenção) e eventos (chat aberto, pergunta respondida pela IA, download de currículo por idioma, cliques em contatos, troca de idioma, envio do formulário, avaliações, clique em "Ver código" e "Ver demo", uso das demos) **sem cookies e sem o texto das perguntas**.
+Contagem opcional somente após consentimento explícito. O Worker usa a região continental fornecida pela Cloudflare e o D1 armazena apenas o total diário por continente; não registrar IP, URL, idioma, cliques ou identificadores. Os agregados são removidos antes de completar 30 dias. A pessoa pode alterar ou retirar a escolha nas preferências de privacidade.
 
 ### RF-09 — SEO e compartilhamento
 - RF-09.1 Ao compartilhar o link (LinkedIn, WhatsApp, X), exibir prévia com imagem, título e descrição.
@@ -99,7 +99,7 @@ Registrar visitas, **cada clique por área e elemento**, as **seções vistas** 
 - RF-09.3 Publicar `sitemap.xml` (página em 8 idiomas, 8 PDFs e 3 demos) e `robots.txt`; o site é verificado no Google Search Console.
 
 ### RF-10 — Resumo semanal
-Toda segunda-feira, o dono recebe por e-mail: contagens agregadas de mensagens e avaliações, saúde da IA, do índice vetorial e do banco; visitas, se houver token do GoatCounter. O resumo não inclui dados pessoais nem conteúdo de mensagens. A retenção de mensagens do formulário e avaliações do chat é de 30 dias, verificada a cada hora.
+Toda segunda-feira, o dono recebe por e-mail: contagens agregadas de mensagens, avaliações e acessos regionais consentidos, além da saúde da IA, do índice vetorial e do banco. O resumo não inclui dados pessoais nem conteúdo de mensagens. A retenção de mensagens do formulário e avaliações do chat é de 30 dias, verificada a cada hora.
 
 ### RF-11 — Página não encontrada
 Endereços inexistentes mostram uma página 404 no estilo do site, com links para o portfólio e o assistente.
@@ -132,7 +132,7 @@ O site pode ser instalado como app (manifest e ícones) e, depois da primeira vi
 | ID | Categoria | Requisito |
 |---|---|---|
 | RNF-01 | **Custo** | Infraestrutura com custo zero: apenas planos gratuitos **sem forma de pagamento cadastrada** (o dono não pode ter custos). Ao atingir um limite grátis, o recurso deve pausar e o site seguir funcionando (degradação graciosa), nunca gerar cobrança. Serviços novos só entram se tiverem plano gratuito sem cartão. As demos de IA rodam no navegador do visitante (sem custo de servidor). |
-| RNF-02 | **Desempenho** | Site estático sem build; primeira imagem pré-carregada (menor no celular) e demais sob demanda; fontes sem bloquear a exibição; scripts de terceiros (Turnstile) carregados sob demanda; respostas repetidas da IA servidas do cache. Meta: Lighthouse (celular) ≥ 75 em desempenho e 100 em acessibilidade, boas práticas e SEO. |
+| RNF-02 | **Desempenho** | Site estático sem build; primeira imagem pré-carregada (menor no celular) e demais sob demanda; fontes sem bloquear a exibição; scripts de terceiros (Turnstile) carregados sob demanda. Perguntas e respostas de visitantes não são armazenadas em cache. Meta: Lighthouse (celular) ≥ 75 em desempenho e 100 em acessibilidade, boas práticas e SEO. |
 | RNF-03 | **Disponibilidade** | O chat deve continuar útil mesmo sem IA (busca local); o formulário falha com mensagem clara. |
 | RNF-04 | **Segurança** | Backend aceita só a origem do site; anti-robô em toda chamada que grava dados ou usa IA; limites por IP; validação de entrada; nenhum segredo no repositório. A rota de preços (só leitura) aceita apenas a origem do site e as 15 ações da demo, com limite por IP e cache. |
 | RNF-05 | **Privacidade (LGPD)** | Sem cookies de rastreamento; formulário guarda o mínimo (sem IP); aviso de uso de IA e de finalidade dos dados. Na demo de reconhecimento facial, câmera e fotos são processadas só no aparelho. Retenção: mensagens e avaliações apagadas após 30 dias, automaticamente, com verificação horária. |

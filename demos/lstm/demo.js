@@ -285,7 +285,7 @@ let data = null;
 const models = {};
 const prices = {};
 
-const { t, fmtDate, fmtNum, fmtPct, track } = Demo;
+const { t, fmtDate, fmtNum, fmtPct } = Demo;
 const money = (value, currency) =>
   new Intl.NumberFormat(Demo.locale(), { style: "currency", currency, minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(value);
 const $ = (selector) => document.querySelector(selector);
@@ -452,7 +452,6 @@ async function init() {
   select.addEventListener("change", () => {
     renderTest();
     runForecast();
-    track(`demo-lstm-${select.value}`, `Demo LSTM: ${select.value}`);
   });
   const range = $("[data-days]");
   range.addEventListener("input", () => ($("[data-days-out]").textContent = range.value));

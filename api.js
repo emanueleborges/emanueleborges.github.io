@@ -72,5 +72,15 @@ export const PortfolioApi = (() => {
     }
   };
 
-  return { enabled: Boolean(BASE), loadTurnstile, post };
+  const recordVisit = async () => {
+    const response = await fetch(`${BASE}/visit`, {
+      method: "POST",
+      credentials: "omit",
+      referrerPolicy: "no-referrer",
+      cache: "no-store",
+    });
+    if (!response.ok) throw new Error(`Contagem regional indisponível (${response.status})`);
+  };
+
+  return { enabled: Boolean(BASE), loadTurnstile, post, recordVisit };
 })();
