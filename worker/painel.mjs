@@ -122,7 +122,7 @@ const tile = (label, value, note = "") => `<div class="tile"><span>${label}</spa
 /* ---------- Cliques por link ---------- */
 
 const clickNames = {
-  "nav-contact": "Menu · Vamos conversar",
+  "nav-contact": "Menu · Contato",
   "hero-projects": "Topo · Explorar projetos",
   "hero-contact": "Topo · Entre em contato",
   "hero-cv": "Topo · Baixar currículo",

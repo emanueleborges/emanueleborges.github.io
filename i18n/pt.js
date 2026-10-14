@@ -8,7 +8,7 @@ window.I18N.pt = {
   "nav.projects": "Projetos",
   "nav.skills": "Habilidades",
   "nav.education": "Formação",
-  "nav.contact": "Vamos conversar",
+  "nav.contact": "Contato",
   "hero.eyebrow": "DISPONÍVEL PARA NOVOS DESAFIOS",
   "hero.intro": "// OI, EU SOU",
   "hero.title": "Full Stack Sênior,<br class=\"desktop-break\" /> construindo com IA.",

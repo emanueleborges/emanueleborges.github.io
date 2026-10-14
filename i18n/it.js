@@ -15,7 +15,7 @@ window.I18N.it = {
   "nav.projects": "Progetti",
   "nav.skills": "Competenze",
   "nav.education": "Formazione",
-  "nav.contact": "Parliamone",
+  "nav.contact": "Contatti",
   "hero.eyebrow": "DISPONIBILE PER NUOVE SFIDE",
   "hero.intro": "// CIAO, SONO",
   "hero.title": "Full Stack Senior,<br class=\"desktop-break\" /> costruisco con l’IA.",

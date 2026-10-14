@@ -15,7 +15,7 @@ window.I18N.ru = {
   "nav.projects": "Проекты",
   "nav.skills": "Навыки",
   "nav.education": "Образование",
-  "nav.contact": "Связаться",
+  "nav.contact": "Контакты",
   "hero.eyebrow": "ОТКРЫТ К НОВЫМ ЗАДАЧАМ",
   "hero.intro": "// ПРИВЕТ, Я",
   "hero.title": "Senior Full Stack,<br class=\"desktop-break\" /> создаю продукты с ИИ.",

@@ -15,7 +15,7 @@ window.I18N.zh = {
   "nav.projects": "项目",
   "nav.skills": "技能",
   "nav.education": "教育背景",
-  "nav.contact": "联系我",
+  "nav.contact": "联系方式",
   "hero.eyebrow": "期待新的挑战",
   "hero.intro": "// 你好，我是",
   "hero.title": "高级全栈工程师，<br class=\"desktop-break\" />用 AI 打造产品。",
