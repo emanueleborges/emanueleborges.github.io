@@ -83,7 +83,7 @@ O site deve apresentar: topo (nome, cargo, resumo, localização, anos de experi
 E-mail, WhatsApp, LinkedIn e GitHub visíveis na seção de contato e no assistente. Não há formulário; as mensagens não são enviadas nem armazenadas pelo site.
 
 ### RF-08 — Estatísticas
-Contagem opcional somente após consentimento explícito. O Worker usa a região continental fornecida pela Cloudflare e o D1 armazena apenas totais diários por continente e por link clicado (alvos fixos validados pelo Worker); não registrar IP, URL, idioma ou identificadores. A nota do portfólio (barra de 0% a 100%, começando em 50%) é enviada por ação explícita, validada pelo Turnstile, e guardada só como total diário por nota. Os agregados são removidos antes de completar 30 dias. A escolha fica salva no navegador; para alterá-la depois, é necessário limpar os dados salvos deste site nas configurações do navegador.
+Contagem opcional somente após consentimento explícito. O Worker usa a região continental fornecida pela Cloudflare e o D1 armazena apenas totais diários por continente e por link clicado (alvos fixos validados pelo Worker); não registrar IP, URL, idioma ou identificadores. Os agregados são removidos antes de completar 30 dias. A escolha fica salva no navegador; para alterá-la depois, é necessário limpar os dados salvos deste site nas configurações do navegador.
 
 ### RF-09 — SEO e compartilhamento
 - RF-09.1 Ao compartilhar o link (LinkedIn, WhatsApp, X), exibir prévia com imagem, título e descrição.

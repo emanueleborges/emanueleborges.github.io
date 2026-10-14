@@ -48,11 +48,10 @@ export async function purgeOldData(env) {
 
 export async function sendWeeklySummary(env) {
   if (!emailEnabled(env)) return;
-  const [ratings, health, visits, score, clicks] = await Promise.all([
+  const [ratings, health, visits, clicks] = await Promise.all([
     env.DB.prepare("SELECT SUM(CASE WHEN rating = 1 THEN total ELSE 0 END) AS up, SUM(CASE WHEN rating = -1 THEN total ELSE 0 END) AS down FROM feedback_daily WHERE feedback_date > date('now', '-7 days')").first(),
     healthCheck(env),
     env.DB.prepare("SELECT COALESCE(SUM(total), 0) AS total FROM regional_visits WHERE access_date > date('now', '-7 days')").first(),
-    env.DB.prepare("SELECT COALESCE(SUM(total), 0) AS total, ROUND(SUM(score * total) * 1.0 / SUM(total)) AS average FROM score_daily WHERE score_date > date('now', '-7 days')").first(),
     env.DB.prepare("SELECT target, SUM(total) AS total FROM click_daily WHERE click_date > date('now', '-7 days') GROUP BY target ORDER BY total DESC LIMIT 10").all(),
   ]);
   const clickRows = clicks?.results ?? [];
@@ -61,7 +60,6 @@ export async function sendWeeklySummary(env) {
     <h2>Resumo semanal do portfólio</h2>
     <p><strong>Acessos regionais consentidos (7 dias):</strong> ${visits?.total ?? 0}</p>
     <h3>Avaliações do chat: 👍 ${ratings?.up ?? 0} · 👎 ${ratings?.down ?? 0}</h3>
-    <h3>Nota do portfólio (7 dias): ${score?.total ? `${score.average}% em ${score.total} avaliações` : "nenhuma avaliação"}</h3>
     <h3>Links mais clicados (7 dias)</h3>
     ${clickRows.length ? `<ul>${clickRows.map((row) => `<li>${escapeHtml(row.target)}: ${row.total}</li>`).join("")}</ul>` : "<p>Nenhum clique consentido registrado.</p>"}
     <h3>Saúde do sistema</h3>
@@ -71,7 +69,7 @@ export async function sendWeeklySummary(env) {
       <li>Vectorize (RAG): ${ok(health.vectorize)}</li>
       <li>Banco D1: ${ok(health.banco)}</li>
     </ul>
-    <p style="color:#666">Avaliações, notas e cliques são armazenados apenas como totais diários, sem perguntas, respostas ou identificadores.</p>`;
+    <p style="color:#666">Avaliações e cliques são armazenados apenas como totais diários, sem perguntas, respostas ou identificadores.</p>`;
   await sendEmail(env, {
     subject: `Resumo semanal do portfólio — 👍 ${ratings?.up ?? 0} 👎 ${ratings?.down ?? 0}${Object.values(health).every(Boolean) ? "" : " ⚠️"}`,
     html,

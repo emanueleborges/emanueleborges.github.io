@@ -9,7 +9,7 @@
   // Índice vetorial gratuito (Vectorize) com os trechos do perfil, para o RAG do chat.
   "vectorize": [{ "binding": "VECTORIZE", "index_name": "portfolio-profile" }],
   // Banco gratuito (D1) com totais diários de avaliação e acesso regional.
-  // Também guarda os totais diários de notas do portfólio (0–100) e de cliques nos links.
+  // Também guarda os totais diários de cliques nos links.
   "d1_databases": [
     {
       "binding": "DB",
@@ -31,7 +31,7 @@
       "namespace_id": "1001",
       "simple": { "limit": 10, "period": 60 }
     },
-    // Até 20 avaliações (👍/👎 e nota do portfólio) por minuto por visitante (IP).
+    // Até 20 avaliações (👍/👎) por minuto por visitante (IP).
     {
       "name": "FEEDBACK_LIMITER",
       "namespace_id": "1003",

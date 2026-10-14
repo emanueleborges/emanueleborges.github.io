@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { PortfolioApi } from "../../api.js";
-import { handleClick, handleScore, isClickTarget } from "../src/rotas/metricas.js";
+import { handleClick, isClickTarget } from "../src/rotas/metricas.js";
 
 function setup({ limited = false, human = true } = {}) {
   const calls = [];
@@ -44,62 +44,6 @@ function setup({ limited = false, human = true } = {}) {
     },
   };
 }
-
-test("stores only the score in the daily aggregate", async () => {
-  const { calls, env, restoreFetch } = setup();
-  try {
-    const response = await handleScore({ score: 73, turnstileToken: "valid" }, "192.0.2.4", env, "https://example.com");
-
-    assert.equal(response.status, 200);
-    assert.deepEqual(calls, [
-      { type: "limit", key: "192.0.2.4" },
-      {
-        type: "prepare",
-        sql: "INSERT INTO score_daily (score, total) VALUES (?, 1) ON CONFLICT (score_date, score) DO UPDATE SET total = total + 1",
-      },
-      { type: "bind", values: [73] },
-      { type: "run" },
-    ]);
-  } finally {
-    restoreFetch();
-  }
-});
-
-test("accepts both ends of the score bar", async () => {
-  for (const score of [0, 100]) {
-    const { env, restoreFetch } = setup();
-    try {
-      const response = await handleScore({ score, turnstileToken: "valid" }, "192.0.2.4", env, "https://example.com");
-      assert.equal(response.status, 200);
-    } finally {
-      restoreFetch();
-    }
-  }
-});
-
-test("rejects scores outside 0–100 or not integers without writing to D1", async () => {
-  for (const score of [-1, 101, 50.5, "50", null]) {
-    const { calls, env, restoreFetch } = setup();
-    try {
-      const response = await handleScore({ score, turnstileToken: "valid" }, "192.0.2.4", env, "https://example.com");
-      assert.equal(response.status, 400, String(score));
-      assert.equal(calls.some(({ type }) => type === "prepare"), false);
-    } finally {
-      restoreFetch();
-    }
-  }
-});
-
-test("does not store a score when Turnstile fails", async () => {
-  const { calls, env, restoreFetch } = setup({ human: false });
-  try {
-    const response = await handleScore({ score: 80, turnstileToken: "bad" }, "192.0.2.4", env, "https://example.com");
-    assert.equal(response.status, 403);
-    assert.equal(calls.some(({ type }) => type === "prepare"), false);
-  } finally {
-    restoreFetch();
-  }
-});
 
 test("stores only the link target in the daily click aggregate", async () => {
   const { calls, env, restoreFetch } = setup();

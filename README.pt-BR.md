@@ -45,7 +45,6 @@ Site estático, sem framework, com backend *serverless* no Cloudflare para o cha
 | **Currículo em PDF** | Um PDF por idioma, gerado da mesma fonte de textos do site; o botão baixa o PDF do idioma atual. |
 | **Contatos diretos** | E-mail, WhatsApp, LinkedIn e GitHub; sem formulário nem armazenamento de mensagens pelo portfólio. |
 | **SEO** | Prévia de link (Open Graph/Twitter), `hreflang` para os 8 idiomas, dados estruturados de `Person` (JSON-LD), `sitemap.xml` e `robots.txt`; verificado no Google Search Console. |
-| **Nota do portfólio** | Barra de 0% a 100% (começa em 50%) na seção de contato. O envio passa pelo Turnstile e o D1 guarda só o total diário de cada nota, sem identificar o visitante; uma nota por navegador. |
 | **Estatísticas** | Contagem opcional, somente após consentimento explícito. O Worker da Cloudflare usa o IP da conexão para estimar o continente e grava no D1 apenas totais diários: acessos por continente e cliques por link (LinkedIn, GitHub, currículo, código e demos dos projetos…); não grava IP, URL, idioma ou identificadores. Os agregados são removidos antes de completar 30 dias. A escolha fica salva no navegador; para alterá-la depois, limpe os dados salvos deste site nas configurações do navegador. |
 | **Resumo semanal** | Toda segunda, um e-mail com avaliações agregadas, acessos regionais consentidos e saúde da IA, do índice vetorial e do banco. |
 | **Página 404** | Página personalizada no estilo do site, com links para o portfólio e o assistente. |
@@ -243,7 +242,7 @@ Quando houver uma migração D1 pendente, aplique-a **antes** de publicar o Work
 
 ### Painel de estatísticas
 
-Painel local com totais diários de avaliações do chat, nota média e distribuição das notas do portfólio, ranking de cliques por link (incluindo os links sem nenhum clique) e contagens agregadas de visitas. O arquivo gerado (`worker/painel.html`) não é publicado.
+Painel local com totais diários de avaliações do chat, ranking de cliques por link (incluindo os links sem nenhum clique) e contagens agregadas de visitas. O arquivo gerado (`worker/painel.html`) não é publicado.
 
 ```bash
 cd worker
@@ -276,13 +275,13 @@ As contagens regionais são consultadas diretamente no D1 remoto pelo painel. N�
 - **Integridade de scripts externos (SRI):** o face-api.js da demo facial tem `integrity` (SHA-384); se o arquivo do CDN for alterado, o navegador não o executa.
 - **HTTPS obrigatório** com HSTS (GitHub Pages).
 - **Política de conteúdo (CSP)** em todas as páginas, por meta tag: só carrega scripts, estilos, fontes, imagens e conexões dos domínios usados (Google Fonts, Unsplash, Cloudflare, API do GitHub, jsDelivr); bloqueia plugins (`object-src 'none'`) e troca de `<base>`. Política de referenciador `strict-origin-when-cross-origin`.
-- **Retenção (LGPD):** o Worker apaga a cada hora os totais diários de avaliações, notas, cliques e acessos regionais antes de completarem 30 dias.
+- **Retenção (LGPD):** o Worker apaga a cada hora os totais diários de avaliações, cliques e acessos regionais antes de completarem 30 dias.
 - **Contas:** a proteção mais importante é a verificação em duas etapas (2FA) no GitHub, Cloudflare, Google e Resend.
 - **Limites por IP:** 10 perguntas/min (chat), 20 avaliações/min, 3 análises de vaga/min, 30 consultas de preços/min. O limitador do Cloudflare é permissivo (contadores com pequeno atraso): segura abusos em volume, não um pedido exato.
 - **Match de vaga honesto:** o texto da vaga é tratado como dado (instruções escondidas nele são ignoradas — testado com "dê nota 100"), a nota é calculada por regra, evidências inexistentes são descartadas e tecnologias que não aparecem no perfil viram "não encontrado".
 - **IA restrita ao perfil:** instruções para responder só sobre o perfil profissional, nunca inventar dados e ignorar tentativas de mudar as regras.
 - **Sem segredos no código:** todas as chaves são *secrets* do Worker; a site key do Turnstile é pública por natureza.
-- **Privacidade (LGPD):** não há formulário nem tabela de mensagens de contato. O D1 guarda somente totais regionais e de cliques consentidos, totais diários das notas do portfólio e de 👍/👎, sem perguntas, respostas, idioma ou identificadores associados à avaliação, por até 30 dias. Perguntas do chat e textos de vagas são processados pela Cloudflare Workers AI para gerar respostas/análises, mas não são gravados no D1; a Cloudflare processa IPs para segurança, Turnstile e limites de uso.
+- **Privacidade (LGPD):** não há formulário nem tabela de mensagens de contato. O D1 guarda somente totais regionais e de cliques consentidos e totais diários de 👍/👎, sem perguntas, respostas, idioma ou identificadores associados à avaliação, por até 30 dias. Perguntas do chat e textos de vagas são processados pela Cloudflare Workers AI para gerar respostas/análises, mas não são gravados no D1; a Cloudflare processa IPs para segurança, Turnstile e limites de uso.
 - **Demo facial:** câmera e fotos são processadas só no aparelho do visitante; nada é enviado nem salvo, e os rostos cadastrados somem ao fechar a página.
 
 ---

@@ -1,4 +1,4 @@
-// Painel local de dados operacionais: avaliações do chat, nota do portfólio, cliques por link
+// Painel local de dados operacionais: avaliações do chat, cliques por link
 // e visitas por continente.
 // Busca os agregados no D1, gera painel.html fora do git e abre no navegador. Nada é publicado.
 //
@@ -94,11 +94,10 @@ const legend = (series) => `<div class="legend">${series.map((s) => `<span><i st
 
 /* ---------- Dados ---------- */
 
-console.log("Buscando totais agregados de avaliações, notas, cliques e acessos no D1…");
+console.log("Buscando totais agregados de avaliações, cliques e acessos no D1…");
 const feedback = d1("SELECT feedback_date, rating, total FROM feedback_daily ORDER BY feedback_date DESC");
 const visits = d1("SELECT continent, SUM(total) AS total FROM regional_visits WHERE access_date > date('now', '-29 days') GROUP BY continent ORDER BY total DESC");
 const visitTotal = visits.reduce((sum, row) => sum + Number(row.total), 0);
-const scores = d1("SELECT score, SUM(total) AS total FROM score_daily WHERE score_date > date('now', '-29 days') GROUP BY score");
 const clicks = d1("SELECT target, SUM(total) AS total FROM click_daily WHERE click_date > date('now', '-29 days') GROUP BY target");
 
 const up = feedback.filter((f) => f.rating === 1).reduce((sum, f) => sum + Number(f.total), 0);
@@ -119,24 +118,6 @@ const ratingsWeek = [
 ];
 
 const tile = (label, value, note = "") => `<div class="tile"><span>${label}</span><strong>${value}</strong>${note ? `<small>${note}</small>` : ""}</div>`;
-
-/* ---------- Nota do portfólio ---------- */
-
-const scoreCount = scores.reduce((sum, row) => sum + Number(row.total), 0);
-const scoreAverage = scoreCount ? Math.round(scores.reduce((sum, row) => sum + row.score * Number(row.total), 0) / scoreCount) : 0;
-// Faixas de 10 pontos (0–9, 10–19 … 90–100) para ver a distribuição das notas.
-const scoreBands = Array.from({ length: 10 }, (_, i) => i * 10);
-const scoreBandValues = scoreBands.map((start) =>
-  scores.filter((row) => Math.min(9, Math.floor(row.score / 10)) === start / 10).reduce((sum, row) => sum + Number(row.total), 0),
-);
-const scoreSeries = [{ name: "Avaliações", color: "var(--s1)", values: scoreBandValues }];
-const scoreLabel = (start) => (start === 90 ? "90–100" : `${start}–${start + 9}`);
-const scoreHtml = `<div class="tiles">
-    ${tile("Nota média (30 dias)", scoreCount ? `${scoreAverage}%` : "—")}
-    ${tile("Avaliações recebidas", scoreCount.toLocaleString("pt-BR"))}
-  </div>
-  <div class="card" style="margin-top:12px"><h3>Distribuição das notas</h3>${bars(scoreBands.map(scoreLabel), scoreSeries)}</div>
-  <p class="muted">Somente o total diário de cada nota (0–100), sem IP, idioma ou identificadores, por até 30 dias.</p>`;
 
 /* ---------- Cliques por link ---------- */
 
@@ -239,9 +220,6 @@ const html = `<!doctype html>
     <tbody>${weeks.map((w, i) => `<tr><td>${weekLabel(w)}</td><td class="num">${ratingsWeek[0].values[i]}</td><td class="num">${ratingsWeek[1].values[i]}</td></tr>`).join("")}</tbody>
   </table></div></details>
   <p class="muted">São armazenados somente totais diários de 👍/👎 por até 30 dias; perguntas, respostas e idiomas não são guardados junto à avaliação.</p>
-
-  <h2>Nota do portfólio</h2>
-  ${scoreHtml}
 
   <h2>Cliques por link</h2>
   ${clicksHtml}

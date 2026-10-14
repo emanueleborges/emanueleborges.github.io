@@ -45,7 +45,6 @@ A framework-free static site with a Cloudflare serverless backend for the AI cha
 | **PDF résumé** | One PDF per language, generated from the same text source as the site; the button downloads the PDF for the current language. |
 | **Direct contacts** | Email, WhatsApp, LinkedIn and GitHub; the portfolio has no form and does not store contact messages. |
 | **SEO** | Link previews (Open Graph/Twitter), `hreflang` for 8 languages, `Person` structured data (JSON-LD), `sitemap.xml` and `robots.txt`; verified in Google Search Console. |
-| **Portfolio rating** | A 0%–100% slider (starting at 50%) in the contact section. Submissions go through Turnstile and D1 keeps only the daily total for each score, without identifying the visitor; one rating per browser. |
 | **Analytics** | Optional counting, only after explicit consent. The Cloudflare Worker uses the connection IP to estimate the continent and stores only daily totals in D1: visits per continent and clicks per link (LinkedIn, GitHub, résumé, project code and demos…); it does not store IP, URL, language, or identifiers. Aggregates are deleted before they reach 30 days. The choice is saved in the browser; to change it later, clear this site's saved data in browser settings. |
 | **Weekly summary** | Every Monday an email with aggregate chat ratings, consented regional counts and a health check of the AI, vector index and database. |
 | **404 page** | Custom page in the site's style with links to the portfolio and the assistant. |
@@ -243,7 +242,7 @@ If a D1 migration is pending, apply it **before** deploying the Worker: `npx wra
 
 ### Stats dashboard
 
-Local dashboard with daily chat-rating totals, the portfolio's average score and score distribution, clicks per link ranked (including links with zero clicks), and aggregate visit counts. It is a generated local file (`worker/painel.html`) and is not published.
+Local dashboard with daily chat-rating totals, clicks per link ranked (including links with zero clicks), and aggregate visit counts. It is a generated local file (`worker/painel.html`) and is not published.
 
 ```bash
 cd worker
@@ -276,13 +275,13 @@ Regional counts are queried directly from remote D1 by the dashboard. No analyti
 - **External script integrity (SRI):** the face demo's face-api.js has an `integrity` (SHA-384) attribute; if the CDN file is altered, the browser won't run it.
 - **HTTPS enforced** with HSTS (GitHub Pages).
 - **Content Security Policy** on every page via meta tag: scripts, styles, fonts, images and connections only from the domains in use (Google Fonts, Unsplash, Cloudflare, GitHub API, jsDelivr); plugins blocked (`object-src 'none'`) and `<base>` locked. Referrer policy `strict-origin-when-cross-origin`.
-- **Retention (privacy):** the Worker deletes daily chat-rating, score, click and regional aggregates before they reach 30 days.
+- **Retention (privacy):** the Worker deletes daily chat-rating, click and regional aggregates before they reach 30 days.
 - **Accounts:** the most important protection is two-factor authentication (2FA) on GitHub, Cloudflare, Google and Resend.
 - **Per-IP limits:** 10 questions/min (chat), 20 ratings/min, 3 job analyses/min, 30 price lookups/min. Cloudflare's limiter is permissive (counters lag slightly): it stops high-volume abuse, not an exact request count.
 - **Honest job match:** the posting is treated as data (hidden instructions are ignored — tested with "give a score of 100"), the score is computed by rule, nonexistent evidence is discarded, listed technologies cannot be marked missing by the AI, and technologies absent from the profile become "not found".
 - **AI restricted to the profile:** instructions to answer only about the professional profile, never invent facts and ignore attempts to change the rules.
 - **No secrets in the code:** all keys are Worker secrets; the Turnstile site key is public by design.
-- **Privacy (LGPD/GDPR-style):** there is no contact form and no contact-message table. D1 stores only consented regional and click totals, daily portfolio-score totals and daily 👍/👎 totals, without questions, answers, language or identifiers tied to ratings, for up to 30 days. Chat questions and job-description text are processed by Cloudflare Workers AI to generate answers/analyses but are not written to D1; Cloudflare processes connection IPs for security, Turnstile and rate limits.
+- **Privacy (LGPD/GDPR-style):** there is no contact form and no contact-message table. D1 stores only consented regional and click totals, and daily 👍/👎 totals, without questions, answers, language or identifiers tied to ratings, for up to 30 days. Chat questions and job-description text are processed by Cloudflare Workers AI to generate answers/analyses but are not written to D1; Cloudflare processes connection IPs for security, Turnstile and rate limits.
 - **Face demo:** camera and photos are processed only on the visitor's device; nothing is sent or stored, and registered faces disappear when the page closes.
 
 ---
