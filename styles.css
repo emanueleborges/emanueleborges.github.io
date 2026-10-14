@@ -213,7 +213,7 @@ theme-toggle:not(:defined) { width: 112px; height: 34px; }
 .section { padding-block: 130px; }
 .about-section { display: grid; grid-template-columns: .9fr 1fr; gap: 80px; border-top: 1px solid var(--line); }
 .section-kicker { margin: 0 0 24px; }
-.section-heading h2, .skills-intro h2, .contact-inner h2 { margin: 0; font-size: clamp(39px, 5vw, 58px); line-height: 1.1; letter-spacing: -.07em; }
+.section-heading h2, .skills-intro h2 { margin: 0; font-size: clamp(39px, 5vw, 58px); line-height: 1.1; letter-spacing: -.07em; }
 .gradient-text { color: var(--accent-text); background: var(--grad-text); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
 .about-photo { position: relative; width: min(280px, 100%); margin: 48px 0 0; animation: float 7s ease-in-out infinite; }
 .about-photo::before { content: ""; position: absolute; inset: 0; border: 1px solid rgba(var(--accent-rgb),.45); border-radius: 50%; translate: 14px 14px; z-index: -1; transition: translate .5s ease; }
@@ -307,8 +307,6 @@ blockquote { margin: 32px 0 0; padding: 12px 0 12px 16px; border-left: 2px solid
 .contact-section { position: relative; overflow: hidden; padding: 105px 0 85px; border-block: 1px solid var(--line); text-align: center; }
 .contact-glow { position: absolute; width: 520px; height: 350px; left: 50%; top: 44%; transform: translate(-50%,-50%); background: var(--aurora-1); opacity: .19; filter: blur(125px); pointer-events: none; }
 .contact-inner { position: relative; }
-.contact-inner h2 { font-size: clamp(42px, 6vw, 65px); }
-.contact-inner > .muted { margin: 16px 0 23px; font-size: 14px; }
 .contact-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; }
 .contact-button { min-width: 188px; text-transform: none; }
 .button-whatsapp { color: #fff; background: linear-gradient(115deg, #25d366, #128c7e); box-shadow: 0 8px 30px rgba(37,211,102,.22), inset 0 1px 0 rgba(255,255,255,.24); }
@@ -507,7 +505,6 @@ main, .footer { position: relative; z-index: 1; }
   .skills-panel { padding-top: 10px; }
   .skills-grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); }
   .contact-section { padding: 80px 0 68px; }
-  .contact-inner h2 { font-size: 46px; }
   .footer { flex-wrap: wrap; min-height: 92px; padding-block: 18px; }
   .footer-copy { order: 3; width: 100%; }
   .footer-updated { order: 4; width: 100%; }
