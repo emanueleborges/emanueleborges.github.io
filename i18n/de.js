@@ -8,7 +8,7 @@ window.I18N.de = {
   "nav.projects": "Projekte",
   "nav.skills": "Skills",
   "nav.education": "Ausbildung",
-  "nav.contact": "Kontakt <span>↗</span>",
+  "nav.contact": "Kontakt",
   "hero.eyebrow": "OFFEN FÜR NEUE HERAUSFORDERUNGEN",
   "hero.intro": "// HALLO, ICH BIN",
   "hero.title": "Senior Full Stack,<br class=\"desktop-break\" /> entwickelt mit KI.",
