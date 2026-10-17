@@ -166,6 +166,8 @@ window.I18N.pt = {
   "chat.goTo": "Ver na página",
   "chat.contact": "Você pode falar com o Emanuel por:",
   "chat.cv": "Aqui está o currículo em PDF no idioma atual:",
+  "chat.image": "Aqui eu respondo só sobre o perfil do Emanuel, mas o portfólio tem uma demo de gerador de imagens (FLUX.1, 2 imagens por visitante por dia). Seu pedido vai junto:",
+  "chat.imageOpen": "Abrir o gerador de imagens →",
   "chat.s1": "Experiência com IA",
   "chat.s2": "Projetos com IA",
   "chat.s3": "Formação acadêmica",

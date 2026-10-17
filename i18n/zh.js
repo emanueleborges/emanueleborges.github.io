@@ -166,6 +166,8 @@ window.I18N.zh = {
   "chat.goTo": "在页面中查看",
   "chat.contact": "可以通过以下方式联系 Emanuel：",
   "chat.cv": "这是当前语言的 PDF 简历：",
+  "chat.image": "这里我只回答关于 Emanuel 个人资料的问题，不过作品集里有一个图像生成演示（FLUX.1，每位访客每天 2 张）。你的描述会一并带过去：",
+  "chat.imageOpen": "打开图像生成器 →",
   "chat.s1": "AI 相关经验",
   "chat.s2": "AI 相关项目",
   "chat.s3": "教育背景",

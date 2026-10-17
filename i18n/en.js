@@ -157,6 +157,8 @@ window.I18N.en = {
   "chat.goTo": "View on page",
   "chat.contact": "You can reach Emanuel via:",
   "chat.cv": "Here's the résumé PDF in the current language:",
+  "chat.image": "I only answer questions about Emanuel's profile here, but the portfolio has an image generator demo (FLUX.1, 2 images per visitor per day). Your request goes along:",
+  "chat.imageOpen": "Open the image generator →",
   "chat.s1": "Experience with AI",
   "chat.s2": "Projects with AI",
   "chat.s3": "Education",

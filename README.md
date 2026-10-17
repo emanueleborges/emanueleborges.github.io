@@ -84,7 +84,7 @@ The **AI demos** run inference in the browser: the LSTM runs in plain JavaScript
 
 ### How the assistant answers
 
-1. **Contact and résumé** → contact buttons or the PDF link (local).
+1. **Contact, résumé and image requests** → contact buttons, the PDF link or a shortcut to the image generator with the request already filled in (local, no AI quota used).
 2. **Ready-made answers** (19 topics, 8 languages) → greetings, thanks, salary, start date and **education** are **always answered locally**, at no cost and with verified text. Other ready-made topics (roles sought, remote work, AI, technologies…) are answered by the AI when it is available.
 3. **AI with RAG** → the Worker:
    1. validates the **Turnstile** token;

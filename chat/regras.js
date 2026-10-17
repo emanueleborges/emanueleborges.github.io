@@ -40,6 +40,10 @@ const topics = [
 const intents = {
   contact: /kontakt|erreich|anrufen|contat|contact|contacto|contatto|e-?mail|whats|telefon|phone|linkedin|github|falar|hablar|parler|parlare|联系|邮箱|电话|связ|почт|телефон|контакт/,
   cv: /lebenslauf|curricul|\bcv\b|resum|pdf|download|baixar|descargar|telecharg|scaric|简历|резюме/,
+  // Pedido para gerar uma imagem ("gera uma imagem de…", "draw a cat"): o chat indica a demo do gerador.
+  image: /(?<![a-zа-я])(gera|gere|gerar|cria|crie|criar|desenha|desenhe|desenhar|faz|faca|fazer|generate|create|make|draw|paint|render|genera|generar|generare|crea|crear|creare|dibuja|dibujar|haz|hacer|genere|generer|cree|creer|dessine|dessiner|fais|faire|disegna|disegnare|fai|fare|erstell[a-z]*|generier[a-z]*|zeichne[a-z]*|male|mach[a-z]*|erzeug[a-z]*|нарисуи|сгенерируи|создаи|сделаи)(?![a-zа-я]).{0,25}?(?<![a-zа-я])(imagem|imagens|image|images|imagen|imagenes|immagine|immagini|foto|fotos|photo|picture|pic|desenho|drawing|ilustracao|illustration|ilustracion|dibujo|dessin|disegno|bild|bilder|zeichnung|изображени[а-я]*|картин[а-я]*|рисун[а-я]*)(?![a-zа-я])|(?<![a-zа-я])(draw|desenhe|desenha|dibuja|dessine|disegna|zeichne|нарисуи)\s+(a|an|me|um|uma|un|une|una|uno|ein|eine|einen|мне)(?![a-zа-я])|(?<![a-zа-я])нарисуи(?![a-zа-я])|画(一|个|张|幅)|生成.{0,8}(图|画|照片)|(做|创建|制作).{0,6}(图片|图像|照片)/,
+  // "Classificação de imagens", "reconhecimento de imagem"… são perguntas sobre o perfil, não pedidos de imagem.
+  imageUnless: /classif|recogn|reconhec|reconoc|riconosc|erkenn|processing|processamento|procesamiento|deteccao|detection|segment|распозн|识别|分类/,
 };
 
 /* ---------- Respostas prontas (perguntas frequentes) ---------- */

@@ -166,6 +166,8 @@ window.I18N.it = {
   "chat.goTo": "Vedi nella pagina",
   "chat.contact": "Puoi contattare Emanuel tramite:",
   "chat.cv": "Ecco il CV in PDF nella lingua attuale:",
+  "chat.image": "Qui rispondo solo sul profilo di Emanuel, ma il portfolio ha una demo di generatore di immagini (FLUX.1, 2 immagini per visitatore al giorno). La tua richiesta viene inclusa:",
+  "chat.imageOpen": "Apri il generatore di immagini →",
   "chat.s1": "Esperienza con l’IA",
   "chat.s2": "Progetti con l’IA",
   "chat.s3": "Formazione",

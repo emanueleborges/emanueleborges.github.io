@@ -205,9 +205,36 @@ function initChat() {
     return nodes;
   };
 
+  // Texto da imagem pedida, tirado da pergunta original ("gera uma imagem de um gato" → "um gato").
+  const imagePrompt = (query) => {
+    const match =
+      query.match(/(?:imagem|imagens|images?|imágenes|imagen|immagin[ei]|fotos?|photos?|pictures?|pic|desenhos?|drawings?|ilustração|ilustracao|illustration|ilustración|dibujo|dessin|disegno|bild(?:er)?|zeichnung|изображени\S*|картин\S*|рисун\S*)(?:\s*[:—-]\s*|\s+)(.+)$/iu) ??
+      query.match(/(?:draw|desenhe|desenha|dibuja|dessine|disegna|zeichne|нарисуй)\s+(?:me\s+|мне\s+)?(.+)$/iu) ??
+      query.match(/(?:画|生成|创建|制作|做)(?:一张|一幅|一个)?(?:图片|图像|照片)?[：:，,]?(.+)$/u);
+    const prompt = (match?.[1] ?? "")
+      .replace(/^(?:(?:de|do|da|dos|das|of|with|showing|von|vom|du|des|di|del|della|dello|с)\s+|d['’]\s*)/iu, "")
+      .replace(/[\s?!.。？！]+$/u, "")
+      .trim();
+    return prompt.length >= 3 ? prompt.slice(0, 300) : "";
+  };
+
+  // Pedido de imagem: o chat não gera imagens; indica a demo do gerador com o texto já preenchido.
+  const imageAnswer = (query) => {
+    const prompt = imagePrompt(query);
+    const box = el("div", "chat-links");
+    const link = el("a", "chat-link", tc("imageOpen"));
+    link.href = `demos/imagem/${prompt ? `?prompt=${encodeURIComponent(prompt)}` : ""}`;
+    link.dataset.track = "chat-image";
+    box.append(link);
+    return [el("p", null, tc("image")), box];
+  };
+
+  const isImageRequest = (q) => intents.image.test(q) && !intents.imageUnless.test(q);
+
   // Monta a resposta (lista de elementos) para uma pergunta.
   const answer = (query) => {
     const q = normalize(query);
+    if (isImageRequest(q)) return imageAnswer(query);
     if (intents.cv.test(q)) {
       const box = el("div", "chat-links");
       box.append(linkButton(text(document.querySelector('[data-i18n="cv.download"]')).replace(/[↓]/g, "").trim(), `cv/curriculo-emanuel-borges-${currentLang}.pdf`));
@@ -297,7 +324,7 @@ function initChat() {
   const usesAi = (query) => {
     if (!ai.enabled) return false;
     const q = normalize(query);
-    if (intents.cv.test(q) || intents.contact.test(q)) return false;
+    if (intents.cv.test(q) || intents.contact.test(q) || isImageRequest(q)) return false;
     const faq = findFaq(q);
     return !(faq && LOCAL_ONLY.has(faq.key));
   };

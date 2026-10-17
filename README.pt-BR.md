@@ -84,7 +84,7 @@ As **demos de IA** fazem a inferência no navegador: o LSTM roda em JavaScript p
 
 ### Como o assistente responde
 
-1. **Contato e currículo** → botões de contato ou link do PDF (local).
+1. **Contato, currículo e pedidos de imagem** → botões de contato, link do PDF ou atalho para o gerador de imagens com o pedido já preenchido (local, sem gastar IA).
 2. **Respostas prontas** (19 temas, 8 idiomas) → saudação, agradecimento, salário, data de início e **formação** são **sempre locais**, sem custo e com texto conferido. Os demais temas prontos (tipo de vaga, remoto, IA, tecnologias…) são respondidos pela IA quando ela está disponível.
 3. **IA com RAG** → o Worker:
    1. confere o token do **Turnstile**;

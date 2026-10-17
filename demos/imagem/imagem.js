@@ -452,6 +452,12 @@ form.addEventListener("submit", async (event) => {
 
 promptInput.addEventListener("input", updateCounter);
 renderExamples();
+// Texto vindo do chat do portfólio (?prompt=…): já deixa o pedido preenchido.
+const fromChat = new URLSearchParams(location.search).get("prompt");
+if (fromChat) {
+  promptInput.value = fromChat.replace(/\s+/g, " ").trim().slice(0, 300);
+  updateCounter();
+}
 if (quotaDone()) {
   quotaKey = "error.visitor_limit";
   button.disabled = true;

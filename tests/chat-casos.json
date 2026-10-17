@@ -127,6 +127,10 @@
     [
       "public sector experience?",
       "answer:Manaus City Hall"
+    ],
+    [
+      "draw a cat wearing a hat",
+      "answer:Open the image generator"
     ]
   ],
   "pt": [
@@ -241,6 +245,10 @@
     [
       "qual foi o tcc dele?",
       "Crítico Jurídico"
+    ],
+    [
+      "gera uma imagem de um gato astronauta",
+      "answer:Abrir o gerador de imagens"
     ]
   ],
   "es": [
@@ -281,6 +289,10 @@
     [
       "AI 经验",
       "answer:有！"
+    ],
+    [
+      "画一只猫",
+      "answer:打开图像生成器"
     ]
   ],
   "ru": [
@@ -303,6 +315,10 @@
     [
       "Кто такой Emanuel?",
       "answer:Senior-инженер"
+    ],
+    [
+      "нарисуй кота",
+      "answer:Открыть генератор изображений"
     ]
   ],
   "fr": [

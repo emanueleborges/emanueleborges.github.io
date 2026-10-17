@@ -9,6 +9,7 @@ export const CLICK_TARGETS = new Set([
   "hero-contact",
   "hero-cv",
   "hero-chat",
+  "chat-image",
   "projects-github",
   "contact-email",
   "contact-cv",
