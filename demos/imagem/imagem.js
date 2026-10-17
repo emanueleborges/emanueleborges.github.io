@@ -343,7 +343,7 @@ const renderExamples = () => {
   );
 };
 
-const showImage = (base64, prompt, seconds, seed) => {
+const showImage = (base64, prompt, seconds) => {
   const src = `data:image/jpeg;base64,${base64}`;
   const img = document.createElement("img");
   img.src = src;
@@ -351,10 +351,10 @@ const showImage = (base64, prompt, seconds, seed) => {
   canvas.replaceChildren(img);
   const download = document.createElement("a");
   download.href = src;
-  download.download = `flux-${seed}.jpg`;
+  download.download = `flux-${Date.now()}.jpg`;
   download.textContent = Demo.t("download");
   const info = document.createElement("span");
-  info.textContent = `FLUX.1 [schnell] · 4 steps · seed ${seed}`;
+  info.textContent = "FLUX.1 [schnell] · 4 steps · 1024×1024";
   meta.replaceChildren(info, download);
   meta.hidden = false;
   setStatus(Demo.t("done", { seconds: Demo.fmtNum(seconds, 1) }));
@@ -378,7 +378,7 @@ form.addEventListener("submit", async (event) => {
   button.disabled = false;
   button.textContent = Demo.t("generate");
 
-  if (ok && data?.image) return showImage(data.image, prompt, (performance.now() - started) / 1000, data.seed);
+  if (ok && data?.image) return showImage(data.image, prompt, (performance.now() - started) / 1000);
   const key = `error.${data?.error}`;
   setStatus(Demo.t(key in T.en ? key : "error.generic"), true);
 });

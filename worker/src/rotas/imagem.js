@@ -54,10 +54,10 @@ export async function handleImage(payload, ip, env, origin) {
   }
 
   try {
-    const seed = Math.floor(Math.random() * 2 ** 31);
-    const result = await env.AI.run(IMAGE_MODEL, { prompt, steps: STEPS, seed }, { gateway: { id: "default", skipCache: true } });
+    // O schema do modelo aceita só prompt e steps (seed é recusado com o erro 5006).
+    const result = await env.AI.run(IMAGE_MODEL, { prompt, steps: STEPS }, { gateway: { id: "default", skipCache: true } });
     if (typeof result?.image !== "string" || !result.image) return json({ error: "unavailable" }, 503, origin);
-    return json({ image: result.image, model: IMAGE_MODEL, steps: STEPS, seed }, 200, origin);
+    return json({ image: result.image, model: IMAGE_MODEL, steps: STEPS }, 200, origin);
   } catch (error) {
     // 3036 = cota diária gratuita do Workers AI esgotada.
     const quota = String(error?.message ?? error).includes("3036");

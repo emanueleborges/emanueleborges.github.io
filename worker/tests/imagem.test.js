@@ -42,7 +42,8 @@ test("generates an image after moderation and counts it", async () => {
   assert.equal(body.image, "aGVsbG8=");
   assert.deepEqual(calls.filter((c) => c.model).map((c) => c.model), [GUARD_MODEL, IMAGE_MODEL]);
   assert.match(calls.find((c) => c.sql).sql, /image_daily/);
-  assert.equal(calls.find((c) => c.model === IMAGE_MODEL).input.prompt, "a lighthouse in the Amazon at sunset");
+  // O FLUX.1 [schnell] do Workers AI recusa campos fora do schema (ex.: seed).
+  assert.deepEqual(calls.find((c) => c.model === IMAGE_MODEL).input, { prompt: "a lighthouse in the Amazon at sunset", steps: 4 });
 });
 
 test("rejects short or long prompts before spending AI quota", async () => {
