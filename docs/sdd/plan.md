@@ -67,7 +67,7 @@ flowchart TB
 | `api.js` | Módulo `PortfolioApi`: URL do Worker, carregamento sob demanda do Turnstile, geração de token por envio e `post(path, body)`. |
 | `chat.js` · `chat/` | Assistente. `chat.js` é a interface; `chat/texto.js` (normalização e erros de digitação), `chat/regras.js` (respostas prontas por expressão regular), `chat/busca.js` (busca local) e `chat/ia.js` (Worker) são módulos ES importados pelo `chat.js`. |
 | `components/` | Web Components sem framework: `<site-logo>` e `<theme-toggle>` (`components.js`); `boot.js` aplica o tema antes da pintura. |
-| `data/` · `scripts/gerar-secoes.mjs` | Projetos e habilidades (com a chave da descrição mostrada ao passar o mouse) como dados; o gerador escreve o HTML estático no `index.html` entre marcadores (textos do `i18n/pt.js`). O CI confere com `--check`. |
+| `data/` · `scripts/gerar-secoes.mjs` | Projetos e habilidades como dados; o gerador escreve o HTML estático no `index.html` entre marcadores (textos do `i18n/pt.js`). O CI confere com `--check`. |
 | `curriculo.html` | Modelo A4 do currículo, renderizado por idioma a partir do `i18n/`. |
 | `manifest.webmanifest` · `sw.js` · `icon-*.png` | App instalável e offline (PWA). |
 | `demos/demos.css` · `demos/demos.js` | Base compartilhada das demos: visual, idioma (`?lang` → `localStorage` → inglês) e formatação (`Intl`). |

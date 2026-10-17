@@ -51,7 +51,7 @@ const CHUNKS = [
   { id: "skills-ai", title: "Skills: AI and machine learning", text: `AI and ML: NLP, LLM, RAG, LangChain, TensorFlow, Scikit-learn, Pandas, Hugging Face. ${get("chat.faq.ai")}` },
   { id: "skills-data", title: "Skills: databases", text: `Data: PostgreSQL, Oracle, MySQL, MongoDB, SQL Server, Redis. ${get("chat.faq.databases")}` },
   { id: "skills-devops", title: "Skills: DevOps and cloud", text: `DevOps: Docker, Kubernetes, AWS, Kafka, RabbitMQ, CI/CD, GitLab. ${get("chat.faq.devops")}` },
-  { id: "skills-practices", title: "Skills: engineering practices", text: "Practices: Clean Architecture, Clean Code, TDD, unit testing, code review, SonarQube, Scrum." },
+  { id: "skills-practices", title: "Skills: engineering practices", text: "Practices: Clean Architecture, Clean Code, TDD, SDD (spec-driven development), unit testing, code review, SonarQube, Scrum." },
   { id: "soft-skills", title: "Soft skills", text: get("chat.faq.soft") },
   { id: "edu1", title: `Education: ${get("edu.d1")}`, text: `${get("edu.d1")} (in Portuguese: Pós-graduação em Natural Language Processing) — Universidade Federal de Goiás (UFG), a public federal university in Goiás, Brazil, 2025–2026.` },
   { id: "edu2", title: `Education: ${get("edu.d2")}`, text: `${get("edu.d2")} (in Portuguese: Pós-graduação em Machine Learning Engineering) — FIAP, a technology college in São Paulo, Brazil, 2025–2026.` },

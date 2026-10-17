@@ -52,7 +52,6 @@ The site must present: hero (name, role, summary, location, years of experience)
 - FR-01.1 Each project card has a "View code" link to its repository and shows language, stars (if any) and last-update date from the public GitHub API.
 - FR-01.2 Projects with a live demo have a "Live demo" button (LSTM, face recognition, movie recommender and the assistant itself).
 - FR-01.3 Results cited on the cards must be verifiable (same number shown in the demo or repository).
-- FR-01.4 On hover (or focus), each skill card shows a short description of the technology in the current language, no wider than the card.
 
 ### FR-02 — Languages
 - FR-02.1 Available in **English (default)**, Portuguese, Spanish, French, Italian, German, Simplified Chinese and Russian.

@@ -280,14 +280,11 @@ blockquote { margin: 32px 0 0; padding: 12px 0 12px 16px; border-left: 2px solid
 .skills-panel { padding-top: 25px; min-width: 0; }
 .filter-count { margin: -12px 0 18px; color: var(--subtle); font-size: 11px; letter-spacing: .1em; }
 .skills-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; margin: 0; padding: 0; list-style: none; }
-.skill-chip { position: relative; transition: border-color .2s, transform .2s; display: grid; grid-template-columns: 26px 1fr; align-items: center; gap: 4px 12px; padding: 14px 16px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); }
+.skill-chip { position: relative; overflow: hidden; transition: border-color .2s, transform .2s; display: grid; grid-template-columns: 26px 1fr; align-items: center; gap: 4px 12px; padding: 14px 16px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); }
 .skill-icon { grid-row: span 2; width: 26px; height: 26px; object-fit: contain; filter: var(--icon-filter); opacity: .8; transition: opacity .2s, transform .2s; }
 .skill-chip:hover .skill-icon { opacity: 1; transform: scale(1.1); }
 .skill-chip strong { font-size: 15px; }
 .skill-chip span { color: var(--skill-cat); font-size: 10px; letter-spacing: .1em; }
-.skill-chip .skill-tip { position: absolute; z-index: 3; left: 0; right: 0; bottom: calc(100% + 8px); padding: 10px 12px; border: 1px solid rgba(var(--accent-rgb),.35); border-radius: 10px; background: var(--bg); box-shadow: 0 10px 30px rgba(0,0,0,.25); color: var(--text-soft); font-size: 12px; letter-spacing: 0; line-height: 1.45; opacity: 0; visibility: hidden; transform: translateY(4px); transition: opacity .2s, transform .2s, visibility .2s; pointer-events: none; }
-.skill-chip:hover, .skill-chip:focus-within { z-index: 2; }
-.skill-chip:hover .skill-tip, .skill-chip:focus-within .skill-tip { opacity: 1; visibility: visible; transform: none; }
 
 .education-section { display: grid; grid-template-columns: .8fr 1.2fr; gap: 90px; border-top: 1px solid var(--line); }
 .education-list { margin: 0; padding: 0; list-style: none; }

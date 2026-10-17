@@ -4,273 +4,233 @@
     {
       "name": "Java",
       "category": "backend",
-      "icon": "imagens/logos/skills/openjdk.svg",
-      "desc": "skill.d.java"
+      "icon": "imagens/logos/skills/openjdk.svg"
     },
     {
       "name": "Kotlin",
       "category": "backend",
-      "icon": "imagens/logos/skills/kotlin.svg",
-      "desc": "skill.d.kotlin"
+      "icon": "imagens/logos/skills/kotlin.svg"
     },
     {
       "name": "Spring Boot",
       "category": "backend",
-      "icon": "imagens/logos/skills/springboot.svg",
-      "desc": "skill.d.springboot"
+      "icon": "imagens/logos/skills/springboot.svg"
     },
     {
       "name": "Node.js",
       "category": "backend",
-      "icon": "imagens/logos/skills/nodedotjs.svg",
-      "desc": "skill.d.nodejs"
+      "icon": "imagens/logos/skills/nodedotjs.svg"
     },
     {
       "name": "NestJS",
       "category": "backend",
-      "icon": "imagens/logos/skills/nestjs.svg",
-      "desc": "skill.d.nestjs"
+      "icon": "imagens/logos/skills/nestjs.svg"
     },
     {
       "name": "Express",
       "category": "backend",
-      "icon": "imagens/logos/skills/express.svg",
-      "desc": "skill.d.express"
+      "icon": "imagens/logos/skills/express.svg"
     },
     {
       "name": "PHP/Laravel",
       "category": "backend",
-      "icon": "imagens/logos/skills/laravel.svg",
-      "desc": "skill.d.laravel"
+      "icon": "imagens/logos/skills/laravel.svg"
     },
     {
       "name": "Python",
       "category": "backend",
-      "icon": "imagens/logos/skills/python.svg",
-      "desc": "skill.d.python"
+      "icon": "imagens/logos/skills/python.svg"
     },
     {
       "name": "Flask",
       "category": "backend",
-      "icon": "imagens/logos/skills/flask.svg",
-      "desc": "skill.d.flask"
+      "icon": "imagens/logos/skills/flask.svg"
     },
     {
       "name": "FastAPI",
       "category": "backend",
-      "icon": "imagens/logos/skills/fastapi.svg",
-      "desc": "skill.d.fastapi"
+      "icon": "imagens/logos/skills/fastapi.svg"
     },
     {
       "name": "TypeScript",
       "category": "frontend",
-      "icon": "imagens/logos/skills/typescript.svg",
-      "desc": "skill.d.typescript"
+      "icon": "imagens/logos/skills/typescript.svg"
     },
     {
       "name": "JavaScript",
       "category": "frontend",
-      "icon": "imagens/logos/skills/javascript.svg",
-      "desc": "skill.d.javascript"
+      "icon": "imagens/logos/skills/javascript.svg"
     },
     {
       "name": "React",
       "category": "frontend",
-      "icon": "imagens/logos/skills/react.svg",
-      "desc": "skill.d.react"
+      "icon": "imagens/logos/skills/react.svg"
     },
     {
       "name": "React Native",
       "category": "frontend",
-      "icon": "imagens/logos/skills/react.svg",
-      "desc": "skill.d.reactnative"
+      "icon": "imagens/logos/skills/react.svg"
     },
     {
       "name": "Vue.js",
       "category": "frontend",
-      "icon": "imagens/logos/skills/vuedotjs.svg",
-      "desc": "skill.d.vue"
+      "icon": "imagens/logos/skills/vuedotjs.svg"
     },
     {
       "name": "Angular",
       "category": "frontend",
-      "icon": "imagens/logos/skills/angular.svg",
-      "desc": "skill.d.angular"
+      "icon": "imagens/logos/skills/angular.svg"
     },
     {
       "name": "HTML & CSS",
       "category": "frontend",
-      "icon": "imagens/logos/skills/html5.svg",
-      "desc": "skill.d.html"
+      "icon": "imagens/logos/skills/html5.svg"
     },
     {
       "name": "NLP",
       "category": "ia",
-      "icon": "imagens/logos/skills/nlp.svg",
-      "desc": "skill.d.nlp"
+      "icon": "imagens/logos/skills/nlp.svg"
     },
     {
       "name": "LLM",
       "category": "ia",
-      "icon": "imagens/logos/skills/llm.svg",
-      "desc": "skill.d.llm"
+      "icon": "imagens/logos/skills/llm.svg"
     },
     {
       "name": "RAG",
       "category": "ia",
-      "icon": "imagens/logos/skills/rag.svg",
-      "desc": "skill.d.rag"
+      "icon": "imagens/logos/skills/rag.svg"
     },
     {
       "name": "LangChain",
       "category": "ia",
-      "icon": "imagens/logos/skills/langchain.svg",
-      "desc": "skill.d.langchain"
+      "icon": "imagens/logos/skills/langchain.svg"
     },
     {
       "name": "TensorFlow",
       "category": "ia",
-      "icon": "imagens/logos/skills/tensorflow.svg",
-      "desc": "skill.d.tensorflow"
+      "icon": "imagens/logos/skills/tensorflow.svg"
     },
     {
       "name": "Scikit-learn",
       "category": "ia",
-      "icon": "imagens/logos/skills/scikitlearn.svg",
-      "desc": "skill.d.sklearn"
+      "icon": "imagens/logos/skills/scikitlearn.svg"
     },
     {
       "name": "Pandas",
       "category": "ia",
-      "icon": "imagens/logos/skills/pandas.svg",
-      "desc": "skill.d.pandas"
+      "icon": "imagens/logos/skills/pandas.svg"
     },
     {
       "name": "Hugging Face",
       "category": "ia",
-      "icon": "imagens/logos/skills/huggingface.svg",
-      "desc": "skill.d.huggingface"
+      "icon": "imagens/logos/skills/huggingface.svg"
     },
     {
       "name": "PostgreSQL",
       "category": "dados",
-      "icon": "imagens/logos/skills/postgresql.svg",
-      "desc": "skill.d.postgresql"
+      "icon": "imagens/logos/skills/postgresql.svg"
     },
     {
       "name": "Oracle",
       "category": "dados",
-      "icon": "imagens/logos/skills/database.svg",
-      "desc": "skill.d.oracle"
+      "icon": "imagens/logos/skills/database.svg"
     },
     {
       "name": "MySQL",
       "category": "dados",
-      "icon": "imagens/logos/skills/mysql.svg",
-      "desc": "skill.d.mysql"
+      "icon": "imagens/logos/skills/mysql.svg"
     },
     {
       "name": "MongoDB",
       "category": "dados",
-      "icon": "imagens/logos/skills/mongodb.svg",
-      "desc": "skill.d.mongodb"
+      "icon": "imagens/logos/skills/mongodb.svg"
     },
     {
       "name": "SQL Server",
       "category": "dados",
-      "icon": "imagens/logos/skills/database.svg",
-      "desc": "skill.d.sqlserver"
+      "icon": "imagens/logos/skills/database.svg"
     },
     {
       "name": "Redis",
       "category": "dados",
-      "icon": "imagens/logos/skills/redis.svg",
-      "desc": "skill.d.redis"
+      "icon": "imagens/logos/skills/redis.svg"
     },
     {
       "name": "Docker",
       "category": "devops",
-      "icon": "imagens/logos/skills/docker.svg",
-      "desc": "skill.d.docker"
+      "icon": "imagens/logos/skills/docker.svg"
     },
     {
       "name": "Kubernetes",
       "category": "devops",
-      "icon": "imagens/logos/skills/kubernetes.svg",
-      "desc": "skill.d.kubernetes"
+      "icon": "imagens/logos/skills/kubernetes.svg"
     },
     {
       "name": "AWS",
       "category": "devops",
-      "icon": "imagens/logos/skills/cloud.svg",
-      "desc": "skill.d.aws"
+      "icon": "imagens/logos/skills/cloud.svg"
     },
     {
       "name": "Kafka",
       "category": "devops",
-      "icon": "imagens/logos/skills/apachekafka.svg",
-      "desc": "skill.d.kafka"
+      "icon": "imagens/logos/skills/apachekafka.svg"
     },
     {
       "name": "RabbitMQ",
       "category": "devops",
-      "icon": "imagens/logos/skills/rabbitmq.svg",
-      "desc": "skill.d.rabbitmq"
+      "icon": "imagens/logos/skills/rabbitmq.svg"
     },
     {
       "name": "CI/CD",
       "category": "devops",
-      "icon": "imagens/logos/skills/cicd.svg",
-      "desc": "skill.d.cicd"
+      "icon": "imagens/logos/skills/cicd.svg"
     },
     {
       "name": "GitLab",
       "category": "devops",
-      "icon": "imagens/logos/skills/gitlab.svg",
-      "desc": "skill.d.gitlab"
+      "icon": "imagens/logos/skills/gitlab.svg"
     },
     {
       "name": "Clean Architecture",
       "category": "praticas",
-      "icon": "imagens/logos/skills/layers.svg",
-      "desc": "skill.d.cleanarch"
+      "icon": "imagens/logos/skills/layers.svg"
     },
     {
       "name": "Clean Code",
       "category": "praticas",
-      "icon": "imagens/logos/skills/code.svg",
-      "desc": "skill.d.cleancode"
+      "icon": "imagens/logos/skills/code.svg"
     },
     {
       "name": "TDD",
       "category": "praticas",
-      "icon": "imagens/logos/skills/tdd.svg",
-      "desc": "skill.d.tdd"
+      "icon": "imagens/logos/skills/tdd.svg"
+    },
+    {
+      "name": "SDD",
+      "category": "praticas",
+      "icon": "imagens/logos/skills/sdd.svg"
     },
     {
       "name": "Testes unitários",
       "category": "praticas",
       "icon": "imagens/logos/skills/test.svg",
-      "key": "skill.unit",
-      "desc": "skill.d.unit"
+      "key": "skill.unit"
     },
     {
       "name": "Code Review",
       "category": "praticas",
-      "icon": "imagens/logos/skills/review.svg",
-      "desc": "skill.d.codereview"
+      "icon": "imagens/logos/skills/review.svg"
     },
     {
       "name": "SonarQube",
       "category": "praticas",
-      "icon": "imagens/logos/skills/sonarqubeserver.svg",
-      "desc": "skill.d.sonarqube"
+      "icon": "imagens/logos/skills/sonarqubeserver.svg"
     },
     {
       "name": "Scrum",
       "category": "praticas",
-      "icon": "imagens/logos/skills/scrum.svg",
-      "desc": "skill.d.scrum"
+      "icon": "imagens/logos/skills/scrum.svg"
     }
   ]
 }

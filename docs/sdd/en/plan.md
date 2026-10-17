@@ -67,7 +67,7 @@ flowchart TB
 | `api.js` | `PortfolioApi` module: Worker URL, on-demand Turnstile loading, one token per submission and `post(path, body)`. |
 | `chat.js` · `chat/` | Assistant. `chat.js` is the UI; `chat/texto.js` (normalization and typos), `chat/regras.js` (regex ready-made answers), `chat/busca.js` (local search) and `chat/ia.js` (Worker) are ES modules imported by `chat.js`. |
 | `components/` | Framework-free Web Components: `<site-logo>` and `<theme-toggle>` (`components.js`); `boot.js` applies the theme before paint. |
-| `data/` · `scripts/gerar-secoes.mjs` | Projects and skills (with the key of the description shown on hover) as data; the generator writes static HTML into `index.html` between markers (text from `i18n/pt.js`). CI checks it with `--check`. |
+| `data/` · `scripts/gerar-secoes.mjs` | Projects and skills as data; the generator writes static HTML into `index.html` between markers (text from `i18n/pt.js`). CI checks it with `--check`. |
 | `curriculo.html` | A4 résumé template, rendered per language from `i18n/`. |
 | `manifest.webmanifest` · `sw.js` · `icon-*.png` | Installable, offline app (PWA). |
 | `demos/demos.css` · `demos/demos.js` | Shared demo base: look, language (`?lang` → `localStorage` → English) and formatting (`Intl`). |

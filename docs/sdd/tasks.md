@@ -23,7 +23,7 @@ Legenda: ✅ concluída · ⏳ pendente · 💡 ideia
 - ✅ **T08** Partículas (Canvas), manchas de luz, animações ao rolar, respeito a "reduzir movimento" — RNF-06
 - ✅ **T09** Filtros de Projetos e Habilidades com contador — RF-03
 - ✅ **T10** Logos das instituições (versões para fundo claro e escuro) — RF-01
-- ✅ **T11** Ícones das 45 habilidades (Simple Icons + genéricos) — RF-01
+- ✅ **T11** Ícones das 46 habilidades (Simple Icons + genéricos) — RF-01
 
 ### Idiomas
 - ✅ **T12** i18n em 8 idiomas, seletor no cabeçalho, `?lang=`, inglês por padrão — RF-02
@@ -88,8 +88,8 @@ Legenda: ✅ concluída · ⏳ pendente · 💡 ideia
 - ✅ **T68** Auditoria (11/10/2026) e correções: demo facial carrega a IA só no primeiro uso (4,7 MB → 103 KB, desempenho 55 → 92), retenção automática inicial (12/6 meses; reduzida a 30 dias em revisão posterior), CSP e política de referenciador em todas as páginas, sem deslocamento de layout no topo (CLS 0,121 → 0,004), títulos em ordem nas demos (acessibilidade 100 em todas), links padrão na página de vagas, pré-carregamento da base de filmes e nota do match sempre numérica — RNF-02, RNF-04, RNF-05, RNF-06
 - ✅ **T69** Componentização em 5 etapas: Web Components `<site-logo>`/`<theme-toggle>` e `boot.js`; projetos e habilidades em `data/` com gerador do HTML (conferido no CI); chat em módulos (`chat/`) e Worker com um arquivo por rota; um arquivo de tradução por idioma, carregado sob demanda (~42 KB → ~13 KB no primeiro acesso); módulos ES com importmap no lugar das variáveis globais. Imagens reunidas em `imagens/` — RNF-02, RNF-09
 - ✅ **T70** Estatísticas sem provedor externo: consentimento atualizado, agregados continente/dia no D1, limite por IP, expurgo antes de 30 dias e resumo/painel migrados — RF-08, LGPD
-- ✅ **T71** Descrição curta ao passar o mouse em cada uma das 45 habilidades, nos 8 idiomas (`skill.d.*` no `i18n/`, campo `desc` em `data/habilidades.json`, tooltip gerado por `scripts/gerar-secoes.mjs`) — RF-01.4, RF-02.4
 - ✅ **T72** Inglês atualizado para básico (A2), evoluindo para intermediário (B1), no site, chat, Worker e PDFs; a análise de vagas passa a enviar o trecho de idiomas quando o requisito de idioma vem fora do inglês (antes "Inglês fluente" ficava sem evidência) — RF-01, RF-14
+- ✅ **T73** SDD (Spec-Driven Development) nas práticas: card na caixa de ferramentas, currículo nos 8 idiomas (PDFs regerados) e base de conhecimento do Worker — RF-01, RF-04
 
 ---
 
