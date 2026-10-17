@@ -120,6 +120,7 @@ window.I18N.ru = {
   "footer.copy": "СОЗДАНО С ЗАБОТОЙ",
   "footer.updated": "ОБНОВЛЕНО",
   "footer.top": "НАВЕРХ ↑",
+  "footer.built": "КАК Я ЭТО СДЕЛАЛ →",
   "cv.pageTitle": "Резюме — Emanuel Borges",
   "cv.role": "Senior Full Stack-разработчик · Machine Learning и NLP",
   "cv.summary": "О себе",

@@ -12,6 +12,8 @@ Professional portfolio of **Emanuel Borges**, Senior Full Stack Developer (Java/
 
 🧪 **Interactive demos:** [stock forecasting (LSTM)](https://emanueleborges.github.io/demos/lstm/) · [face recognition](https://emanueleborges.github.io/demos/face/) · [movie recommender](https://emanueleborges.github.io/demos/filmes/) · [RAG security against prompt injection](https://emanueleborges.github.io/demos/guardrail/)
 
+🛠️ **How it was built:** [architecture, decisions and stack](https://emanueleborges.github.io/como-construi/)
+
 A framework-free static site with a Cloudflare serverless backend for the AI chat and consented regional/rating aggregates, plus browser-based demos. Contact is through direct links; the site has no contact form or message storage. The RAG security demo is a local simulation and does not call AI models. **The whole infrastructure runs on free tiers.**
 
 ---
@@ -47,6 +49,7 @@ A framework-free static site with a Cloudflare serverless backend for the AI cha
 | **SEO** | Link previews (Open Graph/Twitter), `hreflang` for 8 languages, `Person` structured data (JSON-LD), `sitemap.xml` and `robots.txt`; verified in Google Search Console. |
 | **Analytics** | Optional counting, only after explicit consent. The Cloudflare Worker uses the connection IP to estimate the continent and stores only daily totals in D1: visits per continent and clicks per link (LinkedIn, GitHub, résumé, project code and demos…); it does not store IP, URL, language, or identifiers. Aggregates are deleted before they reach 30 days. The choice is saved in the browser; to change it later, clear this site's saved data in browser settings. |
 | **Weekly summary** | Every Monday an email with aggregate chat ratings, consented regional counts and a health check of the AI, vector index and database. |
+| **How I built it** | Page `/como-construi/` (8 languages) summarizing this README for visitors: architecture diagram, how the assistant answers, decisions and trade-offs, quality checks and stack. Linked from the footer. |
 | **404 page** | Custom page in the site's style with links to the portfolio and the assistant. |
 | **AI demo: LSTM stock forecasting** | `/demos/lstm/` page (8 languages) where the FIAP project's LSTM runs **in the browser, in plain JavaScript** (weights exported from Keras, same output to ~1e-8). Recent prices come from the Worker (Yahoo Finance), with a saved copy if it fails; test metrics compared against a naive baseline. |
 | **"Does your role match?" (for recruiters)** | `/vaga/` page (8 languages): the recruiter pastes a job description and sees a **match score**, each requirement as ✅ meets / 🟡 partial / ⚪ not found with **clickable evidence** in the portfolio, and a "why Emanuel" summary to copy. The AI extracts the requirements reading only the posting, then grades each one; the Worker independently verifies technology evidence, splits grouped technologies so missing tools cannot be hidden, treats a skill-list mention as partial unless a project or experience demonstrates it, and computes the score by rule. The posting is not stored. |
@@ -119,6 +122,7 @@ The AI knowledge is **generated from the site's own translations** (`i18n/`): wh
 ├── index.html              # Single-page portfolio (SEO, Open Graph, JSON-LD)
 ├── 404.html                # Custom "page not found"
 ├── manifest.webmanifest · sw.js · icon-*.png  # Installable, offline app (PWA)
+├── como-construi/          # "How I built it": architecture, decisions and stack (texts in como-construi.js)
 ├── vaga/                   # "Does your role match?": page and vaga.js (POST /match)
 ├── demos/                  # In-browser AI demos (shared demos.css/demos.js)
 │   ├── lstm/               # Stock forecasting: lstm.js (inference), weights and data

@@ -101,6 +101,7 @@ window.I18N.de = {
   "footer.copy": "MIT SORGFALT GESTALTET UND ENTWICKELT",
   "footer.updated": "AKTUALISIERT AM",
   "footer.top": "NACH OBEN ↑",
+  "footer.built": "WIE ICH ES GEBAUT HABE →",
   "nav.aria": "Hauptnavigation",
   "brand.aria": "Emanuel Borges — Startseite",
   "lang.aria": "Sprache",

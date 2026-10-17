@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://emanuel-portfolio-chat.emanuel-portfolio-chat.workers.dev; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <title data-t="meta.title">How I built this portfolio — Emanuel Borges</title>
+    <meta name="description" data-t-content="meta.description" content="Architecture, decisions and stack behind Emanuel Borges's portfolio: a framework-free static site, a serverless AI assistant with RAG on Cloudflare and in-browser AI demos, all on free tiers." />
+    <link rel="canonical" href="https://emanueleborges.github.io/como-construi/" />
+    <meta name="theme-color" content="#06100b" />
+    <script src="../components/boot.js"></script>
+    <link rel="icon" href="/imagens/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/imagens/favicon-32.png" sizes="32x32" type="image/png" />
+    <link rel="apple-touch-icon" href="/imagens/apple-touch-icon.png" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="../demos/demos.css" />
+    <style>
+      .stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin-top: 32px; }
+      .stat { padding: 16px; border: 1px solid var(--line); border-radius: 14px; background: var(--surface); }
+      .stat strong { display: block; font: 500 32px/1.1 "DM Mono", monospace; letter-spacing: -.04em; background: var(--grad-text); -webkit-background-clip: text; background-clip: text; color: transparent; }
+      .stat span { display: block; margin-top: 6px; color: var(--muted); font-size: 13px; line-height: 1.45; }
+
+      /* Diagrama de arquitetura em HTML/CSS: navegador → GitHub Pages e Worker → serviços. */
+      .arch { display: grid; gap: 0; justify-items: center; }
+      .node { width: 100%; padding: 14px 16px; border: 1px solid var(--line-strong); border-radius: 12px; background: var(--surface-2); }
+      .node h3 { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; margin-bottom: 4px; }
+      .node h3 small { color: var(--kicker); font: 500 10px "DM Mono", monospace; letter-spacing: .1em; text-transform: uppercase; }
+      .node p { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.5; }
+      .node.key { border-color: rgba(var(--accent-rgb), .45); box-shadow: 0 0 0 1px rgba(var(--accent-rgb), .12) inset; }
+      .wire { width: 2px; height: 26px; background: linear-gradient(var(--line-strong), rgba(var(--accent-rgb), .6)); position: relative; }
+      .wire::after { content: ""; position: absolute; left: -4px; bottom: -1px; border: 5px solid transparent; border-top-color: rgba(var(--accent-rgb), .7); border-bottom: 0; }
+      .row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr); gap: 14px; width: 100%; align-items: start; }
+      .branch { display: grid; justify-items: center; }
+      .services { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; width: 100%; }
+      .services .node { padding: 12px 14px; }
+      .services .node h3 { font-size: 13px; }
+      .services .node p { font-size: 12px; }
+      .external { margin: 14px 0 0; color: var(--muted); font-size: 13px; }
+
+      .steps { display: grid; gap: 10px; margin: 18px 0 0; padding: 0; list-style: none; counter-reset: step; }
+      .steps li { display: grid; grid-template-columns: 36px 1fr; gap: 12px; padding: 14px 16px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); counter-increment: step; }
+      .steps li::before { content: counter(step); display: grid; place-items: center; width: 32px; height: 32px; border-radius: 50%; background: rgba(var(--accent-rgb), .14); color: var(--accent-text); font: 500 14px "DM Mono", monospace; }
+      .steps li.main { border-color: rgba(var(--accent-rgb), .4); }
+      .steps p { margin: 0; color: var(--muted); font-size: 14px; }
+
+      .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; margin-top: 18px; }
+      .cards article { padding: 16px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); }
+      .cards p { margin: 0; color: var(--muted); font-size: 14px; }
+
+      .checks { margin: 18px 0 0; padding: 0; list-style: none; display: grid; gap: 8px; }
+      .checks li { position: relative; padding-left: 26px; color: var(--muted); font-size: 14px; }
+      .checks li::before { content: "✓"; position: absolute; left: 4px; color: var(--ok); font-weight: 800; }
+      .checks strong { color: var(--text); }
+
+      .stack { display: grid; gap: 14px; margin-top: 18px; }
+      .stack h3 { color: var(--muted); font: 500 11px "DM Mono", monospace; letter-spacing: .12em; text-transform: uppercase; }
+      .chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 0; padding: 0; list-style: none; }
+      .chips li { padding: 4px 10px; border: 1px solid var(--line); border-radius: 999px; background: var(--surface-2); font: 500 12px "DM Mono", monospace; }
+
+      .more { margin: 44px 0 56px; }
+      @media (max-width: 760px) {
+        .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        .row { grid-template-columns: 1fr; }
+        .branch + .branch { margin-top: 14px; }
+      }
+    </style>
+    <script type="module" src="como-construi.js"></script>
+    <script type="module" src="../analytics-consent.js"></script>
+    <script src="../components/components.js" defer></script>
+  </head>
+  <body>
+    <div class="glow glow-1" aria-hidden="true"></div>
+    <div class="glow glow-2" aria-hidden="true"></div>
+    <div class="shell">
+      <header>
+        <a class="brand" href="/"><site-logo class="brand-logo" size="32"></site-logo> Emanuel Borges</a>
+        <div class="header-tools">
+          <theme-toggle></theme-toggle>
+          <label><span class="visually-hidden" data-t="lang">Language</span>
+            <select data-lang>
+              <option value="en" lang="en">English</option>
+              <option value="pt" lang="pt-BR">Português</option>
+              <option value="es" lang="es">Español</option>
+              <option value="fr" lang="fr">Français</option>
+              <option value="it" lang="it">Italiano</option>
+              <option value="de" lang="de">Deutsch</option>
+              <option value="zh" lang="zh-CN">中文</option>
+              <option value="ru" lang="ru">Русский</option>
+            </select>
+          </label>
+        </div>
+      </header>
+
+      <main>
+        <p class="kicker" data-t="kicker"></p>
+        <h1 data-t="title"></h1>
+        <p class="lead" data-t="lead"></p>
+        <div class="links">
+          <a class="button" href="/" data-t="back"></a>
+          <a class="button" href="https://github.com/emanueleborges/emanueleborges.github.io" target="_blank" rel="noopener" data-t="code"></a>
+        </div>
+
+        <div class="stats">
+          <div class="stat"><strong>0</strong><span data-t="statFramework"></span></div>
+          <div class="stat"><strong>8</strong><span data-t="statLangs"></span></div>
+          <div class="stat"><strong>4</strong><span data-t="statDemos"></span></div>
+          <div class="stat"><strong>$0</strong><span data-t="statCost"></span></div>
+        </div>
+
+        <h2 data-t="archTitle"></h2>
+        <p class="note" data-t="archLead"></p>
+        <section class="panel">
+          <div class="arch">
+            <div class="node">
+              <h3><span data-t="arch.browser"></span><small>HTML · CSS · JS</small></h3>
+              <p data-t="arch.browserText"></p>
+            </div>
+            <div class="wire" aria-hidden="true"></div>
+            <div class="row">
+              <div class="branch">
+                <div class="node">
+                  <h3>GitHub Pages<small>static</small></h3>
+                  <p data-t="arch.pages"></p>
+                </div>
+              </div>
+              <div class="branch">
+                <div class="node key">
+                  <h3>Cloudflare Worker<small>serverless</small></h3>
+                  <p data-t="arch.worker"></p>
+                </div>
+                <div class="wire" aria-hidden="true"></div>
+                <div class="services">
+                  <div class="node"><h3>Turnstile</h3><p data-t="n.turnstile"></p></div>
+                  <div class="node"><h3>Workers AI</h3><p data-t="n.ai"></p></div>
+                  <div class="node"><h3>Vectorize</h3><p data-t="n.vectorize"></p></div>
+                  <div class="node"><h3>D1</h3><p data-t="n.d1"></p></div>
+                  <div class="node"><h3>Resend</h3><p data-t="n.resend"></p></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <p class="external" data-t="arch.external"></p>
+        </section>
+
+        <h2 data-t="chatTitle"></h2>
+        <p class="note" data-t="chatLead"></p>
+        <ol class="steps">
+          <li><div><h3 data-t="step1Title"></h3><p data-t="step1Text"></p></div></li>
+          <li><div><h3 data-t="step2Title"></h3><p data-t="step2Text"></p></div></li>
+          <li class="main"><div><h3 data-t="step3Title"></h3><p data-t="step3Text"></p></div></li>
+          <li><div><h3 data-t="step4Title"></h3><p data-t="step4Text"></p></div></li>
+        </ol>
+        <p class="note" data-t="chatNote"></p>
+
+        <h2 data-t="decisionsTitle"></h2>
+        <div class="cards">
+          <article><h3 data-t="d1Title"></h3><p data-t="d1Text"></p></article>
+          <article><h3 data-t="d2Title"></h3><p data-t="d2Text"></p></article>
+          <article><h3 data-t="d3Title"></h3><p data-t="d3Text"></p></article>
+          <article><h3 data-t="d4Title"></h3><p data-t="d4Text"></p></article>
+          <article><h3 data-t="d5Title"></h3><p data-t="d5Text"></p></article>
+          <article><h3 data-t="d6Title"></h3><p data-t="d6Text"></p></article>
+        </div>
+
+        <h2 data-t="qualityTitle"></h2>
+        <ul class="checks">
+          <li data-t="q1"></li>
+          <li data-t="q2"></li>
+          <li data-t="q3"></li>
+          <li data-t="q4"></li>
+        </ul>
+
+        <h2 data-t="stackTitle"></h2>
+        <div class="stack">
+          <div><h3 data-t="stack.front"></h3>
+            <ul class="chips"><li>HTML5</li><li>CSS3</li><li>JavaScript ES2020+</li><li>Web Components</li><li>Canvas 2D</li><li>IntersectionObserver</li><li>Intl</li><li>Service Worker</li></ul></div>
+          <div><h3 data-t="stack.back"></h3>
+            <ul class="chips"><li>Cloudflare Workers</li><li>Cron Triggers</li><li>Workers AI</li><li>Vectorize</li><li>AI Gateway</li><li>D1 (SQLite)</li><li>Turnstile</li><li>Rate Limiting</li><li>Resend</li></ul></div>
+          <div><h3 data-t="stack.ai"></h3>
+            <ul class="chips"><li>Qwen3 30B</li><li>BGE-M3</li><li>RAG</li><li>Keras / TensorFlow</li><li>LSTM</li><li>face-api.js</li><li>TensorFlow.js</li><li>TF-IDF</li></ul></div>
+          <div><h3 data-t="stack.tools"></h3>
+            <ul class="chips"><li>GitHub Actions</li><li>GitHub Pages</li><li>Lighthouse CI</li><li>Chrome headless</li><li>Wrangler</li><li>Node.js</li><li>Python</li></ul></div>
+        </div>
+
+        <section class="more">
+          <h2 data-t="moreTitle"></h2>
+          <p class="note" data-t="moreText"></p>
+          <div class="links">
+            <a class="button primary" href="https://github.com/emanueleborges/emanueleborges.github.io/tree/main/docs/sdd" target="_blank" rel="noopener" data-t="linkSpec"></a>
+            <a class="button" href="https://github.com/emanueleborges/emanueleborges.github.io#readme" target="_blank" rel="noopener" data-t="linkReadme"></a>
+            <a class="button" href="/#chat" data-t="linkChat"></a>
+          </div>
+        </section>
+      </main>
+    </div>
+  </body>
+</html>

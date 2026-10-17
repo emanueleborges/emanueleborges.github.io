@@ -109,6 +109,7 @@ window.I18N.en = {
   "contact.kicker": "// 06. CONTACT",
   "footer.copy": "DESIGNED AND BUILT WITH CARE",
   "footer.top": "BACK TO TOP ↑",
+  "footer.built": "HOW I BUILT IT →",
   "footer.updated": "UPDATED ON",
   "cv.download": "Download résumé <span>↓</span>",
   "cv.pageTitle": "Résumé — Emanuel Borges",

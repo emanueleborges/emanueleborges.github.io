@@ -100,6 +100,7 @@ window.I18N.es = {
   "contact.kicker": "// 06. CONTACTO",
   "footer.copy": "DISEÑADO Y CONSTRUIDO CON CUIDADO",
   "footer.top": "VOLVER ARRIBA ↑",
+  "footer.built": "CÓMO LO CONSTRUÍ →",
   "footer.updated": "ACTUALIZADO EL",
   "cv.download": "Descargar CV <span>↓</span>",
   "cv.pageTitle": "Currículum — Emanuel Borges",

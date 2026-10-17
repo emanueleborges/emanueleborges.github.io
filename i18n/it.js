@@ -120,6 +120,7 @@ window.I18N.it = {
   "footer.copy": "PROGETTATO E REALIZZATO CON CURA",
   "footer.updated": "AGGIORNATO IL",
   "footer.top": "TORNA SU ↑",
+  "footer.built": "COME L’HO COSTRUITO →",
   "cv.pageTitle": "Curriculum — Emanuel Borges",
   "cv.role": "Sviluppatore Full Stack Senior · Machine Learning &amp; NLP",
   "cv.summary": "Profilo professionale",

@@ -120,6 +120,7 @@ window.I18N.zh = {
   "footer.copy": "用心设计与开发",
   "footer.updated": "更新于",
   "footer.top": "返回顶部 ↑",
+  "footer.built": "我是如何构建的 →",
   "cv.pageTitle": "简历 — Emanuel Borges",
   "cv.role": "高级全栈开发工程师 · 机器学习与自然语言处理",
   "cv.summary": "个人简介",

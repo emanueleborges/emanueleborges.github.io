@@ -12,6 +12,8 @@ Portfólio profissional de **Emanuel Borges**, Desenvolvedor Full Stack Sênior 
 
 🧪 **Demos interativas:** [previsão de ações (LSTM)](https://emanueleborges.github.io/demos/lstm/) · [reconhecimento facial](https://emanueleborges.github.io/demos/face/) · [recomendação de filmes](https://emanueleborges.github.io/demos/filmes/) · [segurança de RAG contra prompt injection](https://emanueleborges.github.io/demos/guardrail/)
 
+🛠️ **Como foi construído:** [arquitetura, decisões e tecnologias](https://emanueleborges.github.io/como-construi/)
+
 Site estático, sem framework, com backend *serverless* no Cloudflare para o chat com IA e estatísticas agregadas consentidas, além de demos que rodam no navegador. O contato é por links diretos: não há formulário nem armazenamento de mensagens. A demo de segurança RAG é uma simulação local. **Toda a infraestrutura roda em planos gratuitos.**
 
 ---
@@ -47,6 +49,7 @@ Site estático, sem framework, com backend *serverless* no Cloudflare para o cha
 | **SEO** | Prévia de link (Open Graph/Twitter), `hreflang` para os 8 idiomas, dados estruturados de `Person` (JSON-LD), `sitemap.xml` e `robots.txt`; verificado no Google Search Console. |
 | **Estatísticas** | Contagem opcional, somente após consentimento explícito. O Worker da Cloudflare usa o IP da conexão para estimar o continente e grava no D1 apenas totais diários: acessos por continente e cliques por link (LinkedIn, GitHub, currículo, código e demos dos projetos…); não grava IP, URL, idioma ou identificadores. Os agregados são removidos antes de completar 30 dias. A escolha fica salva no navegador; para alterá-la depois, limpe os dados salvos deste site nas configurações do navegador. |
 | **Resumo semanal** | Toda segunda, um e-mail com avaliações agregadas, acessos regionais consentidos e saúde da IA, do índice vetorial e do banco. |
+| **Como construí** | Página `/como-construi/` (8 idiomas) que resume este README para visitantes: diagrama da arquitetura, como o assistente responde, decisões e trade-offs, verificações de qualidade e tecnologias. Link no rodapé. |
 | **Página 404** | Página personalizada no estilo do site, com links para o portfólio e o assistente. |
 | **Demo de IA: previsão de ações com LSTM** | Página `/demos/lstm/` (8 idiomas) onde o LSTM do projeto FIAP roda **no navegador, em JavaScript puro** (pesos exportados do Keras, mesma saída até ~1e-8). Preços recentes pelo Worker (Yahoo Finance), com cópia salva se ele falhar; métricas do teste comparadas com um baseline ingênuo. |
 | **"Sua vaga combina?" (para recrutadores)** | Página `/vaga/` (8 idiomas): o recrutador cola a vaga e vê a **nota de aderência**, cada requisito como ✅ atende / 🟡 parcial / ⚪ não encontrado com **evidências clicáveis** no portfólio, e um resumo "por que o Emanuel" para copiar. A IA extrai os requisitos lendo só a vaga e depois avalia cada um; o Worker confere as evidências, rebaixa tecnologias ausentes do perfil e calcula a nota por regra. O texto da vaga não é salvo. |
@@ -119,6 +122,7 @@ O conhecimento da IA é **gerado das próprias traduções do site** (`i18n/`): 
 ├── index.html              # Página única do portfólio (SEO, Open Graph, JSON-LD)
 ├── 404.html                # "Página não encontrada" personalizada
 ├── manifest.webmanifest · sw.js · icon-*.png  # App instalável e offline (PWA)
+├── como-construi/          # "Como construí": arquitetura, decisões e tecnologias (textos em como-construi.js)
 ├── vaga/                   # "Sua vaga combina?": página e vaga.js (POST /match)
 ├── demos/                  # Demos de IA no navegador (demos.css/demos.js compartilhados)
 │   ├── lstm/               # Previsão de ações: lstm.js (inferência), pesos e dados

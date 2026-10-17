@@ -101,6 +101,7 @@ window.I18N.pt = {
   "footer.copy": "DESENHADO E CONSTRUÍDO COM CUIDADO",
   "footer.updated": "ATUALIZADO EM",
   "footer.top": "VOLTAR AO TOPO ↑",
+  "footer.built": "COMO CONSTRUÍ →",
   "nav.aria": "Navegação principal",
   "brand.aria": "Emanuel Borges — início",
   "lang.aria": "Idioma",

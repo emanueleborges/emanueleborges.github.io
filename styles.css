@@ -305,6 +305,7 @@ blockquote { margin: 32px 0 0; padding: 12px 0 12px 16px; border-left: 2px solid
 .contact-section { position: relative; overflow: hidden; padding: 105px 0 85px; border-block: 1px solid var(--line); text-align: center; }
 .contact-glow { position: absolute; width: 520px; height: 350px; left: 50%; top: 44%; transform: translate(-50%,-50%); background: var(--aurora-1); opacity: .19; filter: blur(125px); pointer-events: none; }
 .contact-inner { position: relative; }
+.contact-section .section-kicker { text-align: left; }
 .contact-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; }
 .contact-button { min-width: 188px; text-transform: none; }
 .button-whatsapp { color: #fff; background: linear-gradient(115deg, #25d366, #128c7e); box-shadow: 0 8px 30px rgba(37,211,102,.22), inset 0 1px 0 rgba(255,255,255,.24); }
@@ -324,7 +325,9 @@ blockquote { margin: 32px 0 0; padding: 12px 0 12px 16px; border-left: 2px solid
 .social-card:hover .social-arrow { transform: translate(3px, -3px); color: var(--cyan-soft); }
 @media (max-width: 560px) { .social-card { flex: 1 1 100%; min-width: 0; } }
 .footer { min-height: 79px; display: flex; align-items: center; justify-content: space-between; gap: 18px; }
-.footer-copy, .footer-updated, .back-top { color: var(--subtle); font-size: 10px; letter-spacing: .06em; }
+.footer-copy, .footer-updated, .back-top, .footer-built { color: var(--subtle); font-size: 10px; letter-spacing: .06em; }
+.footer-built { text-decoration: none; }
+.footer-built:hover { color: var(--accent-text); }
 .footer-updated { text-transform: uppercase; }
 .back-top:hover { color: var(--text-strong); }
 .guide-launcher { position: fixed; z-index: 12; bottom: 22px; left: 22px; display: inline-flex; align-items: center; gap: 8px; min-height: 46px; padding: 0 16px; border: 1px solid var(--line-strong); border-radius: 999px; background: var(--surface); color: var(--text); font: 700 13px var(--sans); box-shadow: 0 8px 28px var(--shadow-strong); cursor: pointer; transition: border-color .2s, transform .2s; }
