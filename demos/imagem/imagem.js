@@ -2,13 +2,10 @@ import { Demo } from "../demos.js";
 import { PortfolioApi } from "../../api.js";
 
 // Demo "Gerador de imagens": o texto vai ao Worker (POST /image), que modera e gera com FLUX.1 [schnell].
+// O pedido pode ser escrito em qualquer idioma: o Worker traduz para o inglês antes de moderar e gerar.
 // Nada é salvo: a imagem chega em base64 e só existe nesta aba.
-const EXAMPLES = [
-  "A lighthouse on the Amazon river at sunset, watercolor",
-  "Isometric illustration of a tiny server room inside a terrarium",
-  "A capybara astronaut floating near Saturn, 3D render",
-  "Minimalist poster of Manaus Opera House, flat design, orange and green",
-];
+// Exemplos no idioma escolhido (ex1…ex4): o Worker traduz para o inglês antes de gerar.
+const EXAMPLE_KEYS = ["ex1", "ex2", "ex3", "ex4"];
 
 const T = {
   en: {
@@ -22,13 +19,18 @@ const T = {
     code: "View code ↗",
     promptLabel: "Describe the image",
     placeholder: "e.g. a toucan made of circuit boards, studio lighting",
-    examplesLabel: "Or try an example (English gives the best results):",
+    examplesLabel: "Or try an example:",
     generate: "Generate image",
     generating: "Generating…",
     empty: "Your image will appear here.",
     working: "Checking the request and generating. This usually takes 3–8 seconds…",
     done: "Generated in {seconds} s.",
     download: "Download ↓",
+    sent: "Sent to the model (English):",
+    ex1: "A lighthouse on the Amazon river at sunset, watercolor",
+    ex2: "Isometric illustration of a tiny server room inside a terrarium",
+    ex3: "A capybara astronaut floating near Saturn, 3D render",
+    ex4: "Minimalist poster of the Manaus Opera House, orange and green",
     "error.short": "Write at least 3 characters.",
     "error.unsafe_prompt": "This request was blocked by moderation. Try describing something else.",
     "error.rate_limited": "Too many requests. Wait a minute and try again.",
@@ -44,8 +46,8 @@ const T = {
     s1Text: "2 images per day per visitor, plus a global daily ceiling that protects the free quota shared with the chat.",
     s2Title: "Anti-bot",
     s2Text: "An invisible Turnstile token proves the request comes from a person on this site.",
-    s3Title: "Moderation",
-    s3Text: "A local term filter, then Llama Guard 3 classifies the request before any image is made.",
+    s3Title: "Translate + moderate",
+    s3Text: "Your text is translated into English (Qwen3); then a term filter and Llama Guard 3 check the translation before any image is made.",
     s4Title: "Diffusion",
     s4Text: "FLUX.1 [schnell] turns noise into a 1024×1024 image in 4 steps on Workers AI.",
     s5Title: "No storage",
@@ -63,13 +65,18 @@ const T = {
     code: "Ver código ↗",
     promptLabel: "Descreva a imagem",
     placeholder: "ex.: um tucano feito de placas de circuito, luz de estúdio",
-    examplesLabel: "Ou teste um exemplo (em inglês o resultado é melhor):",
+    examplesLabel: "Ou teste um exemplo:",
     generate: "Gerar imagem",
     generating: "Gerando…",
     empty: "Sua imagem aparece aqui.",
     working: "Conferindo o pedido e gerando. Costuma levar de 3 a 8 segundos…",
     done: "Gerada em {seconds} s.",
     download: "Baixar ↓",
+    sent: "Enviado ao modelo (em inglês):",
+    ex1: "Um farol no rio Amazonas ao pôr do sol, aquarela",
+    ex2: "Ilustração isométrica de uma sala de servidores dentro de um terrário",
+    ex3: "Uma capivara astronauta flutuando perto de Saturno, render 3D",
+    ex4: "Pôster minimalista do Teatro Amazonas, laranja e verde",
     "error.short": "Escreva pelo menos 3 caracteres.",
     "error.unsafe_prompt": "Este pedido foi bloqueado pela moderação. Tente descrever outra coisa.",
     "error.rate_limited": "Muitos pedidos. Espere um minuto e tente de novo.",
@@ -85,8 +92,8 @@ const T = {
     s1Text: "2 imagens por dia por visitante, mais um teto diário global que protege a cota gratuita dividida com o chat.",
     s2Title: "Anti-robô",
     s2Text: "Um token invisível do Turnstile comprova que o pedido vem de uma pessoa neste site.",
-    s3Title: "Moderação",
-    s3Text: "Um filtro local de termos e, depois, o Llama Guard 3 classifica o pedido antes de qualquer imagem.",
+    s3Title: "Tradução e moderação",
+    s3Text: "Seu texto é traduzido para o inglês (Qwen3); depois um filtro de termos e o Llama Guard 3 conferem a tradução antes de gerar.",
     s4Title: "Difusão",
     s4Text: "O FLUX.1 [schnell] transforma ruído numa imagem 1024×1024 em 4 passos no Workers AI.",
     s5Title: "Sem armazenamento",
@@ -104,13 +111,18 @@ const T = {
     code: "Ver código ↗",
     promptLabel: "Describe la imagen",
     placeholder: "p. ej.: un tucán hecho de placas de circuito, luz de estudio",
-    examplesLabel: "O prueba un ejemplo (en inglés el resultado es mejor):",
+    examplesLabel: "O prueba un ejemplo:",
     generate: "Generar imagen",
     generating: "Generando…",
     empty: "Tu imagen aparecerá aquí.",
     working: "Revisando la petición y generando. Suele tardar de 3 a 8 segundos…",
     done: "Generada en {seconds} s.",
     download: "Descargar ↓",
+    sent: "Enviado al modelo (en inglés):",
+    ex1: "Un faro en el río Amazonas al atardecer, acuarela",
+    ex2: "Ilustración isométrica de una pequeña sala de servidores dentro de un terrario",
+    ex3: "Un capibara astronauta flotando cerca de Saturno, render 3D",
+    ex4: "Póster minimalista del Teatro Amazonas, naranja y verde",
     "error.short": "Escribe al menos 3 caracteres.",
     "error.unsafe_prompt": "La moderación bloqueó esta petición. Intenta describir otra cosa.",
     "error.rate_limited": "Demasiadas peticiones. Espera un minuto e inténtalo de nuevo.",
@@ -126,8 +138,8 @@ const T = {
     s1Text: "2 imágenes al día por visitante, más un tope diario global que protege la cuota gratuita compartida con el chat.",
     s2Title: "Antibots",
     s2Text: "Un token invisible de Turnstile demuestra que la petición viene de una persona en este sitio.",
-    s3Title: "Moderación",
-    s3Text: "Un filtro local de términos y luego Llama Guard 3 clasifica la petición antes de generar nada.",
+    s3Title: "Traducción y moderación",
+    s3Text: "Tu texto se traduce al inglés (Qwen3); luego un filtro de términos y Llama Guard 3 revisan la traducción antes de generar.",
     s4Title: "Difusión",
     s4Text: "FLUX.1 [schnell] convierte ruido en una imagen de 1024×1024 en 4 pasos en Workers AI.",
     s5Title: "Sin almacenamiento",
@@ -145,13 +157,18 @@ const T = {
     code: "Voir le code ↗",
     promptLabel: "Décrivez l’image",
     placeholder: "ex. : un toucan fait de circuits imprimés, éclairage studio",
-    examplesLabel: "Ou essayez un exemple (l’anglais donne les meilleurs résultats) :",
+    examplesLabel: "Ou essayez un exemple :",
     generate: "Générer l’image",
     generating: "Génération…",
     empty: "Votre image apparaîtra ici.",
     working: "Vérification de la demande et génération. Cela prend en général 3 à 8 secondes…",
     done: "Générée en {seconds} s.",
     download: "Télécharger ↓",
+    sent: "Envoyé au modèle (en anglais) :",
+    ex1: "Un phare sur l’Amazone au coucher du soleil, aquarelle",
+    ex2: "Illustration isométrique d’une petite salle de serveurs dans un terrarium",
+    ex3: "Un capybara astronaute flottant près de Saturne, rendu 3D",
+    ex4: "Affiche minimaliste du Théâtre Amazonas, orange et vert",
     "error.short": "Écrivez au moins 3 caractères.",
     "error.unsafe_prompt": "Cette demande a été bloquée par la modération. Essayez de décrire autre chose.",
     "error.rate_limited": "Trop de demandes. Attendez une minute et réessayez.",
@@ -167,8 +184,8 @@ const T = {
     s1Text: "2 images par jour et par visiteur, plus un plafond quotidien global qui protège le quota gratuit partagé avec le chat.",
     s2Title: "Anti-robot",
     s2Text: "Un jeton Turnstile invisible prouve que la demande vient d’une personne sur ce site.",
-    s3Title: "Modération",
-    s3Text: "Un filtre local de termes, puis Llama Guard 3 classe la demande avant toute génération.",
+    s3Title: "Traduction et modération",
+    s3Text: "Votre texte est traduit en anglais (Qwen3) ; puis un filtre de termes et Llama Guard 3 vérifient la traduction avant la génération.",
     s4Title: "Diffusion",
     s4Text: "FLUX.1 [schnell] transforme du bruit en image 1024×1024 en 4 étapes sur Workers AI.",
     s5Title: "Aucun stockage",
@@ -186,13 +203,18 @@ const T = {
     code: "Vedi il codice ↗",
     promptLabel: "Descrivi l’immagine",
     placeholder: "es.: un tucano fatto di circuiti stampati, luce da studio",
-    examplesLabel: "Oppure prova un esempio (in inglese il risultato è migliore):",
+    examplesLabel: "Oppure prova un esempio:",
     generate: "Genera immagine",
     generating: "Generazione…",
     empty: "La tua immagine apparirà qui.",
     working: "Verifica della richiesta e generazione. Di solito servono 3–8 secondi…",
     done: "Generata in {seconds} s.",
     download: "Scarica ↓",
+    sent: "Inviato al modello (in inglese):",
+    ex1: "Un faro sul Rio delle Amazzoni al tramonto, acquerello",
+    ex2: "Illustrazione isometrica di una piccola sala server dentro un terrario",
+    ex3: "Un capibara astronauta che fluttua vicino a Saturno, render 3D",
+    ex4: "Poster minimalista del Teatro Amazonas, arancione e verde",
     "error.short": "Scrivi almeno 3 caratteri.",
     "error.unsafe_prompt": "La moderazione ha bloccato questa richiesta. Prova a descrivere altro.",
     "error.rate_limited": "Troppe richieste. Aspetta un minuto e riprova.",
@@ -208,8 +230,8 @@ const T = {
     s1Text: "2 immagini al giorno per visitatore, più un tetto giornaliero globale che protegge la quota gratuita condivisa con la chat.",
     s2Title: "Anti-bot",
     s2Text: "Un token Turnstile invisibile dimostra che la richiesta arriva da una persona su questo sito.",
-    s3Title: "Moderazione",
-    s3Text: "Un filtro locale di termini, poi Llama Guard 3 classifica la richiesta prima di generare.",
+    s3Title: "Traduzione e moderazione",
+    s3Text: "Il tuo testo viene tradotto in inglese (Qwen3); poi un filtro di termini e Llama Guard 3 controllano la traduzione prima di generare.",
     s4Title: "Diffusione",
     s4Text: "FLUX.1 [schnell] trasforma il rumore in un’immagine 1024×1024 in 4 passi su Workers AI.",
     s5Title: "Nessuna archiviazione",
@@ -227,13 +249,18 @@ const T = {
     code: "Code ansehen ↗",
     promptLabel: "Beschreibe das Bild",
     placeholder: "z. B. ein Tukan aus Leiterplatten, Studiobeleuchtung",
-    examplesLabel: "Oder probiere ein Beispiel (Englisch liefert die besten Ergebnisse):",
+    examplesLabel: "Oder probiere ein Beispiel:",
     generate: "Bild erzeugen",
     generating: "Wird erzeugt…",
     empty: "Hier erscheint dein Bild.",
     working: "Anfrage wird geprüft und das Bild erzeugt. Das dauert meist 3–8 Sekunden…",
     done: "Erzeugt in {seconds} s.",
     download: "Herunterladen ↓",
+    sent: "An das Modell gesendet (Englisch):",
+    ex1: "Ein Leuchtturm am Amazonas bei Sonnenuntergang, Aquarell",
+    ex2: "Isometrische Illustration eines winzigen Serverraums in einem Terrarium",
+    ex3: "Ein Capybara-Astronaut schwebt nahe dem Saturn, 3D-Render",
+    ex4: "Minimalistisches Poster des Teatro Amazonas, Orange und Grün",
     "error.short": "Schreibe mindestens 3 Zeichen.",
     "error.unsafe_prompt": "Diese Anfrage wurde von der Moderation blockiert. Beschreibe etwas anderes.",
     "error.rate_limited": "Zu viele Anfragen. Warte eine Minute und versuche es erneut.",
@@ -249,8 +276,8 @@ const T = {
     s1Text: "2 Bilder pro Tag und Besucher, dazu eine globale Tagesgrenze, die das mit dem Chat geteilte Gratis-Kontingent schützt.",
     s2Title: "Anti-Bot",
     s2Text: "Ein unsichtbares Turnstile-Token belegt, dass die Anfrage von einem Menschen auf dieser Website kommt.",
-    s3Title: "Moderation",
-    s3Text: "Ein lokaler Begriffsfilter, danach stuft Llama Guard 3 die Anfrage ein, bevor ein Bild entsteht.",
+    s3Title: "Übersetzung und Moderation",
+    s3Text: "Dein Text wird ins Englische übersetzt (Qwen3); dann prüfen ein Begriffsfilter und Llama Guard 3 die Übersetzung vor der Erzeugung.",
     s4Title: "Diffusion",
     s4Text: "FLUX.1 [schnell] macht aus Rauschen in 4 Schritten ein 1024×1024-Bild auf Workers AI.",
     s5Title: "Keine Speicherung",
@@ -268,13 +295,18 @@ const T = {
     code: "查看代码 ↗",
     promptLabel: "描述图像",
     placeholder: "例如：由电路板组成的巨嘴鸟，影棚灯光",
-    examplesLabel: "或试试示例（英文效果最好）：",
+    examplesLabel: "或试试示例：",
     generate: "生成图像",
     generating: "生成中…",
     empty: "图像将显示在这里。",
     working: "正在检查请求并生成，通常需要 3–8 秒…",
     done: "用时 {seconds} 秒。",
     download: "下载 ↓",
+    sent: "发送给模型（英文）：",
+    ex1: "日落时分亚马孙河上的灯塔，水彩",
+    ex2: "玻璃生态瓶里的迷你服务器机房，等距插画",
+    ex3: "漂浮在土星附近的水豚宇航员，3D 渲染",
+    ex4: "马瑙斯亚马孙剧院的极简海报，橙色和绿色",
     "error.short": "请至少输入 3 个字符。",
     "error.unsafe_prompt": "该请求被审核拦截，请换个描述。",
     "error.rate_limited": "请求过多，请等一分钟再试。",
@@ -290,8 +322,8 @@ const T = {
     s1Text: "每位访客每天 2 张图像，另有全站每日上限，保护与聊天共享的免费额度。",
     s2Title: "防机器人",
     s2Text: "隐形的 Turnstile 令牌证明请求来自本站的真实用户。",
-    s3Title: "审核",
-    s3Text: "先经过本地关键词过滤，再由 Llama Guard 3 在生成前对请求分类。",
+    s3Title: "翻译与审核",
+    s3Text: "你的文字会先翻译成英文（Qwen3），再由关键词过滤和 Llama Guard 3 在生成前检查译文。",
     s4Title: "扩散生成",
     s4Text: "FLUX.1 [schnell] 在 Workers AI 上用 4 步把噪声变成 1024×1024 的图像。",
     s5Title: "不存储",
@@ -309,13 +341,18 @@ const T = {
     code: "Смотреть код ↗",
     promptLabel: "Опишите изображение",
     placeholder: "например: тукан из печатных плат, студийный свет",
-    examplesLabel: "Или попробуйте пример (на английском результат лучше):",
+    examplesLabel: "Или попробуйте пример:",
     generate: "Сгенерировать",
     generating: "Генерация…",
     empty: "Здесь появится ваше изображение.",
     working: "Проверяем запрос и генерируем. Обычно это занимает 3–8 секунд…",
     done: "Готово за {seconds} с.",
     download: "Скачать ↓",
+    sent: "Отправлено модели (на английском):",
+    ex1: "Маяк на Амазонке на закате, акварель",
+    ex2: "Изометрическая иллюстрация крошечной серверной в террариуме",
+    ex3: "Капибара-астронавт парит рядом с Сатурном, 3D-рендер",
+    ex4: "Минималистичный постер театра Амазонас, оранжевый и зелёный",
     "error.short": "Введите хотя бы 3 символа.",
     "error.unsafe_prompt": "Запрос заблокирован модерацией. Попробуйте описать что-то другое.",
     "error.rate_limited": "Слишком много запросов. Подождите минуту и попробуйте снова.",
@@ -331,8 +368,8 @@ const T = {
     s1Text: "2 изображения в день на посетителя плюс общий дневной потолок, который бережёт бесплатную квоту, общую с чатом.",
     s2Title: "Антибот",
     s2Text: "Невидимый токен Turnstile подтверждает, что запрос сделал человек на этом сайте.",
-    s3Title: "Модерация",
-    s3Text: "Локальный фильтр слов, затем Llama Guard 3 классифицирует запрос до генерации.",
+    s3Title: "Перевод и модерация",
+    s3Text: "Ваш текст переводится на английский (Qwen3), затем фильтр слов и Llama Guard 3 проверяют перевод перед генерацией.",
     s4Title: "Диффузия",
     s4Text: "FLUX.1 [schnell] за 4 шага превращает шум в изображение 1024×1024 на Workers AI.",
     s5Title: "Без хранения",
@@ -386,13 +423,12 @@ const updateCounter = () => (counter.textContent = `${promptInput.value.length} 
 const renderExamples = () => {
   const box = document.querySelector("[data-examples]");
   box.replaceChildren(
-    ...EXAMPLES.map((text) => {
+    ...EXAMPLE_KEYS.map((key) => {
       const chip = document.createElement("button");
       chip.type = "button";
-      chip.textContent = text.length > 38 ? `${text.slice(0, 36)}…` : text;
-      chip.title = text;
+      chip.textContent = Demo.t(key);
       chip.addEventListener("click", () => {
-        promptInput.value = text;
+        promptInput.value = Demo.t(key);
         updateCounter();
         promptInput.focus();
       });
@@ -401,7 +437,17 @@ const renderExamples = () => {
   );
 };
 
-const showImage = (base64, prompt, seconds) => {
+const sentNote = document.querySelector("[data-sent]");
+let sentText = "";
+const showSent = () => {
+  sentNote.hidden = !sentText;
+  if (!sentText) return;
+  const label = document.createElement("strong");
+  label.textContent = `${Demo.t("sent")} `;
+  sentNote.replaceChildren(label, sentText);
+};
+
+const showImage = (base64, prompt, seconds, english) => {
   const src = `data:image/jpeg;base64,${base64}`;
   const img = document.createElement("img");
   img.src = src;
@@ -415,6 +461,8 @@ const showImage = (base64, prompt, seconds) => {
   info.textContent = "FLUX.1 [schnell] · 4 steps · 1024×1024";
   meta.replaceChildren(info, download);
   meta.hidden = false;
+  sentText = english ?? "";
+  showSent();
   setStatus(Demo.t("done", { seconds: Demo.fmtNum(seconds, 1) }));
 };
 
@@ -440,7 +488,7 @@ form.addEventListener("submit", async (event) => {
     showQuota(data.remaining > 0 ? "left1" : "left0");
     if (data.remaining <= 0) markQuotaDone();
   }
-  if (ok && data?.image) return showImage(data.image, prompt, (performance.now() - started) / 1000);
+  if (ok && data?.image) return showImage(data.image, prompt, (performance.now() - started) / 1000, data.prompt);
   if (data?.error === "visitor_limit") {
     markQuotaDone();
     showQuota("error.visitor_limit");
@@ -451,7 +499,6 @@ form.addEventListener("submit", async (event) => {
 });
 
 promptInput.addEventListener("input", updateCounter);
-renderExamples();
 // Texto vindo do chat do portfólio (?prompt=…): já deixa o pedido preenchido.
 const fromChat = new URLSearchParams(location.search).get("prompt");
 if (fromChat) {
@@ -465,7 +512,10 @@ if (quotaDone()) {
 Demo.setup(T, () => {
   if (!busy) button.textContent = Demo.t("generate");
   showQuota(quotaKey);
+  renderExamples();
+  showSent();
   const download = meta.querySelector("a");
   if (download) download.textContent = Demo.t("download");
 });
 showQuota(quotaKey);
+renderExamples();

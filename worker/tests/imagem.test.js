@@ -1,11 +1,13 @@
 import test from "node:test";
 import assert from "node:assert/strict";
+import { MODEL } from "../src/comum.js";
 import { DAILY_IMAGE_LIMIT, GUARD_MODEL, IMAGE_MODEL, PER_VISITOR_LIMIT, handleImage, isSafeVerdict, visitorKey } from "../src/rotas/imagem.js";
 
 const ORIGIN = "https://emanueleborges.github.io";
 
 // D1 de mentira: guarda a cota por visitante em memória e conta o total global.
-function setup({ limited = false, human = true, verdict = { response: "safe" }, global = 1, image = "aGVsbG8=", imageError = null, quota = new Map() } = {}) {
+// A tradução de mentira devolve o texto como veio, a menos que `translation` diga outra coisa.
+function setup({ limited = false, human = true, verdict = { response: "safe" }, global = 1, image = "aGVsbG8=", imageError = null, quota = new Map(), translation, translateError = null } = {}) {
   const calls = [];
   const env = {
     TURNSTILE_SECRET: "test-secret",
@@ -14,6 +16,10 @@ function setup({ limited = false, human = true, verdict = { response: "safe" }, 
       async run(model, input) {
         calls.push({ model, input });
         if (model === GUARD_MODEL) return verdict;
+        if (model === MODEL) {
+          if (translateError) throw new Error(translateError);
+          return { response: translation ?? input.messages[1].content.match(/<description>(.*)<\/description>/)[1] };
+        }
         if (imageError) throw new Error(imageError);
         return { image };
       },
@@ -64,9 +70,31 @@ test("generates an image after moderation and reports the visitor's remaining qu
   assert.equal(status, 200);
   assert.equal(body.image, "aGVsbG8=");
   assert.equal(body.remaining, PER_VISITOR_LIMIT - 1);
-  assert.deepEqual(calls.filter((c) => c.model).map((c) => c.model), [GUARD_MODEL, IMAGE_MODEL]);
+  assert.deepEqual(calls.filter((c) => c.model).map((c) => c.model), [MODEL, GUARD_MODEL, IMAGE_MODEL]);
   // O FLUX.1 [schnell] do Workers AI recusa campos fora do schema (ex.: seed).
   assert.deepEqual(calls.find((c) => c.model === IMAGE_MODEL).input, { prompt: "a lighthouse in the Amazon at sunset", steps: 4 });
+});
+
+test("translates the prompt to English and moderates what actually goes to FLUX", async () => {
+  const { status, body, calls } = await run({ prompt: "um farol no rio Amazonas ao pôr do sol" }, { translation: "<think></think>\"A lighthouse on the Amazon river at sunset\"" });
+  assert.equal(status, 200);
+  assert.equal(body.prompt, "A lighthouse on the Amazon river at sunset");
+  assert.match(calls.find((c) => c.model === GUARD_MODEL).input.messages[0].content, /A lighthouse on the Amazon river at sunset$/);
+  assert.equal(calls.find((c) => c.model === IMAGE_MODEL).input.prompt, "A lighthouse on the Amazon river at sunset");
+  // O texto do visitante vai como dado, entre marcadores, para o tradutor.
+  assert.match(calls.find((c) => c.model === MODEL).input.messages[1].content, /^<description>um farol/);
+});
+
+test("keeps the original text when translation fails", async () => {
+  const { status, calls } = await run({ prompt: "um gato" }, { translateError: "boom" });
+  assert.equal(status, 200);
+  assert.equal(calls.find((c) => c.model === IMAGE_MODEL).input.prompt, "um gato");
+});
+
+test("blocks a translation that turns into an explicit request", async () => {
+  const { status, calls } = await run({ prompt: "uma pessoa sem roupa" }, { translation: "a naked person" });
+  assert.equal(status, 422);
+  assert.equal(calls.some((c) => c.model === GUARD_MODEL || c.model === IMAGE_MODEL), false);
 });
 
 test("allows 2 images per visitor per day, then refuses without spending AI", async () => {

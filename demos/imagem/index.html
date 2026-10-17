@@ -6,7 +6,7 @@
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://emanuel-portfolio-chat.emanuel-portfolio-chat.workers.dev; frame-src https://challenges.cloudflare.com; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests" />
     <meta name="referrer" content="strict-origin-when-cross-origin" />
     <title data-t="meta.title">AI Image Generator — FLUX.1 — Emanuel Borges</title>
-    <meta name="description" data-t-content="meta.description" content="Type a description and generate an image with FLUX.1 [schnell] on Cloudflare Workers AI, with layered moderation and no storage." />
+    <meta name="description" data-t-content="meta.description" content="Type a description in any language and generate an image with FLUX.1 [schnell] on Cloudflare Workers AI, with layered moderation and no storage." />
     <link rel="canonical" href="https://emanueleborges.github.io/demos/imagem/" />
     <meta name="theme-color" content="#06100b" />
     <script src="../../components/boot.js"></script>
@@ -36,6 +36,8 @@
       .result-meta { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; margin-top: 10px; color: var(--muted); font: 500 11px "DM Mono", monospace; }
       .result-meta a { color: var(--accent-text); font-family: Manrope, sans-serif; font-weight: 700; font-size: 13px; }
       .status.error { color: var(--warn-text); }
+      .sent { margin: 8px 0 0; color: var(--muted); font-size: 12px; overflow-wrap: anywhere; }
+      .sent strong { color: var(--text); font-weight: 700; }
       .quota { margin: 12px 0 0; padding: 8px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface-2); color: var(--muted); font-size: 13px; }
       .quota.over { border-color: var(--warn-line); background: var(--warn-bg); color: var(--warn-text); }
       .pipeline { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; margin: 18px 0 0; padding: 0; list-style: none; counter-reset: step; }
@@ -96,6 +98,7 @@
             <div>
               <div class="canvas" data-canvas><p data-t="empty"></p></div>
               <div class="result-meta" data-meta hidden></div>
+              <p class="sent" data-sent hidden></p>
             </div>
           </div>
         </section>
