@@ -76,6 +76,12 @@ test("grading context contains only excerpts relevant to the extracted requireme
   assert.ok(!ids.includes("contact"));
 });
 
+test("spoken-language requirements in any site language get the languages excerpt", () => {
+  for (const requirement of ["Inglês fluente", "Fluent English", "Inglés avanzado", "Englisch fließend", "英语流利", "Свободный английский"]) {
+    assert.deepEqual(relevantProfileChunks([{ requirement, importance: "must" }]).map(({ id }) => id), ["languages"], requirement);
+  }
+});
+
 test("unrelated requirements do not send the full profile to the grading model", () => {
   assert.deepEqual(relevantProfileChunks([{ requirement: "work on Mars", importance: "must" }]), []);
 });

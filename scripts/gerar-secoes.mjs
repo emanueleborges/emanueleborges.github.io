@@ -47,7 +47,7 @@ function projectCard(p) {
 
 function skillChip(s) {
   const name = s.key ? `<strong data-i18n="${s.key}">${ptText(s.key)}</strong>` : `<strong>${escape(s.name)}</strong>`;
-  return `            <li data-category="${s.category}" class="skill-chip"><img class="skill-icon" src="${escape(s.icon)}" alt="" loading="lazy" />${name}<span class="mono" data-i18n="cat.${s.category}">${ptText(`cat.${s.category}`)}</span></li>`;
+  return `            <li data-category="${s.category}" class="skill-chip"><img class="skill-icon" src="${escape(s.icon)}" alt="" loading="lazy" />${name}<span class="mono" data-i18n="cat.${s.category}">${ptText(`cat.${s.category}`)}</span><span class="skill-tip" role="tooltip" data-i18n="${s.desc}">${ptText(s.desc)}</span></li>`;
 }
 
 const projects = JSON.parse(read("data/projetos.json")).projects;

@@ -154,6 +154,10 @@ const STOP_WORDS = new Set(`a an and are as at be by for from in into is it of o
 const requirementWords = (value) => [...new Set(normalizeText(value).match(/[\p{L}\p{N}+#.]+/gu) ?? [])]
   .filter((word) => word.length > 2 && !STOP_WORDS.has(word));
 
+// Requisito de idioma falado (nome do idioma nas 8 línguas do site; na busca por palavras ele é stop word).
+const SPOKEN_LANGUAGE = /\b(ingles[ae]?|english|englisch|anglais|espanhol|spanish|espanol|spanisch|espagnol|spagnolo|portugues[ea]?|portuguese|portugiesisch|portugais|portoghese)\b|英语|英文|西班牙语|葡萄牙语|англи|испанск|португальск/u;
+const LANGUAGES_CHUNK = CHUNKS.find((chunk) => chunk.id === "languages");
+
 // Limit each requirement to a small, directly relevant profile context instead of sending all 32 excerpts.
 export function relevantProfileChunks(requirements) {
   const primary = [];
@@ -161,7 +165,9 @@ export function relevantProfileChunks(requirements) {
   for (const requirement of requirements) {
     const terms = techTerms(requirement.requirement);
     let candidates;
-    if (terms.length) {
+    if (SPOKEN_LANGUAGE.test(normalizeText(requirement.requirement))) {
+      candidates = [LANGUAGES_CHUNK];
+    } else if (terms.length) {
       const matches = CHUNKS.filter((chunk) => terms.some((term) => termPattern(term).test(chunk.text)));
       const concrete = matches.filter((chunk) => /^(job|p)\d+$/.test(chunk.id));
       const skills = matches.filter((chunk) => SKILL_CHUNK_IDS.has(chunk.id));

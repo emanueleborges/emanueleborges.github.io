@@ -52,6 +52,7 @@ O site deve apresentar: topo (nome, cargo, resumo, localização, anos de experi
 - RF-01.1 Cada card de projeto tem o link "Ver código" para o repositório e mostra linguagem, estrelas (se houver) e data da última atualização, vindos da API pública do GitHub.
 - RF-01.2 Projetos com demo ao vivo têm o botão "Ver demo" (LSTM, reconhecimento facial, recomendação de filmes e o próprio assistente).
 - RF-01.3 Resultados citados nos cards devem ser verificáveis (mesmo número mostrado na demo ou no repositório).
+- RF-01.4 Cada card de habilidade mostra, ao passar o mouse (ou ao receber foco), uma descrição curta da tecnologia no idioma atual, sem sair da largura do card.
 
 ### RF-02 — Idiomas
 - RF-02.1 Disponível em **inglês (padrão)**, português, espanhol, francês, italiano, alemão, chinês simplificado e russo.
