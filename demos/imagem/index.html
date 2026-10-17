@@ -36,6 +36,8 @@
       .result-meta { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; margin-top: 10px; color: var(--muted); font: 500 11px "DM Mono", monospace; }
       .result-meta a { color: var(--accent-text); font-family: Manrope, sans-serif; font-weight: 700; font-size: 13px; }
       .status.error { color: var(--warn-text); }
+      .quota { margin: 12px 0 0; padding: 8px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface-2); color: var(--muted); font-size: 13px; }
+      .quota.over { border-color: var(--warn-line); background: var(--warn-bg); color: var(--warn-text); }
       .pipeline { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; margin: 18px 0 0; padding: 0; list-style: none; counter-reset: step; }
       .pipeline li { padding: 14px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); counter-increment: step; }
       .pipeline li::before { content: "0" counter(step); display: block; margin-bottom: 6px; color: var(--kicker); font: 500 11px "DM Mono", monospace; }
@@ -88,6 +90,7 @@
               <p class="note" style="margin:10px 0 0;font-size:13px" data-t="examplesLabel"></p>
               <div class="examples" data-examples></div>
               <button class="button primary" type="submit" data-generate data-t="generate"></button>
+              <p class="quota" data-quota aria-live="polite"></p>
               <p class="status" role="status" aria-live="polite" data-status></p>
             </form>
             <div>

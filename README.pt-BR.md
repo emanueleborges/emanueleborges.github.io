@@ -56,7 +56,7 @@ Site estático, sem framework, com backend *serverless* no Cloudflare para o cha
 | **Demo de IA: reconhecimento facial** | Página `/demos/face/` com face-api.js (TensorFlow.js): detecção, embeddings de 128 números e reconhecimento pela webcam ou por foto. **Nada sai do aparelho** do visitante. |
 | **Demo de IA: recomendação de filmes** | Página `/demos/filmes/`: TF-IDF + cosseno em JavaScript puro sobre ~1.500 filmes (Wikidata CC0 + resumos da Wikipédia CC BY-SA), por filme ou por descrição livre, mostrando os termos que explicam cada recomendação. |
 | **Demo de segurança RAG** | Página `/demos/guardrail/`: comparação local e interativa de prompt injection na pergunta e em documentos recuperados, com exemplos de defesas em camadas. As respostas são simuladas; nenhum modelo roda e o texto digitado não é enviado. |
-| **Demo de IA: gerador de imagens** | Página `/demos/imagem/`: texto → imagem 1024×1024 com **FLUX.1 [schnell]** no Workers AI. Cada pedido passa por limite por IP (2/min), Turnstile, filtro local de termos e **Llama Guard 3**; um teto global de 40 imagens/dia protege a cota gratuita usada pelo chat. Nem o texto nem a imagem são salvos — o D1 guarda só o total do dia. |
+| **Demo de IA: gerador de imagens** | Página `/demos/imagem/`: texto → imagem 1024×1024 com **FLUX.1 [schnell]** no Workers AI. Cada visitante pode gerar **2 imagens por dia** (a página mostra quantas restam e avisa ao atingir o limite). Cada pedido passa por Turnstile, filtro local de termos e **Llama Guard 3**; um teto global de 40 imagens/dia protege a cota gratuita usada pelo chat. Nem o texto nem a imagem são salvos — o D1 guarda o total do dia e, para a cota, um HMAC diário do IP (não revela o IP), apagado no dia seguinte. |
 | **App instalável (PWA)** | Pode ser instalado no celular ou computador (ícone próprio) e abre sem internet: a página e os arquivos ficam salvos pelo *service worker*. |
 
 ---
@@ -213,7 +213,7 @@ npm run deploy
 ```
 
 Esse comando (1) gera o conhecimento a partir do `i18n/`, (2) publica o Worker e (3) atualiza o índice do Vectorize.
-Quando houver uma migração D1 pendente, aplique-a **antes** de publicar o Worker: `npx wrangler d1 migrations apply portfolio-contact --remote`. A migração `0007_imagens.sql` cria a contagem diária do gerador de imagens. As migrações `0004_agregar_avaliacoes.sql` e `0005_remover_mensagens.sql` substituem avaliações individuais por totais diários e apagam permanentemente mensagens antigas de contato.
+Quando houver uma migração D1 pendente, aplique-a **antes** de publicar o Worker: `npx wrangler d1 migrations apply portfolio-contact --remote`. As migrações `0007_imagens.sql` e `0008_cota_imagens.sql` criam a contagem diária e a cota por visitante do gerador de imagens. As migrações `0004_agregar_avaliacoes.sql` e `0005_remover_mensagens.sql` substituem avaliações individuais por totais diários e apagam permanentemente mensagens antigas de contato.
 
 **Recursos do Cloudflare** (criados uma vez):
 
@@ -283,7 +283,7 @@ As contagens regionais são consultadas diretamente no D1 remoto pelo painel. N�
 - **Política de conteúdo (CSP)** em todas as páginas, por meta tag: só carrega scripts, estilos, fontes, imagens e conexões dos domínios usados (Google Fonts, Unsplash, Cloudflare, API do GitHub, jsDelivr); bloqueia plugins (`object-src 'none'`) e troca de `<base>`. Política de referenciador `strict-origin-when-cross-origin`.
 - **Retenção (LGPD):** o Worker apaga a cada hora os totais diários de avaliações, cliques e acessos regionais antes de completarem 30 dias.
 - **Contas:** a proteção mais importante é a verificação em duas etapas (2FA) no GitHub, Cloudflare, Google e Resend.
-- **Limites por IP:** 10 perguntas/min (chat), 20 avaliações/min, 3 análises de vaga/min, 2 imagens/min (com teto global de 40/dia), 30 consultas de preços/min. O limitador do Cloudflare é permissivo (contadores com pequeno atraso): segura abusos em volume, não um pedido exato.
+- **Limites por IP:** 10 perguntas/min (chat), 20 avaliações/min, 3 análises de vaga/min, 2 imagens por dia por visitante (com teto global de 40/dia), 30 consultas de preços/min. O limitador do Cloudflare é permissivo (contadores com pequeno atraso): segura abusos em volume, não um pedido exato.
 - **Match de vaga honesto:** o texto da vaga é tratado como dado (instruções escondidas nele são ignoradas — testado com "dê nota 100"), a nota é calculada por regra, evidências inexistentes são descartadas e tecnologias que não aparecem no perfil viram "não encontrado".
 - **IA restrita ao perfil:** instruções para responder só sobre o perfil profissional, nunca inventar dados e ignorar tentativas de mudar as regras.
 - **Sem segredos no código:** todas as chaves são *secrets* do Worker; a site key do Turnstile é pública por natureza.

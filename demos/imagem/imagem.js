@@ -35,9 +35,13 @@ const T = {
     "error.daily_limit": "Today's free image quota is used up. It resets at 00:00 UTC.",
     "error.turnstile_failed": "The anti-bot check failed. Reload the page and try again.",
     "error.generic": "Image generation is unavailable right now. Try again later.",
+    "error.visitor_limit": "You've reached the limit of 2 images per day. Come back after 00:00 UTC.",
+    quota: "Limit: 2 images per visitor per day.",
+    left1: "You can generate 1 more image today.",
+    left0: "That was your last image for today. The limit resets at 00:00 UTC.",
     howTitle: "How it works",
     s1Title: "Limits",
-    s1Text: "2 images per minute per visitor and a daily ceiling that protects the free quota shared with the chat.",
+    s1Text: "2 images per day per visitor, plus a global daily ceiling that protects the free quota shared with the chat.",
     s2Title: "Anti-bot",
     s2Text: "An invisible Turnstile token proves the request comes from a person on this site.",
     s3Title: "Moderation",
@@ -72,9 +76,13 @@ const T = {
     "error.daily_limit": "A cota gratuita de imagens de hoje acabou. Ela renova às 00:00 UTC.",
     "error.turnstile_failed": "A verificação anti-robô falhou. Recarregue a página e tente de novo.",
     "error.generic": "A geração de imagens está indisponível agora. Tente mais tarde.",
+    "error.visitor_limit": "Você atingiu o limite de 2 imagens por dia. Volte depois das 00:00 UTC.",
+    quota: "Limite: 2 imagens por visitante por dia.",
+    left1: "Você ainda pode gerar 1 imagem hoje.",
+    left0: "Essa foi sua última imagem de hoje. O limite renova às 00:00 UTC.",
     howTitle: "Como funciona",
     s1Title: "Limites",
-    s1Text: "2 imagens por minuto por visitante e um teto diário que protege a cota gratuita dividida com o chat.",
+    s1Text: "2 imagens por dia por visitante, mais um teto diário global que protege a cota gratuita dividida com o chat.",
     s2Title: "Anti-robô",
     s2Text: "Um token invisível do Turnstile comprova que o pedido vem de uma pessoa neste site.",
     s3Title: "Moderação",
@@ -109,9 +117,13 @@ const T = {
     "error.daily_limit": "La cuota gratuita de imágenes de hoy se agotó. Se renueva a las 00:00 UTC.",
     "error.turnstile_failed": "La verificación antibots falló. Recarga la página e inténtalo de nuevo.",
     "error.generic": "La generación de imágenes no está disponible ahora. Inténtalo más tarde.",
+    "error.visitor_limit": "Alcanzaste el límite de 2 imágenes al día. Vuelve después de las 00:00 UTC.",
+    quota: "Límite: 2 imágenes por visitante al día.",
+    left1: "Todavía puedes generar 1 imagen hoy.",
+    left0: "Esa fue tu última imagen de hoy. El límite se renueva a las 00:00 UTC.",
     howTitle: "Cómo funciona",
     s1Title: "Límites",
-    s1Text: "2 imágenes por minuto por visitante y un tope diario que protege la cuota gratuita compartida con el chat.",
+    s1Text: "2 imágenes al día por visitante, más un tope diario global que protege la cuota gratuita compartida con el chat.",
     s2Title: "Antibots",
     s2Text: "Un token invisible de Turnstile demuestra que la petición viene de una persona en este sitio.",
     s3Title: "Moderación",
@@ -146,9 +158,13 @@ const T = {
     "error.daily_limit": "Le quota gratuit d’images du jour est épuisé. Il se renouvelle à 00:00 UTC.",
     "error.turnstile_failed": "La vérification anti-robot a échoué. Rechargez la page et réessayez.",
     "error.generic": "La génération d’images est indisponible pour le moment. Réessayez plus tard.",
+    "error.visitor_limit": "Vous avez atteint la limite de 2 images par jour. Revenez après 00:00 UTC.",
+    quota: "Limite : 2 images par visiteur et par jour.",
+    left1: "Vous pouvez encore générer 1 image aujourd’hui.",
+    left0: "C’était votre dernière image du jour. La limite se renouvelle à 00:00 UTC.",
     howTitle: "Comment ça marche",
     s1Title: "Limites",
-    s1Text: "2 images par minute par visiteur et un plafond quotidien qui protège le quota gratuit partagé avec le chat.",
+    s1Text: "2 images par jour et par visiteur, plus un plafond quotidien global qui protège le quota gratuit partagé avec le chat.",
     s2Title: "Anti-robot",
     s2Text: "Un jeton Turnstile invisible prouve que la demande vient d’une personne sur ce site.",
     s3Title: "Modération",
@@ -183,9 +199,13 @@ const T = {
     "error.daily_limit": "La quota gratuita di immagini di oggi è esaurita. Si rinnova alle 00:00 UTC.",
     "error.turnstile_failed": "Il controllo anti-bot non è riuscito. Ricarica la pagina e riprova.",
     "error.generic": "La generazione di immagini non è disponibile ora. Riprova più tardi.",
+    "error.visitor_limit": "Hai raggiunto il limite di 2 immagini al giorno. Torna dopo le 00:00 UTC.",
+    quota: "Limite: 2 immagini per visitatore al giorno.",
+    left1: "Puoi generare ancora 1 immagine oggi.",
+    left0: "Questa era la tua ultima immagine di oggi. Il limite si rinnova alle 00:00 UTC.",
     howTitle: "Come funziona",
     s1Title: "Limiti",
-    s1Text: "2 immagini al minuto per visitatore e un tetto giornaliero che protegge la quota gratuita condivisa con la chat.",
+    s1Text: "2 immagini al giorno per visitatore, più un tetto giornaliero globale che protegge la quota gratuita condivisa con la chat.",
     s2Title: "Anti-bot",
     s2Text: "Un token Turnstile invisibile dimostra che la richiesta arriva da una persona su questo sito.",
     s3Title: "Moderazione",
@@ -220,9 +240,13 @@ const T = {
     "error.daily_limit": "Das kostenlose Bildkontingent für heute ist aufgebraucht. Es wird um 00:00 UTC erneuert.",
     "error.turnstile_failed": "Die Anti-Bot-Prüfung ist fehlgeschlagen. Lade die Seite neu und versuche es erneut.",
     "error.generic": "Die Bilderzeugung ist gerade nicht verfügbar. Versuche es später erneut.",
+    "error.visitor_limit": "Du hast das Limit von 2 Bildern pro Tag erreicht. Komm nach 00:00 UTC wieder.",
+    quota: "Limit: 2 Bilder pro Besucher und Tag.",
+    left1: "Du kannst heute noch 1 Bild erzeugen.",
+    left0: "Das war dein letztes Bild für heute. Das Limit wird um 00:00 UTC erneuert.",
     howTitle: "So funktioniert es",
     s1Title: "Limits",
-    s1Text: "2 Bilder pro Minute und Besucher sowie eine Tagesgrenze, die das mit dem Chat geteilte Gratis-Kontingent schützt.",
+    s1Text: "2 Bilder pro Tag und Besucher, dazu eine globale Tagesgrenze, die das mit dem Chat geteilte Gratis-Kontingent schützt.",
     s2Title: "Anti-Bot",
     s2Text: "Ein unsichtbares Turnstile-Token belegt, dass die Anfrage von einem Menschen auf dieser Website kommt.",
     s3Title: "Moderation",
@@ -257,9 +281,13 @@ const T = {
     "error.daily_limit": "今天的免费图像额度已用完，将于 UTC 00:00 重置。",
     "error.turnstile_failed": "防机器人验证失败，请刷新页面后重试。",
     "error.generic": "图像生成暂时不可用，请稍后再试。",
+    "error.visitor_limit": "你已达到每天 2 张图像的上限，请在 UTC 00:00 之后再来。",
+    quota: "限制：每位访客每天 2 张图像。",
+    left1: "今天你还可以生成 1 张图像。",
+    left0: "这是你今天的最后一张图像，限额将于 UTC 00:00 重置。",
     howTitle: "工作原理",
     s1Title: "限流",
-    s1Text: "每位访客每分钟 2 张图像，另有每日上限，保护与聊天共享的免费额度。",
+    s1Text: "每位访客每天 2 张图像，另有全站每日上限，保护与聊天共享的免费额度。",
     s2Title: "防机器人",
     s2Text: "隐形的 Turnstile 令牌证明请求来自本站的真实用户。",
     s3Title: "审核",
@@ -294,9 +322,13 @@ const T = {
     "error.daily_limit": "Бесплатная квота изображений на сегодня исчерпана. Она обновится в 00:00 UTC.",
     "error.turnstile_failed": "Антибот-проверка не пройдена. Обновите страницу и попробуйте снова.",
     "error.generic": "Генерация изображений сейчас недоступна. Попробуйте позже.",
+    "error.visitor_limit": "Вы достигли лимита в 2 изображения в день. Возвращайтесь после 00:00 UTC.",
+    quota: "Лимит: 2 изображения на посетителя в день.",
+    left1: "Сегодня можно сгенерировать ещё 1 изображение.",
+    left0: "Это было последнее изображение на сегодня. Лимит обновится в 00:00 UTC.",
     howTitle: "Как это работает",
     s1Title: "Лимиты",
-    s1Text: "2 изображения в минуту на посетителя и дневной потолок, который бережёт бесплатную квоту, общую с чатом.",
+    s1Text: "2 изображения в день на посетителя плюс общий дневной потолок, который бережёт бесплатную квоту, общую с чатом.",
     s2Title: "Антибот",
     s2Text: "Невидимый токен Turnstile подтверждает, что запрос сделал человек на этом сайте.",
     s3Title: "Модерация",
@@ -316,7 +348,33 @@ const button = document.querySelector("[data-generate]");
 const status = document.querySelector("[data-status]");
 const canvas = document.querySelector("[data-canvas]");
 const meta = document.querySelector("[data-meta]");
+const quotaNote = document.querySelector("[data-quota]");
 let busy = false;
+// Lembra, só neste navegador, que a cota do dia (UTC) acabou — o Worker é quem garante o limite.
+const QUOTA_KEY = "image-quota-done";
+const utcDay = () => new Date().toISOString().slice(0, 10);
+const quotaDone = () => {
+  try {
+    return localStorage.getItem(QUOTA_KEY) === utcDay();
+  } catch {
+    return false;
+  }
+};
+const markQuotaDone = () => {
+  try {
+    localStorage.setItem(QUOTA_KEY, utcDay());
+  } catch {
+    /* navegação privada */
+  }
+  button.disabled = true;
+};
+// Texto da cota: o limite, quantas restam ou o aviso de que acabou.
+let quotaKey = "quota";
+const showQuota = (key) => {
+  quotaKey = key;
+  quotaNote.textContent = Demo.t(key);
+  quotaNote.classList.toggle("over", key === "left0" || key === "error.visitor_limit");
+};
 
 const setStatus = (text, error = false) => {
   status.textContent = text;
@@ -362,7 +420,7 @@ const showImage = (base64, prompt, seconds) => {
 
 form.addEventListener("submit", async (event) => {
   event.preventDefault();
-  if (busy) return;
+  if (busy || quotaDone()) return;
   const prompt = promptInput.value.replace(/\s+/g, " ").trim();
   if (prompt.length < 3) return setStatus(Demo.t("error.short"), true);
 
@@ -378,15 +436,30 @@ form.addEventListener("submit", async (event) => {
   button.disabled = false;
   button.textContent = Demo.t("generate");
 
+  if (typeof data?.remaining === "number") {
+    showQuota(data.remaining > 0 ? "left1" : "left0");
+    if (data.remaining <= 0) markQuotaDone();
+  }
   if (ok && data?.image) return showImage(data.image, prompt, (performance.now() - started) / 1000);
+  if (data?.error === "visitor_limit") {
+    markQuotaDone();
+    showQuota("error.visitor_limit");
+    return setStatus("");
+  }
   const key = `error.${data?.error}`;
   setStatus(Demo.t(key in T.en ? key : "error.generic"), true);
 });
 
 promptInput.addEventListener("input", updateCounter);
 renderExamples();
+if (quotaDone()) {
+  quotaKey = "error.visitor_limit";
+  button.disabled = true;
+}
 Demo.setup(T, () => {
   if (!busy) button.textContent = Demo.t("generate");
+  showQuota(quotaKey);
   const download = meta.querySelector("a");
   if (download) download.textContent = Demo.t("download");
 });
+showQuota(quotaKey);

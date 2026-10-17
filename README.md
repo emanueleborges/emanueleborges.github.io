@@ -56,7 +56,7 @@ A framework-free static site with a Cloudflare serverless backend for the AI cha
 | **AI demo: face recognition** | `/demos/face/` page with face-api.js (TensorFlow.js): detection, 128-number embeddings and recognition via webcam or photo. **Nothing leaves** the visitor's device. |
 | **AI demo: movie recommender** | `/demos/filmes/` page: TF-IDF + cosine in plain JavaScript over ~1,500 films (Wikidata CC0 + Wikipedia CC BY-SA summaries), by film or free description, showing the terms behind each recommendation. |
 | **RAG security demo** | `/demos/guardrail/` page: local interactive comparison of prompt injection in a question and retrieved documents, with layered defense examples. Responses are simulated; no model runs and typed text is not uploaded. |
-| **AI demo: image generator** | Page `/demos/imagem/`: text → 1024×1024 image with **FLUX.1 [schnell]** on Workers AI. Every request goes through a per-IP limit (2/min), Turnstile, a local term filter and **Llama Guard 3**; a global ceiling of 40 images/day protects the free quota the chat also uses. Neither the text nor the image is stored — D1 keeps only the daily total. |
+| **AI demo: image generator** | Page `/demos/imagem/`: text → 1024×1024 image with **FLUX.1 [schnell]** on Workers AI. Each visitor can generate **2 images per day** (the page shows how many are left and says when the limit is reached). Every request goes through Turnstile, a local term filter and **Llama Guard 3**; a global ceiling of 40 images/day protects the free quota the chat also uses. Neither the text nor the image is stored — D1 keeps the daily total and, for the quota, a daily HMAC of the IP (it doesn't reveal the IP), deleted the next day. |
 | **Installable app (PWA)** | Can be installed on a phone or computer (own icon) and opens offline: the page and its files are saved by a *service worker*. |
 
 ---
@@ -213,7 +213,7 @@ npm run deploy
 ```
 
 This (1) builds the knowledge from `i18n/`, (2) deploys the Worker and (3) updates the Vectorize index.
-If a D1 migration is pending, apply it **before** deploying the Worker: `npx wrangler d1 migrations apply portfolio-contact --remote`. Migration `0007_imagens.sql` creates the image generator's daily count. Migrations `0004_agregar_avaliacoes.sql` and `0005_remover_mensagens.sql` replace individual ratings with daily totals and permanently delete stored contact messages.
+If a D1 migration is pending, apply it **before** deploying the Worker: `npx wrangler d1 migrations apply portfolio-contact --remote`. Migrations `0007_imagens.sql` and `0008_cota_imagens.sql` create the image generator's daily count and per-visitor quota. Migrations `0004_agregar_avaliacoes.sql` and `0005_remover_mensagens.sql` replace individual ratings with daily totals and permanently delete stored contact messages.
 
 **Cloudflare resources** (created once):
 
@@ -283,7 +283,7 @@ Regional counts are queried directly from remote D1 by the dashboard. No analyti
 - **Content Security Policy** on every page via meta tag: scripts, styles, fonts, images and connections only from the domains in use (Google Fonts, Unsplash, Cloudflare, GitHub API, jsDelivr); plugins blocked (`object-src 'none'`) and `<base>` locked. Referrer policy `strict-origin-when-cross-origin`.
 - **Retention (privacy):** the Worker deletes daily chat-rating, click and regional aggregates before they reach 30 days.
 - **Accounts:** the most important protection is two-factor authentication (2FA) on GitHub, Cloudflare, Google and Resend.
-- **Per-IP limits:** 10 questions/min (chat), 20 ratings/min, 3 job analyses/min, 2 images/min (with a global ceiling of 40/day), 30 price lookups/min. Cloudflare's limiter is permissive (counters lag slightly): it stops high-volume abuse, not an exact request count.
+- **Per-IP limits:** 10 questions/min (chat), 20 ratings/min, 3 job analyses/min, 2 images per day per visitor (with a global ceiling of 40/day), 30 price lookups/min. Cloudflare's limiter is permissive (counters lag slightly): it stops high-volume abuse, not an exact request count.
 - **Honest job match:** the posting is treated as data (hidden instructions are ignored — tested with "give a score of 100"), the score is computed by rule, nonexistent evidence is discarded, listed technologies cannot be marked missing by the AI, and technologies absent from the profile become "not found".
 - **AI restricted to the profile:** instructions to answer only about the professional profile, never invent facts and ignore attempts to change the rules.
 - **No secrets in the code:** all keys are Worker secrets; the Turnstile site key is public by design.

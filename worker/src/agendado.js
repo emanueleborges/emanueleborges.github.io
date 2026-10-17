@@ -37,6 +37,8 @@ export async function purgeOldData(env) {
       env.DB.prepare("DELETE FROM score_daily WHERE score_date <= date('now', '-29 days')"),
       env.DB.prepare("DELETE FROM click_daily WHERE click_date <= date('now', '-29 days')"),
       env.DB.prepare("DELETE FROM image_daily WHERE image_date <= date('now', '-29 days')"),
+      // Cota por visitante: só vale no próprio dia.
+      env.DB.prepare("DELETE FROM image_visitor_daily WHERE image_date < date('now')"),
     ]);
     const removed = results.map((r) => r.meta?.changes ?? 0);
     if (removed.some(Boolean)) {
