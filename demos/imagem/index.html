@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://emanuel-portfolio-chat.emanuel-portfolio-chat.workers.dev; frame-src https://challenges.cloudflare.com; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <title data-t="meta.title">AI Image Generator — FLUX.1 — Emanuel Borges</title>
+    <meta name="description" data-t-content="meta.description" content="Type a description and generate an image with FLUX.1 [schnell] on Cloudflare Workers AI, with layered moderation and no storage." />
+    <link rel="canonical" href="https://emanueleborges.github.io/demos/imagem/" />
+    <meta name="theme-color" content="#06100b" />
+    <script src="../../components/boot.js"></script>
+    <link rel="icon" href="/imagens/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/imagens/favicon-32.png" sizes="32x32" type="image/png" />
+    <link rel="apple-touch-icon" href="/imagens/apple-touch-icon.png" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="../demos.css" />
+    <style>
+      .studio { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 22px; align-items: start; }
+      .prompt-field textarea { width: 100%; min-height: 128px; padding: 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface-2); color: var(--text); font: 500 14px/1.55 Manrope, sans-serif; resize: vertical; }
+      .prompt-field label { color: var(--text); font-weight: 700; }
+      .counter { justify-self: end; font: 500 11px "DM Mono", monospace; color: var(--muted); }
+      .examples { display: flex; flex-wrap: wrap; gap: 6px; margin: 12px 0 16px; }
+      .examples button { padding: 6px 11px; border: 1px solid var(--line); border-radius: 999px; background: var(--surface-2); color: var(--muted); font: 600 12px Manrope, sans-serif; cursor: pointer; }
+      .examples button:hover { border-color: rgba(var(--accent-rgb), .5); color: var(--text); }
+      .button[disabled] { opacity: .6; cursor: progress; }
+      .canvas { position: relative; display: grid; place-items: center; aspect-ratio: 1; border: 1px dashed var(--line-strong); border-radius: 14px; background: var(--stage); overflow: hidden; }
+      .canvas img { width: 100%; height: 100%; object-fit: cover; }
+      .canvas p { margin: 0; padding: 24px; color: var(--muted); font-size: 13px; text-align: center; }
+      .canvas.loading::after { content: ""; position: absolute; inset: 0; background: linear-gradient(110deg, transparent 30%, rgba(var(--accent-rgb), .12) 50%, transparent 70%); background-size: 250% 100%; animation: sweep 1.4s linear infinite; }
+      @keyframes sweep { from { background-position: 150% 0; } to { background-position: -100% 0; } }
+      @media (prefers-reduced-motion: reduce) { .canvas.loading::after { animation: none; } }
+      .result-meta { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; margin-top: 10px; color: var(--muted); font: 500 11px "DM Mono", monospace; }
+      .result-meta a { color: var(--accent-text); font-family: Manrope, sans-serif; font-weight: 700; font-size: 13px; }
+      .status.error { color: var(--warn-text); }
+      .pipeline { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; margin: 18px 0 0; padding: 0; list-style: none; counter-reset: step; }
+      .pipeline li { padding: 14px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); counter-increment: step; }
+      .pipeline li::before { content: "0" counter(step); display: block; margin-bottom: 6px; color: var(--kicker); font: 500 11px "DM Mono", monospace; }
+      .pipeline p { margin: 0; color: var(--muted); font-size: 13px; }
+      @media (max-width: 760px) { .studio { grid-template-columns: 1fr; } .pipeline { grid-template-columns: 1fr 1fr; } }
+    </style>
+    <script type="module" src="imagem.js"></script>
+    <script type="module" src="../../analytics-consent.js"></script>
+    <script src="../../components/components.js" defer></script>
+  </head>
+  <body>
+    <div class="glow glow-1" aria-hidden="true"></div>
+    <div class="glow glow-2" aria-hidden="true"></div>
+    <div class="shell">
+      <header>
+        <a class="brand" href="/"><site-logo class="brand-logo" size="32"></site-logo> Emanuel Borges</a>
+        <div class="header-tools">
+          <theme-toggle></theme-toggle>
+          <label><span class="visually-hidden" data-t="lang">Language</span>
+            <select data-lang>
+              <option value="en" lang="en">English</option>
+              <option value="pt" lang="pt-BR">Português</option>
+              <option value="es" lang="es">Español</option>
+              <option value="fr" lang="fr">Français</option>
+              <option value="it" lang="it">Italiano</option>
+              <option value="de" lang="de">Deutsch</option>
+              <option value="zh" lang="zh-CN">中文</option>
+              <option value="ru" lang="ru">Русский</option>
+            </select>
+          </label>
+        </div>
+      </header>
+
+      <main>
+        <p class="kicker" data-t="kicker"></p>
+        <h1 data-t="title"></h1>
+        <p class="lead" data-t="lead"></p>
+        <div class="links">
+          <a class="button" href="/#projetos" data-t="back"></a>
+          <a class="button" href="https://github.com/emanueleborges/emanueleborges.github.io/blob/main/worker/src/rotas/imagem.js" target="_blank" rel="noopener" data-t="code"></a>
+        </div>
+
+        <section class="panel">
+          <div class="studio">
+            <form data-form>
+              <label class="prompt-field"><span data-t="promptLabel"></span>
+                <textarea maxlength="300" required data-prompt data-t-placeholder="placeholder"></textarea>
+                <span class="counter" data-counter>0 / 300</span>
+              </label>
+              <p class="note" style="margin:10px 0 0;font-size:13px" data-t="examplesLabel"></p>
+              <div class="examples" data-examples></div>
+              <button class="button primary" type="submit" data-generate data-t="generate"></button>
+              <p class="status" role="status" aria-live="polite" data-status></p>
+            </form>
+            <div>
+              <div class="canvas" data-canvas><p data-t="empty"></p></div>
+              <div class="result-meta" data-meta hidden></div>
+            </div>
+          </div>
+        </section>
+
+        <h2 data-t="howTitle"></h2>
+        <ol class="pipeline">
+          <li><h3 data-t="s1Title"></h3><p data-t="s1Text"></p></li>
+          <li><h3 data-t="s2Title"></h3><p data-t="s2Text"></p></li>
+          <li><h3 data-t="s3Title"></h3><p data-t="s3Text"></p></li>
+          <li><h3 data-t="s4Title"></h3><p data-t="s4Text"></p></li>
+          <li><h3 data-t="s5Title"></h3><p data-t="s5Text"></p></li>
+        </ol>
+        <p class="disclaimer" data-t="limits"></p>
+      </main>
+    </div>
+  </body>
+</html>

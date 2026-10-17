@@ -2,7 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { purgeOldData } from "../src/agendado.js";
 
-test("purges daily chat-rating, regional, score and click aggregates", async () => {
+test("purges daily chat-rating, regional, score, click and image aggregates", async () => {
   const statements = [];
   const env = {
     DB: {
@@ -23,5 +23,6 @@ test("purges daily chat-rating, regional, score and click aggregates", async () 
     "DELETE FROM regional_visits WHERE access_date <= date('now', '-29 days')",
     "DELETE FROM score_daily WHERE score_date <= date('now', '-29 days')",
     "DELETE FROM click_daily WHERE click_date <= date('now', '-29 days')",
+    "DELETE FROM image_daily WHERE image_date <= date('now', '-29 days')",
   ]);
 });

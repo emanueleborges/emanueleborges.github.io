@@ -12,7 +12,7 @@
       content="Portfólio de Emanuel Borges — Desenvolvedor Full Stack Sênior com mais de 10 anos de experiência, especializando-se em Machine Learning e NLP."
     />
     <meta name="theme-color" content="#06100b" />
-    <script src="components/boot.js?v=20261017175538" data-i18n></script>
+    <script src="components/boot.js?v=20261017182650" data-i18n></script>
     <!-- Verificação do Google Search Console -->
     <meta name="google-site-verification" content="4hxCxYtZIODldYdYJvIOxejABtc2_GRdp5L6Ug72eEE" />
     <link rel="alternate" hreflang="en" href="https://emanueleborges.github.io/?lang=en" />
@@ -133,33 +133,33 @@
     <!-- Primeira imagem do topo: pré-carregada, menor no celular -->
     <link rel="preload" as="image" href="https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=800&q=70" media="(max-width: 760px)" fetchpriority="high" />
     <link rel="preload" as="image" href="https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1400&q=70" media="(min-width: 761px)" fetchpriority="high" />
-    <link rel="stylesheet" href="styles.css?v=20261017175538" />
-    <script src="i18n/pt.js?v=20261017175538" defer></script>
-    <script src="i18n/en.js?v=20261017175538" defer></script>
-    <script src="i18n.js?v=20261017175538" defer></script>
+    <link rel="stylesheet" href="styles.css?v=20261017182650" />
+    <script src="i18n/pt.js?v=20261017182650" defer></script>
+    <script src="i18n/en.js?v=20261017182650" defer></script>
+    <script src="i18n.js?v=20261017182650" defer></script>
     <!-- Módulos ES. O mapa mantém a versão (?v=, atualizada pelo hook de pre-commit) também nos imports,
          para o navegador nunca misturar arquivos novos e antigos do cache. -->
     <script type="importmap">
       {
         "imports": {
-          "./script.js": "./script.js?v=20261017175538",
-          "./api.js": "./api.js?v=20261017175538",
-          "./chat/texto.js": "./chat/texto.js?v=20261017175538",
-          "./chat/regras.js": "./chat/regras.js?v=20261017175538",
-          "./chat/busca.js": "./chat/busca.js?v=20261017175538",
-          "./chat/ia.js": "./chat/ia.js?v=20261017175538"
+          "./script.js": "./script.js?v=20261017182650",
+          "./api.js": "./api.js?v=20261017182650",
+          "./chat/texto.js": "./chat/texto.js?v=20261017182650",
+          "./chat/regras.js": "./chat/regras.js?v=20261017182650",
+          "./chat/busca.js": "./chat/busca.js?v=20261017182650",
+          "./chat/ia.js": "./chat/ia.js?v=20261017182650"
         }
       }
     </script>
-    <link rel="modulepreload" href="api.js?v=20261017175538" />
-    <link rel="modulepreload" href="chat/texto.js?v=20261017175538" />
-    <link rel="modulepreload" href="chat/regras.js?v=20261017175538" />
-    <link rel="modulepreload" href="chat/busca.js?v=20261017175538" />
-    <link rel="modulepreload" href="chat/ia.js?v=20261017175538" />
-    <script type="module" src="script.js?v=20261017175538"></script>
-    <script type="module" src="chat.js?v=20261017175538"></script>
-    <script type="module" src="analytics-consent.js?v=20261017175538"></script>
-    <script src="components/components.js?v=20261017175538" defer></script>
+    <link rel="modulepreload" href="api.js?v=20261017182650" />
+    <link rel="modulepreload" href="chat/texto.js?v=20261017182650" />
+    <link rel="modulepreload" href="chat/regras.js?v=20261017182650" />
+    <link rel="modulepreload" href="chat/busca.js?v=20261017182650" />
+    <link rel="modulepreload" href="chat/ia.js?v=20261017182650" />
+    <script type="module" src="script.js?v=20261017182650"></script>
+    <script type="module" src="chat.js?v=20261017182650"></script>
+    <script type="module" src="analytics-consent.js?v=20261017182650"></script>
+    <script src="components/components.js?v=20261017182650" defer></script>
   </head>
   <body>
     <div class="bg-aurora" aria-hidden="true"><span></span><span></span><span></span></div>
@@ -240,9 +240,15 @@
             <span data-i18n="hero.match"><strong>Recrutador?</strong> Cole sua vaga e veja a aderência em segundos</span>
             <span class="hero-match-go" aria-hidden="true">↗</span>
           </a>
+          <!-- Métricas: projetos e demos são contados de data/projetos.json por scripts/gerar-secoes.mjs. -->
+          <ul class="hero-stats">
+            <li><strong class="mono">10+</strong><span data-i18n="hero.stat1">anos de experiência</span></li>
+            <li><strong class="mono" data-count="projects">12</strong><span data-i18n="hero.stat2">projetos</span></li>
+            <li><strong class="mono" data-count="demos">5</strong><span data-i18n="hero.stat3">demos de IA ao vivo</span></li>
+            <li><strong class="mono">Top 5%</strong><span data-i18n="hero.stat4">em datathon de ML</span></li>
+          </ul>
           <div class="hero-meta">
             <span><span class="pin">⌖</span> <span data-i18n="hero.location">Manaus, AM · Brasil</span></span>
-            <span class="mono" data-i18n="hero.years">10+ ANOS DE EXPERIÊNCIA</span>
           </div>
         </div>
         <a class="scroll-cue mono" href="#sobre" data-i18n="hero.scroll"><span>↓</span> ROLE PARA EXPLORAR</a>
@@ -345,6 +351,7 @@
             <p class="mono project-type">MACHINE LEARNING · SCIKIT-LEARN · DOCKER</p>
             <h3 data-i18n="p2.title">Risco de Defasagem Escolar</h3>
             <p class="muted" data-i18n="p2.desc">Modelo de classificação (Random Forest, XGBoost) com 87% de precisão para o case Passos Mágicos, com API e dashboard de monitoramento de drift. Top 5% no datathon.</p>
+            <ul class="project-metrics"><li><strong class="mono">87%</strong><span data-i18n="p2.m1">precisão</span></li><li><strong class="mono">Top 5%</strong><span data-i18n="p2.m2">no datathon</span></li></ul>
             <div class="project-footer"><a class="project-link" href="https://github.com/emanueleborges/fiaptech5" target="_blank" rel="noopener" data-repo="fiaptech5"><span data-i18n="proj.code">Ver código</span> <span aria-hidden="true">↗</span></a><span class="project-meta mono" data-repo-meta="fiaptech5"></span></div>
           </article>
           <article data-category="ia" class="project-card">
@@ -352,6 +359,7 @@
             <p class="mono project-type">DEEP LEARNING · LSTM · TENSORFLOW · FLASK</p>
             <h3 data-i18n="p3.title">Previsão de Ações com LSTM</h3>
             <p class="muted" data-i18n="p3.desc">Rede LSTM que prevê o próximo fechamento de ações com erro médio de 1,1–2,2% (MAPE) em teste fora da amostra, avaliada contra um baseline ingênuo. Pipeline de dados via Yahoo Finance e API REST documentada com Swagger.</p>
+            <ul class="project-metrics"><li><strong class="mono" data-i18n="p3.m1v">1,1–2,2%</strong><span data-i18n="p3.m1">erro fora da amostra (MAPE)</span></li><li><strong class="mono">15</strong><span data-i18n="p3.m2">ações na demo ao vivo</span></li></ul>
             <div class="project-footer"><span class="project-actions"><a class="project-link project-demo" href="demos/lstm/" data-demo="lstm"><span data-i18n="proj.demo">Ver demo</span> <span aria-hidden="true">▶</span></a><a class="project-link" href="https://github.com/emanueleborges/fiaptech4" target="_blank" rel="noopener" data-repo="fiaptech4"><span data-i18n="proj.code">Ver código</span> <span aria-hidden="true">↗</span></a></span><span class="project-meta mono" data-repo-meta="fiaptech4"></span></div>
           </article>
           <article data-category="ia" class="project-card">
@@ -380,6 +388,7 @@
             <p class="mono project-type">FASTAPI · POSTGRESQL · SCIKIT-LEARN</p>
             <h3>Movie Recommender System</h3>
             <p class="muted" data-i18n="p7.desc">Sistema de recomendação de filmes baseado em TF-IDF e similaridade de cossenos, com interface web responsiva e banco PostgreSQL.</p>
+            <ul class="project-metrics"><li><strong class="mono" data-i18n="p7.m1v">~1.500</strong><span data-i18n="p7.m1">filmes na demo</span></li><li><strong class="mono">&lt; 50 ms</strong><span data-i18n="p7.m2">para indexar no navegador</span></li></ul>
             <div class="project-footer"><span class="project-actions"><a class="project-link project-demo" href="demos/filmes/" data-demo="filmes"><span data-i18n="proj.demo">Ver demo</span> <span aria-hidden="true">▶</span></a><a class="project-link" href="https://github.com/emanueleborges/challenge-movies" target="_blank" rel="noopener" data-repo="challenge-movies"><span data-i18n="proj.code">Ver código</span> <span aria-hidden="true">↗</span></a></span><span class="project-meta mono" data-repo-meta="challenge-movies"></span></div>
           </article>
           <article data-category="ia apps" class="project-card">
@@ -387,6 +396,7 @@
             <p class="mono project-type">FACE-API.JS · NODE.JS · SQLITE</p>
             <h3>Face Recognition POC</h3>
             <p class="muted" data-i18n="p8.desc">Reconhecimento facial em tempo real pela webcam: captura, geração de embeddings e verificação a partir de vetores salvos via API REST.</p>
+            <ul class="project-metrics"><li><strong class="mono">128</strong><span data-i18n="p8.m1">números por rosto (embedding)</span></li><li><strong class="mono">0</strong><span data-i18n="p8.m2">imagens enviadas na demo</span></li></ul>
             <div class="project-footer"><span class="project-actions"><a class="project-link project-demo" href="demos/face/" data-demo="face"><span data-i18n="proj.demo">Ver demo</span> <span aria-hidden="true">▶</span></a><a class="project-link" href="https://github.com/emanueleborges/face-recognition-poc" target="_blank" rel="noopener" data-repo="face-recognition-poc"><span data-i18n="proj.code">Ver código</span> <span aria-hidden="true">↗</span></a></span><span class="project-meta mono" data-repo-meta="face-recognition-poc"></span></div>
           </article>
           <article data-category="apps" class="project-card">
@@ -401,6 +411,7 @@
             <p class="mono project-type">RAG · WORKERS AI · VECTORIZE · CLOUDFLARE</p>
             <h3 data-i18n="p10.title">Assistente com IA deste portfólio</h3>
             <p class="muted" data-i18n="p10.desc">Chat híbrido em 8 idiomas: respostas prontas, busca local (TF-IDF com correção de digitação) e RAG com embeddings BGE-M3 no Vectorize e geração pelo Qwen3 30B no Workers AI, protegido por Turnstile e limites por IP — tudo em planos gratuitos.</p>
+            <ul class="project-metrics"><li><strong class="mono">8</strong><span data-i18n="p10.m1">idiomas</span></li><li><strong class="mono">92</strong><span data-i18n="p10.m2">testes automáticos</span></li><li><strong class="mono">$0</strong><span data-i18n="p10.m3">custo mensal</span></li></ul>
             <div class="project-footer"><span class="project-actions"><a class="project-link project-demo" href="#chat" data-open-chat data-demo="chat"><span data-i18n="proj.demo">Ver demo</span> <span aria-hidden="true">▶</span></a><a class="project-link" href="https://github.com/emanueleborges/emanueleborges.github.io/tree/main/worker" target="_blank" rel="noopener" data-repo="emanueleborges.github.io"><span data-i18n="proj.code">Ver código</span> <span aria-hidden="true">↗</span></a></span><span class="project-meta mono" data-repo-meta="emanueleborges.github.io"></span></div>
           </article>
           <article data-category="ia" class="project-card">
@@ -408,7 +419,16 @@
             <p class="mono project-type">RAG · PROMPT INJECTION · SEGURANÇA DE LLM</p>
             <h3 data-i18n="p11.title">Laboratório de Segurança RAG</h3>
             <p class="muted" data-i18n="p11.desc">Demo local e interativa de prompt injection em perguntas e documentos recuperados: compara um fluxo vulnerável com outro protegido e explica defesas em camadas. Sem inferência de IA ou envio do texto digitado; usa apenas um segredo fictício.</p>
+            <ul class="project-metrics"><li><strong class="mono">3</strong><span data-i18n="p11.m1">cenários para testar</span></li><li><strong class="mono">0</strong><span data-i18n="p11.m2">bytes enviados a servidor</span></li></ul>
             <div class="project-footer"><span class="project-actions"><a class="project-link project-demo" href="demos/guardrail/" data-demo="guardrail"><span data-i18n="proj.demo">Ver demo</span> <span aria-hidden="true">▶</span></a><a class="project-link" href="https://github.com/emanueleborges/emanueleborges.github.io/tree/main/demos/guardrail" target="_blank" rel="noopener" data-repo="emanueleborges.github.io"><span data-i18n="proj.code">Ver código</span> <span aria-hidden="true">↗</span></a></span><span class="project-meta mono" data-repo-meta="emanueleborges.github.io"></span></div>
+          </article>
+          <article data-category="ia" class="project-card">
+            <span class="art-number mono">12 / IA GENERATIVA</span>
+            <p class="mono project-type">FLUX.1 · LLAMA GUARD · WORKERS AI · TURNSTILE</p>
+            <h3 data-i18n="p12.title">Gerador de Imagens com IA</h3>
+            <p class="muted" data-i18n="p12.desc">Demo de texto para imagem com FLUX.1 [schnell] no Cloudflare Workers AI: Turnstile, filtro local de termos e Llama Guard 3 moderam cada pedido, com limite por IP e teto diário que protege a cota gratuita. Nada é salvo.</p>
+            <ul class="project-metrics"><li><strong class="mono">4</strong><span data-i18n="p12.m1">passos de difusão</span></li><li><strong class="mono">3</strong><span data-i18n="p12.m2">camadas de moderação</span></li></ul>
+            <div class="project-footer"><span class="project-actions"><a class="project-link project-demo" href="demos/imagem/" data-demo="imagem"><span data-i18n="proj.demo">Ver demo</span> <span aria-hidden="true">▶</span></a><a class="project-link" href="https://github.com/emanueleborges/emanueleborges.github.io/tree/main/demos/imagem" target="_blank" rel="noopener" data-repo="emanueleborges.github.io"><span data-i18n="proj.code">Ver código</span> <span aria-hidden="true">↗</span></a></span><span class="project-meta mono" data-repo-meta="emanueleborges.github.io"></span></div>
           </article>
           <!-- /gerado: projetos -->
         </div>

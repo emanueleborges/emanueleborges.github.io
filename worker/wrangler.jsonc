@@ -60,6 +60,12 @@
       "name": "CLICK_LIMITER",
       "namespace_id": "1007",
       "simple": { "limit": 30, "period": 60 }
+    },
+    // Até 2 imagens por minuto por visitante (demo do gerador de imagens); há também um teto diário no D1.
+    {
+      "name": "IMAGE_LIMITER",
+      "namespace_id": "1008",
+      "simple": { "limit": 2, "period": 60 }
     }
   ],
   // Retenção verificada a cada hora; resumo agregado semanal na segunda às 12:00 UTC.

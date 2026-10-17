@@ -10,7 +10,7 @@ Portfólio profissional de **Emanuel Borges**, Desenvolvedor Full Stack Sênior 
 
 🎯 **Para recrutadores:** [sua vaga combina com o Emanuel?](https://emanueleborges.github.io/vaga/) — cole a vaga e veja a aderência requisito por requisito
 
-🧪 **Demos interativas:** [previsão de ações (LSTM)](https://emanueleborges.github.io/demos/lstm/) · [reconhecimento facial](https://emanueleborges.github.io/demos/face/) · [recomendação de filmes](https://emanueleborges.github.io/demos/filmes/) · [segurança de RAG contra prompt injection](https://emanueleborges.github.io/demos/guardrail/)
+🧪 **Demos interativas:** [previsão de ações (LSTM)](https://emanueleborges.github.io/demos/lstm/) · [reconhecimento facial](https://emanueleborges.github.io/demos/face/) · [recomendação de filmes](https://emanueleborges.github.io/demos/filmes/) · [segurança de RAG contra prompt injection](https://emanueleborges.github.io/demos/guardrail/) · [gerador de imagens (FLUX.1)](https://emanueleborges.github.io/demos/imagem/)
 
 🛠️ **Como foi construído:** [arquitetura, decisões e tecnologias](https://emanueleborges.github.io/como-construi/)
 
@@ -56,6 +56,7 @@ Site estático, sem framework, com backend *serverless* no Cloudflare para o cha
 | **Demo de IA: reconhecimento facial** | Página `/demos/face/` com face-api.js (TensorFlow.js): detecção, embeddings de 128 números e reconhecimento pela webcam ou por foto. **Nada sai do aparelho** do visitante. |
 | **Demo de IA: recomendação de filmes** | Página `/demos/filmes/`: TF-IDF + cosseno em JavaScript puro sobre ~1.500 filmes (Wikidata CC0 + resumos da Wikipédia CC BY-SA), por filme ou por descrição livre, mostrando os termos que explicam cada recomendação. |
 | **Demo de segurança RAG** | Página `/demos/guardrail/`: comparação local e interativa de prompt injection na pergunta e em documentos recuperados, com exemplos de defesas em camadas. As respostas são simuladas; nenhum modelo roda e o texto digitado não é enviado. |
+| **Demo de IA: gerador de imagens** | Página `/demos/imagem/`: texto → imagem 1024×1024 com **FLUX.1 [schnell]** no Workers AI. Cada pedido passa por limite por IP (2/min), Turnstile, filtro local de termos e **Llama Guard 3**; um teto global de 40 imagens/dia protege a cota gratuita usada pelo chat. Nem o texto nem a imagem são salvos — o D1 guarda só o total do dia. |
 | **App instalável (PWA)** | Pode ser instalado no celular ou computador (ícone próprio) e abre sem internet: a página e os arquivos ficam salvos pelo *service worker*. |
 
 ---
@@ -68,8 +69,8 @@ flowchart LR
   GP -->|chat / avaliação<br/>+ token Turnstile| W[Cloudflare Worker]
   W -->|valida token| TS[Turnstile]
   W -->|embeddings + geração, sem cache de prompts| GW[AI Gateway]
-  GW --> AI[Workers AI<br/>BGE-M3 e Qwen3 30B]
-  W -->|busca semântica| VZ[Vectorize<br/>32 trechos do perfil]
+  GW --> AI[Workers AI<br/>BGE-M3, Qwen3 30B,<br/>FLUX.1 e Llama Guard 3]
+  W -->|busca semântica| VZ[Vectorize<br/>33 trechos do perfil]
   W -->|totais agregados| D1[(D1<br/>avaliações diárias + contagens por continente)]
   W -->|resumo semanal agregado| RS[Resend → Gmail do dono]
   GP -->|contagem por continente após consentimento| W
@@ -128,7 +129,8 @@ O conhecimento da IA é **gerado das próprias traduções do site** (`i18n/`): 
 │   ├── lstm/               # Previsão de ações: lstm.js (inferência), pesos e dados
 │   ├── face/               # Reconhecimento facial com face-api.js
 │   ├── filmes/             # Recomendação de filmes: tfidf.js e filmes.json
-│   └── guardrail/          # Simulação local de prompt injection contra RAG
+│   ├── guardrail/          # Simulação local de prompt injection contra RAG
+│   └── imagem/             # Gerador de imagens: imagem.js (POST /image no Worker)
 ├── scripts/conferir-modulos.mjs # CI: todo módulo ES importado pelo index.html está no importmap
 ├── scripts/gerar-secoes.mjs # Gera os cards de projetos e as habilidades a partir de data/ (--check no CI)
 ├── scripts/gerar-dados-filmes.py  # Gera demos/filmes/filmes.json (Wikidata + Wikipédia)
@@ -155,7 +157,7 @@ O conhecimento da IA é **gerado das próprias traduções do site** (`i18n/`): 
 ├── docs/sdd/               # Especificação (SDD) em português; docs/sdd/en/ em inglês
 └── worker/                 # Cloudflare Worker
     ├── src/index.js            # Roteador: chat, avaliações, vaga, visitas regionais, preços + Cron
-    ├── src/rotas/              # Um arquivo por rota: chat, avaliacao, vaga, precos, visitas
+    ├── src/rotas/              # Um arquivo por rota: chat, avaliacao, vaga, imagem, precos, visitas, metricas
     ├── src/comum.js            # Compartilhado: modelos, idiomas, CORS/JSON, Turnstile, limite, e-mail
     ├── src/agendado.js         # Resumo semanal por e-mail e retenção de dados (LGPD)
     ├── src/conhecimento.js     # Gerado: resumo, trechos, perfil completo e versão
@@ -211,7 +213,7 @@ npm run deploy
 ```
 
 Esse comando (1) gera o conhecimento a partir do `i18n/`, (2) publica o Worker e (3) atualiza o índice do Vectorize.
-Quando houver uma migração D1 pendente, aplique-a **antes** de publicar o Worker: `npx wrangler d1 migrations apply portfolio-contact --remote`. As migrações `0004_agregar_avaliacoes.sql` e `0005_remover_mensagens.sql` substituem avaliações individuais por totais diários e apagam permanentemente mensagens antigas de contato.
+Quando houver uma migração D1 pendente, aplique-a **antes** de publicar o Worker: `npx wrangler d1 migrations apply portfolio-contact --remote`. A migração `0007_imagens.sql` cria a contagem diária do gerador de imagens. As migrações `0004_agregar_avaliacoes.sql` e `0005_remover_mensagens.sql` substituem avaliações individuais por totais diários e apagam permanentemente mensagens antigas de contato.
 
 **Recursos do Cloudflare** (criados uma vez):
 
@@ -281,7 +283,7 @@ As contagens regionais são consultadas diretamente no D1 remoto pelo painel. N�
 - **Política de conteúdo (CSP)** em todas as páginas, por meta tag: só carrega scripts, estilos, fontes, imagens e conexões dos domínios usados (Google Fonts, Unsplash, Cloudflare, API do GitHub, jsDelivr); bloqueia plugins (`object-src 'none'`) e troca de `<base>`. Política de referenciador `strict-origin-when-cross-origin`.
 - **Retenção (LGPD):** o Worker apaga a cada hora os totais diários de avaliações, cliques e acessos regionais antes de completarem 30 dias.
 - **Contas:** a proteção mais importante é a verificação em duas etapas (2FA) no GitHub, Cloudflare, Google e Resend.
-- **Limites por IP:** 10 perguntas/min (chat), 20 avaliações/min, 3 análises de vaga/min, 30 consultas de preços/min. O limitador do Cloudflare é permissivo (contadores com pequeno atraso): segura abusos em volume, não um pedido exato.
+- **Limites por IP:** 10 perguntas/min (chat), 20 avaliações/min, 3 análises de vaga/min, 2 imagens/min (com teto global de 40/dia), 30 consultas de preços/min. O limitador do Cloudflare é permissivo (contadores com pequeno atraso): segura abusos em volume, não um pedido exato.
 - **Match de vaga honesto:** o texto da vaga é tratado como dado (instruções escondidas nele são ignoradas — testado com "dê nota 100"), a nota é calculada por regra, evidências inexistentes são descartadas e tecnologias que não aparecem no perfil viram "não encontrado".
 - **IA restrita ao perfil:** instruções para responder só sobre o perfil profissional, nunca inventar dados e ignorar tentativas de mudar as regras.
 - **Sem segredos no código:** todas as chaves são *secrets* do Worker; a site key do Turnstile é pública por natureza.

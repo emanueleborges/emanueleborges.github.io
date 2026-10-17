@@ -33,6 +33,9 @@ function projectCard(p) {
   const demo = p.demo
     ? `<a class="project-link project-demo" href="${escape(p.demo.href)}"${p.demo.openChat ? " data-open-chat" : ""} data-demo="${escape(p.demo.name)}"><span data-i18n="proj.demo">${ptText("proj.demo")}</span> <span aria-hidden="true">▶</span></a>`
     : "";
+  const metrics = p.metrics?.length
+    ? `            <ul class="project-metrics">${p.metrics.map((m) => { const value = field(m.value); const label = field(m.label); return `<li><strong class="mono"${value.attr}>${value.html}</strong><span${label.attr}>${label.html}</span></li>`; }).join("")}</ul>`
+    : "";
   const actions = demo ? `<span class="project-actions">${demo}${code}</span>` : code;
   return [
     `          <article data-category="${p.categories.join(" ")}" class="project-card${p.featured ? " project-featured" : ""}">`,
@@ -40,9 +43,12 @@ function projectCard(p) {
     `            <p class="mono project-type"${type.attr}>${type.html}</p>`,
     `            <h3${title.attr}>${title.html}</h3>`,
     `            <p class="muted" data-i18n="${p.desc.key}">${ptText(p.desc.key)}</p>`,
+    metrics,
     `            <div class="project-footer">${actions}<span class="project-meta mono" data-repo-meta="${escape(p.repo)}"></span></div>`,
     "          </article>",
-  ].join("\n");
+  ]
+    .filter(Boolean)
+    .join("\n");
 }
 
 function skillChip(s) {
@@ -66,6 +72,9 @@ function replaceBlock(html, name, content) {
 const current = read("index.html");
 let next = replaceBlock(current, "projetos", projects.map(projectCard).join("\n"));
 next = replaceBlock(next, "habilidades", skills.map(skillChip).join("\n"));
+// Números do hero que dependem dos dados: total de projetos e de demos de IA (páginas em demos/).
+const counts = { projects: projects.length, demos: projects.filter((p) => p.demo?.href.startsWith("demos/")).length };
+next = next.replace(/(data-count="(\w+)">)\d+/g, (all, start, name) => (name in counts ? `${start}${counts[name]}` : all));
 
 if (process.argv.includes("--check")) {
   if (next !== current) {

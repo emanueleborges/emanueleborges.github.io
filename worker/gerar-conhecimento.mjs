@@ -45,6 +45,7 @@ const CHUNKS = [
   { id: "p7", title: "Project: Movie Recommender System", text: `Movie Recommender System (FastAPI, PostgreSQL, Scikit-learn): ${get("p7.desc")}` },
   { id: "p8", title: "Project: Face Recognition POC", text: `Face Recognition POC (face-api.js, Node.js, SQLite): ${get("p8.desc")}` },
   { id: "p9", title: "Project: Kotlin Desktop CRUD", text: `Kotlin Desktop CRUD (Kotlin, Jetpack Compose, Retrofit): ${get("p9.desc")}` },
+  { id: "p12", title: `Project: ${get("p12.title")}`, text: `${get("p12.title")} (FLUX.1 [schnell], Llama Guard 3, Cloudflare Workers AI, Turnstile): ${get("p12.desc")}` },
   { id: "portfolio", title: "Project: this portfolio website", text: "This portfolio itself: static site (HTML, CSS, vanilla JavaScript, Canvas) in 8 languages, local search assistant (TF-IDF, typo tolerance), AI chat with Cloudflare Workers AI and RAG over Vectorize, contact form stored in Cloudflare D1, Turnstile bot protection, PDF résumés generated with headless Chrome, hosted on GitHub Pages." },
   { id: "skills-backend", title: "Skills: backend", text: `Backend skills listed in the portfolio: ${backendSkills}.` },
   { id: "skills-frontend", title: "Skills: frontend and mobile", text: `Frontend and mobile: TypeScript, JavaScript, React, React Native, Vue.js, Angular, HTML & CSS. ${get("chat.faq.mobile")}` },

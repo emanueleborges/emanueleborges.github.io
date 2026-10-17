@@ -1,5 +1,5 @@
 {
-  "_doc": "Projetos da seção Projetos. Textos em português vêm do i18n/pt.js (pela chave); gere o HTML com: node scripts/gerar-secoes.mjs",
+  "_doc": "Projetos da seção Projetos. Textos em português vêm do i18n/pt.js (pela chave); gere o HTML com: node scripts/gerar-secoes.mjs. Métricas opcionais em \"metrics\": [{ value: {text|key}, label: {key} }] — só números verificáveis.",
   "projects": [
     {
       "id": "p1",
@@ -36,7 +36,25 @@
         "key": "p2.desc"
       },
       "repo": "fiaptech5",
-      "repoUrl": "https://github.com/emanueleborges/fiaptech5"
+      "repoUrl": "https://github.com/emanueleborges/fiaptech5",
+      "metrics": [
+        {
+          "value": {
+            "text": "87%"
+          },
+          "label": {
+            "key": "p2.m1"
+          }
+        },
+        {
+          "value": {
+            "text": "Top 5%"
+          },
+          "label": {
+            "key": "p2.m2"
+          }
+        }
+      ]
     },
     {
       "id": "p3",
@@ -58,7 +76,25 @@
       "demo": {
         "name": "lstm",
         "href": "demos/lstm/"
-      }
+      },
+      "metrics": [
+        {
+          "value": {
+            "key": "p3.m1v"
+          },
+          "label": {
+            "key": "p3.m1"
+          }
+        },
+        {
+          "value": {
+            "text": "15"
+          },
+          "label": {
+            "key": "p3.m2"
+          }
+        }
+      ]
     },
     {
       "id": "p4",
@@ -135,7 +171,25 @@
       "demo": {
         "name": "filmes",
         "href": "demos/filmes/"
-      }
+      },
+      "metrics": [
+        {
+          "value": {
+            "key": "p7.m1v"
+          },
+          "label": {
+            "key": "p7.m1"
+          }
+        },
+        {
+          "value": {
+            "text": "< 50 ms"
+          },
+          "label": {
+            "key": "p7.m2"
+          }
+        }
+      ]
     },
     {
       "id": "p8",
@@ -158,7 +212,25 @@
       "demo": {
         "name": "face",
         "href": "demos/face/"
-      }
+      },
+      "metrics": [
+        {
+          "value": {
+            "text": "128"
+          },
+          "label": {
+            "key": "p8.m1"
+          }
+        },
+        {
+          "value": {
+            "text": "0"
+          },
+          "label": {
+            "key": "p8.m2"
+          }
+        }
+      ]
     },
     {
       "id": "p9",
@@ -200,7 +272,33 @@
         "name": "chat",
         "href": "#chat",
         "openChat": true
-      }
+      },
+      "metrics": [
+        {
+          "value": {
+            "text": "8"
+          },
+          "label": {
+            "key": "p10.m1"
+          }
+        },
+        {
+          "value": {
+            "text": "92"
+          },
+          "label": {
+            "key": "p10.m2"
+          }
+        },
+        {
+          "value": {
+            "text": "$0"
+          },
+          "label": {
+            "key": "p10.m3"
+          }
+        }
+      ]
     },
     {
       "id": "p11",
@@ -222,7 +320,65 @@
       "demo": {
         "name": "guardrail",
         "href": "demos/guardrail/"
-      }
+      },
+      "metrics": [
+        {
+          "value": {
+            "text": "3"
+          },
+          "label": {
+            "key": "p11.m1"
+          }
+        },
+        {
+          "value": {
+            "text": "0"
+          },
+          "label": {
+            "key": "p11.m2"
+          }
+        }
+      ]
+    },
+    {
+      "id": "p12",
+      "categories": [
+        "ia"
+      ],
+      "label": "12 / IA GENERATIVA",
+      "type": {
+        "text": "FLUX.1 · LLAMA GUARD · WORKERS AI · TURNSTILE"
+      },
+      "title": {
+        "key": "p12.title"
+      },
+      "desc": {
+        "key": "p12.desc"
+      },
+      "repo": "emanueleborges.github.io",
+      "repoUrl": "https://github.com/emanueleborges/emanueleborges.github.io/tree/main/demos/imagem",
+      "demo": {
+        "name": "imagem",
+        "href": "demos/imagem/"
+      },
+      "metrics": [
+        {
+          "value": {
+            "text": "4"
+          },
+          "label": {
+            "key": "p12.m1"
+          }
+        },
+        {
+          "value": {
+            "text": "3"
+          },
+          "label": {
+            "key": "p12.m2"
+          }
+        }
+      ]
     }
   ]
 }

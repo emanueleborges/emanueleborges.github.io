@@ -4,6 +4,7 @@
 //   POST /match    → "Essa vaga combina?": requisitos da vaga × perfil, com evidências e nota
 //   POST /visit    → contagem agregada por continente, somente após consentimento
 //   POST /click    → total diário de cliques por link (LinkedIn, GitHub…), somente após consentimento
+//   POST /image    → demo do gerador de imagens (FLUX.1 schnell), com moderação e teto diário
 //   GET  /prices   → preços das ações da demo do LSTM (Yahoo Finance)
 //   Cron (horário) → limpeza de dados expirados; (segunda 12:00 UTC) resumo agregado semanal
 //
@@ -15,6 +16,7 @@ import { handleMatch } from "./rotas/vaga.js";
 import { handlePrices } from "./rotas/precos.js";
 import { handleVisit } from "./rotas/visitas.js";
 import { handleClick } from "./rotas/metricas.js";
+import { handleImage } from "./rotas/imagem.js";
 import { purgeOldData, sendWeeklySummary } from "./agendado.js";
 
 // Rotas POST: caminho → função (payload, ip, env, origin, ctx, request).
@@ -23,6 +25,7 @@ const POST_ROUTES = {
   "/feedback": handleFeedback,
   "/match": handleMatch,
   "/click": handleClick,
+  "/image": handleImage,
   "/visit": (_payload, _ip, env, origin, _ctx, request) => handleVisit(request, env, origin),
 };
 
