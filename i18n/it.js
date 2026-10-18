@@ -51,7 +51,7 @@ window.I18N.it = {
   "job1.b3": "Soluzioni scalabili con AWS Serverless (Lambda, S3) e messaggistica con RabbitMQ.",
   "job2.period": "LUG 2021 — MAR 2023",
   "job2.title": "Sviluppatore Full Stack Mid-level",
-  "job2.b1": "Sistemi web con PHP/Laravel, Node.js (NestJS), React, Vue.js e Angular.",
+  "job2.b1": "Sistemi web con Java, PHP/Laravel, Node.js (NestJS), React, Vue.js e Angular.",
   "job2.b2": "Procedure, funzioni e trigger Oracle per ottimizzare query e processi aziendali.",
   "job2.b3": "Test unitari e Clean Architecture in team agili multidisciplinari.",
   "job3.period": "AGO 2015 — GIU 2021",

@@ -49,7 +49,7 @@ window.I18N.en = {
   "job1.b2": "CI/CD pipelines with GitLab, Docker and Kubernetes; quality ensured with SonarQube and code review.",
   "job1.b3": "Scalable solutions with AWS Serverless (Lambda, S3) and messaging with RabbitMQ.",
   "job2.title": "Mid-level Full Stack Developer",
-  "job2.b1": "Web systems with PHP/Laravel, Node.js (NestJS), React, Vue.js and Angular.",
+  "job2.b1": "Web systems with Java, PHP/Laravel, Node.js (NestJS), React, Vue.js and Angular.",
   "job2.b2": "Oracle procedures, functions and triggers to optimize queries and business processes.",
   "job2.b3": "Unit testing and Clean Architecture in multidisciplinary agile teams.",
   "job3.period": "AUG 2015 — JUN 2021",

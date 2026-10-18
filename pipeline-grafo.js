@@ -51,7 +51,7 @@ if (timeline) {
   const stages = [...jobs].reverse();
   const pipeline = document.createElement("div");
   pipeline.className = "pipeline";
-  pipeline.setAttribute("role", "tablist");
+  pipeline.setAttribute("role", "group");
   // A seção é uma grade de 2 colunas: esteira e etapas ficam juntas na coluna da direita.
   const column = document.createElement("div");
   column.className = "pipeline-column";
@@ -81,18 +81,14 @@ if (timeline) {
         tab.type = "button";
         tab.id = `${job.id}-tab`;
         tab.className = `pipe-stage ${running ? "is-running" : "is-passed"}`;
-        tab.setAttribute("role", "tab");
         tab.setAttribute("aria-controls", job.id);
-        tab.setAttribute("aria-selected", String(job === selected));
-        tab.tabIndex = job === selected ? 0 : -1;
-        tab.innerHTML = `<span class="pipe-icon" aria-hidden="true">${running ? "" : "✓"}</span><span class="pipe-name"></span><span class="pipe-meta mono"></span>`;
+        tab.setAttribute("aria-pressed", String(job === selected));
+        tab.innerHTML = `<span class="pipe-icon" aria-hidden="true">${running ? "●" : "✓"}</span><span class="pipe-name"></span><span class="pipe-meta mono"></span>`;
         tab.querySelector(".pipe-name").textContent = shortName(job);
         tab.querySelector(".pipe-meta").textContent = `${start ?? ""} → ${end ?? t("exp.now")}`;
         tab.addEventListener("click", () => select(job, true));
 
         // Cabeçalho de "log" e stack mais citada no período (habilidades que aparecem no texto do emprego).
-        job.setAttribute("role", "tabpanel");
-        job.setAttribute("aria-labelledby", tab.id);
         job.querySelector(".job-log")?.remove();
         job.querySelector(".job-stack")?.remove();
         const head = document.createElement("p");
@@ -123,17 +119,16 @@ if (timeline) {
 
   const select = (job, focus) => {
     selected = job;
-    pipeline.querySelectorAll("[role=tab]").forEach((tab) => {
+    pipeline.querySelectorAll(".pipe-stage").forEach((tab) => {
       const on = tab.getAttribute("aria-controls") === job.id;
-      tab.setAttribute("aria-selected", String(on));
-      tab.tabIndex = on ? 0 : -1;
+      tab.setAttribute("aria-pressed", String(on));
       if (on && focus) tab.focus();
     });
     jobs.forEach((item) => (item.hidden = item !== job));
     job.classList.add("is-visible");
   };
 
-  // Setas ←/→ trocam de etapa (padrão de abas).
+  // Setas ←/→ trocam de etapa.
   pipeline.addEventListener("keydown", (event) => {
     if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) return;
     event.preventDefault();

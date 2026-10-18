@@ -51,7 +51,7 @@ window.I18N.zh = {
   "job1.b3": "使用 AWS Serverless (Lambda、S3) 和 RabbitMQ 消息队列构建可扩展的解决方案。",
   "job2.period": "2021 年 7 月 — 2023 年 3 月",
   "job2.title": "中级全栈开发工程师",
-  "job2.b1": "使用 PHP/Laravel、Node.js (NestJS)、React、Vue.js 和 Angular 开发 Web 系统。",
+  "job2.b1": "使用 Java、PHP/Laravel、Node.js (NestJS)、React、Vue.js 和 Angular 开发 Web 系统。",
   "job2.b2": "编写 Oracle 存储过程、函数和触发器，优化查询和业务流程。",
   "job2.b3": "在跨职能敏捷团队中实践单元测试和整洁架构。",
   "job3.period": "2015 年 8 月 — 2021 年 6 月",

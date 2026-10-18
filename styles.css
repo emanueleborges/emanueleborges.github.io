@@ -69,7 +69,7 @@
   --text-soft: #3b3644;
   --text-strong: #000000;
   --muted: #5a5563;
-  --subtle: #6a6473;
+  --subtle: #56515f;
   --kicker: #5f5a68;
   --purple: #d9420c;
   --accent: #d9420c;
@@ -401,9 +401,9 @@ blockquote { margin: 32px 0 0; padding: 12px 0 12px 16px; border-left: 2px solid
 .pipe-stage { position: relative; flex: 0 1 auto; display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 2px 10px; min-width: 0; padding: 10px 14px 10px 10px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface-2); color: var(--text); text-align: left; cursor: pointer; transition: border-color .2s, background .2s, transform .2s; }
 .pipe-stage:hover { border-color: rgba(var(--accent-rgb),.45); transform: translateY(-1px); }
 .pipe-stage:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 2px; }
-.pipe-stage[aria-selected="true"] { border-color: rgba(var(--accent-rgb),.7); background: rgba(var(--accent-rgb),.1); box-shadow: 0 0 22px rgba(var(--accent-rgb),.14); }
+.pipe-stage[aria-pressed="true"] { border-color: rgba(var(--accent-rgb),.7); background: rgba(var(--accent-rgb),.1); box-shadow: 0 0 22px rgba(var(--accent-rgb),.14); }
 .pipe-icon { grid-row: span 2; display: grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; background: rgba(var(--accent-rgb),.16); color: var(--accent-text); font-size: 12px; font-weight: 800; }
-.pipe-stage.is-running .pipe-icon { border: 2px solid rgba(var(--accent-rgb),.3); border-top-color: var(--accent-text); background: none; animation: spin 1.1s linear infinite; }
+.pipe-stage.is-running .pipe-icon { background: var(--accent); color: var(--bg); font-size: 9px; }
 .pipe-name { overflow: hidden; font-size: 13px; font-weight: 700; text-overflow: ellipsis; white-space: nowrap; }
 .pipe-meta { color: var(--subtle); font-size: 10px; letter-spacing: .06em; white-space: nowrap; }
 .pipe-link { flex: 1 1 18px; min-width: 12px; height: 2px; background: linear-gradient(90deg, rgba(var(--accent-rgb),.6) 50%, transparent 50%) 0 0 / 10px 2px repeat-x; animation: pipe-flow 1s linear infinite; }
@@ -424,7 +424,7 @@ blockquote { margin: 32px 0 0; padding: 12px 0 12px 16px; border-left: 2px solid
 /* Grafo de habilidades (pipeline-grafo.js) */
 .skills-views { display: inline-flex; gap: 4px; margin-bottom: 18px; padding: 4px; border: 1px solid var(--line); border-radius: 999px; background: var(--surface-2); }
 .skills-view { padding: 7px 14px; border: 0; border-radius: 999px; background: none; color: var(--text-soft); font: 600 12px var(--sans); cursor: pointer; }
-.skills-view[aria-pressed="true"] { background: rgba(var(--accent-rgb),.16); color: var(--accent-text); }
+.skills-view[aria-pressed="true"] { background: rgba(var(--accent-rgb),.16); color: var(--text-strong); }
 .skills-view:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 2px; }
 .skills-graph { display: none; margin: 0; }
 .skills-panel.is-graph .skills-graph { display: block; }
@@ -454,7 +454,7 @@ blockquote { margin: 32px 0 0; padding: 12px 0 12px 16px; border-left: 2px solid
 .graph-skills { flex-basis: 100%; color: var(--accent-text); font-size: 11px; letter-spacing: .04em; }
 .graph-chip { padding: 6px 12px; border: 1px solid var(--line-strong); border-radius: 999px; background: var(--surface-2); color: var(--text); font: 600 12px var(--sans); cursor: pointer; }
 .graph-chip:hover, .graph-chip.is-primary { border-color: rgba(var(--accent-rgb),.55); color: var(--accent-text); }
-@media (prefers-reduced-motion: reduce) { .pipe-link, .pipe-stage.is-running .pipe-icon { animation: none; } }
+@media (prefers-reduced-motion: reduce) { .pipe-link { animation: none; } }
 @media (max-width: 560px) {
   .pipe-stage { grid-template-columns: 1fr; justify-items: center; padding: 10px 8px; text-align: center; }
   .pipe-icon { grid-row: auto; }
@@ -472,6 +472,7 @@ blockquote { margin: 32px 0 0; padding: 12px 0 12px 16px; border-left: 2px solid
 @keyframes system-blink { 50% { opacity: .3; } }
 .system-run { padding: 0; border: 0; background: none; color: var(--accent-text); font: inherit; letter-spacing: inherit; cursor: pointer; }
 .system-run:hover { text-decoration: underline; }
+:root[data-theme="editorial"] .system-run { color: #8f2c07; }
 .system-run:disabled { cursor: progress; opacity: .7; }
 @media (prefers-reduced-motion: reduce) { .spotlight[open], .system-dot { animation: none; } }
 @media (max-width: 760px) {

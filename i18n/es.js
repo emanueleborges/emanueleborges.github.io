@@ -49,7 +49,7 @@ window.I18N.es = {
   "job1.b2": "Pipelines CI/CD con GitLab, Docker y Kubernetes; calidad garantizada con SonarQube y code review.",
   "job1.b3": "Soluciones escalables con AWS Serverless (Lambda, S3) y mensajería con RabbitMQ.",
   "job2.title": "Desarrollador Full Stack Semi Sénior",
-  "job2.b1": "Sistemas web con PHP/Laravel, Node.js (NestJS), React, Vue.js y Angular.",
+  "job2.b1": "Sistemas web con Java, PHP/Laravel, Node.js (NestJS), React, Vue.js y Angular.",
   "job2.b2": "Procedures, functions y triggers en Oracle para optimizar consultas y procesos de negocio.",
   "job2.b3": "Pruebas unitarias y Clean Architecture en equipos ágiles multidisciplinarios.",
   "job3.title": "Desarrollador Web",

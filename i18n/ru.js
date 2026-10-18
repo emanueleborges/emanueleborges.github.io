@@ -51,7 +51,7 @@ window.I18N.ru = {
   "job1.b3": "Масштабируемые решения на AWS Serverless (Lambda, S3) и обмен сообщениями через RabbitMQ.",
   "job2.period": "ИЮЛ 2021 — МАР 2023",
   "job2.title": "Middle Full Stack-разработчик",
-  "job2.b1": "Веб-системы на PHP/Laravel, Node.js (NestJS), React, Vue.js и Angular.",
+  "job2.b1": "Веб-системы на Java, PHP/Laravel, Node.js (NestJS), React, Vue.js и Angular.",
   "job2.b2": "Процедуры, функции и триггеры Oracle для оптимизации запросов и бизнес-процессов.",
   "job2.b3": "Модульное тестирование и Clean Architecture в кросс-функциональных agile-командах.",
   "job3.period": "АВГ 2015 — ИЮН 2021",

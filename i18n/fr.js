@@ -51,7 +51,7 @@ window.I18N.fr = {
   "job1.b3": "Solutions évolutives avec AWS Serverless (Lambda, S3) et messagerie RabbitMQ.",
   "job2.period": "JUIL. 2021 — MARS 2023",
   "job2.title": "Développeur Full Stack confirmé",
-  "job2.b1": "Systèmes web avec PHP/Laravel, Node.js (NestJS), React, Vue.js et Angular.",
+  "job2.b1": "Systèmes web avec Java, PHP/Laravel, Node.js (NestJS), React, Vue.js et Angular.",
   "job2.b2": "Procédures, fonctions et triggers Oracle pour optimiser les requêtes et les processus métier.",
   "job2.b3": "Tests unitaires et Clean Architecture au sein d’équipes agiles pluridisciplinaires.",
   "job3.period": "AOÛT 2015 — JUIN 2021",
