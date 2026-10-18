@@ -49,7 +49,7 @@ window.I18N.pt = {
   "job3.title": "Desenvolvedor Web",
   "job3.company": "Prefeitura de Manaus — SEMEF / SEMAD",
   "job3.b1": "Desenvolvimento dos portais <a href=\"https://compras.manaus.am.gov.br/\" target=\"_blank\" rel=\"noopener\">ComprasManaus</a> e <a href=\"https://contratos.manaus.am.gov.br\" target=\"_blank\" rel=\"noopener\">ContratosManaus</a>, de licitações e contratos.",
-  "job3.b2": "Sistemas governamentais com PHP, ASP Classic, VB.NET, Java, jQuery e Oracle.",
+  "job3.b2": "Sistemas governamentais com PHP, ASP Classic, ASP.NET Web Forms, VB.NET, Java, jQuery, Bootstrap e Oracle.",
   "job3.b3": "Views, functions e procedures em Oracle para relatórios e automação de processos.",
   "proj.kicker": "// 03. PROJETOS SELECIONADOS",
   "proj.title": "Ideias em<br /><span class=\"gradient-text\">movimento.</span>",
@@ -275,5 +275,8 @@ window.I18N.pt = {
   "skills.graphProject": "{name}: {n} habilidade(s)",
   "skills.graphOpen": "Ver projeto ↘",
   "skills.graphProjects": "{n} projeto(s)",
-  "skills.graphLinks": "conexões"
+  "skills.graphLinks": "conexões",
+  "demo.newTab": "NOVA ABA ↗",
+  "demo.close": "Fechar demo",
+  "demo.loading": "&gt;_ INICIANDO DEMO…"
 };

@@ -1,5 +1,21 @@
 // Base compartilhada das páginas de demo (demos/*): idioma, textos, formatação e estatísticas.
 // Cada página chama Demo.setup(textos, render) com os textos nos 8 idiomas.
+// Dentro do modal do portfólio (?embed=1, demo-modal.js): sem cabeçalho nem "Voltar ao portfólio",
+// e links para o resto do site abrem na janela principal, não dentro do modal.
+if (new URLSearchParams(location.search).has("embed") && window.top !== window) {
+  document.documentElement.classList.add("is-embedded");
+  document.addEventListener(
+    "click",
+    (event) => {
+      const link = event.target.closest?.("a[href]");
+      if (!link || link.target) return;
+      const url = new URL(link.href, location.href);
+      if (url.origin === location.origin && !url.pathname.startsWith(location.pathname)) link.target = "_top";
+    },
+    true,
+  );
+}
+
 export const Demo = (() => {
   const htmlLang = { en: "en", pt: "pt-BR", es: "es", fr: "fr", it: "it", de: "de", zh: "zh-CN", ru: "ru" };
   let texts = {};

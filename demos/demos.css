@@ -102,3 +102,8 @@ theme-toggle:not(:defined) { width: 112px; height: 34px; }
 @keyframes logo-pop { from { transform: scale(0); } }
 @keyframes logo-pulse { 0% { transform: scale(1); stroke-opacity: .55; } 70%, 100% { transform: scale(1.9); stroke-opacity: 0; } }
 @media (prefers-reduced-motion: reduce) { .logo-ring, .logo-e, .logo-node { animation: none !important; } }
+
+/* Dentro do modal do portfólio (?embed=1): o modal já tem barra de título e botão de fechar. */
+.is-embedded body > .shell > header, .is-embedded [data-t="back"] { display: none; }
+.is-embedded main { padding-top: 8px; }
+.is-embedded .glow { display: none; }

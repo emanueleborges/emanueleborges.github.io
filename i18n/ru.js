@@ -58,7 +58,7 @@ window.I18N.ru = {
   "job3.title": "Веб-разработчик",
   "job3.company": "Мэрия Манауса — SEMEF / SEMAD",
   "job3.b1": "Разработка порталов <a href=\"https://compras.manaus.am.gov.br/\" target=\"_blank\" rel=\"noopener\">ComprasManaus</a> и <a href=\"https://contratos.manaus.am.gov.br\" target=\"_blank\" rel=\"noopener\">ContratosManaus</a> для госзакупок и контрактов.",
-  "job3.b2": "Государственные системы на PHP, ASP Classic, VB.NET, Java, jQuery и Oracle.",
+  "job3.b2": "Государственные системы на PHP, ASP Classic, ASP.NET Web Forms, VB.NET, Java, jQuery, Bootstrap и Oracle.",
   "job3.b3": "Представления, функции и процедуры Oracle для отчётов и автоматизации процессов.",
   "proj.kicker": "// 03. ИЗБРАННЫЕ ПРОЕКТЫ",
   "proj.title": "Идеи<br /><span class=\"gradient-text\">в движении.</span>",
@@ -275,5 +275,8 @@ window.I18N.ru = {
   "skills.graphProject": "{name}: навыков — {n}",
   "skills.graphOpen": "Открыть проект ↘",
   "skills.graphProjects": "проектов: {n}",
-  "skills.graphLinks": "связей"
+  "skills.graphLinks": "связей",
+  "demo.newTab": "НОВАЯ ВКЛАДКА ↗",
+  "demo.close": "Закрыть демо",
+  "demo.loading": "&gt;_ ЗАПУСК ДЕМО…"
 };

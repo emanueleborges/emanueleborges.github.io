@@ -19,6 +19,7 @@ const PRECACHE = [
   "busca-rapida.js",
   "sistema.js",
   "pipeline-grafo.js",
+  "demo-modal.js",
   "components/boot.js",
   "components/components.js",
   "imagens/logo.svg",

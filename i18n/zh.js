@@ -58,7 +58,7 @@ window.I18N.zh = {
   "job3.title": "Web 开发工程师",
   "job3.company": "马瑙斯市政府 — SEMEF / SEMAD",
   "job3.b1": "开发 <a href=\"https://compras.manaus.am.gov.br/\" target=\"_blank\" rel=\"noopener\">ComprasManaus</a> 和 <a href=\"https://contratos.manaus.am.gov.br\" target=\"_blank\" rel=\"noopener\">ContratosManaus</a> 门户，用于政府采购和合同管理。",
-  "job3.b2": "使用 PHP、ASP Classic、VB.NET、Java、jQuery 和 Oracle 开发政府系统。",
+  "job3.b2": "使用 PHP、ASP Classic、ASP.NET Web Forms、VB.NET、Java、jQuery、Bootstrap 和 Oracle 开发政府系统。",
   "job3.b3": "编写 Oracle 视图、函数和存储过程，用于报表和流程自动化。",
   "proj.kicker": "// 03. 精选项目",
   "proj.title": "让想法<br /><span class=\"gradient-text\">动起来。</span>",
@@ -275,5 +275,8 @@ window.I18N.zh = {
   "skills.graphProject": "{name}：{n} 项技能",
   "skills.graphOpen": "查看项目 ↘",
   "skills.graphProjects": "{n} 个项目",
-  "skills.graphLinks": "条连接"
+  "skills.graphLinks": "条连接",
+  "demo.newTab": "新标签页 ↗",
+  "demo.close": "关闭演示",
+  "demo.loading": "&gt;_ 正在启动演示…"
 };
