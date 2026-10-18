@@ -81,6 +81,7 @@ if (dialog?.showModal) {
     { kind: t("search.kindAction"), label: plain(t("cv.download")), run: () => document.querySelector("[data-cv-link]")?.click() },
     { kind: t("search.kindAction"), label: t("search.actMatch"), run: () => document.querySelector("[data-match-link]")?.click() },
     { kind: t("search.kindAction"), label: t("guide.open"), run: () => document.querySelector("[data-guide-open]")?.click() },
+    { kind: t("search.kindAction"), label: t("search.actShare"), run: () => window.portfolioShare?.open() },
   ];
 
   const commands = () => [...sections(), ...actions()];

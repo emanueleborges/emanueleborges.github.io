@@ -269,5 +269,9 @@ window.I18N.en = {
   "skills.graphLinks": "connections",
   "demo.newTab": "NEW TAB ↗",
   "demo.close": "Close demo",
-  "demo.loading": "&gt;_ STARTING DEMO…"
+  "demo.loading": "&gt;_ STARTING DEMO…",
+  "share.card": "Share",
+  "share.cardSub": "QR code and link",
+  "share.footer": "SHARE ⇪",
+  "search.actShare": "Share portfolio (QR code and link)"
 };

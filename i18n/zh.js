@@ -278,5 +278,9 @@ window.I18N.zh = {
   "skills.graphLinks": "条连接",
   "demo.newTab": "新标签页 ↗",
   "demo.close": "关闭演示",
-  "demo.loading": "&gt;_ 正在启动演示…"
+  "demo.loading": "&gt;_ 正在启动演示…",
+  "share.card": "分享",
+  "share.cardSub": "二维码和链接",
+  "share.footer": "分享 ⇪",
+  "search.actShare": "分享作品集（二维码和链接）"
 };

@@ -278,5 +278,9 @@ window.I18N.ru = {
   "skills.graphLinks": "связей",
   "demo.newTab": "НОВАЯ ВКЛАДКА ↗",
   "demo.close": "Закрыть демо",
-  "demo.loading": "&gt;_ ЗАПУСК ДЕМО…"
+  "demo.loading": "&gt;_ ЗАПУСК ДЕМО…",
+  "share.card": "Поделиться",
+  "share.cardSub": "QR-код и ссылка",
+  "share.footer": "ПОДЕЛИТЬСЯ ⇪",
+  "search.actShare": "Поделиться портфолио (QR-код и ссылка)"
 };

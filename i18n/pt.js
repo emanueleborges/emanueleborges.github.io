@@ -278,5 +278,9 @@ window.I18N.pt = {
   "skills.graphLinks": "conexões",
   "demo.newTab": "NOVA ABA ↗",
   "demo.close": "Fechar demo",
-  "demo.loading": "&gt;_ INICIANDO DEMO…"
+  "demo.loading": "&gt;_ INICIANDO DEMO…",
+  "share.card": "Compartilhar",
+  "share.cardSub": "QR code e link",
+  "share.footer": "COMPARTILHAR ⇪",
+  "search.actShare": "Compartilhar portfólio (QR code e link)"
 };

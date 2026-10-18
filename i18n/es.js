@@ -261,5 +261,9 @@ window.I18N.es = {
   "skills.graphLinks": "conexiones",
   "demo.newTab": "NUEVA PESTAÑA ↗",
   "demo.close": "Cerrar demo",
-  "demo.loading": "&gt;_ INICIANDO DEMO…"
+  "demo.loading": "&gt;_ INICIANDO DEMO…",
+  "share.card": "Compartir",
+  "share.cardSub": "Código QR y enlace",
+  "share.footer": "COMPARTIR ⇪",
+  "search.actShare": "Compartir portafolio (código QR y enlace)"
 };

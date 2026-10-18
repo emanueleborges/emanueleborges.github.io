@@ -340,6 +340,9 @@ blockquote { margin: 32px 0 0; padding: 12px 0 12px 16px; border-left: 2px solid
 .footer { min-height: 79px; display: flex; align-items: center; justify-content: space-between; gap: 18px; }
 .footer-copy, .footer-updated, .back-top, .footer-built { color: var(--subtle); font-size: 10px; letter-spacing: .06em; }
 .footer-built { text-decoration: none; }
+.footer-share { padding: 0; border: 0; background: none; color: var(--subtle); font-size: 10px; letter-spacing: .06em; cursor: pointer; }
+.footer-share:hover { color: var(--accent-text); }
+.social-share { font: inherit; cursor: pointer; }
 .footer-built:hover { color: var(--accent-text); }
 .footer-updated { text-transform: uppercase; }
 .back-top:hover { color: var(--text-strong); }

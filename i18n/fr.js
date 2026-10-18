@@ -278,5 +278,9 @@ window.I18N.fr = {
   "skills.graphLinks": "connexions",
   "demo.newTab": "NOUVEL ONGLET ↗",
   "demo.close": "Fermer la démo",
-  "demo.loading": "&gt;_ DÉMARRAGE DE LA DÉMO…"
+  "demo.loading": "&gt;_ DÉMARRAGE DE LA DÉMO…",
+  "share.card": "Partager",
+  "share.cardSub": "QR code et lien",
+  "share.footer": "PARTAGER ⇪",
+  "search.actShare": "Partager le portfolio (QR code et lien)"
 };
