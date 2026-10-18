@@ -143,7 +143,7 @@ Todas rodam **no navegador do visitante**, sem servidor de IA.
 - **Tokens:** todas as cores viraram papéis em variáveis CSS (`--bg`, `--surface`, `--text`, `--accent`, `--accent-rgb`, `--grad-primary`, `--on-primary`, `--duotone`, `--particle-a/-b`…), definidos em `:root[data-theme="amazonia"]` (padrão) e `:root[data-theme="editorial"]` em `styles.css` e `demos/demos.css`; a 404 tem os seus.
 - **Sem piscar:** um script curto no `<head>` de cada página lê `?theme=` ou `localStorage.theme` e define `<html data-theme>` e a `theme-color` antes da pintura.
 - **Troca:** o componente `<theme-toggle>` (`components/components.js`, em todas as páginas) alterna o tema, salvam, atualizam o rótulo/ARIA nos 8 idiomas e disparam `themechange` (as partículas releem as cores). Gráficos SVG usam `style="stroke:var(--series-n)"` e acompanham na hora.
-- **Gráficos:** séries validadas para daltonismo — Amazônia azul `#3987e5` × lima `#65a30d`; Editorial azul `#2a78d6` × laranja `#d9420c`.
+- **Gráficos:** séries validadas para daltonismo — Amazônia azul `#3987e5` × lima `#65a30d`; Editorial ciano `#38bdf8` × laranja `#fb923c`.
 - **CI:** o Lighthouse mede `index.html` e `index.html?theme=editorial`.
 - **Logo "E.":** SVG dentro das páginas (cabeçalho, rodapé, chat, demos, vagas, 404) com cores pelas variáveis `--logo-*` de cada tema; o E se desenha ao carregar (`stroke-dashoffset`), o nó de IA aparece e emite um pulso a cada 3,2 s, e ao passar o mouse gira e brilha — tudo desligado com "reduzir movimento". Favicon, `imagens/logo.svg` e ícones do app usam a versão Amazônia.
 

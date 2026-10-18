@@ -143,7 +143,7 @@ All run **in the visitor's browser**, with no AI server.
 - **Tokens:** every color became a role in CSS variables (`--bg`, `--surface`, `--text`, `--accent`, `--accent-rgb`, `--grad-primary`, `--on-primary`, `--duotone`, `--particle-a/-b`…), defined in `:root[data-theme="amazonia"]` (default) and `:root[data-theme="editorial"]` in `styles.css` and `demos/demos.css`; the 404 has its own.
 - **No flash:** a short `<head>` script on each page reads `?theme=` or `localStorage.theme` and sets `<html data-theme>` and `theme-color` before first paint.
 - **Switching:** the `<theme-toggle>` component (`components/components.js`, on every page) toggles the theme, save it, update the label/ARIA in 8 languages and fire `themechange` (particles re-read their colors). SVG charts use `style="stroke:var(--series-n)"` and follow instantly.
-- **Charts:** series validated for color-vision deficiency — Amazon blue `#3987e5` × lime `#65a30d`; Editorial blue `#2a78d6` × orange `#d9420c`.
+- **Charts:** series validated for color-vision deficiency — Amazon blue `#3987e5` × lime `#65a30d`; Editorial cyan `#38bdf8` × orange `#fb923c`.
 - **CI:** Lighthouse checks `index.html` and `index.html?theme=editorial`.
 - **"E." logo:** inline SVG on every page (header, footer, chat, demos, job match, 404) colored by each theme's `--logo-*` variables; the E draws itself on load (`stroke-dashoffset`), the AI node pops in and pulses every 3.2 s, and on hover it tilts and glows — all off with "reduce motion". Favicon, `imagens/logo.svg` and app icons use the Amazon version.
 

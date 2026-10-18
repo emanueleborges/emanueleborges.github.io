@@ -99,7 +99,7 @@ Toda segunda-feira, o dono recebe por e-mail contagens agregadas de avaliações
 Endereços inexistentes mostram uma página 404 no estilo do site, com links para o portfólio e o assistente.
 
 ### RF-15 — Temas
-- RF-15.1 Dois temas: **Amazônia** (padrão inicial; escuro, verde-floresta e lima) e **Editorial** (claro; papel, tinta e laranja).
+- RF-15.1 Dois temas: **Amazônia** (padrão inicial; escuro, verde-floresta e lima mesclados com o azul de tecnologia) e **Editorial** (escuro; azul-noite `#0B0F19`, ardósia `#1E293B`, ciano `#38BDF8`).
 - RF-15.2 Botão no cabeçalho de todas as páginas (site, demos, vagas) troca o tema; a escolha fica salva e vale nas próximas visitas e páginas; `?theme=editorial` abre direto no tema.
 - RF-15.3 O tema é aplicado antes da primeira pintura (sem piscar); acessibilidade 100 no Lighthouse nos dois temas.
 

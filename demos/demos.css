@@ -1,5 +1,5 @@
 /* Visual compartilhado das páginas de demo (demos/*) e da página de vagas, com os dois temas do
-   portfólio: "amazonia" (padrão) e "editorial". O tema vem de <html data-theme> (script no <head>). */
+   portfólio: "amazonia" (padrão) e "editorial" (escuro, azul). O tema vem de <html data-theme> (script no <head>). */
 :root, :root[data-theme="amazonia"] {
   color-scheme: dark;
   --logo-bg1: #0f2e33; --logo-bg2: #050d08; --logo-edge1: #bef264; --logo-edge2: #38bdf8; --logo-letter1: #ffffff; --logo-letter2: #e4fbb5; --logo-letter3: #86efac; --logo-node1: #f7fee7; --logo-node2: #a3e635; --logo-node3: #0ea5e9; --logo-ring: #a3e635;
@@ -14,17 +14,17 @@
   --swatch: linear-gradient(135deg, #a3e635 50%, #38bdf8 50%);
 }
 :root[data-theme="editorial"] {
-  color-scheme: light;
-  --logo-bg1: #2b2633; --logo-bg2: #16131c; --logo-edge1: #60a5fa; --logo-edge2: #1d4ed8; --logo-letter1: #ffffff; --logo-letter2: #dbeafe; --logo-letter3: #93c5fd; --logo-node1: #eff6ff; --logo-node2: #3b82f6; --logo-node3: #1d4ed8; --logo-ring: #3b82f6;
-  --bg: #e1dbd0; --surface: #ebe6dc; --surface-2: #ebe6dc; --stage: #d7d0c4;
-  --text: #16131c; --muted: #5a5563; --line: rgba(22, 19, 28, .12); --line-strong: rgba(22, 19, 28, .22); --grid: rgba(22, 19, 28, .08);
-  --accent: #1d4ed8; --accent-rgb: 29, 78, 216; --accent-2: #1d4ed8; --accent-2-rgb: 29, 78, 216; --accent-text: #1e40af; --kicker: #1e40af;
-  --on-primary: #ffffff; --grad-primary: linear-gradient(115deg, #16131c, #2b2633);
-  --grad-text: linear-gradient(100deg, #1d4ed8, #2563eb);
-  --glow-1: #b5a895; --glow-2: #aaa08e; --glow-opacity: .1;
-  --series-1: #2a78d6; --series-2: #d9420c;
-  --ok: #047857; --warn: #b45309; --warn-bg: #eee3cd; --warn-line: rgba(180, 83, 9, .35); --warn-text: #7c2d12;
-  --swatch: linear-gradient(135deg, #e1dbd0 50%, #1d4ed8 50%);
+  color-scheme: dark;
+  --logo-bg1: #1e293b; --logo-bg2: #0b0f19; --logo-edge1: #7dd3fc; --logo-edge2: #38bdf8; --logo-letter1: #ffffff; --logo-letter2: #e0f2fe; --logo-letter3: #7dd3fc; --logo-node1: #f0f9ff; --logo-node2: #38bdf8; --logo-node3: #0ea5e9; --logo-ring: #38bdf8;
+  --bg: #0b0f19; --surface: #1e293b; --surface-2: rgba(30, 41, 59, .62); --stage: #070a12;
+  --text: #e2e8f0; --muted: #94a3b8; --line: rgba(148, 163, 184, .14); --line-strong: rgba(148, 163, 184, .26); --grid: rgba(148, 163, 184, .08);
+  --accent: #38bdf8; --accent-rgb: 56, 189, 248; --accent-2: #22d3ee; --accent-2-rgb: 34, 211, 238; --accent-text: #7dd3fc; --kicker: #7dd3fc;
+  --on-primary: #0b0f19; --grad-primary: linear-gradient(115deg, #7dd3fc 0%, #38bdf8 50%, #0ea5e9 100%);
+  --grad-text: linear-gradient(100deg, #e0f2fe, #7dd3fc 50%, #38bdf8);
+  --glow-1: #1e3a5f; --glow-2: #0369a1;
+  --series-1: #38bdf8; --series-2: #fb923c;
+  --ok: #5eead4; --warn: #fcd34d; --warn-bg: rgba(250, 204, 21, .06); --warn-line: rgba(250, 204, 21, .3); --warn-text: #fde68a;
+  --swatch: linear-gradient(135deg, #1e293b 50%, #38bdf8 50%);
 }
 * { box-sizing: border-box; }
 body { margin: 0; background: var(--bg); color: var(--text); font-family: Manrope, sans-serif; line-height: 1.6; overflow-x: clip; -webkit-font-smoothing: antialiased; }

@@ -99,7 +99,7 @@ Every Monday the owner receives an email with aggregate chat ratings and consent
 Unknown addresses show a 404 page in the site's style, with links to the portfolio and the assistant.
 
 ### FR-15 — Themes
-- FR-15.1 Two themes: **Amazon** (initial default; dark, forest green and lime) and **Editorial** (light; paper, ink and orange).
+- FR-15.1 Two themes: **Amazon** (initial default; dark, forest green and lime blended with tech blue) and **Editorial** (dark; near-black navy `#0B0F19`, slate `#1E293B`, cyan `#38BDF8`).
 - FR-15.2 A header button on every page (site, demos, job match) switches the theme; the choice is saved for later visits and pages; `?theme=editorial` opens straight in that theme.
 - FR-15.3 The theme is applied before first paint (no flash); Lighthouse accessibility 100 in both themes.
 

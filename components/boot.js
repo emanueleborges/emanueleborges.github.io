@@ -27,5 +27,5 @@
   }
   document.documentElement.dataset.theme = theme;
   var meta = document.querySelector('meta[name="theme-color"]');
-  if (meta) meta.content = theme === "editorial" ? "#e1dbd0" : "#050f14";
+  if (meta) meta.content = theme === "editorial" ? "#0b0f19" : "#050f14";
 })();
