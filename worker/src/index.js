@@ -6,10 +6,11 @@
 //   POST /click    → total diário de cliques por link (LinkedIn, GitHub…), somente após consentimento
 //   POST /image    → demo do gerador de imagens (FLUX.1 schnell), com moderação e teto diário
 //   GET  /prices   → preços das ações da demo do LSTM (Yahoo Finance)
+//   GET  /status   → rodapé técnico: data center da Cloudflare que atendeu e modelo do chat (nada é salvo)
 //   Cron (horário) → limpeza de dados expirados; (segunda 12:00 UTC) resumo agregado semanal
 //
 // Cada rota fica em src/rotas/; as peças comuns em src/comum.js; o cron em src/agendado.js.
-import { corsHeaders, json } from "./comum.js";
+import { MODEL, corsHeaders, json } from "./comum.js";
 import { handleChat } from "./rotas/chat.js";
 import { handleFeedback } from "./rotas/avaliacao.js";
 import { handleMatch } from "./rotas/vaga.js";
@@ -42,6 +43,10 @@ export default {
     if (request.method === "GET" && new URL(request.url).pathname === "/prices") {
       if (request.headers.get("Origin") !== origin) return json({ error: "forbidden_origin" }, 403, origin);
       return handlePrices(request, request.headers.get("CF-Connecting-IP") ?? "unknown", env, origin);
+    }
+    if (request.method === "GET" && new URL(request.url).pathname === "/status") {
+      if (request.headers.get("Origin") !== origin) return json({ error: "forbidden_origin" }, 403, origin);
+      return json({ colo: request.cf?.colo ?? null, model: MODEL.split("/").pop() }, 200, origin);
     }
     if (request.method !== "POST") return json({ error: "method_not_allowed" }, 405, origin);
     if (request.headers.get("Origin") !== origin) return json({ error: "forbidden_origin" }, 403, origin);

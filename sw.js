@@ -2,7 +2,7 @@
 // - Página: rede primeiro (sempre a versão mais nova); sem rede, a última cópia salva.
 // - CSS, JS e imagens do próprio site: cópia salva primeiro, atualizada em segundo plano.
 // - Outros domínios (IA, GitHub, fontes, estatísticas) não passam por aqui.
-const CACHE = "portfolio-v4";
+const CACHE = "portfolio-v5";
 const PRECACHE = [
   "./",
   "styles.css",
@@ -16,6 +16,9 @@ const PRECACHE = [
   "chat/busca.js",
   "chat/ia.js",
   "chat.js",
+  "busca-rapida.js",
+  "sistema.js",
+  "pipeline-grafo.js",
   "components/boot.js",
   "components/components.js",
   "imagens/logo.svg",

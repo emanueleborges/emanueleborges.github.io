@@ -338,6 +338,7 @@ function initChat() {
 
   // Mostra "digitando…" enquanto a resposta (local ou da IA) é preparada.
   async function respond(userText, makeReply) {
+    finishTyping?.();
     addMessage("user", el("p", null, userText));
     const typing = addMessage("bot", el("span", "chat-typing", ""));
     typing.querySelector(".chat-typing").append(el("i"), el("i"), el("i"));
@@ -346,7 +347,84 @@ function initChat() {
     const [reply] = await Promise.all([makeReply(), new Promise((resolve) => setTimeout(resolve, minimumDelay))]);
     typing.removeAttribute("aria-hidden");
     typing.replaceChildren(...reply);
+    typeOut(typing);
+  }
+
+  // Efeito de digitação: revela o texto da resposta letra a letra, bloco por bloco (links e botões
+  // aparecem quando a digitação chega neles). Respostas longas aceleram para terminar em ~2,5 s;
+  // clicar na resposta ou fazer outra pergunta completa na hora. Leitores de tela recebem o texto
+  // inteiro no fim (aria-busy). Sem efeito com "reduzir movimento".
+  let finishTyping = null;
+  function typeOut(bubble) {
+    finishTyping?.();
     messages.scrollTop = messages.scrollHeight;
+    if (prefersReducedMotion) return;
+
+    const blocks = [...bubble.children];
+    const parts = blocks.map((block) => {
+      const walker = document.createTreeWalker(block, NodeFilter.SHOW_TEXT);
+      const nodes = [];
+      while (walker.nextNode()) nodes.push({ node: walker.currentNode, text: walker.currentNode.nodeValue });
+      return nodes;
+    });
+    const total = parts.flat().reduce((sum, { text }) => sum + text.length, 0);
+    if (!total) return;
+
+    parts.flat().forEach(({ node }) => (node.nodeValue = ""));
+    blocks.forEach((block) => block.classList.add("is-typing-pending"));
+    bubble.setAttribute("aria-busy", "true");
+    bubble.classList.add("is-typing");
+
+    const msPerChar = Math.min(18, 2500 / total);
+    const start = performance.now();
+    let shown = 0;
+    let frame = 0;
+    let lastTick = 0;
+
+    const render = (count) => {
+      let left = count;
+      parts.forEach((nodes, i) => {
+        if (left > 0 || i === 0) blocks[i].classList.remove("is-typing-pending");
+        for (const part of nodes) {
+          const take = Math.max(0, Math.min(part.text.length, left));
+          part.node.nodeValue = part.text.slice(0, take);
+          left -= part.text.length;
+        }
+      });
+      const nearBottom = messages.scrollHeight - messages.scrollTop - messages.clientHeight < 80;
+      if (nearBottom) messages.scrollTop = messages.scrollHeight;
+    };
+
+    const done = () => {
+      clearTimeout(frame);
+      render(total);
+      blocks.forEach((block) => block.classList.remove("is-typing-pending"));
+      bubble.classList.remove("is-typing");
+      bubble.removeAttribute("aria-busy");
+      bubble.removeEventListener("click", done);
+      messages.scrollTop = messages.scrollHeight;
+      finishTyping = null;
+    };
+
+    const step = () => {
+      const now = performance.now();
+      const next = Math.min(total, Math.floor((now - start) / msPerChar) + 1);
+      if (next !== shown) {
+        shown = next;
+        render(shown);
+        // Estalos discretos de teclado (se os sons estiverem ligados — components.js).
+        if (now - lastTick > 75) {
+          lastTick = now;
+          window.portfolioSound?.play("tick");
+        }
+      }
+      if (shown < total) frame = setTimeout(step, 16);
+      else done();
+    };
+
+    finishTyping = done;
+    bubble.addEventListener("click", done);
+    frame = setTimeout(step, 16);
   }
 
   /* ---------- Balão de convite (uma vez por visitante) ---------- */
@@ -478,6 +556,12 @@ function initChat() {
     if (!event.target.closest("[data-open-chat]")) return;
     event.preventDefault();
     setOpen(true);
+  });
+
+  // Pergunta vinda de outra parte da página (ex.: busca rápida, busca-rapida.js).
+  document.addEventListener("portfolio:ask", (event) => {
+    setOpen(true);
+    ask(event.detail.question);
   });
 
   // Usado pelos testes automáticos (tests/): devolve a resposta em texto.

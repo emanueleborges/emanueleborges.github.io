@@ -141,6 +141,9 @@ The AI knowledge is **generated from the site's own translations** (`i18n/`): wh
 ├── script.js               # Languages, menu, filters, animations, particles, analytics
 ├── api.js                  # Shared connection to the Worker and Turnstile
 ├── chat.js                 # Assistant interface (panel, messages, "Ask my AI" bar)
+├── busca-rapida.js         # Spotlight-style quick search (/ or Ctrl/⌘+K): sections, projects, actions and AI
+├── pipeline-grafo.js       # Experience as a CI/CD pipeline and skills × projects graph
+├── sistema.js              # Technical footer: chat model; ping and Cloudflare data center on click
 ├── chat/                   # Assistant logic: texto.js (normalization), regras.js (ready-made answers),
 │                           #   busca.js (local search on the page), ia.js (Worker and ratings)
 ├── components/             # Web Components: <site-logo>, <theme-toggle> (components.js) and boot.js (theme before paint)

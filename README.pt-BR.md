@@ -141,6 +141,9 @@ O conhecimento da IA é **gerado das próprias traduções do site** (`i18n/`): 
 ├── script.js               # Idiomas, menu, filtros, animações, partículas, estatísticas
 ├── api.js                  # Conexão compartilhada com o Worker e o Turnstile
 ├── chat.js                 # Interface do assistente (painel, mensagens, barra "Pergunte à minha IA")
+├── busca-rapida.js         # Busca rápida estilo Spotlight (/ ou Ctrl/⌘+K): seções, projetos, ações e IA
+├── pipeline-grafo.js       # Experiência como pipeline de CI/CD e grafo de habilidades × projetos
+├── sistema.js              # Rodapé técnico: modelo do chat; ping e data center da Cloudflare ao clicar
 ├── chat/                   # Lógica do assistente: texto.js (normalização), regras.js (respostas prontas),
 │                           #   busca.js (busca local na página), ia.js (Worker e avaliações)
 ├── components/             # Web Components: <site-logo>, <theme-toggle> (components.js) e boot.js (tema antes da pintura)

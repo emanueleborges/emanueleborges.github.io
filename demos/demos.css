@@ -77,6 +77,12 @@ th, [data-metrics-table] td:first-child { white-space: normal; }
 .visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 site-logo { display: inline-block; flex: none; line-height: 0; }
 site-logo .logo { width: 100%; height: 100%; }
+sound-toggle { display: inline-flex; }
+sound-toggle:not(:defined) { width: 34px; height: 34px; }
+.sound-toggle { display: grid; place-items: center; width: 34px; height: 34px; padding: 0; border: 1px solid var(--line); border-radius: 50%; background: var(--surface-2); color: var(--text); cursor: pointer; transition: border-color .2s, color .2s; }
+.sound-toggle:hover { border-color: rgba(var(--accent-rgb),.5); }
+.sound-toggle[aria-pressed="true"] { color: var(--accent-text); }
+.sound-toggle:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 2px; }
 theme-toggle { display: inline-flex; }
 /* Antes do componente carregar, reserva o espaço do botão (evita deslocar o cabeçalho). */
 theme-toggle:not(:defined) { width: 112px; height: 34px; }

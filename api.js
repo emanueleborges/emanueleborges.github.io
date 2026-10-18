@@ -97,5 +97,20 @@ export const PortfolioApi = (() => {
     if (!response.ok) throw new Error(`Contagem de cliques indisponível (${response.status})`);
   };
 
-  return { enabled: Boolean(BASE), loadTurnstile, post, recordVisit, recordClick };
+  // Rodapé técnico: mede o tempo de ida e volta até o Worker e devolve { ms, colo, model }.
+  // Só roda quando o visitante pede (não guarda nada; a primeira chamada abre a conexão).
+  const status = async () => {
+    let best = Infinity;
+    let data = null;
+    for (let i = 0; i < 3; i += 1) {
+      const start = performance.now();
+      const response = await fetch(`${BASE}/status`, { credentials: "omit", referrerPolicy: "no-referrer", cache: "no-store" });
+      if (!response.ok) throw new Error(`Status indisponível (${response.status})`);
+      data = await response.json();
+      if (i > 0) best = Math.min(best, performance.now() - start);
+    }
+    return { ms: Math.round(best), colo: data.colo, model: data.model };
+  };
+
+  return { enabled: Boolean(BASE), loadTurnstile, post, recordVisit, recordClick, status };
 })();
