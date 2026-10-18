@@ -131,6 +131,8 @@ button { font: inherit; }
 .menu-toggle { display: none; order: 4; }
 site-logo { display: inline-block; flex: none; line-height: 0; }
 site-logo .logo { width: 100%; height: 100%; }
+share-button { order: 3; display: inline-flex; }
+share-button:not(:defined) { width: 34px; height: 34px; }
 sound-toggle { order: 3; display: inline-flex; }
 sound-toggle:not(:defined) { width: 34px; height: 34px; }
 .sound-toggle { display: grid; place-items: center; width: 34px; height: 34px; padding: 0; border: 1px solid var(--line); border-radius: 50%; background: var(--surface-2); color: var(--text); cursor: pointer; transition: border-color .2s, color .2s; }
@@ -370,7 +372,7 @@ blockquote { margin: 32px 0 0; padding: 12px 0 12px 16px; border-left: 2px solid
 .nav-search:hover { border-color: rgba(var(--accent-rgb),.5); color: var(--text-strong); }
 .nav-search:focus-visible, .nav-links-search:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 2px; }
 .nav-search kbd, .spotlight kbd { padding: 1px 6px; border: 1px solid var(--line-strong); border-radius: 5px; color: var(--muted); font-size: 11px; line-height: 1.4; }
-.nav-links-search { display: none; }
+.nav-links-search, .nav-links-share { display: none; }
 .nav-search[hidden], .nav-links-search[hidden] { display: none !important; }
 .spotlight { width: min(640px, calc(100% - 32px)); max-height: min(560px, calc(100dvh - 120px)); margin: 12vh auto auto; padding: 0; border: 1px solid rgba(var(--accent-rgb),.35); border-radius: 18px; background: var(--surface); color: var(--text); box-shadow: 0 30px 80px var(--shadow-strong), 0 0 0 1px var(--line), 0 0 40px rgba(var(--accent-rgb),.12); overflow: hidden; }
 .spotlight[open] { display: flex; animation: spotlight-in .18s ease-out; }
@@ -687,6 +689,12 @@ main, .footer { position: relative; z-index: 1; }
 }
 
 /* Celulares pequenos: o cabeçalho mostra só o logo (o link mantém o nome no aria-label), para caberem tema, idioma e menu. */
+/* Telas muito estreitas: o compartilhar sai do topo e vai para o menu ☰. */
+@media (max-width: 400px) {
+  .site-header share-button { display: none; }
+  .nav-links-share { display: flex; align-items: center; gap: 8px; padding: 13px 5px; border: 0; border-top: 1px solid var(--line); background: none; color: var(--accent-text); font: 600 14px var(--sans); text-align: left; cursor: pointer; }
+}
+
 @media (max-width: 420px) {
   .site-header .brand > span { display: none; }
   .lang-select select { padding: 9px 26px 9px 11px; }

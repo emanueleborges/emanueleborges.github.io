@@ -6,6 +6,7 @@
 //   links do GitHub         abrem num visualizador em modal (pastas, README e código) em vez de sair do site
 //   outros links externos   (LinkedIn, WhatsApp, e-mail, sites) abrem um cartão em modal; o site só abre se pedido
 //   [data-share]            "Compartilhar portfólio": QR code, link para copiar e atalhos de compartilhamento
+//   <share-button>          ícone de compartilhar no cabeçalho (abre o mesmo modal)
 (() => {
   /* ---------- <site-logo> ---------- */
 
@@ -893,7 +894,33 @@
     openLink(link.href, link.textContent);
   });
 
+  /* ---------- <share-button> ---------- */
+
+  // Ícone de compartilhar no cabeçalho: abre o modal "Compartilhar" ([data-share], tratado acima).
+  const SHARE_ICON =
+    '<svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="2.6"/><circle cx="6" cy="12" r="2.6"/><circle cx="18" cy="19" r="2.6"/><path d="M8.3 10.8l7.4-4.3M8.3 13.2l7.4 4.3"/></svg>';
+
+  class ShareButton extends HTMLElement {
+    connectedCallback() {
+      if (this.button) return;
+      this.innerHTML = `<button class="sound-toggle share-toggle" type="button" data-share data-track="header-share">${SHARE_ICON}</button>`;
+      this.button = this.querySelector("button");
+      this.refresh = () => {
+        const label = linkText().shareTitle;
+        this.button.setAttribute("aria-label", label);
+        this.button.title = label;
+      };
+      document.addEventListener("languagechange", this.refresh);
+      this.refresh();
+    }
+
+    disconnectedCallback() {
+      document.removeEventListener("languagechange", this.refresh);
+    }
+  }
+
   customElements.define("site-logo", SiteLogo);
   customElements.define("theme-toggle", ThemeToggle);
   customElements.define("sound-toggle", SoundToggle);
+  customElements.define("share-button", ShareButton);
 })();

@@ -18,6 +18,7 @@ export const CLICK_TARGETS = new Set([
   "contact-linkedin",
   "contact-share",
   "footer-share",
+  "header-share",
 ]);
 const PROJECT_TARGET = /^(code|demo):[a-z0-9._-]{1,50}$/;
 
