@@ -265,5 +265,7 @@ window.I18N.es = {
   "share.card": "Compartir",
   "share.cardSub": "Código QR y enlace",
   "share.footer": "COMPARTIR ⇪",
-  "search.actShare": "Compartir portafolio (código QR y enlace)"
+  "search.actShare": "Compartir portafolio (código QR y enlace)",
+  "demo.download": "DESCARGAR PDF ↓",
+  "demo.cvTitle": "Currículum"
 };

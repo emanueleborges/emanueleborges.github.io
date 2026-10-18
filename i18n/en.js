@@ -273,5 +273,7 @@ window.I18N.en = {
   "share.card": "Share",
   "share.cardSub": "QR code and link",
   "share.footer": "SHARE ⇪",
-  "search.actShare": "Share portfolio (QR code and link)"
+  "search.actShare": "Share portfolio (QR code and link)",
+  "demo.download": "DOWNLOAD PDF ↓",
+  "demo.cvTitle": "Résumé"
 };

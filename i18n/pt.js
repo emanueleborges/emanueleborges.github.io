@@ -282,5 +282,7 @@ window.I18N.pt = {
   "share.card": "Compartilhar",
   "share.cardSub": "QR code e link",
   "share.footer": "COMPARTILHAR ⇪",
-  "search.actShare": "Compartilhar portfólio (QR code e link)"
+  "search.actShare": "Compartilhar portfólio (QR code e link)",
+  "demo.download": "BAIXAR PDF ↓",
+  "demo.cvTitle": "Currículo"
 };

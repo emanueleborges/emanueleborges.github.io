@@ -282,5 +282,7 @@ window.I18N.fr = {
   "share.card": "Partager",
   "share.cardSub": "QR code et lien",
   "share.footer": "PARTAGER ⇪",
-  "search.actShare": "Partager le portfolio (QR code et lien)"
+  "search.actShare": "Partager le portfolio (QR code et lien)",
+  "demo.download": "TÉLÉCHARGER LE PDF ↓",
+  "demo.cvTitle": "CV"
 };

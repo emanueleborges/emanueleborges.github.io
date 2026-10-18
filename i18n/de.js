@@ -282,5 +282,7 @@ window.I18N.de = {
   "share.card": "Teilen",
   "share.cardSub": "QR-Code und Link",
   "share.footer": "TEILEN ⇪",
-  "search.actShare": "Portfolio teilen (QR-Code und Link)"
+  "search.actShare": "Portfolio teilen (QR-Code und Link)",
+  "demo.download": "PDF HERUNTERLADEN ↓",
+  "demo.cvTitle": "Lebenslauf"
 };

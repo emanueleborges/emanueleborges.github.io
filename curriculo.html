@@ -3,6 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <script src="components/boot.js"></script>
+    <script>
+      // Aberto no modal do portfólio (demo-modal.js): fundo mais enxuto.
+      if (new URLSearchParams(location.search).has("embed") && window.top !== window) document.documentElement.classList.add("is-embedded");
+    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="robots" content="noindex" />
     <title>Emanuel Borges — CV</title>
@@ -61,6 +65,19 @@
       .edu span { color: var(--muted); }
       .muted { color: #2e2944; font-size: 9.2pt; }
       @media screen { body { padding: 32px 16px; background: #f1eef9; } main { background: #fff; padding: 14mm; box-shadow: 0 10px 40px rgba(28,24,48,.12); } }
+      /* Celular: uma coluna, sem a "folha" A4 (o PDF, gerado na impressão, não muda). */
+      @media screen and (max-width: 640px) {
+        body { padding: 0; background: #fff; }
+        main { padding: 22px 18px 32px; box-shadow: none; }
+        header { flex-direction: column; align-items: flex-start; gap: 12px; }
+        h1 { font-size: 22pt; }
+        .item-head { flex-wrap: wrap; gap: 0 12px; }
+        .projects, .skills { grid-template-columns: 1fr; }
+        .skills dt { margin-top: 6px; }
+      }
+      /* Dentro do modal do portfólio (?embed=1). */
+      .is-embedded body { padding: 20px 12px; }
+      @media screen and (max-width: 640px) { .is-embedded body { padding: 0; } }
     </style>
   </head>
   <body>

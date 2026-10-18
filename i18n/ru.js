@@ -282,5 +282,7 @@ window.I18N.ru = {
   "share.card": "Поделиться",
   "share.cardSub": "QR-код и ссылка",
   "share.footer": "ПОДЕЛИТЬСЯ ⇪",
-  "search.actShare": "Поделиться портфолио (QR-код и ссылка)"
+  "search.actShare": "Поделиться портфолио (QR-код и ссылка)",
+  "demo.download": "СКАЧАТЬ PDF ↓",
+  "demo.cvTitle": "Резюме"
 };

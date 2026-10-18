@@ -151,9 +151,17 @@ import { PortfolioApi } from "./api.js";
     root.shadowRoot.querySelector('[data-choice="rejected"]').textContent = copy.reject;
   };
 
+  // Página aberta dentro do modal do portfólio (mesma origem): a janela principal já pergunta e conta.
+  const framed = (() => {
+    try {
+      return window.top !== window && window.top.location.origin === location.origin;
+    } catch {
+      return false;
+    }
+  })();
   const current = readConsent();
-  panel.hidden = current === "accepted" || current === "rejected";
-  if (current === "accepted") enableStatistics();
+  panel.hidden = framed || current === "accepted" || current === "rejected";
+  if (current === "accepted" && !framed) enableStatistics();
   updateText();
   document.addEventListener("languagechange", updateText);
 

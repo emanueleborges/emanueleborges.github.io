@@ -282,5 +282,7 @@ window.I18N.zh = {
   "share.card": "分享",
   "share.cardSub": "二维码和链接",
   "share.footer": "分享 ⇪",
-  "search.actShare": "分享作品集（二维码和链接）"
+  "search.actShare": "分享作品集（二维码和链接）",
+  "demo.download": "下载 PDF ↓",
+  "demo.cvTitle": "简历"
 };
