@@ -48,9 +48,11 @@ Static résumés and profiles force recruiters to read everything to find one sp
 ## 3. Functional requirements
 
 ### FR-01 — Profile content
-The site must present: hero (name, role, summary, location, years of experience), About (with photo), Experience (timeline), Projects, Skills, Education (with certifications and languages) and Contact.
+The site must present: hero (name, role, summary, location, years of experience), About (with photo), Experience (CI/CD pipeline), Projects, Skills, Education (with certifications and languages) and Contact.
 - FR-01.1 Each project card has a "View code" link to its repository and shows language, stars (if any) and last-update date from the public GitHub API.
-- FR-01.2 Projects with a live demo have a "Live demo" button (LSTM, face recognition, movie recommender and the assistant itself).
+- FR-01.2 Projects with a live demo have a "Live demo" button (LSTM, face recognition, movie recommender, RAG security, image generator and the assistant itself).
+- FR-01.4 Experience is a CI/CD pipeline: each job is a stage (✓ passed or ● running) in chronological order; picking a stage shows its "log" with the achievements and the most cited stack for the period (toolbox technologies found in the text). Keyboard navigable (←/→).
+- FR-01.5 Skills open as a grid (default) and can be viewed as a graph: skills on the outer ring, projects on the inner one; touching a skill lights up the projects connected to it, with shortcuts to the cards (and vice versa).
 - FR-01.3 Results cited on the cards must be verifiable (same number shown in the demo or repository).
 
 ### FR-02 — Languages
@@ -65,7 +67,7 @@ The site must present: hero (name, role, summary, location, years of experience)
 
 ### FR-04 — PDF résumé
 - FR-04.1 One PDF per language, generated from the same text source as the site.
-- FR-04.2 The "Download résumé" button delivers the PDF for the current language.
+- FR-04.2 The "Download résumé" button opens the résumé for the current language in a modal for reading (the HTML version the PDF is generated from, readable on phones too), with a "Download PDF" button in the bar; Ctrl/⌘+click downloads directly.
 
 ### FR-05 — Assistant (chat)
 - FR-05.1 A floating button opens the assistant panel; an invitation bubble appears 3 s after the first visit (only once).
@@ -80,7 +82,7 @@ The site must present: hero (name, role, summary, location, years of experience)
 - FR-05.10 AI answers can be rated 👍/👎; only daily totals per rating are stored for up to 30 days, without questions, answers, language or identifiers, with a notice next to the buttons.
 
 ### FR-07 — Direct contacts
-Email, WhatsApp, LinkedIn and GitHub visible in the contact section and in the assistant. There is no form; messages are not submitted to or stored by the site.
+Email, WhatsApp, LinkedIn and GitHub visible in the contact section and in the assistant. There is no form; messages are not submitted to or stored by the site. Each contact opens a modal card (FR-16.3).
 
 ### FR-08 — Analytics
 Optional counting only after explicit consent. The Worker uses the continent provided by Cloudflare, and D1 stores only daily totals per continent and per clicked link (fixed targets validated by the Worker); do not store IP, URL, language, or identifiers. Aggregates are deleted before they reach 30 days. The choice is saved in the browser; to change it later, visitors must clear this site's saved data in browser settings.
@@ -105,6 +107,7 @@ Unknown addresses show a 404 page in the site's style, with links to the portfol
 - FR-14.1 `/vaga/` page (8 languages) where a recruiter pastes a job description (80–8,000 characters, any language) and gets: a match score (0–100%), each requirement with its level (meets / partial / not found), required or nice-to-have, a reason and clickable evidence linking to portfolio sections, plus a "why Emanuel" summary with a copy button.
 - FR-14.2 Requirements are only those written in the posting (nothing invented, nothing omitted); the score is computed by rule, not by the AI; no experience may be claimed without evidence in the profile.
 - FR-14.3 The posting text is not stored; the visitor is told so.
+- FR-14.4 The result shows the score on a gauge and the match by pillar (Backend, Frontend, AI/ML, Data, DevOps, Other) as a radar (3+ pillars) and bars, using the same rule as the overall score; while analyzing, a scan line sweeps the posting text.
 
 ### FR-12 — AI demos
 Dedicated pages (`/demos/…`) in 8 languages, in the site's style, linking back to the portfolio and the code:
@@ -115,6 +118,15 @@ Dedicated pages (`/demos/…`) in 8 languages, in the site's style, linking back
 
 ### FR-13 — Installable, offline app
 The site can be installed as an app (manifest and icons) and, after the first visit, opens offline with the last saved version; the chat uses local search when offline.
+
+### FR-16 — Interactions and browsing without leaving the site
+- FR-16.1 **Sound and haptics:** interface clicks and keystrokes while typing, synthesized in the browser, plus a short vibration on phones; a speaker button on every page mutes them, and the choice is remembered.
+- FR-16.2 **Modals for the site's pages:** demos, "How I built it", the job-match page and the résumé open in a modal in the current language and theme, without the embedded page's header; its links back to the portfolio open in the main window; closing unloads the page (turning off the face demo's camera).
+- FR-16.3 **External links:** the owner's GitHub links open in a modal viewer (repositories, folders, rendered README/Markdown, code and images; breadcrumb, back and "open on GitHub"). LinkedIn, WhatsApp, email and other sites open a modal card (WhatsApp QR code, LinkedIn profile, email to copy, description and stack of the City Hall systems), and the external site only opens if the visitor asks. Ctrl/⌘+click opens the original.
+- FR-16.4 **Share:** a contact card, a footer button and a quick-search action open the portfolio's QR code and link in the current language, with copy, native sharing and WhatsApp, LinkedIn and email shortcuts.
+- FR-16.5 **Quick search:** `/` or Ctrl/⌘+K opens a bar that finds projects, experience, skills, sections and actions, filters the projects by topic (with "Summarize with AI" and "Clear filter") and sends questions to the assistant; keyboard navigable; nothing is sent to a server.
+- FR-16.6 **Typing effect:** chat answers appear letter by letter within ~2.5 s; a click or a new question completes it; screen readers get the full text; no effect with "reduce motion".
+- FR-16.7 **Technical footer:** shows the chat's AI model; the ping to the Worker and the Cloudflare data center are only measured when the visitor clicks.
 
 ---
 
@@ -192,6 +204,15 @@ The site can be installed as an app (manifest and icons) and, after the first vi
 
 ### Installable app
 - [x] After the first visit, the site reloads offline, with its look and projects.
+
+### Interactions and browsing
+- [x] "/" and Ctrl/⌘+K open the search; "rag" offers "Show the 4 projects with rag" and the filter leaves only those cards; a question puts "Ask the AI" first and opens the chat with it.
+- [x] The pipeline shows 3 stages (INDT running) and each job's stack; the graph links "Kafka" to Financial Hub and Products API.
+- [x] "Live demo", "How I built it", job match and the résumé open in the modal without the page header; closing clears the iframe.
+- [x] The `docs/sdd` link clicked inside "How I built it" opens the viewer in the main window with `plan.md`, `spec.md` and `tasks.md`; `spec.md` and the `tcc-ufg` README render formatted.
+- [x] WhatsApp, LinkedIn, email, ComprasManaus and ContratosManaus open their cards; the WhatsApp and share QR codes decode to `wa.me/5592999771376` and `emanueleborges.github.io/?lang=pt`.
+- [x] The résumé modal has "Download PDF"; the reading version fits 375 px and the regenerated PDF is identical (same text, 2 pages).
+- [x] Lighthouse: accessibility, best practices and SEO 100 in both themes after the changes.
 
 ### Metrics email
 - [ ] The aggregate weekly summary arrives on Monday (test run completed without errors; delivery to be confirmed).

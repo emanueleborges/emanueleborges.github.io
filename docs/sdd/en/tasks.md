@@ -90,6 +90,13 @@ Legend: ✅ done · ⏳ pending · 💡 idea
 - ✅ **T70** External-provider-free analytics: consent refreshed, continent/day aggregates in D1, per-IP limit, purge before 30 days, and dashboard/summary migrated — FR-08, LGPD
 - ✅ **T72** English updated to basic (A2), progressing to intermediate (B1), on the site, chat, Worker and PDFs; the job analysis now sends the languages excerpt when a language requirement is written in a language other than English (previously "Inglês fluente" got no evidence) — FR-01, FR-14
 - ✅ **T73** SDD (Spec-Driven Development) under practices: toolbox card, résumé in all 8 languages (PDFs regenerated) and the Worker knowledge base — FR-01, FR-04
+- ✅ **T74** Interface and keystroke sounds (Web Audio) with haptics on phones and a mute button on every page — FR-16.1
+- ✅ **T75** Spotlight-style quick search (`/`, Ctrl/⌘+K) with topic filtering of projects and "Ask the AI"; typing effect in the chat; technical footer with `GET /status` only on click — FR-16.5, FR-16.6, FR-16.7
+- ✅ **T76** Experience as a CI/CD pipeline (log and stack per stage) and a skills × projects graph (grid remains the default) — FR-01.4, FR-01.5
+- ✅ **T77** Job match: score gauge, match by pillar (radar and bars) and a scan line over the text while analyzing — FR-14.4
+- ✅ **T78** Browsing without leaving the site: demos, "How I built it", job match and résumé in a modal; GitHub viewer; cards for LinkedIn, WhatsApp (QR code), email and external sites — FR-16.2, FR-16.3, FR-04.2
+- ✅ **T79** "Share portfolio": QR code, link, native sharing and shortcuts — FR-16.4
+- ✅ **T80** Java at ICCT and the City Hall; ASP.NET Web Forms and Bootstrap at the City Hall (site, 8 languages, PDFs and AI knowledge); accessibility 100 in both themes (Editorial contrast, pipeline without tab roles, quick guide in a `<div>`) — FR-01, accessibility NFR
 
 ---
 

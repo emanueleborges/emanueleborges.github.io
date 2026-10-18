@@ -90,6 +90,13 @@ Legenda: ✅ concluída · ⏳ pendente · 💡 ideia
 - ✅ **T70** Estatísticas sem provedor externo: consentimento atualizado, agregados continente/dia no D1, limite por IP, expurgo antes de 30 dias e resumo/painel migrados — RF-08, LGPD
 - ✅ **T72** Inglês atualizado para básico (A2), evoluindo para intermediário (B1), no site, chat, Worker e PDFs; a análise de vagas passa a enviar o trecho de idiomas quando o requisito de idioma vem fora do inglês (antes "Inglês fluente" ficava sem evidência) — RF-01, RF-14
 - ✅ **T73** SDD (Spec-Driven Development) nas práticas: card na caixa de ferramentas, currículo nos 8 idiomas (PDFs regerados) e base de conhecimento do Worker — RF-01, RF-04
+- ✅ **T74** Sons de interface e teclas (Web Audio) com vibração no celular e botão para mutar em todas as páginas — RF-16.1
+- ✅ **T75** Busca rápida estilo Spotlight (`/`, Ctrl/⌘+K) com filtro de projetos por assunto e "Perguntar à IA"; efeito de digitação no chat; rodapé técnico com `GET /status` só ao clicar — RF-16.5, RF-16.6, RF-16.7
+- ✅ **T76** Experiência como esteira de CI/CD (log e stack por etapa) e grafo de habilidades × projetos (grade continua o padrão) — RF-01.4, RF-01.5
+- ✅ **T77** Vagas: velocímetro da nota, aderência por pilar (radar e barras) e varredura do texto durante a análise — RF-14.4
+- ✅ **T78** Navegação sem sair do site: demos, "Como construí", vagas e currículo em modal; visualizador do GitHub; cartões para LinkedIn, WhatsApp (QR code), e-mail e sites externos — RF-16.2, RF-16.3, RF-04.2
+- ✅ **T79** "Compartilhar portfólio": QR code, link, compartilhamento nativo e atalhos — RF-16.4
+- ✅ **T80** Java no ICCT e na Prefeitura; ASP.NET Web Forms e Bootstrap na Prefeitura (site, 8 idiomas, PDFs e conhecimento da IA); acessibilidade 100 nos dois temas (contraste do tema Editorial, esteira sem papéis de aba, guia rápido em `<div>`) — RF-01, RNF de acessibilidade
 
 ---
 

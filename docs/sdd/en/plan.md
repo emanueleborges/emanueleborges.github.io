@@ -66,7 +66,11 @@ flowchart TB
 | `script.js` | Applies the language (keeping the Portuguese original), language selector, mobile menu, filters, last-updated date (`Intl`), scroll animations, particles (Canvas) and reading progress. |
 | `api.js` | `PortfolioApi` module: Worker URL, on-demand Turnstile loading, one token per submission and `post(path, body)`. |
 | `chat.js` · `chat/` | Assistant. `chat.js` is the UI; `chat/texto.js` (normalization and typos), `chat/regras.js` (regex ready-made answers), `chat/busca.js` (local search) and `chat/ia.js` (Worker) are ES modules imported by `chat.js`. |
-| `components/` | Framework-free Web Components: `<site-logo>` and `<theme-toggle>` (`components.js`); `boot.js` applies the theme before paint. |
+| `components/` | Pieces shared by every page (`components.js`, a classic script): `<site-logo>`, `<theme-toggle>` and `<sound-toggle>` Web Components; sounds (Web Audio) and haptics; GitHub viewer; external-link cards; "Share" (QR code via `vendor/qrcode.min.js`, loaded on demand). `boot.js` applies the theme before paint. |
+| `busca-rapida.js` | Quick search (`<dialog>` with a combobox): reuses `chat/busca.js`, filters project cards by term and sends questions to the chat through the `portfolio:ask` event. |
+| `pipeline-grafo.js` | Experience as a pipeline (button group with `aria-pressed`) and an SVG skills × projects graph; links come from the page text (skill names with word boundaries). |
+| `demo-modal.js` | `<iframe>` modal for demos, `vaga/`, `como-construi/` and the résumé (`curriculo.html?lang=xx&embed=1`, with "Download PDF"). |
+| `sistema.js` | Technical footer: `PortfolioApi.status()` (3 calls to `GET /status`, best time of calls 2–3) only on click. |
 | `data/` · `scripts/gerar-secoes.mjs` | Projects and skills as data; the generator writes static HTML into `index.html` between markers (text from `i18n/pt.js`). CI checks it with `--check`. |
 | `curriculo.html` | A4 résumé template, rendered per language from `i18n/`. |
 | `manifest.webmanifest` · `sw.js` · `icon-*.png` | Installable, offline app (PWA). |
@@ -143,6 +147,15 @@ All run **in the visitor's browser**, with no AI server.
 - **CI:** Lighthouse checks `index.html` and `index.html?theme=editorial`.
 - **"E." logo:** inline SVG on every page (header, footer, chat, demos, job match, 404) colored by each theme's `--logo-*` variables; the E draws itself on load (`stroke-dashoffset`), the AI node pops in and pulses every 3.2 s, and on hover it tilts and glows — all off with "reduce motion". Favicon, `imagens/logo.svg` and app icons use the Amazon version.
 
+### 2.10 Interactions and browsing without leaving the site
+- **Sounds:** `components.js` synthesizes clicks (filtered noise + a short tone) and keystrokes with Web Audio; the `AudioContext` is created on the visitor's first gesture. It listens to `click` on clickable elements and `keydown` in text fields (no repeats or shortcuts; at most one sound every 28 ms). `navigator.vibrate(8)` only on touch screens. Preference in `localStorage.sound`; `window.portfolioSound.play("tick")` is used by the chat's typing effect.
+- **Typing effect:** after building the answer, `chat.js` empties its text nodes and reveals them in order with `setTimeout` (≤ 18 ms per letter, ≤ 2.5 s total); blocks not yet reached stay hidden; `aria-busy` until done.
+- **Pages in a modal:** `demo-modal.js` intercepts clicks (no Ctrl/⌘/Shift/middle button) and loads the page in an `<iframe>` with `?embed=1&lang=&theme=`. `demos/demos.js` and `curriculo.html` set `html.is-embedded` (no header or "back") and send links to the rest of the site with `target="_top"`. On close (button, Esc or backdrop) the iframe goes to `about:blank`. `analytics-consent.js` doesn't show the notice or count a visit inside a same-origin iframe.
+- **GitHub viewer:** `parseGithub()` accepts `github.com/emanueleborges[/repo[/tree|blob/ref[/path]]]`. It uses `api.github.com` (no key): `/users/…/repos`, `/repos/…` (default branch), `/contents/…` (JSON to list; `application/vnd.github.html+json` for rendered Markdown; `…raw+json` for code). Responses are kept in a `Map` for the visit; HTML/text requests use `cache: "no-store"` so they don't mix with the same URL's JSON. The HTML goes through `DOMParser` (removing `script`, `iframe`, `form`, `on*`, `javascript:`) and has relative links/images resolved. On an embedded page it opens in `window.top` (same origin).
+- **External-link cards:** LinkedIn, WhatsApp, Compras/ContratosManaus and other sites answer with `X-Frame-Options`/`frame-ancestors`, so they can't be framed; `components.js` opens a `<dialog>` with useful content per type (`wa.me` → QR code + number; LinkedIn → photo, role and address; `mailto:` → address; known sites → description and stack) and a button to the original.
+- **Share:** `[data-share]` opens the same card with a QR code for `https://emanueleborges.github.io/?lang=<language>`, copy, `navigator.share` (when available) and WhatsApp, LinkedIn and email shortcuts.
+- **Résumé:** the modal reads `curriculo.html` (the PDFs' source) because Android doesn't render PDFs in iframes and iOS shows only the first page; `@media screen and (max-width: 640px)` gives a single column on phones without changing the print output.
+
 ## 3. Backend — Cloudflare Worker
 
 ### 3.1 Routes
@@ -184,6 +197,15 @@ Clicking increments only a daily total of 👍 or 👎; the question, answer, la
 **Errors:** `400 invalid_symbol` · `403 forbidden_origin` · `429 rate_limited` · `502 upstream`
 
 Read-only and without Turnstile; 30/min per-IP limit; it only accepts the site's origin and the demo's 15 stocks (`PRICE_SYMBOLS`: 8 from B3 and 7 from NASDAQ). It fetches 1 year of adjusted closes from Yahoo Finance (`v8/finance/chart`), converts dates to the exchange's time zone and responds with `Cache-Control: max-age=3600`.
+
+#### `GET /status` — technical footer
+**200 response**
+```json
+{ "colo": "GRU", "model": "qwen3-30b-a3b-fp8" }
+```
+**Errors:** `403 forbidden_origin`
+
+Read-only, no Turnstile and nothing stored; it only accepts the site's origin. `colo` comes from `request.cf.colo` (the data center that answered); `model` is the chat model's name (`MODEL`). The site only calls it when the visitor clicks "measure connection".
 
 #### Cron — weekly summary (`0 12 * * 1`, Mondays 12:00 UTC)
 Queries D1 for only the last 7 days of ratings and consented regional access, runs a health check (Qwen3 generation, BGE-M3 embedding, Vectorize query and `SELECT 1` on D1), and sends the aggregate summary through Resend to `NOTIFY_EMAIL`. The subject gets a ⚠️ when any service fails.
@@ -298,3 +320,10 @@ One 1024-dimension vector per excerpt; stable `id` (e.g. `job1`, `p5`, `edu4`); 
 | ADR-27 | Two-step job match (extract reading only the posting → grade) + deterministic Worker checks and rule-based score | A single call, score given by the AI | In a single call the AI invented favorable requirements, omitted gaps (English) and claimed absent technologies (Go); with the steps and rules, a data job went from 80% to 23% and gaps show up. |
 | ADR-29 | Framework-free componentization: Web Components, data + static HTML generator, ES modules with an import map, Worker routes in separate files, per-language translations on demand | React/Vue/Astro; a bundler (Vite) | No build or dependencies: GitHub Pages serves files as they are, the HTML stays static (SEO and chat search) and each part lives in one place; the import map handles versioned caching that a bundler would. |
 | ADR-28 | Two themes via CSS variables + a `<head>` script | A single theme; `prefers-color-scheme` | The owner wanted the "Amazon" identity as the default plus a light option; the pre-paint script avoids a flash and `?theme=` allows sharing/testing. |
+| ADR-30 | Sounds synthesized with Web Audio, on by default with a mute button | Audio files; no sound | Zero audio bytes to download and a timbre tunable in code; the browser only plays after the visitor's first gesture. |
+| ADR-31 | The site's own pages in a modal (`<iframe>` with `?embed=1`) | Navigate to the page; SPA | Keeps the visitor on the portfolio without rewriting pages; each still works on its own and has a direct link. |
+| ADR-32 | GitHub viewer via the public API | GitHub in an `<iframe>`; open a new tab | GitHub forbids being framed; the API (already used by the cards) returns folders, rendered Markdown and code without a key. 60/h limit per visitor, cached per visit, with "open on GitHub" when reached. |
+| ADR-33 | Modal cards for LinkedIn, WhatsApp, email and external sites | `<iframe>`; open directly | Those sites send `X-Frame-Options`/`frame-ancestors`; the card shows what's useful (QR code, profile, email, stack) and the site only opens if the visitor asks. |
+| ADR-34 | Résumé read through its HTML version (`curriculo.html`) in the modal, PDF for download | PDF in an `<iframe>`; pdf.js | Android doesn't render PDFs in iframes and iOS shows only page 1; the HTML version is the PDFs' own source, with no extra library. |
+| ADR-35 | Ping and data center measured only on click (`GET /status`) | Measure on page load | The privacy notice promises not to contact the Worker without consent; the click is the explicit request. |
+| ADR-36 | QR codes with qrcode-generator (MIT) served by the site and loaded on demand | CDN; an external QR service | No third party at runtime and the link isn't sent to another service; ~20 KB only when the card opens. |

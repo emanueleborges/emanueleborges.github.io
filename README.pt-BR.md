@@ -40,19 +40,24 @@ Site estático, sem framework, com backend *serverless* no Cloudflare para o cha
 | Área | O que faz |
 |---|---|
 | **8 idiomas** | Inglês (padrão), português, espanhol, francês, italiano, alemão, chinês e russo. O visitante escolhe no cabeçalho; a escolha fica salva e pode vir no link (`?lang=pt`). |
-| **Seções** | Sobre (com foto), Experiência, Projetos (10 cards, 4 com demo ao vivo; filtros, link para o código e linguagem/estrelas/última atualização vindos da API do GitHub), Habilidades (45 tecnologias com ícones e filtros), Formação (com logos das instituições) e Contato. |
+| **Seções** | Sobre (com foto), Experiência (como **esteira de CI/CD**: cada emprego é uma etapa concluída ou em execução, com o "log" das conquistas e a stack mais citada no período), Projetos (12 cards, 6 com demo ao vivo; filtros, link para o código e linguagem/estrelas/última atualização vindos da API do GitHub), Habilidades (46 tecnologias em **grade** — padrão — ou **grafo** interativo habilidades × projetos), Formação (com logos das instituições) e Contato. |
 | **Temas** | Dois temas que o visitante escolhe no cabeçalho (a escolha fica salva e vale em todas as páginas, inclusive demos e 404): **Amazônia** (padrão — verde-floresta escuro com lima, "IA feita na Amazônia") e **Editorial** (claro — papel, tinta preta e laranja). Também pelo link: `?theme=editorial`. Aplicado antes da pintura, sem piscar. |
 | **Visual** | Tema escolhido pelo visitante, imagens de fundo em movimento (duotone), rede de partículas em Canvas, animações ao rolar e cabeçalho fixo com barra de progresso. Respeita "reduzir movimento". |
-| **Assistente com IA** | Híbrido: **respostas prontas** locais para perguntas frequentes, **IA generativa com RAG** para o resto e **busca local** como reserva. Respostas da IA podem ser avaliadas com 👍/👎. Veja [Arquitetura](#arquitetura). |
-| **Currículo em PDF** | Um PDF por idioma, gerado da mesma fonte de textos do site; o botão baixa o PDF do idioma atual. |
-| **Contatos diretos** | E-mail, WhatsApp, LinkedIn e GitHub; sem formulário nem armazenamento de mensagens pelo portfólio. |
+| **Sons e vibração** | Cliques de interface e teclas de teclado mecânico ao digitar, sintetizados com Web Audio (sem arquivos de áudio), e vibração curta no celular. Botão de alto-falante no cabeçalho de todas as páginas para mutar; a escolha fica salva. |
+| **Busca rápida** | `/` ou Ctrl/⌘+K abre uma barra estilo Spotlight que encontra projetos, experiências, habilidades, seções e ações (tema, sons, currículo, vaga, compartilhar), **filtra os projetos por assunto** (ex.: "rag") e leva perguntas ao assistente. Usa a mesma busca local do chat; nada é enviado. |
+| **Navegação sem sair do site** | Demos, "Como construí", a página de vagas e o currículo abrem num **modal**. Links do GitHub abrem num **visualizador próprio** (pastas, README e Markdown formatados e código, pela API pública do GitHub). LinkedIn, WhatsApp, e-mail e outros sites — que proíbem ser exibidos dentro de outra página — abrem um **cartão** com o essencial (QR code do WhatsApp, perfil, e-mail para copiar, descrição e tecnologia dos sistemas da Prefeitura); o site externo só abre se o visitante pedir. Ctrl/⌘+clique abre o original. |
+| **Compartilhar** | Cartão no contato, botão no rodapé e ação na busca rápida: **QR code** do portfólio no idioma atual, link para copiar, compartilhamento nativo do aparelho e atalhos para WhatsApp, LinkedIn e e-mail. |
+| **Rodapé técnico** | Linha estilo terminal com o modelo de IA do chat; ao clicar em "medir conexão", mostra o ping até o Worker e o data center da Cloudflare que atendeu (`GET /status`). Sem clique, nada é enviado. |
+| **Assistente com IA** | Híbrido: **respostas prontas** locais para perguntas frequentes, **IA generativa com RAG** para o resto e **busca local** como reserva. As respostas aparecem com **efeito de digitação** (até ~2,5 s; clicar completa). Respostas da IA podem ser avaliadas com 👍/👎. Veja [Arquitetura](#arquitetura). |
+| **Currículo em PDF** | Um PDF por idioma, gerado da mesma fonte de textos do site. O botão abre o currículo **num modal para leitura** (a versão HTML da qual o PDF é gerado, legível também no celular) com **"Baixar PDF"** na barra. |
+| **Contatos diretos** | E-mail, WhatsApp, LinkedIn e GitHub, cada um com seu cartão em modal; sem formulário nem armazenamento de mensagens pelo portfólio. |
 | **SEO** | Prévia de link (Open Graph/Twitter), `hreflang` para os 8 idiomas, dados estruturados de `Person` (JSON-LD), `sitemap.xml` e `robots.txt`; verificado no Google Search Console. |
 | **Estatísticas** | Contagem opcional, somente após consentimento explícito. O Worker da Cloudflare usa o IP da conexão para estimar o continente e grava no D1 apenas totais diários: acessos por continente e cliques por link (LinkedIn, GitHub, currículo, código e demos dos projetos…); não grava IP, URL, idioma ou identificadores. Os agregados são removidos antes de completar 30 dias. A escolha fica salva no navegador; para alterá-la depois, limpe os dados salvos deste site nas configurações do navegador. |
 | **Resumo semanal** | Toda segunda, um e-mail com avaliações agregadas, acessos regionais consentidos e saúde da IA, do índice vetorial e do banco. |
 | **Como construí** | Página `/como-construi/` (8 idiomas) que resume este README para visitantes: diagrama da arquitetura, como o assistente responde, decisões e trade-offs, verificações de qualidade e tecnologias. Link no rodapé. |
 | **Página 404** | Página personalizada no estilo do site, com links para o portfólio e o assistente. |
 | **Demo de IA: previsão de ações com LSTM** | Página `/demos/lstm/` (8 idiomas) onde o LSTM do projeto FIAP roda **no navegador, em JavaScript puro** (pesos exportados do Keras, mesma saída até ~1e-8). Preços recentes pelo Worker (Yahoo Finance), com cópia salva se ele falhar; métricas do teste comparadas com um baseline ingênuo. |
-| **"Sua vaga combina?" (para recrutadores)** | Página `/vaga/` (8 idiomas): o recrutador cola a vaga e vê a **nota de aderência**, cada requisito como ✅ atende / 🟡 parcial / ⚪ não encontrado com **evidências clicáveis** no portfólio, e um resumo "por que o Emanuel" para copiar. A IA extrai os requisitos lendo só a vaga e depois avalia cada um; o Worker confere as evidências, rebaixa tecnologias ausentes do perfil e calcula a nota por regra. O texto da vaga não é salvo. |
+| **"Sua vaga combina?" (para recrutadores)** | Página `/vaga/` (8 idiomas): o recrutador cola a vaga e vê a **nota de aderência**, cada requisito como ✅ atende / 🟡 parcial / ⚪ não encontrado com **evidências clicáveis** no portfólio, e um resumo "por que o Emanuel" para copiar. A IA extrai os requisitos lendo só a vaga e depois avalia cada um; o Worker confere as evidências, rebaixa tecnologias ausentes do perfil e calcula a nota por regra. O resultado traz um **velocímetro** da nota e a **aderência por pilar** (Backend, Frontend, IA/ML, Dados, DevOps, Outros) em radar e barras, com a mesma regra por pilar. O texto da vaga não é salvo. |
 | **Demo de IA: reconhecimento facial** | Página `/demos/face/` com face-api.js (TensorFlow.js): detecção, embeddings de 128 números e reconhecimento pela webcam ou por foto. **Nada sai do aparelho** do visitante. |
 | **Demo de IA: recomendação de filmes** | Página `/demos/filmes/`: TF-IDF + cosseno em JavaScript puro sobre ~1.500 filmes (Wikidata CC0 + resumos da Wikipédia CC BY-SA), por filme ou por descrição livre, mostrando os termos que explicam cada recomendação. |
 | **Demo de segurança RAG** | Página `/demos/guardrail/`: comparação local e interativa de prompt injection na pergunta e em documentos recuperados, com exemplos de defesas em camadas. As respostas são simuladas; nenhum modelo roda e o texto digitado não é enviado. |
@@ -144,16 +149,17 @@ O conhecimento da IA é **gerado das próprias traduções do site** (`i18n/`): 
 ├── busca-rapida.js         # Busca rápida estilo Spotlight (/ ou Ctrl/⌘+K): seções, projetos, ações e IA
 ├── pipeline-grafo.js       # Experiência como pipeline de CI/CD e grafo de habilidades × projetos
 ├── sistema.js              # Rodapé técnico: modelo do chat; ping e data center da Cloudflare ao clicar
+├── demo-modal.js           # Modal para demos, "Como construí", vagas e currículo (iframe com ?embed=1)
 ├── chat/                   # Lógica do assistente: texto.js (normalização), regras.js (respostas prontas),
 │                           #   busca.js (busca local na página), ia.js (Worker e avaliações)
-├── components/             # Web Components: <site-logo>, <theme-toggle> (components.js) e boot.js (tema antes da pintura)
+├── components/             # Web Components e peças comuns a todas as páginas (components.js): <site-logo>, <theme-toggle>, <sound-toggle>, sons/vibração, visualizador do GitHub, cartões de links externos e "Compartilhar"; boot.js (tema antes da pintura); vendor/qrcode.min.js (QR code, MIT)
 ├── data/                   # Projetos e habilidades (fonte única) → scripts/gerar-secoes.mjs escreve no index.html
 ├── curriculo.html          # Modelo do currículo (A4) usado para gerar os PDFs
 ├── gerar-curriculos.sh     # Gera os 8 PDFs em cv/ com Chrome headless
 ├── sitemap.xml · robots.txt
 ├── cv/                     # Currículos em PDF (um por idioma)
 ├── imagens/                # Todas as imagens: foto, favicons, ícones do app, og-image, logo; logos/ (instituições e habilidades)
-├── tests/                  # Testes automáticos do chat (92 casos, 8 idiomas)
+├── tests/                  # Testes automáticos do chat (96 casos, 8 idiomas)
 ├── .github/workflows/      # GitHub Actions: testes e Lighthouse a cada push
 ├── lighthouserc.json       # Notas mínimas do Lighthouse no CI
 ├── scripts/pre-commit      # Hook do git: data de atualização e versão dos arquivos
@@ -291,7 +297,10 @@ As contagens regionais são consultadas diretamente no D1 remoto pelo painel. N�
 - **IA restrita ao perfil:** instruções para responder só sobre o perfil profissional, nunca inventar dados e ignorar tentativas de mudar as regras.
 - **Sem segredos no código:** todas as chaves são *secrets* do Worker; a site key do Turnstile é pública por natureza.
 - **Privacidade (LGPD):** não há formulário nem tabela de mensagens de contato. O D1 guarda somente totais regionais e de cliques consentidos e totais diários de 👍/👎, sem perguntas, respostas, idioma ou identificadores associados à avaliação, por até 30 dias. Perguntas do chat e textos de vagas são processados pela Cloudflare Workers AI para gerar respostas/análises, mas não são gravados no D1; a Cloudflare processa IPs para segurança, Turnstile e limites de uso.
-- **Demo facial:** câmera e fotos são processadas só no aparelho do visitante; nada é enviado nem salvo, e os rostos cadastrados somem ao fechar a página.
+- **Demo facial:** câmera e fotos são processadas só no aparelho do visitante; nada é enviado nem salvo, e os rostos cadastrados somem ao fechar a página. Ao fechar o modal da demo, a página é descarregada e a câmera desliga.
+- **Rota de status (`GET /status`):** só leitura, aceita apenas a origem do site e devolve o data center da Cloudflare e o nome do modelo; não grava nada. O rodapé só a chama quando o visitante clica em "medir conexão".
+- **Visualizador do GitHub:** o navegador do visitante consulta a API pública do GitHub (como os cards já faziam); o HTML renderizado pelo GitHub passa por uma segunda limpeza (sem scripts, iframes, formulários ou atributos `on*`). A CSP libera `api.github.com` e imagens de `*.githubusercontent.com`; `frame-src 'self'` permite os modais das próprias páginas.
+- **Páginas dentro do modal:** não mostram o aviso de estatísticas nem contam visita (a janela principal já pergunta e conta).
 
 ---
 
@@ -342,6 +351,7 @@ O projeto segue **Spec-Driven Development**: a especificação descreve o *quê*
 - Ícones das tecnologias: [Simple Icons](https://simpleicons.org) (CC0) — ver `imagens/logos/skills/LICENSE-simple-icons.md`. Oracle, SQL Server e AWS usam ícones genéricos por diretriz de marca.
 - Logos de UFG, FIAP, Descomplica e FUCAPI: obtidos dos sites oficiais, usados apenas para identificar a formação.
 - Imagens de fundo: [Unsplash](https://unsplash.com).
+- QR code: [qrcode-generator](https://github.com/kazuhikoarase/qrcode-generator) (MIT), de Kazuhiko Arase, servido pelo próprio site. "QR Code" é marca registrada da DENSO WAVE.
 - Fontes: Manrope e DM Mono (Google Fonts).
 - Demo facial: [face-api.js](https://github.com/vladmandic/face-api) (MIT), de Vladimir Mandic.
 - Demo de filmes: dados do [Wikidata](https://www.wikidata.org) (CC0) e resumos da [Wikipédia](https://en.wikipedia.org) em inglês (CC BY-SA 4.0), encurtados.

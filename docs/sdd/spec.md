@@ -48,9 +48,11 @@ Currículos e perfis estáticos obrigam o recrutador a ler tudo para achar uma i
 ## 3. Requisitos funcionais
 
 ### RF-01 — Conteúdo do perfil
-O site deve apresentar: topo (nome, cargo, resumo, localização, anos de experiência), Sobre (com foto), Experiência (linha do tempo), Projetos, Habilidades, Formação (com certificações e idiomas) e Contato.
+O site deve apresentar: topo (nome, cargo, resumo, localização, anos de experiência), Sobre (com foto), Experiência (esteira de CI/CD), Projetos, Habilidades, Formação (com certificações e idiomas) e Contato.
 - RF-01.1 Cada card de projeto tem o link "Ver código" para o repositório e mostra linguagem, estrelas (se houver) e data da última atualização, vindos da API pública do GitHub.
-- RF-01.2 Projetos com demo ao vivo têm o botão "Ver demo" (LSTM, reconhecimento facial, recomendação de filmes e o próprio assistente).
+- RF-01.2 Projetos com demo ao vivo têm o botão "Ver demo" (LSTM, reconhecimento facial, recomendação de filmes, segurança RAG, gerador de imagens e o próprio assistente).
+- RF-01.4 A Experiência é uma esteira de CI/CD: cada emprego é uma etapa (✓ concluída ou ● em execução), em ordem cronológica; escolher uma etapa mostra o "log" com as conquistas e a stack mais citada no período (tecnologias da caixa de ferramentas que aparecem no texto). Navegável por teclado (←/→).
+- RF-01.5 As Habilidades abrem em grade (padrão) e podem ser vistas como grafo: habilidades no anel externo, projetos no interno; tocar numa habilidade acende os projetos ligados a ela, com atalhos para os cards (e vice-versa).
 - RF-01.3 Resultados citados nos cards devem ser verificáveis (mesmo número mostrado na demo ou no repositório).
 
 ### RF-02 — Idiomas
@@ -65,7 +67,7 @@ O site deve apresentar: topo (nome, cargo, resumo, localização, anos de experi
 
 ### RF-04 — Currículo em PDF
 - RF-04.1 Um PDF por idioma, gerado a partir da mesma fonte de textos do site.
-- RF-04.2 O botão "Baixar currículo" entrega o PDF do idioma atual.
+- RF-04.2 O botão "Baixar currículo" abre o currículo do idioma atual num modal para leitura (a versão HTML da qual o PDF é gerado, legível também no celular), com o botão "Baixar PDF" na barra; Ctrl/⌘+clique baixa direto.
 
 ### RF-05 — Assistente (chat)
 - RF-05.1 Botão flutuante abre o painel do assistente; um balão de convite aparece 3 s após a primeira visita (uma única vez).
@@ -80,7 +82,7 @@ O site deve apresentar: topo (nome, cargo, resumo, localização, anos de experi
 - RF-05.10 Respostas da IA podem ser avaliadas com 👍/👎; somente totais diários por tipo de avaliação são guardados por até 30 dias, sem pergunta, resposta, idioma ou identificadores, com aviso ao lado dos botões.
 
 ### RF-07 — Contatos diretos
-E-mail, WhatsApp, LinkedIn e GitHub visíveis na seção de contato e no assistente. Não há formulário; as mensagens não são enviadas nem armazenadas pelo site.
+E-mail, WhatsApp, LinkedIn e GitHub visíveis na seção de contato e no assistente. Não há formulário; as mensagens não são enviadas nem armazenadas pelo site. Cada contato abre um cartão em modal (RF-16.3).
 
 ### RF-08 — Estatísticas
 Contagem opcional somente após consentimento explícito. O Worker usa a região continental fornecida pela Cloudflare e o D1 armazena apenas totais diários por continente e por link clicado (alvos fixos validados pelo Worker); não registrar IP, URL, idioma ou identificadores. Os agregados são removidos antes de completar 30 dias. A escolha fica salva no navegador; para alterá-la depois, é necessário limpar os dados salvos deste site nas configurações do navegador.
@@ -105,6 +107,7 @@ Endereços inexistentes mostram uma página 404 no estilo do site, com links par
 - RF-14.1 Página `/vaga/` (8 idiomas) onde o recrutador cola a descrição de uma vaga (80–8.000 caracteres, qualquer idioma) e recebe: nota de aderência (0–100%), cada requisito com nível (atende / parcial / não encontrado), obrigatório ou diferencial, justificativa e evidências clicáveis para as seções do portfólio, e um resumo "por que o Emanuel" com botão de copiar.
 - RF-14.2 Os requisitos são só os escritos na vaga (nada inventado, nada omitido); a nota é calculada por regra, não pela IA; nenhuma experiência pode ser afirmada sem evidência no perfil.
 - RF-14.3 O texto da vaga não é salvo; o visitante é avisado disso.
+- RF-14.4 O resultado mostra a nota num velocímetro e a aderência por pilar (Backend, Frontend, IA/ML, Dados, DevOps, Outros) em radar (3 pilares ou mais) e barras, com a mesma regra da nota geral; durante a análise, uma linha de varredura percorre o texto da vaga.
 
 ### RF-12 — Demos de IA
 Páginas próprias (`/demos/…`), nos 8 idiomas, no estilo do site, com link de volta ao portfólio e ao código:
@@ -116,6 +119,15 @@ Páginas próprias (`/demos/…`), nos 8 idiomas, no estilo do site, com link de
 
 ### RF-13 — App instalável e offline
 O site pode ser instalado como app (manifest e ícones) e, depois da primeira visita, abre sem internet com a última versão salva; o chat usa a busca local quando offline.
+
+### RF-16 — Interações e navegação sem sair do site
+- RF-16.1 **Sons e vibração:** cliques de interface e teclas ao digitar, sintetizados no navegador, e vibração curta no celular; botão de alto-falante em todas as páginas para mutar, com a escolha salva.
+- RF-16.2 **Modais para páginas do site:** demos, "Como construí", a página de vagas e o currículo abrem num modal no idioma e tema atuais, sem o cabeçalho da página embutida; links dela para o portfólio abrem na janela principal; fechar descarrega a página (desliga a câmera da demo facial).
+- RF-16.3 **Links externos:** links do GitHub do dono abrem num visualizador em modal (repositórios, pastas, README/Markdown formatados, código e imagens; trilha de navegação, voltar e "abrir no GitHub"). LinkedIn, WhatsApp, e-mail e outros sites abrem um cartão em modal (QR code do WhatsApp, perfil do LinkedIn, e-mail para copiar, descrição e tecnologia dos sistemas da Prefeitura) e o site externo só abre se o visitante pedir. Ctrl/⌘+clique abre o original.
+- RF-16.4 **Compartilhar:** cartão no contato, botão no rodapé e ação na busca rápida abrem QR code e link do portfólio no idioma atual, com copiar, compartilhamento nativo e atalhos para WhatsApp, LinkedIn e e-mail.
+- RF-16.5 **Busca rápida:** `/` ou Ctrl/⌘+K abre uma barra que encontra projetos, experiências, habilidades, seções e ações, filtra os projetos por assunto (com "Resumir com IA" e "Limpar filtro") e envia perguntas ao assistente; navegável por teclado; nada é enviado a servidor.
+- RF-16.6 **Efeito de digitação:** respostas do chat aparecem letra a letra em até ~2,5 s; clicar ou perguntar de novo completa; leitores de tela recebem o texto inteiro; sem efeito com "reduzir movimento".
+- RF-16.7 **Rodapé técnico:** mostra o modelo de IA do chat; o ping até o Worker e o data center da Cloudflare só são medidos quando o visitante clica.
 
 ---
 
@@ -193,6 +205,15 @@ O site pode ser instalado como app (manifest e ícones) e, depois da primeira vi
 
 ### App instalável
 - [x] Depois da primeira visita, o site recarrega sem internet, com o visual e os projetos.
+
+### Interações e navegação
+- [x] "/" e Ctrl/⌘+K abrem a busca; "rag" oferece "Mostrar os 4 projetos com rag" e o filtro deixa só esses cards; uma pergunta põe "Perguntar à IA" em primeiro e abre o chat com ela.
+- [x] A esteira mostra 3 etapas (INDT em execução) e a stack de cada emprego; o grafo liga "Kafka" a Financial Hub e Products API.
+- [x] "Ver demo", "Como construí", vagas e currículo abrem no modal sem o cabeçalho da página; fechar limpa o iframe.
+- [x] O link `docs/sdd` clicado dentro de "Como construí" abre o visualizador na janela principal com `plan.md`, `spec.md` e `tasks.md`; `spec.md` e o README de `tcc-ufg` aparecem formatados.
+- [x] WhatsApp, LinkedIn, e-mail, ComprasManaus e ContratosManaus abrem seus cartões; os QR codes do WhatsApp e do compartilhamento decodificam para `wa.me/5592999771376` e `emanueleborges.github.io/?lang=pt`.
+- [x] O currículo no modal tem "Baixar PDF"; a versão de leitura cabe em 375 px e o PDF regerado é idêntico (mesmo texto, 2 páginas).
+- [x] Lighthouse: acessibilidade, boas práticas e SEO 100 nos dois temas após as mudanças.
 
 ### E-mail de métricas
 - [ ] O resumo semanal agregado chega na segunda-feira (envio de teste executado sem erros; recebimento a confirmar).
