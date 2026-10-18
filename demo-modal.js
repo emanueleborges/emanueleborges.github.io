@@ -1,4 +1,4 @@
-// Demos abertas num modal, sem sair do portfólio: "Ver demo" (demos/<nome>/) carrega a página da demo
+// Demos e páginas internas (vaga/, como-construi/) abertas num modal, sem sair do portfólio: "Ver demo" (demos/<nome>/) carrega a página da demo
 // num iframe com ?embed=1 (ela esconde o próprio cabeçalho — demos/demos.js), no idioma e tema atuais.
 // Ctrl/⌘/Shift+clique ou clique do meio continuam abrindo a página inteira; "nova aba" também.
 // Ao fechar, o iframe volta para about:blank (desliga a câmera da demo facial, por exemplo).
@@ -31,8 +31,8 @@ if (dialog?.showModal) {
     url.searchParams.set("theme", document.documentElement.dataset.theme || "amazonia");
     newTab.href = url.href;
     url.searchParams.set("embed", "1");
-    const name = link.closest(".project-card")?.querySelector("h3")?.textContent.trim() ?? "Demo";
-    title.textContent = `~/demos/${url.pathname.split("/").filter(Boolean).pop()} · ${name}`;
+    const name = (link.closest(".project-card")?.querySelector("h3") ?? link).textContent.replace(/[↗→↘▶]/g, "").replace(/\s+/g, " ").trim();
+    title.textContent = `~${url.pathname.replace(/\/$/, "")} · ${name}`;
     frame.title = name;
     dialog.classList.remove("is-loaded");
     frame.src = url.href;
@@ -50,7 +50,7 @@ if (dialog?.showModal) {
   document.addEventListener("languagechange", () => dialog.querySelector("[data-demo-modal-close]").setAttribute("aria-label", t("demo.close")));
 
   document.addEventListener("click", (event) => {
-    const link = event.target.closest?.("a[data-demo][href^='demos/']");
+    const link = event.target.closest?.("a[data-demo][href^='demos/'], a[href='vaga/'], a[href='como-construi/']");
     if (!link || event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
     event.preventDefault();
     open(link);

@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <!-- Segurança: só carrega recursos destes domínios (CSP) e não envia o endereço completo a outros sites. -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://challenges.cloudflare.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://images.unsplash.com; connect-src 'self' https://emanuel-portfolio-chat.emanuel-portfolio-chat.workers.dev https://api.github.com https://cdn.jsdelivr.net; frame-src 'self' https://challenges.cloudflare.com; media-src 'self' blob:; worker-src 'self' blob:; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://challenges.cloudflare.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://images.unsplash.com https://*.githubusercontent.com https://github.com; connect-src 'self' https://emanuel-portfolio-chat.emanuel-portfolio-chat.workers.dev https://api.github.com https://cdn.jsdelivr.net; frame-src 'self' https://challenges.cloudflare.com; media-src 'self' blob:; worker-src 'self' blob:; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests" />
     <meta name="referrer" content="strict-origin-when-cross-origin" />
     <meta
       data-i18n-content="meta.description"
@@ -12,7 +12,7 @@
       content="Portfólio de Emanuel Borges — Desenvolvedor Full Stack Sênior com mais de 10 anos de experiência, especializando-se em Machine Learning e NLP."
     />
     <meta name="theme-color" content="#06100b" />
-    <script src="components/boot.js?v=20261018080705" data-i18n></script>
+    <script src="components/boot.js?v=20261018082343" data-i18n></script>
     <!-- Verificação do Google Search Console -->
     <meta name="google-site-verification" content="4hxCxYtZIODldYdYJvIOxejABtc2_GRdp5L6Ug72eEE" />
     <link rel="alternate" hreflang="en" href="https://emanueleborges.github.io/?lang=en" />
@@ -133,41 +133,41 @@
     <!-- Primeira imagem do topo: pré-carregada, menor no celular -->
     <link rel="preload" as="image" href="https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=800&q=70" media="(max-width: 760px)" fetchpriority="high" />
     <link rel="preload" as="image" href="https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1400&q=70" media="(min-width: 761px)" fetchpriority="high" />
-    <link rel="stylesheet" href="styles.css?v=20261018080705" />
-    <script src="i18n/pt.js?v=20261018080705" defer></script>
-    <script src="i18n/en.js?v=20261018080705" defer></script>
-    <script src="i18n.js?v=20261018080705" defer></script>
+    <link rel="stylesheet" href="styles.css?v=20261018082343" />
+    <script src="i18n/pt.js?v=20261018082343" defer></script>
+    <script src="i18n/en.js?v=20261018082343" defer></script>
+    <script src="i18n.js?v=20261018082343" defer></script>
     <!-- Módulos ES. O mapa mantém a versão (?v=, atualizada pelo hook de pre-commit) também nos imports,
          para o navegador nunca misturar arquivos novos e antigos do cache. -->
     <script type="importmap">
       {
         "imports": {
-          "./script.js": "./script.js?v=20261018080705",
-          "./api.js": "./api.js?v=20261018080705",
-          "./chat/texto.js": "./chat/texto.js?v=20261018080705",
-          "./chat/regras.js": "./chat/regras.js?v=20261018080705",
-          "./chat/busca.js": "./chat/busca.js?v=20261018080705",
-          "./chat/ia.js": "./chat/ia.js?v=20261018080705",
-          "./busca-rapida.js": "./busca-rapida.js?v=20261018080705",
-          "./sistema.js": "./sistema.js?v=20261018080705",
-          "./demo-modal.js": "./demo-modal.js?v=20261018080705",
-          "./pipeline-grafo.js": "./pipeline-grafo.js?v=20261018080705"
+          "./script.js": "./script.js?v=20261018082343",
+          "./api.js": "./api.js?v=20261018082343",
+          "./chat/texto.js": "./chat/texto.js?v=20261018082343",
+          "./chat/regras.js": "./chat/regras.js?v=20261018082343",
+          "./chat/busca.js": "./chat/busca.js?v=20261018082343",
+          "./chat/ia.js": "./chat/ia.js?v=20261018082343",
+          "./busca-rapida.js": "./busca-rapida.js?v=20261018082343",
+          "./sistema.js": "./sistema.js?v=20261018082343",
+          "./demo-modal.js": "./demo-modal.js?v=20261018082343",
+          "./pipeline-grafo.js": "./pipeline-grafo.js?v=20261018082343"
         }
       }
     </script>
-    <link rel="modulepreload" href="api.js?v=20261018080705" />
-    <link rel="modulepreload" href="chat/texto.js?v=20261018080705" />
-    <link rel="modulepreload" href="chat/regras.js?v=20261018080705" />
-    <link rel="modulepreload" href="chat/busca.js?v=20261018080705" />
-    <link rel="modulepreload" href="chat/ia.js?v=20261018080705" />
-    <script type="module" src="script.js?v=20261018080705"></script>
-    <script type="module" src="chat.js?v=20261018080705"></script>
-    <script type="module" src="busca-rapida.js?v=20261018080705"></script>
-    <script type="module" src="sistema.js?v=20261018080705"></script>
-    <script type="module" src="demo-modal.js?v=20261018080705"></script>
-    <script type="module" src="pipeline-grafo.js?v=20261018080705"></script>
-    <script type="module" src="analytics-consent.js?v=20261018080705"></script>
-    <script src="components/components.js?v=20261018080705" defer></script>
+    <link rel="modulepreload" href="api.js?v=20261018082343" />
+    <link rel="modulepreload" href="chat/texto.js?v=20261018082343" />
+    <link rel="modulepreload" href="chat/regras.js?v=20261018082343" />
+    <link rel="modulepreload" href="chat/busca.js?v=20261018082343" />
+    <link rel="modulepreload" href="chat/ia.js?v=20261018082343" />
+    <script type="module" src="script.js?v=20261018082343"></script>
+    <script type="module" src="chat.js?v=20261018082343"></script>
+    <script type="module" src="busca-rapida.js?v=20261018082343"></script>
+    <script type="module" src="sistema.js?v=20261018082343"></script>
+    <script type="module" src="demo-modal.js?v=20261018082343"></script>
+    <script type="module" src="pipeline-grafo.js?v=20261018082343"></script>
+    <script type="module" src="analytics-consent.js?v=20261018082343"></script>
+    <script src="components/components.js?v=20261018082343" defer></script>
   </head>
   <body>
     <div class="bg-aurora" aria-hidden="true"><span></span><span></span><span></span></div>

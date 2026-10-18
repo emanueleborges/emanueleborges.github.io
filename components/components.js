@@ -3,6 +3,7 @@
 //   <site-logo size="34">   logo "E." animado, nas cores do tema
 //   <theme-toggle>          botão que alterna os temas Amazônia (padrão) e Editorial
 //   <sound-toggle>          liga/desliga os cliques sonoros e a vibração da interface (padrão: ligado)
+//   links do GitHub         abrem num visualizador em modal (pastas, README e código) em vez de sair do site
 (() => {
   /* ---------- <site-logo> ---------- */
 
@@ -242,6 +243,331 @@
       document.dispatchEvent(new CustomEvent("soundchange", { detail: { on: soundOn } }));
     }
   }
+
+  /* ---------- Visualizador do GitHub ---------- */
+
+  // Links para github.com/emanueleborges/... abrem num modal dentro do site, sem sair da página:
+  // pastas, README e Markdown renderizados pela API pública do GitHub (60 consultas/hora por IP,
+  // com cache na visita) e código como texto. Outros donos, issues etc. continuam abrindo no GitHub.
+  // Dentro de uma página embutida (modal das demos), o visualizador abre na janela principal.
+  const GH_OWNER = "emanueleborges";
+  const GH_LABELS = {
+    en: ["Back", "Close", "GITHUB ↗", "Loading…", "Couldn't load this from GitHub right now.", "GitHub's hourly request limit was reached. Try again in a few minutes or open it on GitHub.", "Repositories"],
+    pt: ["Voltar", "Fechar", "GITHUB ↗", "Carregando…", "Não foi possível carregar do GitHub agora.", "O limite de consultas por hora do GitHub foi atingido. Tente em alguns minutos ou abra no GitHub.", "Repositórios"],
+    es: ["Volver", "Cerrar", "GITHUB ↗", "Cargando…", "No se pudo cargar desde GitHub ahora.", "Se alcanzó el límite de consultas por hora de GitHub. Inténtalo en unos minutos o ábrelo en GitHub.", "Repositorios"],
+    fr: ["Retour", "Fermer", "GITHUB ↗", "Chargement…", "Impossible de charger depuis GitHub pour le moment.", "La limite horaire de requêtes GitHub est atteinte. Réessayez dans quelques minutes ou ouvrez-le sur GitHub.", "Dépôts"],
+    it: ["Indietro", "Chiudi", "GITHUB ↗", "Caricamento…", "Impossibile caricare da GitHub in questo momento.", "Raggiunto il limite orario di richieste a GitHub. Riprova tra qualche minuto o aprilo su GitHub.", "Repository"],
+    de: ["Zurück", "Schließen", "GITHUB ↗", "Wird geladen…", "Konnte gerade nicht von GitHub geladen werden.", "Das stündliche Anfragelimit von GitHub ist erreicht. Versuchen Sie es in ein paar Minuten erneut oder öffnen Sie es auf GitHub.", "Repositorys"],
+    zh: ["返回", "关闭", "GITHUB ↗", "加载中…", "暂时无法从 GitHub 加载。", "已达到 GitHub 每小时请求上限。请几分钟后再试，或在 GitHub 上打开。", "仓库"],
+    ru: ["Назад", "Закрыть", "GITHUB ↗", "Загрузка…", "Сейчас не удалось загрузить с GitHub.", "Достигнут почасовой лимит запросов к GitHub. Попробуйте через несколько минут или откройте на GitHub.", "Репозитории"],
+  };
+  const ghText = () => GH_LABELS[pageLang()] ?? GH_LABELS.en;
+
+  // github.com/emanueleborges[/repo[/tree|blob/ref[/caminho]]] → { repo, ref, path }; o resto → null.
+  const parseGithub = (href) => {
+    let url;
+    try {
+      url = new URL(href, location.href);
+    } catch {
+      return null;
+    }
+    if (url.hostname !== "github.com") return null;
+    const [owner, repo, kind, ref, ...rest] = url.pathname.split("/").filter(Boolean).map(decodeURIComponent);
+    if (owner?.toLowerCase() !== GH_OWNER || (kind && !["tree", "blob"].includes(kind)) || (kind && !ref)) return null;
+    return { repo: repo ?? "", ref: ref ?? "", path: rest.join("/"), hash: url.hash };
+  };
+  const githubUrl = ({ repo, ref, path }) =>
+    `https://github.com/${GH_OWNER}${repo ? `/${repo}` : ""}${repo && (ref || path) ? `/tree/${ref}${path ? `/${path}` : ""}` : ""}`;
+
+  const ghCache = new Map();
+  const ghFetch = (path, accept = "application/vnd.github+json") => {
+    const key = `${accept} ${path}`;
+    if (!ghCache.has(key)) {
+      // Mesma URL com Accept diferente (JSON / HTML / texto): sem cache HTTP para não misturar as respostas.
+      const json = accept.endsWith("github+json");
+      const request = fetch(`https://api.github.com${path}`, { headers: { Accept: accept }, cache: json ? "default" : "no-store" }).then((response) => {
+        if (!response.ok) throw Object.assign(new Error("github"), { status: response.status });
+        return json ? response.json() : response.text();
+      });
+      ghCache.set(key, request);
+      request.catch(() => ghCache.delete(key));
+    }
+    return ghCache.get(key);
+  };
+  const enc = (path) => path.split("/").map(encodeURIComponent).join("/");
+  const defaultBranch = async (repo) => (await ghFetch(`/repos/${GH_OWNER}/${repo}`)).default_branch;
+
+  // HTML do GitHub (já higienizado por ele) passa por mais uma limpeza e tem links e imagens resolvidos.
+  const cleanHtml = (html, { repo, ref, dir }) => {
+    const doc = new DOMParser().parseFromString(html, "text/html");
+    doc.querySelectorAll("script, style, iframe, object, embed, form, link, meta, base").forEach((node) => node.remove());
+    doc.querySelectorAll("*").forEach((el) => {
+      for (const attr of [...el.attributes]) {
+        if (/^on/i.test(attr.name) || (/^(href|src|xlink:href|action)$/i.test(attr.name) && /^\s*(javascript|data):/i.test(attr.value))) el.removeAttribute(attr.name);
+      }
+    });
+    const folder = dir ? `${enc(dir)}/` : "";
+    const pageBase = `https://github.com/${GH_OWNER}/${repo}/blob/${ref}/${folder}`;
+    const rawBase = `https://raw.githubusercontent.com/${GH_OWNER}/${repo}/${ref}/${folder}`;
+    doc.querySelectorAll("a[href]").forEach((a) => {
+      const href = a.getAttribute("href");
+      if (!href.startsWith("#")) a.setAttribute("href", new URL(href, pageBase).href);
+    });
+    doc.querySelectorAll("img[src]").forEach((img) => {
+      img.setAttribute("src", new URL(img.getAttribute("src"), rawBase).href);
+      img.setAttribute("loading", "lazy");
+    });
+    return [...doc.body.childNodes];
+  };
+
+  const GH_STYLE = `
+    html:has(.gh-viewer[open]) { overflow: hidden; }
+    .gh-viewer { width: min(1080px, calc(100% - 32px)); height: min(860px, calc(100dvh - 48px)); max-width: none; max-height: none; margin: auto; padding: 0; border: 1px solid rgba(var(--accent-rgb),.35); border-radius: 18px; background: var(--bg); color: var(--text); box-shadow: 0 30px 90px rgba(0,0,0,.45); overflow: hidden; font-family: Manrope, sans-serif; }
+    .gh-viewer[open] { display: flex; flex-direction: column; }
+    .gh-viewer::backdrop { background: rgba(0,0,0,.6); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
+    .gh-bar { display: flex; align-items: center; gap: 10px; min-height: 50px; padding: 0 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
+    .gh-bar button { display: grid; place-items: center; flex: none; width: 34px; height: 34px; border: 1px solid var(--line); border-radius: 50%; background: var(--surface-2); color: var(--text); font: 600 16px/1 Manrope, sans-serif; cursor: pointer; }
+    .gh-bar button:disabled { opacity: .35; cursor: default; }
+    .gh-bar button:focus-visible, .gh-viewer a:focus-visible, .gh-row:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 2px; }
+    .gh-crumbs { display: flex; flex: 1; align-items: center; gap: 4px; min-width: 0; overflow-x: auto; font: 500 12px "DM Mono", monospace; white-space: nowrap; scrollbar-width: none; }
+    .gh-crumbs button { width: auto; height: auto; padding: 4px 6px; border: 0; border-radius: 6px; background: none; color: var(--muted); font: inherit; }
+    .gh-crumbs button:last-child { color: var(--text); }
+    .gh-crumbs button:hover { background: var(--surface-2); color: var(--text); }
+    .gh-crumbs span { color: var(--muted); }
+    .gh-external { flex: none; color: var(--accent-text); font: 500 11px "DM Mono", monospace; letter-spacing: .06em; text-decoration: none; }
+    .gh-external:hover { text-decoration: underline; }
+    :root[data-theme="editorial"] .gh-external, :root[data-theme="editorial"] .gh-md a { color: #8f2c07; }
+    .gh-body { flex: 1; min-height: 0; overflow: auto; padding: 22px clamp(16px, 4vw, 40px) 40px; }
+    .gh-status { color: var(--muted); font: 500 13px "DM Mono", monospace; }
+    .gh-list { margin: 0 0 26px; padding: 0; border: 1px solid var(--line); border-radius: 12px; list-style: none; overflow: hidden; }
+    .gh-row { display: flex; align-items: center; gap: 12px; width: 100%; padding: 11px 16px; border: 0; border-top: 1px solid var(--line); background: none; color: var(--text); font: 500 14px Manrope, sans-serif; text-align: left; cursor: pointer; }
+    .gh-list li:first-child .gh-row { border-top: 0; }
+    .gh-row:hover { background: rgba(var(--accent-rgb),.08); }
+    .gh-row small { margin-left: auto; color: var(--muted); font: 400 11px "DM Mono", monospace; }
+    .gh-icon { flex: none; width: 18px; color: var(--accent-text); text-align: center; }
+    .gh-repos { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; }
+    .gh-repo { display: grid; gap: 6px; padding: 16px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface-2); color: var(--text); text-align: left; cursor: pointer; font: inherit; }
+    .gh-repo:hover { border-color: rgba(var(--accent-rgb),.5); }
+    .gh-repo strong { font-size: 15px; }
+    .gh-repo span { color: var(--muted); font-size: 13px; line-height: 1.5; }
+    .gh-repo small { color: var(--accent-text); font: 500 11px "DM Mono", monospace; }
+    .gh-readme-title { margin: 0 0 14px; color: var(--muted); font: 500 11px "DM Mono", monospace; letter-spacing: .08em; }
+    .gh-md { max-width: 860px; line-height: 1.7; font-size: 15px; overflow-wrap: anywhere; }
+    .gh-md h1, .gh-md h2, .gh-md h3 { margin: 1.4em 0 .5em; line-height: 1.25; letter-spacing: -.02em; }
+    .gh-md h1 { font-size: 30px; } .gh-md h2 { padding-bottom: 6px; border-bottom: 1px solid var(--line); font-size: 22px; } .gh-md h3 { font-size: 18px; }
+    .gh-md > :first-child, .gh-md > :first-child > :first-child { margin-top: 0; }
+    .gh-md a { color: var(--accent-text); }
+    .gh-md code { padding: 2px 6px; border-radius: 5px; background: var(--surface-2); font: 13px "DM Mono", monospace; }
+    .gh-md pre, .gh-code { margin: 0 0 16px; padding: 16px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); overflow: auto; font: 13px/1.6 "DM Mono", monospace; tab-size: 2; }
+    .gh-md pre code { padding: 0; background: none; }
+    .gh-md table { display: block; max-width: 100%; margin: 0 0 16px; border-collapse: collapse; overflow: auto; font-size: 14px; }
+    .gh-md th, .gh-md td { padding: 7px 12px; border: 1px solid var(--line); }
+    .gh-md th { background: var(--surface-2); }
+    .gh-md blockquote { margin: 0 0 16px; padding: 4px 16px; border-left: 3px solid var(--accent); color: var(--muted); }
+    .gh-md img { max-width: 100%; height: auto; }
+    .gh-md hr { border: 0; border-top: 1px solid var(--line); }
+    .gh-md .anchor, .gh-md .octicon { display: none; }
+    .gh-image { display: block; max-width: 100%; margin: 0 auto; border-radius: 10px; }
+    @media (max-width: 760px) { .gh-viewer { width: 100%; height: 100dvh; border: 0; border-radius: 0; } }
+  `;
+
+  let ghDialog = null;
+  let ghHistory = [];
+
+  const ghBuild = () => {
+    const style = document.createElement("style");
+    style.textContent = GH_STYLE;
+    document.head.append(style);
+    ghDialog = document.createElement("dialog");
+    ghDialog.className = "gh-viewer";
+    ghDialog.setAttribute("aria-labelledby", "gh-crumbs");
+    ghDialog.innerHTML =
+      '<div class="gh-bar"><button type="button" class="gh-back">←</button><nav class="gh-crumbs" id="gh-crumbs"></nav><a class="gh-external" target="_blank" rel="noopener"></a><button type="button" class="gh-close">×</button></div><div class="gh-body" tabindex="-1"></div>';
+    document.body.append(ghDialog);
+    ghDialog.querySelector(".gh-close").addEventListener("click", () => ghDialog.close());
+    ghDialog.querySelector(".gh-back").addEventListener("click", () => {
+      ghHistory.pop();
+      if (ghHistory.length) ghShow(ghHistory.at(-1));
+    });
+    ghDialog.addEventListener("click", (event) => event.target === ghDialog && ghDialog.close());
+    ghDialog.addEventListener("close", () => (ghHistory = []));
+    // Links dentro do conteúdo: do mesmo dono navegam no visualizador; âncoras rolam; o resto abre em nova aba.
+    ghDialog.querySelector(".gh-body").addEventListener("click", (event) => {
+      const link = event.target.closest("a[href]");
+      if (!link) return;
+      const href = link.getAttribute("href");
+      if (href.startsWith("#")) {
+        event.preventDefault();
+        const id = decodeURIComponent(href.slice(1));
+        ghDialog.querySelector(`[id="user-content-${CSS.escape(id)}"], [id="${CSS.escape(id)}"]`)?.scrollIntoView({ block: "start" });
+        return;
+      }
+      const target = parseGithub(link.href);
+      if (target) {
+        event.preventDefault();
+        ghNavigate(target);
+      } else {
+        link.target = "_blank";
+        link.rel = "noopener";
+      }
+    });
+  };
+
+  const ghSetBar = (target) => {
+    const [back, close] = [ghDialog.querySelector(".gh-back"), ghDialog.querySelector(".gh-close")];
+    const [labelBack, labelClose, external] = ghText();
+    back.setAttribute("aria-label", labelBack);
+    close.setAttribute("aria-label", labelClose);
+    back.disabled = ghHistory.length < 2;
+    const link = ghDialog.querySelector(".gh-external");
+    link.textContent = external;
+    link.href = githubUrl(target);
+    const crumbs = ghDialog.querySelector(".gh-crumbs");
+    const parts = [{ label: GH_OWNER, target: { repo: "", ref: "", path: "" } }];
+    if (target.repo) parts.push({ label: target.repo, target: { repo: target.repo, ref: target.ref, path: "" } });
+    target.path.split("/").filter(Boolean).forEach((part, i, all) => parts.push({ label: part, target: { ...target, path: all.slice(0, i + 1).join("/") } }));
+    crumbs.replaceChildren(
+      ...parts.flatMap((part, i) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.textContent = part.label;
+        button.addEventListener("click", () => ghNavigate(part.target));
+        if (i === parts.length - 1) button.setAttribute("aria-current", "page");
+        if (!i) return [button];
+        const slash = document.createElement("span");
+        slash.textContent = "/";
+        slash.setAttribute("aria-hidden", "true");
+        return [slash, button];
+      }),
+    );
+  };
+
+  const el = (tag, className, text) => {
+    const node = document.createElement(tag);
+    if (className) node.className = className;
+    if (text != null) node.textContent = text;
+    return node;
+  };
+
+  const ghShow = async (target) => {
+    const body = ghDialog.querySelector(".gh-body");
+    ghSetBar(target);
+    body.replaceChildren(el("p", "gh-status", `>_ ${ghText()[3]}`));
+    body.scrollTop = 0;
+    const current = ghHistory.at(-1);
+    try {
+      const nodes = await ghRender(target);
+      if (ghHistory.at(-1) !== current) return; // o visitante já navegou para outro lugar
+      ghSetBar(target);
+      body.replaceChildren(...nodes);
+      if (target.hash) ghDialog.querySelector(`[id="user-content-${CSS.escape(target.hash.slice(1))}"]`)?.scrollIntoView({ block: "start" });
+    } catch (error) {
+      if (ghHistory.at(-1) !== current) return;
+      const message = el("p", "gh-status", error.status === 403 || error.status === 429 ? ghText()[5] : ghText()[4]);
+      const open = el("a", "gh-external", ghText()[2]);
+      open.href = githubUrl(target);
+      open.target = "_blank";
+      open.rel = "noopener";
+      body.replaceChildren(message, open);
+    }
+  };
+
+  const ghRender = async (target) => {
+    if (!target.repo) {
+      const repos = (await ghFetch(`/users/${GH_OWNER}/repos?sort=pushed&per_page=100`)).filter((repo) => !repo.fork);
+      const grid = el("div", "gh-repos");
+      grid.append(
+        ...repos.map((repo) => {
+          const card = el("button", "gh-repo");
+          card.type = "button";
+          card.append(el("strong", null, repo.name), el("span", null, repo.description ?? ""), el("small", null, [repo.language, repo.stargazers_count ? `★ ${repo.stargazers_count}` : ""].filter(Boolean).join(" · ")));
+          card.addEventListener("click", () => ghNavigate({ repo: repo.name, ref: "", path: "" }));
+          return card;
+        }),
+      );
+      return [el("p", "gh-readme-title", ghText()[6].toUpperCase()), grid];
+    }
+    target.ref ||= await defaultBranch(target.repo);
+    const base = `/repos/${GH_OWNER}/${target.repo}/contents/${enc(target.path)}?ref=${encodeURIComponent(target.ref)}`;
+    const entry = await ghFetch(base);
+    const dir = Array.isArray(entry) ? target.path : target.path.split("/").slice(0, -1).join("/");
+    const context = { repo: target.repo, ref: target.ref, dir };
+
+    if (Array.isArray(entry)) {
+      const list = el("ul", "gh-list");
+      const sorted = [...entry].sort((a, b) => (a.type === b.type ? a.name.localeCompare(b.name) : a.type === "dir" ? -1 : 1));
+      list.append(
+        ...sorted.map((item) => {
+          const li = el("li");
+          const row = el("button", "gh-row");
+          row.type = "button";
+          row.append(el("span", "gh-icon", item.type === "dir" ? "▸" : "·"), el("span", null, item.name));
+          if (item.type === "file") row.append(el("small", null, item.size > 1024 ? `${(item.size / 1024).toFixed(1)} KB` : `${item.size} B`));
+          row.addEventListener("click", () => ghNavigate({ ...target, path: item.path, hash: "" }));
+          li.append(row);
+          return li;
+        }),
+      );
+      const nodes = [list];
+      const readme = entry.find((item) => item.type === "file" && /^readme(\.(md|markdown|txt))?$/i.test(item.name));
+      if (readme) {
+        const html = await ghFetch(`/repos/${GH_OWNER}/${target.repo}/contents/${enc(readme.path)}?ref=${encodeURIComponent(target.ref)}`, "application/vnd.github.html+json");
+        const article = el("article", "gh-md");
+        article.append(...cleanHtml(html, context));
+        nodes.push(el("p", "gh-readme-title", readme.name.toUpperCase()), article);
+      }
+      return nodes;
+    }
+
+    if (/\.(md|markdown)$/i.test(entry.name)) {
+      const html = await ghFetch(base, "application/vnd.github.html+json");
+      const article = el("article", "gh-md");
+      article.append(...cleanHtml(html, context));
+      return [article];
+    }
+    if (/\.(png|jpe?g|gif|svg|webp|ico)$/i.test(entry.name)) {
+      const img = el("img", "gh-image");
+      img.src = entry.download_url;
+      img.alt = entry.name;
+      return [img];
+    }
+    if (entry.size > 400000) throw Object.assign(new Error("large"), { status: 0 });
+    const code = el("pre", "gh-code");
+    code.append(el("code", null, await ghFetch(base, "application/vnd.github.raw+json")));
+    return [code];
+  };
+
+  const ghNavigate = (target) => {
+    ghHistory.push(target);
+    ghShow(target);
+  };
+
+  const openGithub = (href) => {
+    const target = parseGithub(href);
+    if (!target) return false;
+    if (!ghDialog) ghBuild();
+    ghHistory = [];
+    ghNavigate(target);
+    if (!ghDialog.open) ghDialog.showModal();
+    ghDialog.querySelector(".gh-close").focus();
+    return true;
+  };
+  window.portfolioGithub = { open: openGithub };
+
+  // Qualquer link para o GitHub do Emanuel, em qualquer página (Ctrl/⌘/Shift+clique abre no GitHub).
+  document.addEventListener("click", (event) => {
+    const link = event.target.closest?.("a[href]");
+    if (!link || event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    if (link.closest(".gh-viewer") || !parseGithub(link.href)) return;
+    event.preventDefault();
+    // Página embutida no modal do portfólio: abre na janela principal (mesma origem).
+    try {
+      if (window.top !== window && window.top.portfolioGithub?.open(link.href)) return;
+    } catch {
+      /* janela principal de outra origem */
+    }
+    openGithub(link.href);
+  });
 
   customElements.define("site-logo", SiteLogo);
   customElements.define("theme-toggle", ThemeToggle);
