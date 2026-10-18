@@ -249,8 +249,10 @@
   /* ---------- Visualizador do GitHub ---------- */
 
   // Links para github.com/emanueleborges/... abrem num modal dentro do site, sem sair da página:
-  // pastas, README e Markdown renderizados pela API pública do GitHub (60 consultas/hora por IP,
-  // com cache na visita) e código como texto. Outros donos, issues etc. continuam abrindo no GitHub.
+  // pastas, README/Markdown formatados e código. Sem o limite de 60 consultas/hora da API do GitHub:
+  // a lista de arquivos vem do jsDelivr (data.jsdelivr.com), o conteúdo do raw.githubusercontent.com
+  // e o Markdown é formatado no navegador (vendor/marked.min.js). A API do GitHub fica só como reserva
+  // (repositório que o jsDelivr não serve). Outros donos, issues etc. continuam abrindo no GitHub.
   // Dentro de uma página embutida (modal das demos), o visualizador abre na janela principal.
   const GH_OWNER = "emanueleborges";
   const GH_LABELS = {
@@ -297,7 +299,67 @@
     return ghCache.get(key);
   };
   const enc = (path) => path.split("/").map(encodeURIComponent).join("/");
-  const defaultBranch = async (repo) => (await ghFetch(`/repos/${GH_OWNER}/${repo}`)).default_branch;
+
+  // Lista de repositórios: a mesma que os cards de projeto já guardaram na sessão (script.js);
+  // senão a API; sem ela, os repositórios citados nos cards da página.
+  let repoListPromise = null;
+  const repoList = () => (repoListPromise ??= loadRepoList().catch((error) => ((repoListPromise = null), Promise.reject(error))));
+  const loadRepoList = async () => {
+    try {
+      const cached = JSON.parse(sessionStorage.getItem("repos") ?? "null");
+      if (Array.isArray(cached) && cached.length) return cached;
+    } catch {
+      /* sem sessionStorage */
+    }
+    try {
+      return await ghFetch(`/users/${GH_OWNER}/repos?sort=pushed&per_page=100`);
+    } catch (error) {
+      const names = [...new Set([...document.querySelectorAll("[data-repo]")].map((link) => link.dataset.repo))];
+      if (!names.length) throw error;
+      return names.map((name) => ({ name, description: document.querySelector(`[data-repo="${name}"]`)?.closest(".project-card")?.querySelector("h3")?.textContent ?? "" }));
+    }
+  };
+  const defaultBranch = async (repo) => {
+    const known = (await repoList().catch(() => [])).find((item) => item.name === repo)?.default_branch;
+    return known ?? "main";
+  };
+
+  // Todos os arquivos do repositório num ref (jsDelivr; sem limite por hora). null = use a API.
+  const cdnLists = new Map();
+  const cdnFiles = (repo, ref) => {
+    const key = `${repo}@${ref}`;
+    if (!cdnLists.has(key)) {
+      cdnLists.set(
+        key,
+        fetch(`https://data.jsdelivr.com/v1/packages/gh/${GH_OWNER}/${repo}@${encodeURIComponent(ref)}?structure=flat`, { cache: "no-cache" })
+          .then((response) => (response.ok ? response.json() : null))
+          .then((data) => (Array.isArray(data?.files) ? data.files.map((file) => ({ path: file.name.replace(/^\//, ""), size: file.size })) : null))
+          .catch(() => null),
+      );
+    }
+    return cdnLists.get(key);
+  };
+  const rawUrl = (repo, ref, path) => `https://raw.githubusercontent.com/${GH_OWNER}/${repo}/${encodeURIComponent(ref)}/${enc(path)}`;
+  const rawText = async (repo, ref, path) => {
+    const response = await fetch(rawUrl(repo, ref, path));
+    if (!response.ok) throw Object.assign(new Error("raw"), { status: response.status });
+    return response.text();
+  };
+
+  // Scripts de terceiros servidos pelo próprio site (components/vendor/), carregados só quando usados.
+  const vendorScripts = {};
+  const loadVendor = (file, global) =>
+    (vendorScripts[file] ??= new Promise((resolve, reject) => {
+      const script = document.createElement("script");
+      script.src = new URL(`components/vendor/${file}`, SITE_ROOT).href;
+      script.onload = () => resolve(window[global]);
+      script.onerror = () => {
+        delete vendorScripts[file];
+        reject(new Error(file));
+      };
+      document.head.append(script);
+    }));
+  const markdownHtml = async (text) => (await loadVendor("marked.min.js", "marked")).parse(text, { gfm: true });
 
   // HTML do GitHub (já higienizado por ele) passa por mais uma limpeza e tem links e imagens resolvidos.
   const cleanHtml = (html, { repo, ref, dir }) => {
@@ -318,6 +380,10 @@
     doc.querySelectorAll("img[src]").forEach((img) => {
       img.setAttribute("src", new URL(img.getAttribute("src"), rawBase).href);
       img.setAttribute("loading", "lazy");
+    });
+    // Âncoras como as do GitHub ("## Como rodar" → #como-rodar), para os links do sumário.
+    doc.querySelectorAll("h1, h2, h3, h4, h5, h6").forEach((heading) => {
+      if (!heading.id) heading.id = heading.textContent.trim().toLowerCase().replace(/[^\p{L}\p{N}\s_-]/gu, "").replace(/\s/g, "-");
     });
     return [...doc.body.childNodes];
   };
@@ -462,7 +528,8 @@
       if (ghHistory.at(-1) !== current) return; // o visitante já navegou para outro lugar
       ghSetBar(target);
       body.replaceChildren(...nodes);
-      if (target.hash) ghDialog.querySelector(`[id="user-content-${CSS.escape(target.hash.slice(1))}"]`)?.scrollIntoView({ block: "start" });
+      const anchor = target.hash ? CSS.escape(decodeURIComponent(target.hash.slice(1))) : "";
+      if (anchor) ghDialog.querySelector(`[id="${anchor}"], [id="user-content-${anchor}"]`)?.scrollIntoView({ block: "start" });
     } catch (error) {
       if (ghHistory.at(-1) !== current) return;
       const message = el("p", "gh-status", error.status === 403 || error.status === 429 ? ghText()[5] : ghText()[4]);
@@ -474,9 +541,51 @@
     }
   };
 
+  const sizeLabel = (size) => (size > 1024 ? `${(size / 1024).toFixed(1)} KB` : `${size} B`);
+  const fileRow = (target, item) => {
+    const li = el("li");
+    const row = el("button", "gh-row");
+    row.type = "button";
+    row.append(el("span", "gh-icon", item.dir ? "▸" : "·"), el("span", null, item.name));
+    if (!item.dir) row.append(el("small", null, sizeLabel(item.size)));
+    row.addEventListener("click", () => ghNavigate({ ...target, path: item.path, hash: "" }));
+    li.append(row);
+    return li;
+  };
+  const markdownArticle = async (target, path) => {
+    const article = el("article", "gh-md");
+    const dir = path.split("/").slice(0, -1).join("/");
+    article.append(...cleanHtml(await markdownHtml(await rawText(target.repo, target.ref, path)), { repo: target.repo, ref: target.ref, dir }));
+    return article;
+  };
+  // Pasta: lista (pastas primeiro) + README formatado, se houver.
+  const folderNodes = async (target, items) => {
+    const list = el("ul", "gh-list");
+    const sorted = [...items].sort((a, b) => (a.dir === b.dir ? a.name.localeCompare(b.name) : a.dir ? -1 : 1));
+    list.append(...sorted.map((item) => fileRow(target, item)));
+    const nodes = [list];
+    const readme = items.find((item) => !item.dir && /^readme(\.(md|markdown))?$/i.test(item.name));
+    if (readme) nodes.push(el("p", "gh-readme-title", readme.name.toUpperCase()), await markdownArticle(target, readme.path));
+    return nodes;
+  };
+  // Arquivo: Markdown formatado, imagem ou código como texto.
+  const fileNodes = async (target, name, size) => {
+    if (/\.(md|markdown)$/i.test(name)) return [await markdownArticle(target, target.path)];
+    if (/\.(png|jpe?g|gif|svg|webp|ico)$/i.test(name)) {
+      const img = el("img", "gh-image");
+      img.src = rawUrl(target.repo, target.ref, target.path);
+      img.alt = name;
+      return [img];
+    }
+    if (size > 400000) throw Object.assign(new Error("large"), { status: 0 });
+    const code = el("pre", "gh-code");
+    code.append(el("code", null, await rawText(target.repo, target.ref, target.path)));
+    return [code];
+  };
+
   const ghRender = async (target) => {
     if (!target.repo) {
-      const repos = (await ghFetch(`/users/${GH_OWNER}/repos?sort=pushed&per_page=100`)).filter((repo) => !repo.fork);
+      const repos = (await repoList()).filter((repo) => !repo.fork);
       const grid = el("div", "gh-repos");
       grid.append(
         ...repos.map((repo) => {
@@ -490,53 +599,29 @@
       return [el("p", "gh-readme-title", ghText()[6].toUpperCase()), grid];
     }
     target.ref ||= await defaultBranch(target.repo);
-    const base = `/repos/${GH_OWNER}/${target.repo}/contents/${enc(target.path)}?ref=${encodeURIComponent(target.ref)}`;
-    const entry = await ghFetch(base);
-    const dir = Array.isArray(entry) ? target.path : target.path.split("/").slice(0, -1).join("/");
-    const context = { repo: target.repo, ref: target.ref, dir };
+    const path = target.path.replace(/\/+$/, "");
 
-    if (Array.isArray(entry)) {
-      const list = el("ul", "gh-list");
-      const sorted = [...entry].sort((a, b) => (a.type === b.type ? a.name.localeCompare(b.name) : a.type === "dir" ? -1 : 1));
-      list.append(
-        ...sorted.map((item) => {
-          const li = el("li");
-          const row = el("button", "gh-row");
-          row.type = "button";
-          row.append(el("span", "gh-icon", item.type === "dir" ? "▸" : "·"), el("span", null, item.name));
-          if (item.type === "file") row.append(el("small", null, item.size > 1024 ? `${(item.size / 1024).toFixed(1)} KB` : `${item.size} B`));
-          row.addEventListener("click", () => ghNavigate({ ...target, path: item.path, hash: "" }));
-          li.append(row);
-          return li;
-        }),
-      );
-      const nodes = [list];
-      const readme = entry.find((item) => item.type === "file" && /^readme(\.(md|markdown|txt))?$/i.test(item.name));
-      if (readme) {
-        const html = await ghFetch(`/repos/${GH_OWNER}/${target.repo}/contents/${enc(readme.path)}?ref=${encodeURIComponent(target.ref)}`, "application/vnd.github.html+json");
-        const article = el("article", "gh-md");
-        article.append(...cleanHtml(html, context));
-        nodes.push(el("p", "gh-readme-title", readme.name.toUpperCase()), article);
-      }
-      return nodes;
+    // 1) jsDelivr: a lista completa do repositório numa chamada só.
+    const files = await cdnFiles(target.repo, target.ref);
+    if (files) {
+      const file = files.find((item) => item.path === path);
+      if (file) return fileNodes(target, path.split("/").pop(), file.size);
+      const prefix = path ? `${path}/` : "";
+      const items = new Map();
+      files
+        .filter((item) => item.path.startsWith(prefix))
+        .forEach((item) => {
+          const [name, ...rest] = item.path.slice(prefix.length).split("/");
+          if (!items.has(name)) items.set(name, { name, path: prefix + name, dir: rest.length > 0, size: item.size });
+        });
+      if (!items.size) throw Object.assign(new Error("not found"), { status: 404 });
+      return folderNodes(target, [...items.values()]);
     }
 
-    if (/\.(md|markdown)$/i.test(entry.name)) {
-      const html = await ghFetch(base, "application/vnd.github.html+json");
-      const article = el("article", "gh-md");
-      article.append(...cleanHtml(html, context));
-      return [article];
-    }
-    if (/\.(png|jpe?g|gif|svg|webp|ico)$/i.test(entry.name)) {
-      const img = el("img", "gh-image");
-      img.src = entry.download_url;
-      img.alt = entry.name;
-      return [img];
-    }
-    if (entry.size > 400000) throw Object.assign(new Error("large"), { status: 0 });
-    const code = el("pre", "gh-code");
-    code.append(el("code", null, await ghFetch(base, "application/vnd.github.raw+json")));
-    return [code];
+    // 2) Reserva: API do GitHub (60 consultas/hora por visitante).
+    const entry = await ghFetch(`/repos/${GH_OWNER}/${target.repo}/contents/${enc(path)}?ref=${encodeURIComponent(target.ref)}`);
+    if (Array.isArray(entry)) return folderNodes(target, entry.map((item) => ({ name: item.name, path: item.path, dir: item.type === "dir", size: item.size })));
+    return fileNodes(target, entry.name, entry.size);
   };
 
   const ghNavigate = (target) => {
@@ -644,15 +729,7 @@
     @media (pointer: coarse), (max-width: 760px) { .link-card-qr:not(.is-share), .link-card-scan:not(.is-share) { display: none; } }
   `;
 
-  let qrReady = null;
-  const loadQr = () =>
-    (qrReady ??= new Promise((resolve, reject) => {
-      const script = document.createElement("script");
-      script.src = new URL("components/vendor/qrcode.min.js", SITE_ROOT).href;
-      script.onload = () => resolve(window.qrcode);
-      script.onerror = reject;
-      document.head.append(script);
-    }));
+  const loadQr = () => loadVendor("qrcode.min.js", "qrcode");
   const qrSvg = (qrcode, text) => {
     const qr = qrcode(0, "M");
     qr.addData(text);

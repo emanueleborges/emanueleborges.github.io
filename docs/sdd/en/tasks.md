@@ -97,6 +97,7 @@ Legend: ✅ done · ⏳ pending · 💡 idea
 - ✅ **T78** Browsing without leaving the site: demos, "How I built it", job match and résumé in a modal; GitHub viewer; cards for LinkedIn, WhatsApp (QR code), email and external sites — FR-16.2, FR-16.3, FR-04.2
 - ✅ **T79** "Share portfolio": QR code, link, native sharing and shortcuts — FR-16.4
 - ✅ **T80** Java at ICCT and the City Hall; ASP.NET Web Forms and Bootstrap at the City Hall (site, 8 languages, PDFs and AI knowledge); accessibility 100 in both themes (Editorial contrast, pipeline without tab roles, quick guide in a `<div>`) — FR-01, accessibility NFR
+- ✅ **T81** GitHub viewer without the 60/h limit: listing via jsDelivr, contents via raw.githubusercontent.com and Markdown rendered in the browser (marked); API only as a fallback — FR-16.3
 
 ---
 

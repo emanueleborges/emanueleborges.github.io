@@ -97,6 +97,7 @@ Legenda: ✅ concluída · ⏳ pendente · 💡 ideia
 - ✅ **T78** Navegação sem sair do site: demos, "Como construí", vagas e currículo em modal; visualizador do GitHub; cartões para LinkedIn, WhatsApp (QR code), e-mail e sites externos — RF-16.2, RF-16.3, RF-04.2
 - ✅ **T79** "Compartilhar portfólio": QR code, link, compartilhamento nativo e atalhos — RF-16.4
 - ✅ **T80** Java no ICCT e na Prefeitura; ASP.NET Web Forms e Bootstrap na Prefeitura (site, 8 idiomas, PDFs e conhecimento da IA); acessibilidade 100 nos dois temas (contraste do tema Editorial, esteira sem papéis de aba, guia rápido em `<div>`) — RF-01, RNF de acessibilidade
+- ✅ **T81** Visualizador do GitHub sem o limite de 60/h: lista pelo jsDelivr, conteúdo pelo raw.githubusercontent.com e Markdown formatado no navegador (marked); API só como reserva — RF-16.3
 
 ---
 
