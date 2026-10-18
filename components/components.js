@@ -4,6 +4,7 @@
 //   <theme-toggle>          botão que alterna os temas Amazônia (padrão) e Editorial
 //   <sound-toggle>          liga/desliga os cliques sonoros e a vibração da interface (padrão: ligado)
 //   links do GitHub         abrem num visualizador em modal (pastas, README e código) em vez de sair do site
+//   outros links externos   (LinkedIn, WhatsApp, e-mail, sites) abrem um cartão em modal; o site só abre se pedido
 (() => {
   /* ---------- <site-logo> ---------- */
 
@@ -567,6 +568,194 @@
       /* janela principal de outra origem */
     }
     openGithub(link.href);
+  });
+
+  /* ---------- Links externos num modal ---------- */
+
+  // LinkedIn, WhatsApp, os portais da Prefeitura e outros sites proíbem ser exibidos dentro de outra
+  // página (X-Frame-Options / frame-ancestors), e e-mail abre um aplicativo. Em vez de sair do
+  // portfólio, o link abre um cartão no próprio site — QR code do WhatsApp, perfil do LinkedIn,
+  // e-mail para copiar, descrição do sistema — e o site externo só abre se o visitante pedir.
+  const SITE_ROOT = new URL("..", document.currentScript?.src ?? location.href).href;
+  const LINK_LABELS = {
+    en: { close: "Close", copy: "Copy", copied: "Copied!", note: "This site can't be shown inside the portfolio — open it whenever you like.", whatsTitle: "Chat on WhatsApp", scan: "Point your phone's camera at the code", openWhats: "Open chat ↗", linkedinTitle: "LinkedIn profile", openLinkedin: "Open on LinkedIn ↗", mailTitle: "Email", openMail: "Write an email ↗", siteTitle: "External site", openSite: "Open site ↗", headline: "Senior Full Stack Developer · Applied AI", location: "Manaus, Brazil", stack: "Stack", compras: "Procurement and public bidding portal of the Manaus City Hall, developed by Emanuel at SEMEF.", contratos: "Contract management system of the Manaus City Hall, developed by Emanuel at SEMEF / SEMAD." },
+    pt: { close: "Fechar", copy: "Copiar", copied: "Copiado!", note: "Este site não pode ser exibido dentro do portfólio — abra quando quiser.", whatsTitle: "Conversar no WhatsApp", scan: "Aponte a câmera do celular para o código", openWhats: "Abrir conversa ↗", linkedinTitle: "Perfil no LinkedIn", openLinkedin: "Abrir no LinkedIn ↗", mailTitle: "E-mail", openMail: "Escrever e-mail ↗", siteTitle: "Site externo", openSite: "Abrir site ↗", headline: "Desenvolvedor Full Stack Sênior · IA aplicada", location: "Manaus, AM · Brasil", stack: "Tecnologias", compras: "Portal de compras e licitações da Prefeitura de Manaus, desenvolvido por Emanuel na SEMEF.", contratos: "Sistema de gestão de contratos da Prefeitura de Manaus, desenvolvido por Emanuel na SEMEF / SEMAD." },
+    es: { close: "Cerrar", copy: "Copiar", copied: "¡Copiado!", note: "Este sitio no puede mostrarse dentro del portafolio — ábrelo cuando quieras.", whatsTitle: "Hablar por WhatsApp", scan: "Apunta la cámara del móvil al código", openWhats: "Abrir chat ↗", linkedinTitle: "Perfil de LinkedIn", openLinkedin: "Abrir en LinkedIn ↗", mailTitle: "Correo", openMail: "Escribir correo ↗", siteTitle: "Sitio externo", openSite: "Abrir sitio ↗", headline: "Desarrollador Full Stack Sénior · IA aplicada", location: "Manaos, Brasil", stack: "Tecnologías", compras: "Portal de compras y licitaciones del Ayuntamiento de Manaos, desarrollado por Emanuel en la SEMEF.", contratos: "Sistema de gestión de contratos del Ayuntamiento de Manaos, desarrollado por Emanuel en la SEMEF / SEMAD." },
+    fr: { close: "Fermer", copy: "Copier", copied: "Copié !", note: "Ce site ne peut pas s’afficher dans le portfolio — ouvrez-le quand vous voulez.", whatsTitle: "Discuter sur WhatsApp", scan: "Pointez l’appareil photo du téléphone vers le code", openWhats: "Ouvrir la discussion ↗", linkedinTitle: "Profil LinkedIn", openLinkedin: "Ouvrir sur LinkedIn ↗", mailTitle: "E-mail", openMail: "Écrire un e-mail ↗", siteTitle: "Site externe", openSite: "Ouvrir le site ↗", headline: "Développeur Full Stack Senior · IA appliquée", location: "Manaus, Brésil", stack: "Technologies", compras: "Portail d’achats et d’appels d’offres de la mairie de Manaus, développé par Emanuel à la SEMEF.", contratos: "Système de gestion des contrats de la mairie de Manaus, développé par Emanuel à la SEMEF / SEMAD." },
+    it: { close: "Chiudi", copy: "Copia", copied: "Copiato!", note: "Questo sito non può essere mostrato nel portfolio — aprilo quando vuoi.", whatsTitle: "Scrivi su WhatsApp", scan: "Inquadra il codice con la fotocamera del telefono", openWhats: "Apri chat ↗", linkedinTitle: "Profilo LinkedIn", openLinkedin: "Apri su LinkedIn ↗", mailTitle: "E-mail", openMail: "Scrivi un’e-mail ↗", siteTitle: "Sito esterno", openSite: "Apri sito ↗", headline: "Sviluppatore Full Stack Senior · IA applicata", location: "Manaus, Brasile", stack: "Tecnologie", compras: "Portale acquisti e gare del Comune di Manaus, sviluppato da Emanuel alla SEMEF.", contratos: "Sistema di gestione dei contratti del Comune di Manaus, sviluppato da Emanuel alla SEMEF / SEMAD." },
+    de: { close: "Schließen", copy: "Kopieren", copied: "Kopiert!", note: "Diese Website kann nicht im Portfolio angezeigt werden — öffnen Sie sie, wann Sie möchten.", whatsTitle: "Auf WhatsApp schreiben", scan: "Richten Sie die Handykamera auf den Code", openWhats: "Chat öffnen ↗", linkedinTitle: "LinkedIn-Profil", openLinkedin: "Auf LinkedIn öffnen ↗", mailTitle: "E-Mail", openMail: "E-Mail schreiben ↗", siteTitle: "Externe Website", openSite: "Website öffnen ↗", headline: "Senior Full-Stack-Entwickler · Angewandte KI", location: "Manaus, Brasilien", stack: "Technologien", compras: "Einkaufs- und Ausschreibungsportal der Stadt Manaus, von Emanuel bei der SEMEF entwickelt.", contratos: "Vertragsverwaltung der Stadt Manaus, von Emanuel bei SEMEF / SEMAD entwickelt." },
+    zh: { close: "关闭", copy: "复制", copied: "已复制！", note: "该网站无法在作品集中显示——需要时再打开即可。", whatsTitle: "通过 WhatsApp 联系", scan: "用手机相机扫描二维码", openWhats: "打开聊天 ↗", linkedinTitle: "领英主页", openLinkedin: "在领英打开 ↗", mailTitle: "电子邮件", openMail: "写邮件 ↗", siteTitle: "外部网站", openSite: "打开网站 ↗", headline: "高级全栈开发工程师 · 应用 AI", location: "巴西 马瑙斯", stack: "技术", compras: "马瑙斯市政府采购与招标门户，由 Emanuel 在 SEMEF 开发。", contratos: "马瑙斯市政府合同管理系统，由 Emanuel 在 SEMEF / SEMAD 开发。" },
+    ru: { close: "Закрыть", copy: "Копировать", copied: "Скопировано!", note: "Этот сайт нельзя показать внутри портфолио — откройте, когда захотите.", whatsTitle: "Написать в WhatsApp", scan: "Наведите камеру телефона на код", openWhats: "Открыть чат ↗", linkedinTitle: "Профиль LinkedIn", openLinkedin: "Открыть в LinkedIn ↗", mailTitle: "Эл. почта", openMail: "Написать письмо ↗", siteTitle: "Внешний сайт", openSite: "Открыть сайт ↗", headline: "Senior Full Stack разработчик · прикладной ИИ", location: "Манаус, Бразилия", stack: "Технологии", compras: "Портал закупок и тендеров мэрии Манауса, разработанный Emanuel в SEMEF.", contratos: "Система управления контрактами мэрии Манауса, разработанная Emanuel в SEMEF / SEMAD." },
+  };
+  const linkText = () => LINK_LABELS[pageLang()] ?? LINK_LABELS.en;
+  const KNOWN_SITES = {
+    "compras.manaus.am.gov.br": { name: "ComprasManaus", key: "compras", stack: "ASP Classic · ASP.NET Web Forms · VB.NET · jQuery · Bootstrap · Highcharts" },
+    "contratos.manaus.am.gov.br": { name: "ContratosManaus", key: "contratos", stack: "PHP · jQuery · Bootstrap · Chart.js · Select2" },
+    "sistemaspmm.manaus.am.gov.br": { name: "ContratosManaus", key: "contratos", stack: "PHP · jQuery · Bootstrap · Chart.js · Select2" },
+  };
+
+  // Tipo do link: whatsapp | linkedin | email | site; null = deixa o navegador seguir.
+  const linkKind = (link) => {
+    if (link.hasAttribute("download")) return null;
+    let url;
+    try {
+      url = new URL(link.href, location.href);
+    } catch {
+      return null;
+    }
+    if (url.protocol === "mailto:") return "email";
+    if (!/^https?:$/.test(url.protocol) || url.host === location.host) return null;
+    if (url.hostname === "wa.me" || url.hostname.endsWith("whatsapp.com")) return "whatsapp";
+    if (url.hostname.endsWith("linkedin.com")) return "linkedin";
+    return "site";
+  };
+
+  const LINK_STYLE = `
+    html:has(.link-card[open]) { overflow: hidden; }
+    .link-card { width: min(460px, calc(100% - 32px)); max-height: calc(100dvh - 48px); margin: auto; padding: 0; border: 1px solid rgba(var(--accent-rgb),.35); border-radius: 20px; background: var(--surface); color: var(--text); box-shadow: 0 30px 90px rgba(0,0,0,.45), 0 0 40px rgba(var(--accent-rgb),.12); font-family: Manrope, sans-serif; overflow: auto; }
+    .link-card::backdrop { background: rgba(0,0,0,.6); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
+    .link-card[open] { animation: link-card-in .18s ease-out; }
+    @keyframes link-card-in { from { opacity: 0; transform: translateY(8px) scale(.98); } }
+    .link-card-bar { display: flex; align-items: center; gap: 10px; padding: 14px 14px 0 20px; }
+    .link-card-kind { flex: 1; color: var(--accent-text); font: 500 11px "DM Mono", monospace; letter-spacing: .08em; text-transform: uppercase; }
+    .link-card-close { display: grid; place-items: center; width: 34px; height: 34px; border: 1px solid var(--line); border-radius: 50%; background: var(--surface-2); color: var(--text); font-size: 18px; line-height: 1; cursor: pointer; }
+    .link-card-body { display: grid; justify-items: center; gap: 14px; padding: 10px 24px 24px; text-align: center; }
+    .link-card-body h2 { margin: 0; font-size: 22px; letter-spacing: -.03em; }
+    .link-card-body p { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.6; }
+    .link-card-photo { width: 92px; height: 92px; border: 2px solid rgba(var(--accent-rgb),.6); border-radius: 50%; object-fit: cover; box-shadow: 0 0 24px rgba(var(--accent-rgb),.25); }
+    .link-card-qr { padding: 12px; border-radius: 14px; background: #fff; line-height: 0; }
+    .link-card-qr svg { width: 188px; height: 188px; }
+    .link-card-copy { display: flex; align-items: center; gap: 8px; max-width: 100%; padding: 6px 6px 6px 14px; border: 1px solid var(--line); border-radius: 999px; background: var(--surface-2); font: 500 13px "DM Mono", monospace; }
+    .link-card-copy span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .link-card-copy button { flex: none; padding: 6px 12px; border: 1px solid var(--line); border-radius: 999px; background: var(--surface); color: var(--text); font: 600 12px Manrope, sans-serif; cursor: pointer; }
+    .link-card-stack { color: var(--accent-text) !important; font: 500 12px "DM Mono", monospace !important; }
+    .link-card-open { display: inline-flex; justify-content: center; width: 100%; padding: 13px 18px; border-radius: 12px; background: linear-gradient(90deg, var(--accent), var(--accent-2)); color: #0b130e; font: 800 14px Manrope, sans-serif; text-decoration: none; }
+    .link-card-open:hover { filter: brightness(1.05); }
+    .link-card-note { font-size: 12px !important; }
+    .link-card button:focus-visible, .link-card a:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 2px; }
+    :root[data-theme="editorial"] .link-card-kind, :root[data-theme="editorial"] .link-card-stack { color: #8f2c07 !important; }
+    :root[data-theme="editorial"] .link-card-open { color: #fff; }
+    @media (pointer: coarse), (max-width: 760px) { .link-card-qr, .link-card-scan { display: none; } }
+  `;
+
+  let qrReady = null;
+  const loadQr = () =>
+    (qrReady ??= new Promise((resolve, reject) => {
+      const script = document.createElement("script");
+      script.src = new URL("components/vendor/qrcode.min.js", SITE_ROOT).href;
+      script.onload = () => resolve(window.qrcode);
+      script.onerror = reject;
+      document.head.append(script);
+    }));
+  const qrSvg = (qrcode, text) => {
+    const qr = qrcode(0, "M");
+    qr.addData(text);
+    qr.make();
+    const n = qr.getModuleCount();
+    let path = "";
+    for (let y = 0; y < n; y += 1) for (let x = 0; x < n; x += 1) if (qr.isDark(y, x)) path += `M${x} ${y}h1v1h-1z`;
+    return `<svg viewBox="-2 -2 ${n + 4} ${n + 4}" role="img" aria-label="QR code" shape-rendering="crispEdges"><path d="${path}" fill="#000"/></svg>`;
+  };
+  // 5592999771376 → +55 (92) 99977-1376
+  const formatPhone = (digits) => (digits.length === 13 ? `+${digits.slice(0, 2)} (${digits.slice(2, 4)}) ${digits.slice(4, 9)}-${digits.slice(9)}` : `+${digits}`);
+
+  let linkDialog = null;
+  const linkBuild = () => {
+    const style = document.createElement("style");
+    style.textContent = LINK_STYLE;
+    document.head.append(style);
+    linkDialog = document.createElement("dialog");
+    linkDialog.className = "link-card";
+    linkDialog.setAttribute("aria-labelledby", "link-card-title");
+    linkDialog.innerHTML = '<div class="link-card-bar"><span class="link-card-kind"></span><button type="button" class="link-card-close">×</button></div><div class="link-card-body"></div>';
+    document.body.append(linkDialog);
+    linkDialog.querySelector(".link-card-close").addEventListener("click", () => linkDialog.close());
+    linkDialog.addEventListener("click", (event) => event.target === linkDialog && linkDialog.close());
+  };
+
+  const copyRow = (value) => {
+    const row = el("div", "link-card-copy");
+    const button = el("button", null, linkText().copy);
+    button.type = "button";
+    button.addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(value);
+        button.textContent = linkText().copied;
+        setTimeout(() => (button.textContent = linkText().copy), 1800);
+      } catch {
+        /* sem permissão de área de transferência */
+      }
+    });
+    row.append(el("span", null, value), button);
+    return row;
+  };
+
+  const openLink = (href, label = "") => {
+    const probe = Object.assign(document.createElement("a"), { href });
+    const kind = linkKind(probe);
+    if (!kind) return false;
+    if (!linkDialog) linkBuild();
+    const text = linkText();
+    const url = new URL(probe.href);
+    const body = linkDialog.querySelector(".link-card-body");
+    const action = el("a", "link-card-open");
+    action.href = url.href;
+    if (kind !== "email") {
+      action.target = "_blank";
+      action.rel = "noopener";
+    }
+    action.addEventListener("click", () => linkDialog.close());
+    linkDialog.querySelector(".link-card-close").setAttribute("aria-label", text.close);
+    body.replaceChildren();
+
+    if (kind === "whatsapp") {
+      const digits = (url.pathname.match(/\d{8,}/) ?? [url.searchParams.get("phone") ?? ""])[0].replace(/\D/g, "");
+      linkDialog.querySelector(".link-card-kind").textContent = "WhatsApp";
+      const qr = el("div", "link-card-qr");
+      loadQr().then((qrcode) => (qr.innerHTML = qrSvg(qrcode, url.href))).catch(() => qr.remove());
+      action.textContent = text.openWhats;
+      body.append(el("h2", null, text.whatsTitle), qr, el("p", "link-card-scan", text.scan), copyRow(formatPhone(digits)), action);
+    } else if (kind === "linkedin") {
+      linkDialog.querySelector(".link-card-kind").textContent = text.linkedinTitle;
+      const photo = el("img", "link-card-photo");
+      photo.src = new URL("imagens/emanuel-borges.jpg", SITE_ROOT).href;
+      photo.alt = "";
+      action.textContent = text.openLinkedin;
+      body.append(photo, el("h2", null, "Emanuel Borges"), el("p", null, `${text.headline}\n${text.location}`), copyRow(`${url.hostname.replace(/^www\./, "")}${url.pathname.replace(/\/$/, "")}`), action);
+      body.querySelector("p").style.whiteSpace = "pre-line";
+    } else if (kind === "email") {
+      linkDialog.querySelector(".link-card-kind").textContent = text.mailTitle;
+      action.textContent = text.openMail;
+      body.append(el("h2", null, "Emanuel Borges"), copyRow(decodeURIComponent(url.pathname)), action);
+    } else {
+      const known = KNOWN_SITES[url.hostname];
+      linkDialog.querySelector(".link-card-kind").textContent = text.siteTitle;
+      action.textContent = text.openSite;
+      const title = known?.name ?? (label.replace(/[↗→]/g, "").trim() || url.hostname.replace(/^www\./, ""));
+      body.append(el("h2", null, title));
+      if (known) body.append(el("p", null, text[known.key]), el("p", "link-card-stack", known.stack));
+      body.append(copyRow(url.href.replace(/^https?:\/\//, "").replace(/\/$/, "")), el("p", "link-card-note", text.note), action);
+    }
+    linkDialog.querySelector(".link-card-kind").id = "";
+    body.querySelector("h2").id = "link-card-title";
+    if (!linkDialog.open) linkDialog.showModal();
+    action.focus();
+    return true;
+  };
+  window.portfolioLink = { open: openLink };
+
+  document.addEventListener("click", (event) => {
+    const link = event.target.closest?.("a[href]");
+    if (!link || event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    // Botões que já são o pedido explícito de abrir fora ("GITHUB ↗" do visualizador) seguem direto.
+    if (link.closest(".link-card, .gh-external") || link.classList.contains("gh-external") || !linkKind(link)) return;
+    event.preventDefault();
+    try {
+      if (window.top !== window && window.top.portfolioLink?.open(link.href, link.textContent)) return;
+    } catch {
+      /* janela principal de outra origem */
+    }
+    openLink(link.href, link.textContent);
   });
 
   customElements.define("site-logo", SiteLogo);
