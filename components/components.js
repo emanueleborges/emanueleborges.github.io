@@ -405,7 +405,7 @@
     .gh-crumbs span { color: var(--muted); }
     .gh-external { flex: none; color: var(--accent-text); font: 500 11px "DM Mono", monospace; letter-spacing: .06em; text-decoration: none; }
     .gh-external:hover { text-decoration: underline; }
-    :root[data-theme="editorial"] .gh-external, :root[data-theme="editorial"] .gh-md a { color: #8f2c07; }
+    :root[data-theme="editorial"] .gh-external, :root[data-theme="editorial"] .gh-md a { color: #1e3a8a; }
     .gh-body { flex: 1; min-height: 0; overflow: auto; padding: 22px clamp(16px, 4vw, 40px) 40px; }
     .gh-status { color: var(--muted); font: 500 13px "DM Mono", monospace; }
     .gh-list { margin: 0 0 26px; padding: 0; border: 1px solid var(--line); border-radius: 12px; list-style: none; overflow: hidden; }
@@ -720,7 +720,7 @@
     .link-card-open:hover { filter: brightness(1.05); }
     .link-card-note { font-size: 12px !important; }
     .link-card button:focus-visible, .link-card a:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 2px; }
-    :root[data-theme="editorial"] .link-card-kind, :root[data-theme="editorial"] .link-card-stack { color: #8f2c07 !important; }
+    :root[data-theme="editorial"] .link-card-kind, :root[data-theme="editorial"] .link-card-stack { color: #1e3a8a !important; }
     :root[data-theme="editorial"] .link-card-open { color: #fff; }
     .link-card-via { display: flex; gap: 8px; width: 100%; }
     .link-card-via a { flex: 1; padding: 10px 8px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface-2); color: var(--text); font: 600 13px Manrope, sans-serif; text-decoration: none; }
