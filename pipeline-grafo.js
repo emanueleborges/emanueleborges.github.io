@@ -157,7 +157,7 @@ if (panel && projectCards.length) {
     return node;
   };
 
-  // Alternância Grade / Grafo (padrão: grafo em telas largas, grade no celular).
+  // Alternância Grade / Grafo (padrão: grade).
   const views = document.createElement("div");
   views.className = "skills-views";
   views.setAttribute("role", "group");
@@ -172,7 +172,7 @@ if (panel && projectCards.length) {
   const svg = figure.querySelector("svg");
   const info = figure.querySelector(".graph-info");
 
-  let view = matchMedia("(min-width: 900px)").matches ? "graph" : "grid";
+  let view = "grid";
   let selected = null; // nó fixado por clique
   let nodes = [];
   let edges = [];
