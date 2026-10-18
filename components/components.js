@@ -27,7 +27,7 @@
   /* ---------- <theme-toggle> ---------- */
 
   const THEMES = ["amazonia", "editorial"];
-  const THEME_COLORS = { amazonia: "#06100b", editorial: "#e1dbd0" };
+  const THEME_COLORS = { amazonia: "#050f14", editorial: "#e1dbd0" };
   const LABELS = {
     en: ["Amazon", "Editorial", "Theme: {current}. Switch to {next}"],
     pt: ["Amazônia", "Editorial", "Tema: {current}. Mudar para {next}"],

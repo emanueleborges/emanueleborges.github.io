@@ -2,16 +2,16 @@
    portfólio: "amazonia" (padrão) e "editorial". O tema vem de <html data-theme> (script no <head>). */
 :root, :root[data-theme="amazonia"] {
   color-scheme: dark;
-  --logo-bg1: #13321f; --logo-bg2: #050d08; --logo-edge1: #bef264; --logo-edge2: #2dd4bf; --logo-letter1: #ffffff; --logo-letter2: #e4fbb5; --logo-letter3: #86efac; --logo-node1: #f7fee7; --logo-node2: #a3e635; --logo-node3: #14b8a6; --logo-ring: #a3e635;
-  --bg: #06100b; --surface: #0b1912; --surface-2: rgba(14, 32, 22, .62); --stage: #040b07;
-  --text: #eef5ee; --muted: #9db3a5; --line: rgba(190, 242, 200, .13); --line-strong: rgba(190, 242, 200, .24); --grid: rgba(190, 242, 200, .08);
-  --accent: #a3e635; --accent-rgb: 163, 230, 53; --accent-2: #34d399; --accent-2-rgb: 52, 211, 153; --accent-text: #bef264; --kicker: #86efac;
-  --on-primary: #04130a; --grad-primary: linear-gradient(115deg, #84cc16 0%, #22c55e 55%, #14b8a6 100%);
-  --grad-text: linear-gradient(100deg, #d9f99d, #86efac 50%, #5eead4);
-  --glow-1: #15803d; --glow-2: #0e7490;
+  --logo-bg1: #0f2e33; --logo-bg2: #050d08; --logo-edge1: #bef264; --logo-edge2: #38bdf8; --logo-letter1: #ffffff; --logo-letter2: #e4fbb5; --logo-letter3: #86efac; --logo-node1: #f7fee7; --logo-node2: #a3e635; --logo-node3: #0ea5e9; --logo-ring: #a3e635;
+  --bg: #050f14; --surface: #0a1a1e; --surface-2: rgba(12, 30, 36, .62); --stage: #040c10;
+  --text: #eef5f5; --muted: #9bb2b4; --line: rgba(186, 230, 240, .13); --line-strong: rgba(186, 230, 240, .24); --grid: rgba(186, 230, 240, .08);
+  --accent: #a3e635; --accent-rgb: 163, 230, 53; --accent-2: #38bdf8; --accent-2-rgb: 56, 189, 248; --accent-text: #bef264; --kicker: #86efac;
+  --on-primary: #04130a; --grad-primary: linear-gradient(115deg, #84cc16 0%, #22c55e 40%, #0ea5e9 100%);
+  --grad-text: linear-gradient(100deg, #d9f99d, #6ee7b7 45%, #7dd3fc);
+  --glow-1: #15803d; --glow-2: #0369a1;
   --series-1: #3987e5; --series-2: #65a30d;
   --ok: #86efac; --warn: #fcd34d; --warn-bg: rgba(250, 204, 21, .06); --warn-line: rgba(250, 204, 21, .3); --warn-text: #fde68a;
-  --swatch: linear-gradient(135deg, #0b1912 50%, #a3e635 50%);
+  --swatch: linear-gradient(135deg, #a3e635 50%, #38bdf8 50%);
 }
 :root[data-theme="editorial"] {
   color-scheme: light;
