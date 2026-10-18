@@ -162,7 +162,7 @@ if (panel && projectCards.length) {
   views.className = "skills-views";
   views.setAttribute("role", "group");
   views.innerHTML =
-    '<button type="button" class="skills-view" data-view="graph" aria-pressed="false"><span aria-hidden="true">◎</span> <span data-label></span></button><button type="button" class="skills-view" data-view="grid" aria-pressed="false"><span aria-hidden="true">▦</span> <span data-label></span></button>';
+    '<button type="button" class="skills-view" data-view="grid" aria-pressed="false"><span aria-hidden="true">▦</span> <span data-label></span></button><button type="button" class="skills-view" data-view="graph" aria-pressed="false"><span aria-hidden="true">◎</span> <span data-label></span></button>';
   panel.prepend(views);
 
   const figure = document.createElement("figure");
