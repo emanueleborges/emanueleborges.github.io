@@ -139,6 +139,8 @@ window.I18N.fr = {
   "edu.lang": "LANGUES",
   "edu.langList": "Portugais — langue maternelle · Espagnol — intermédiaire (B2) · Anglais — élémentaire (A2), en progression vers intermédiaire (B1)",
   "contact.kicker": "// 06. CONTACT",
+  "contact.title": "Un projet ?<br /><span class=\"gradient-text\">Discutons-en.</span>",
+  "contact.intro": "Ouvert aux opportunités en développement full stack, mobile et IA — contactez-moi par le canal de votre choix.",
   "footer.copy": "CONÇU ET DÉVELOPPÉ AVEC SOIN",
   "footer.updated": "MIS À JOUR LE",
   "footer.top": "RETOUR EN HAUT ↑",

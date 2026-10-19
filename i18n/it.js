@@ -139,6 +139,8 @@ window.I18N.it = {
   "edu.lang": "LINGUE",
   "edu.langList": "Portoghese — madrelingua · Spagnolo — intermedio (B2) · Inglese — elementare (A2), in progresso verso intermedio (B1)",
   "contact.kicker": "// 06. CONTATTI",
+  "contact.title": "Hai un progetto?<br /><span class=\"gradient-text\">Parliamone.</span>",
+  "contact.intro": "Aperto a opportunità nello sviluppo full stack, mobile e IA — contattami sul canale che preferisci.",
   "footer.copy": "PROGETTATO E REALIZZATO CON CURA",
   "footer.updated": "AGGIORNATO IL",
   "footer.top": "TORNA SU ↑",

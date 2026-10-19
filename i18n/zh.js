@@ -139,6 +139,8 @@ window.I18N.zh = {
   "edu.lang": "语言",
   "edu.langList": "葡萄牙语 — 母语 · 西班牙语 — 中级 (B2) · 英语 — 初级 (A2)，正向中级 (B1) 迈进",
   "contact.kicker": "// 06. 联系方式",
+  "contact.title": "有项目想法？<br /><span class=\"gradient-text\">聊一聊吧。</span>",
+  "contact.intro": "欢迎全栈、移动端和 AI 开发方向的工作机会——选择你方便的方式联系我。",
   "footer.copy": "用心设计与开发",
   "footer.updated": "更新于",
   "footer.top": "返回顶部 ↑",

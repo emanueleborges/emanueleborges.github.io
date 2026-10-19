@@ -120,6 +120,8 @@ window.I18N.de = {
   "edu.lang": "SPRACHEN",
   "edu.langList": "Portugiesisch — Muttersprache · Spanisch — Mittelstufe (B2) · Englisch — Grundkenntnisse (A2), auf dem Weg zur Mittelstufe (B1)",
   "contact.kicker": "// 06. KONTAKT",
+  "contact.title": "Ein Projekt im Kopf?<br /><span class=\"gradient-text\">Lass uns reden.</span>",
+  "contact.intro": "Offen für Möglichkeiten in Full-Stack-, Mobile- und KI-Entwicklung — schreib mir über den Kanal, der dir am liebsten ist.",
   "footer.copy": "MIT SORGFALT GESTALTET UND ENTWICKELT",
   "footer.updated": "AKTUALISIERT AM",
   "footer.top": "NACH OBEN ↑",
