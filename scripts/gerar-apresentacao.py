@@ -20,7 +20,7 @@ from gradio_client import Client, handle_file
 ROOT = Path(__file__).resolve().parent.parent
 OUT = ROOT / "audio" / "apresentacao"
 VOICE = ROOT / "scripts" / "voz-referencia.wav"
-LANGS = ["en", "pt", "es", "fr", "it", "de", "zh", "ru"]
+LANGS = ["en", "pt"]  # nos outros idiomas do site o botão não aparece
 SEED = 42  # mesma semente, mesma entonação ao gerar de novo
 
 
@@ -30,9 +30,8 @@ def speech(lang):
 
 
 # Frases do resumo; cada uma vira uma faixa e uma legenda (a demo aceita até 300 caracteres).
-def sentences(text, lang):
-    parts = re.findall(r"[^。]+。?", text) if lang == "zh" else re.split(r"(?<=[.!?])\s+", text)
-    return [part.strip() for part in parts if part.strip()]
+def sentences(text):
+    return [part.strip() for part in re.split(r"(?<=[.!?])\s+", text) if part.strip()]
 
 
 manifest_path = OUT / "faixas.json"
@@ -45,7 +44,7 @@ for lang in LANGS:
     folder.mkdir(parents=True, exist_ok=True)
     old = previous.get(lang, [])
     manifest[lang] = []
-    for i, text in enumerate(sentences(speech(lang), lang)):
+    for i, text in enumerate(sentences(speech(lang))):
         file = folder / f"{i}.mp3"
         track = {"text": text, "file": f"{lang}/{i}.mp3", "voice": "emanuel"}
         # Reaproveita a faixa se o texto e a voz são os mesmos da última geração.
