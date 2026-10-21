@@ -2,7 +2,7 @@
 // - Página: rede primeiro (sempre a versão mais nova); sem rede, a última cópia salva.
 // - CSS, JS e imagens do próprio site: cópia salva primeiro, atualizada em segundo plano.
 // - Outros domínios (IA, GitHub, fontes, estatísticas) não passam por aqui.
-const CACHE = "portfolio-v5";
+const CACHE = "portfolio-v6";
 const PRECACHE = [
   "./",
   "styles.css",
@@ -58,8 +58,9 @@ const fromCache = (request) => caches.match(request).then((hit) => hit || caches
 self.addEventListener("fetch", (event) => {
   const { request } = event;
   if (request.method !== "GET" || new URL(request.url).origin !== location.origin) return;
-  // Áudio pede pedaços do arquivo (Range): vai direto à rede, porque o cache não guarda respostas parciais.
-  if (request.headers.has("range")) return;
+  // Apresentação falada: vai direto à rede, para legenda (faixas.json) e áudio serem sempre da mesma versão
+  // (e o áudio pede pedaços do arquivo, que o cache não guarda).
+  if (request.headers.has("range") || new URL(request.url).pathname.includes("/audio/")) return;
 
   if (request.mode === "navigate") {
     event.respondWith(

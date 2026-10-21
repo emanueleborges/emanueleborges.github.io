@@ -58,7 +58,8 @@ const play = async () => {
 if (button) {
   button.addEventListener("click", () => (session ? stop() : play()));
   document.addEventListener("languagechange", () => (session ? stop() : render()));
-  fetch(new URL("faixas.json", BASE))
+  // Sempre confere com o servidor: a legenda precisa ser da mesma versão do áudio.
+  fetch(new URL("faixas.json", BASE), { cache: "no-cache" })
     .then((response) => (response.ok ? response.json() : {}))
     .then((data) => {
       tracks = data;
