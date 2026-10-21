@@ -20,6 +20,7 @@ const PRECACHE = [
   "sistema.js",
   "pipeline-grafo.js",
   "demo-modal.js",
+  "apresentacao.js",
   "components/boot.js",
   "components/components.js",
   "imagens/logo.svg",
@@ -57,6 +58,8 @@ const fromCache = (request) => caches.match(request).then((hit) => hit || caches
 self.addEventListener("fetch", (event) => {
   const { request } = event;
   if (request.method !== "GET" || new URL(request.url).origin !== location.origin) return;
+  // Áudio pede pedaços do arquivo (Range): vai direto à rede, porque o cache não guarda respostas parciais.
+  if (request.headers.has("range")) return;
 
   if (request.mode === "navigate") {
     event.respondWith(

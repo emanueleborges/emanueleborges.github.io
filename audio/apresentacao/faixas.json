@@ -1,0 +1,218 @@
+{
+  "en": [
+    {
+      "text": "Hi, I'm Emanuel Borges, a Senior Full Stack Developer based in Manaus, Brazil, working fully remote.",
+      "file": "en/0.mp3",
+      "voice": "emanuel"
+    },
+    {
+      "text": "I have more than ten years of experience building systems with Java, Kotlin, Node.js, React and React Native, on large-scale projects at INDT, ICCT and Manaus City Hall.",
+      "file": "en/1.mp3",
+      "voice": "emanuel"
+    },
+    {
+      "text": "Today my focus is Artificial Intelligence: RAG, semantic search and NLP, backed by postgraduate specializations in Machine Learning Engineering and Natural Language Processing.",
+      "file": "en/2.mp3",
+      "voice": "emanuel"
+    },
+    {
+      "text": "The assistant that answers your questions on this portfolio was built by me, in eight languages and at zero cost.",
+      "file": "en/3.mp3",
+      "voice": "emanuel"
+    },
+    {
+      "text": "I'm open to new opportunities, so let's talk.",
+      "file": "en/4.mp3",
+      "voice": "emanuel"
+    }
+  ],
+  "pt": [
+    {
+      "text": "Olá, eu sou o Emanuel Borges, desenvolvedor Full Stack Sênior em Manaus, trabalhando 100% remoto.",
+      "file": "pt/0.mp3",
+      "voice": "emanuel"
+    },
+    {
+      "text": "São mais de dez anos criando sistemas com Java, Kotlin, Node.js, React e React Native, em projetos de grande porte no INDT, no ICCT e na Prefeitura de Manaus.",
+      "file": "pt/1.mp3",
+      "voice": "emanuel"
+    },
+    {
+      "text": "Hoje meu foco é Inteligência Artificial: RAG, busca semântica e NLP, com pós-graduações em Machine Learning Engineering e em Processamento de Linguagem Natural.",
+      "file": "pt/2.mp3",
+      "voice": "emanuel"
+    },
+    {
+      "text": "O assistente que responde às suas perguntas neste portfólio fui eu que construí, em oito idiomas e com custo zero.",
+      "file": "pt/3.mp3",
+      "voice": "emanuel"
+    },
+    {
+      "text": "Estou aberto a novas oportunidades, então vamos conversar.",
+      "file": "pt/4.mp3",
+      "voice": "emanuel"
+    }
+  ],
+  "es": [
+    {
+      "text": "Hola, soy Emanuel Borges, desarrollador Full Stack Sénior en Manaus, Brasil, trabajando 100% en remoto.",
+      "file": "es/0.mp3",
+      "voice": "emanuel"
+    },
+    {
+      "text": "Tengo más de diez años de experiencia creando sistemas con Java, Kotlin, Node.js, React y React Native, en proyectos de gran escala en INDT, ICCT y la Alcaldía de Manaus.",
+      "file": "es/1.mp3",
+      "voice": "emanuel"
+    },
+    {
+      "text": "Hoy mi foco es la Inteligencia Artificial: RAG, búsqueda semántica y NLP, con especializaciones de posgrado en Machine Learning Engineering y en Procesamiento de Lenguaje Natural.",
+      "file": "es/2.mp3",
+      "voice": "emanuel"
+    },
+    {
+      "text": "El asistente que responde tus preguntas en este portafolio lo construí yo, en ocho idiomas y con costo cero.",
+      "file": "es/3.mp3",
+      "voice": "emanuel"
+    },
+    {
+      "text": "Estoy abierto a nuevas oportunidades, así que hablemos.",
+      "file": "es/4.mp3",
+      "voice": "emanuel"
+    }
+  ],
+  "fr": [
+    {
+      "text": "Bonjour, je suis Emanuel Borges, développeur Full Stack senior basé à Manaus, au Brésil, en télétravail complet.",
+      "file": "fr/0.mp3",
+      "voice": "emanuel"
+    },
+    {
+      "text": "J’ai plus de dix ans d’expérience dans la création de systèmes avec Java, Kotlin, Node.js, React et React Native, sur des projets d’envergure à l’INDT, à l’ICCT et à la mairie de Manaus.",
+      "file": "fr/1.mp3",
+      "voice": "emanuel"
+    },
+    {
+      "text": "Aujourd’hui, je me consacre à l’intelligence artificielle : RAG, recherche sémantique et NLP, avec des spécialisations de troisième cycle en Machine Learning Engineering et en traitement du langage naturel.",
+      "file": "fr/2.mp3",
+      "voice": "emanuel"
+    },
+    {
+      "text": "L’assistant qui répond à vos questions sur ce portfolio, c’est moi qui l’ai construit, en huit langues et à coût zéro.",
+      "file": "fr/3.mp3",
+      "voice": "emanuel"
+    },
+    {
+      "text": "Je suis ouvert à de nouvelles opportunités, alors parlons-en.",
+      "file": "fr/4.mp3",
+      "voice": "emanuel"
+    }
+  ],
+  "it": [
+    {
+      "text": "Ciao, sono Emanuel Borges, sviluppatore Full Stack senior a Manaus, in Brasile, e lavoro completamente da remoto.",
+      "file": "it/0.mp3",
+      "voice": "emanuel"
+    },
+    {
+      "text": "Ho più di dieci anni di esperienza nella creazione di sistemi con Java, Kotlin, Node.js, React e React Native, in progetti di grandi dimensioni presso INDT, ICCT e il Comune di Manaus.",
+      "file": "it/1.mp3",
+      "voice": "emanuel"
+    },
+    {
+      "text": "Oggi mi concentro sull’intelligenza artificiale: RAG, ricerca semantica e NLP, con specializzazioni post-laurea in Machine Learning Engineering e in elaborazione del linguaggio naturale.",
+      "file": "it/2.mp3",
+      "voice": "emanuel"
+    },
+    {
+      "text": "L’assistente che risponde alle tue domande in questo portfolio l’ho costruito io, in otto lingue e a costo zero.",
+      "file": "it/3.mp3",
+      "voice": "emanuel"
+    },
+    {
+      "text": "Sono aperto a nuove opportunità, quindi parliamone.",
+      "file": "it/4.mp3",
+      "voice": "emanuel"
+    }
+  ],
+  "de": [
+    {
+      "text": "Hallo, ich bin Emanuel Borges, Senior Full Stack Developer aus Manaus, Brasilien, und arbeite komplett remote.",
+      "file": "de/0.mp3",
+      "voice": "emanuel"
+    },
+    {
+      "text": "Ich habe mehr als zehn Jahre Erfahrung in der Entwicklung von Systemen mit Java, Kotlin, Node.js, React und React Native, in Großprojekten bei INDT, ICCT und der Stadtverwaltung Manaus.",
+      "file": "de/1.mp3",
+      "voice": "emanuel"
+    },
+    {
+      "text": "Heute liegt mein Fokus auf Künstlicher Intelligenz: RAG, semantische Suche und NLP, mit Spezialisierungen in Machine Learning Engineering und Natural Language Processing.",
+      "file": "de/2.mp3",
+      "voice": "emanuel"
+    },
+    {
+      "text": "Den Assistenten, der in diesem Portfolio Ihre Fragen beantwortet, habe ich selbst gebaut, in acht Sprachen und ohne Kosten.",
+      "file": "de/3.mp3",
+      "voice": "emanuel"
+    },
+    {
+      "text": "Ich bin offen für neue Möglichkeiten, also lassen Sie uns sprechen.",
+      "file": "de/4.mp3",
+      "voice": "emanuel"
+    }
+  ],
+  "zh": [
+    {
+      "text": "你好，我是 Emanuel Borges，一名常驻巴西马瑙斯的高级全栈开发工程师，完全远程工作。",
+      "file": "zh/0.mp3",
+      "voice": "emanuel"
+    },
+    {
+      "text": "我有十多年使用 Java、Kotlin、Node.js、React 和 React Native 构建系统的经验，参与过 INDT、ICCT 和马瑙斯市政府的大型项目。",
+      "file": "zh/1.mp3",
+      "voice": "emanuel"
+    },
+    {
+      "text": "如今我专注于人工智能：RAG、语义搜索和自然语言处理，并完成了机器学习工程和自然语言处理两个研究生专业课程。",
+      "file": "zh/2.mp3",
+      "voice": "emanuel"
+    },
+    {
+      "text": "这个作品集里回答你问题的智能助手是我亲手打造的，支持八种语言，而且零成本。",
+      "file": "zh/3.mp3",
+      "voice": "emanuel"
+    },
+    {
+      "text": "我正在寻找新的机会，欢迎联系我。",
+      "file": "zh/4.mp3",
+      "voice": "emanuel"
+    }
+  ],
+  "ru": [
+    {
+      "text": "Здравствуйте, меня зовут Эмануэл Боржес, я Senior Full Stack разработчик из Манауса, Бразилия, и работаю полностью удалённо.",
+      "file": "ru/0.mp3",
+      "voice": "emanuel"
+    },
+    {
+      "text": "У меня более десяти лет опыта разработки систем на Java, Kotlin, Node.js, React и React Native в крупных проектах INDT, ICCT и мэрии Манауса.",
+      "file": "ru/1.mp3",
+      "voice": "emanuel"
+    },
+    {
+      "text": "Сейчас я сосредоточен на искусственном интеллекте: RAG, семантическом поиске и NLP, и прошёл специализации по Machine Learning Engineering и обработке естественного языка.",
+      "file": "ru/2.mp3",
+      "voice": "emanuel"
+    },
+    {
+      "text": "Ассистента, который отвечает на ваши вопросы в этом портфолио, я создал сам, на восьми языках и без затрат.",
+      "file": "ru/3.mp3",
+      "voice": "emanuel"
+    },
+    {
+      "text": "Я открыт для новых возможностей, давайте поговорим.",
+      "file": "ru/4.mp3",
+      "voice": "emanuel"
+    }
+  ]
+}
