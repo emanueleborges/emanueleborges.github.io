@@ -1,5 +1,5 @@
 // Assistente (1/4) — texto: normalização, palavras e tolerância a erros de digitação.
-// Funções puras, sem acesso à página; usadas pelas regras, pela busca e pela interface.
+// Funções puras, sem acesso à página (só ao perfil.js, para o nome); usadas pelas regras, pela busca e pela interface.
 
 const normalize = (text) =>
   text
@@ -17,7 +17,8 @@ const stopwords = new Set(
     "il lo gli di del con per che quale quali come ha lui suo un una dove sul conosce " +
     "и в на с по что как какой какие у он его есть ли о для знает " +
     "der die das den dem des und ist er sie es hat mit fur von zu ein eine einen einer was wie wo welche welcher welches auf im an auch nicht als bei oder aus wer kann kennt gibt hast schon " +
-    "emanuel borges"
+    // o nome da pessoa do portfólio (perfil.js) não ajuda a busca: está em toda parte
+    normalize(globalThis.PERFIL.nomeCompleto)
   ).split(" "),
 );
 

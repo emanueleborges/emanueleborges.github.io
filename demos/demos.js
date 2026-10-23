@@ -1,5 +1,6 @@
 // Base compartilhada das páginas de demo (demos/*): idioma, textos, formatação e estatísticas.
-// Cada página chama Demo.setup(textos, render) com os textos nos 8 idiomas.
+// Cada página chama Demo.setup(textos, render) com os textos nos 8 idiomas. Nos textos, {nome} e
+// {nomeCompleto} vêm do perfil (data/perfil.json), e o título da aba ganha " — <nome completo>" (não repita nos textos).
 // Dentro do modal do portfólio (?embed=1, demo-modal.js): sem cabeçalho nem "Voltar ao portfólio",
 // e links para o resto do site abrem na janela principal, não dentro do modal.
 if (new URLSearchParams(location.search).has("embed") && window.top !== window) {
@@ -17,7 +18,7 @@ if (new URLSearchParams(location.search).has("embed") && window.top !== window) 
 }
 
 export const Demo = (() => {
-  const htmlLang = { en: "en", pt: "pt-BR", es: "es", fr: "fr", it: "it", de: "de", zh: "zh-CN", ru: "ru" };
+  const htmlLang = Object.fromEntries(Object.entries(globalThis.IDIOMAS).map(([code, idioma]) => [code, idioma.html])); // idiomas.js
   let texts = {};
   let lang = "en";
 
@@ -33,8 +34,9 @@ export const Demo = (() => {
     return "en";
   };
 
+  const { nome, nomeCompleto } = globalThis.PERFIL;
   const t = (key, vars = {}) =>
-    (texts[lang]?.[key] ?? texts.en[key] ?? key).replace(/\{(\w+)\}/g, (_, name) => vars[name] ?? "");
+    (texts[lang]?.[key] ?? texts.en[key] ?? key).replace(/\{(\w+)\}/g, (_, name) => ({ nome, nomeCompleto, ...vars })[name] ?? "");
 
   const applyTexts = () => {
     document.documentElement.lang = htmlLang[lang];
@@ -42,6 +44,7 @@ export const Demo = (() => {
     document.querySelectorAll("[data-t-content]").forEach((el) => el.setAttribute("content", t(el.dataset.tContent)));
     document.querySelectorAll("[data-t-placeholder]").forEach((el) => el.setAttribute("placeholder", t(el.dataset.tPlaceholder)));
     document.querySelectorAll("[data-t-aria]").forEach((el) => el.setAttribute("aria-label", t(el.dataset.tAria)));
+    document.title = `${t("meta.title")} — ${nomeCompleto}`;
     const select = document.querySelector("[data-lang]");
     if (select) select.value = lang;
   };

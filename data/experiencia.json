@@ -1,0 +1,8 @@
+{
+  "_doc": "Experiência profissional, da mais recente para a mais antiga. Textos (cargo, período, tópicos <id>.b1, .b2…) ficam no i18n/ pela chave <id>.*; empresa em { text } (igual em todos os idiomas) ou { key }. A primeira é a empresa atual (SEO). Usada no index.html, no currículo e na IA; gere com: node scripts/gerar-secoes.mjs",
+  "jobs": [
+    { "id": "job1", "company": { "text": "INDT — Instituto de Desenvolvimento Tecnológico" } },
+    { "id": "job2", "company": { "text": "ICCT — Instituto CAL-COMP de Tecnologia" } },
+    { "id": "job3", "company": { "key": "job3.company" } }
+  ]
+}

@@ -6,9 +6,10 @@
     <!-- Segurança: só carrega recursos destes domínios (CSP) e não envia o endereço completo a outros sites. -->
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://challenges.cloudflare.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://images.unsplash.com https://*.githubusercontent.com https://github.com; connect-src 'self' https://emanuel-portfolio-chat.emanuel-portfolio-chat.workers.dev https://api.github.com https://cdn.jsdelivr.net https://data.jsdelivr.com https://raw.githubusercontent.com; frame-src https://challenges.cloudflare.com; media-src 'self' blob:; worker-src 'self' blob:; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests" />
     <meta name="referrer" content="strict-origin-when-cross-origin" />
-    <title data-t="meta.title">LSTM Stock Forecasting — Emanuel Borges</title>
+    <title data-t="meta.title">LSTM Stock Forecasting</title>
     <meta name="description" data-t-content="meta.description" content="LSTM neural network that forecasts the next stock close, running in your browser in plain JavaScript and evaluated against a naive baseline." />
     <meta name="theme-color" content="#050f14" />
+    <script src="../../idiomas.js"></script>
     <script src="../../components/boot.js"></script>
     <link rel="icon" href="/imagens/favicon.svg" type="image/svg+xml" />
     <link rel="icon" href="/imagens/favicon-32.png" sizes="32x32" type="image/png" />
@@ -18,6 +19,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;700;800&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="../demos.css" />
+    <script src="/perfil.js" defer></script>
     <script type="module" src="demo.js"></script>
     <script type="module" src="../../analytics-consent.js"></script>
     <script src="../../components/components.js" defer></script>
@@ -27,7 +29,7 @@
     <div class="glow glow-2" aria-hidden="true"></div>
     <div class="shell">
       <header>
-        <a class="brand" href="/"><site-logo class="brand-logo" size="32"></site-logo> Emanuel Borges</a>
+        <a class="brand" href="/"><site-logo class="brand-logo" size="32"></site-logo><span data-perfil="{nomeCompleto}">Emanuel Borges</span></a>
         <div class="header-tools">
           <share-button></share-button>
           <sound-toggle></sound-toggle>
@@ -53,7 +55,7 @@
         <p class="lead" data-t="lead"></p>
         <div class="links">
           <a class="button" href="/#projetos" data-t="back">← Back to portfolio</a>
-          <a class="button" href="https://github.com/emanueleborges/fiaptech4" target="_blank" rel="noopener" data-t="code">View code ↗</a>
+          <a class="button" href="https://github.com/emanueleborges/fiaptech4" data-perfil-href="{links.github}/fiaptech4" target="_blank" rel="noopener" data-t="code">View code ↗</a>
         </div>
 
         <section class="panel" aria-labelledby="forecast-title">

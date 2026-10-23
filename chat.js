@@ -7,6 +7,8 @@ import { LOCAL_ONLY, intents, faqs, findFaq } from "./chat/regras.js";
 import { text, search } from "./chat/busca.js";
 import * as ai from "./chat/ia.js";
 
+const { PERFIL } = globalThis; // dados pessoais (perfil.js)
+
 function initChat() {
   /* ---------- Interface ---------- */
 
@@ -166,10 +168,10 @@ function initChat() {
   const contactLinks = () => {
     const box = el("div", "chat-links");
     box.append(
-      linkButton("E-mail", "mailto:emanuel.eborges@gmail.com"),
-      linkButton("WhatsApp", "https://wa.me/5592999771376"),
-      linkButton("LinkedIn", "https://www.linkedin.com/in/borgesemmanuell"),
-      linkButton("GitHub", "https://github.com/emanueleborges"),
+      linkButton("E-mail", PERFIL.links.email),
+      linkButton("WhatsApp", PERFIL.links.whatsapp),
+      linkButton("LinkedIn", PERFIL.links.linkedin),
+      linkButton("GitHub", PERFIL.links.github),
     );
     return box;
   };
@@ -237,7 +239,7 @@ function initChat() {
     if (isImageRequest(q)) return imageAnswer(query);
     if (intents.cv.test(q)) {
       const box = el("div", "chat-links");
-      box.append(linkButton(text(document.querySelector('[data-i18n="cv.download"]')).replace(/[↓]/g, "").trim(), `cv/curriculo-emanuel-borges-${currentLang}.pdf`));
+      box.append(linkButton(text(document.querySelector('[data-i18n="cv.download"]')).replace(/[↓]/g, "").trim(), PERFIL.cv(currentLang)));
       return [el("p", null, tc("cv")), box];
     }
     const faq = findFaq(q);
@@ -554,7 +556,7 @@ function initChat() {
     cycle(0);
   }
 
-  // Link direto para o assistente: https://emanueleborges.github.io/#chat
+  // Link direto para o assistente: <site>/#chat
   if (location.hash === "#chat") setOpen(true);
   // Botões que abrem o assistente na própria página (ex.: "Ver demo" no card do assistente).
   document.addEventListener("click", (event) => {

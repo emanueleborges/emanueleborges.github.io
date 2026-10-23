@@ -8,8 +8,9 @@
     <meta name="referrer" content="strict-origin-when-cross-origin" />
     <meta name="robots" content="noindex" />
     <meta name="theme-color" content="#050f14" />
+    <script src="/idiomas.js"></script>
     <script src="/components/boot.js"></script>
-    <title>Page not found — Emanuel Borges</title>
+    <title data-perfil="Page not found — {nomeCompleto}">Page not found — Emanuel Borges</title>
     <link rel="icon" href="/imagens/favicon.svg" type="image/svg+xml" />
     <link rel="icon" href="/imagens/favicon-32.png" sizes="32x32" type="image/png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -51,13 +52,14 @@
       .quiet { border: 1px solid var(--quiet-line); background: var(--quiet-bg); }
     </style>
     <script type="module" src="/analytics-consent.js"></script>
+    <script src="/perfil.js" defer></script>
     <script src="/components/components.js" defer></script>
   </head>
   <body>
     <div class="glow glow-1" aria-hidden="true"></div>
     <div class="glow glow-2" aria-hidden="true"></div>
     <main>
-      <a class="brand" href="/" aria-label="Emanuel Borges — home"><site-logo class="logo-404" size="56"></site-logo></a>
+      <a class="brand" href="/" aria-label="Emanuel Borges — home" data-perfil-aria-label="{nomeCompleto} — home"><site-logo class="logo-404" size="56"></site-logo></a>
       <p class="code">// 404</p>
       <h1>This page <span>doesn't exist.</span></h1>
       <p class="lead">The link may be broken or the page may have moved. Head back to the portfolio or ask the assistant what you were looking for.</p>

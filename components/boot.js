@@ -17,7 +17,8 @@
     } catch (e) {
       /* navegação privada */
     }
-    if (/^(es|fr|it|de|zh|ru)$/.test(lang)) {
+    // pt e en já vêm na página; os outros idiomas do site (idiomas.js) são pré-carregados.
+    if (window.IDIOMAS && window.IDIOMAS[lang] && lang !== "pt" && lang !== "en") {
       var preload = document.createElement("link");
       preload.rel = "preload";
       preload.as = "script";

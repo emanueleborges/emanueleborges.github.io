@@ -1,5 +1,7 @@
 // Arquivo gerado por gerar-conhecimento.mjs — não edite à mão.
 export const VERSION = "e35906901c";
+export const NOME = "Emanuel Borges";
+export const PRIMEIRO_NOME = "Emanuel";
 export const CORE = "Emanuel Borges is a Senior Full Stack Developer (Java/Kotlin, Node.js, React, React Native) based in Manaus, Brazil (UTC−4), with 10+ years of experience, currently at INDT and specializing in applied AI (Machine Learning and NLP). Contact: emanuel.eborges@gmail.com · WhatsApp +55 92 99977-1376 · linkedin.com/in/borgesemmanuell · github.com/emanueleborges · emanueleborges.github.io. Salary and start date are not public — visitors should contact him directly.";
 export const CHUNKS = [
   {

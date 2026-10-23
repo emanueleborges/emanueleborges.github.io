@@ -18,8 +18,8 @@ jobs:
 
       - name: Sintaxe dos scripts JavaScript
         run: |
-          # Scripts clássicos (dados de tradução, carregador, boot e Web Components e service worker)
-          for f in i18n.js i18n/*.js components/*.js sw.js; do
+          # Scripts clássicos (idiomas, perfil, dados de tradução, carregador, boot e Web Components e service worker)
+          for f in idiomas.js perfil.js i18n.js i18n/*.js components/*.js sw.js; do
             node --check "$f"
           done
           # Módulos ES (site, demos, Worker e geradores)
@@ -41,7 +41,7 @@ jobs:
           print("JSON-LD válido:", data["name"])
           PY
 
-      - name: Projetos e habilidades do index.html em dia com data/
+      - name: HTML, currículo, SEO, sitemap e manifest em dia com data/, idiomas.js e i18n/pt.js
         run: node scripts/gerar-secoes.mjs --check
 
       - name: Módulos ES do index.html todos no importmap

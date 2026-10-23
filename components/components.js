@@ -8,6 +8,8 @@
 //   [data-share]            "Compartilhar portfólio": QR code, link para copiar e atalhos de compartilhamento
 //   <share-button>          ícone de compartilhar no cabeçalho (abre o mesmo modal)
 (() => {
+  const { PERFIL } = globalThis; // dados pessoais (perfil.js, carregado antes deste arquivo)
+
   /* ---------- <site-logo> ---------- */
 
   // Cada logo recebe ids próprios nos degradês (vários logos na mesma página não se confundem).
@@ -249,13 +251,13 @@
 
   /* ---------- Visualizador do GitHub ---------- */
 
-  // Links para github.com/emanueleborges/... abrem num modal dentro do site, sem sair da página:
+  // Links para github.com/<perfil.github>/... abrem num modal dentro do site, sem sair da página:
   // pastas, README/Markdown formatados e código. Sem o limite de 60 consultas/hora da API do GitHub:
   // a lista de arquivos vem do jsDelivr (data.jsdelivr.com), o conteúdo do raw.githubusercontent.com
   // e o Markdown é formatado no navegador (vendor/marked.min.js). A API do GitHub fica só como reserva
   // (repositório que o jsDelivr não serve). Outros donos, issues etc. continuam abrindo no GitHub.
   // Dentro de uma página embutida (modal das demos), o visualizador abre na janela principal.
-  const GH_OWNER = "emanueleborges";
+  const GH_OWNER = PERFIL.github.toLowerCase();
   const GH_LABELS = {
     en: ["Back", "Close", "GITHUB ↗", "Loading…", "Couldn't load this from GitHub right now.", "GitHub's hourly request limit was reached. Try again in a few minutes or open it on GitHub.", "Repositories"],
     pt: ["Voltar", "Fechar", "GITHUB ↗", "Carregando…", "Não foi possível carregar do GitHub agora.", "O limite de consultas por hora do GitHub foi atingido. Tente em alguns minutos ou abra no GitHub.", "Repositórios"],
@@ -268,7 +270,7 @@
   };
   const ghText = () => GH_LABELS[pageLang()] ?? GH_LABELS.en;
 
-  // github.com/emanueleborges[/repo[/tree|blob/ref[/caminho]]] → { repo, ref, path }; o resto → null.
+  // github.com/<dono>[/repo[/tree|blob/ref[/caminho]]] → { repo, ref, path }; o resto → null.
   const parseGithub = (href) => {
     let url;
     try {
@@ -641,7 +643,7 @@
   };
   window.portfolioGithub = { open: openGithub };
 
-  // Qualquer link para o GitHub do Emanuel, em qualquer página (Ctrl/⌘/Shift+clique abre no GitHub).
+  // Qualquer link para o GitHub da pessoa do portfólio, em qualquer página (Ctrl/⌘/Shift+clique abre no GitHub).
   document.addEventListener("click", (event) => {
     const link = event.target.closest?.("a[href]");
     if (!link || event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
@@ -664,16 +666,35 @@
   // e-mail para copiar, descrição do sistema — e o site externo só abre se o visitante pedir.
   const SITE_ROOT = new URL("..", document.currentScript?.src ?? location.href).href;
   const LINK_LABELS = {
-    en: { close: "Close", copy: "Copy", copied: "Copied!", note: "This site can't be shown inside the portfolio — open it whenever you like.", whatsTitle: "Chat on WhatsApp", scan: "Point your phone's camera at the code", openWhats: "Open chat ↗", linkedinTitle: "LinkedIn profile", openLinkedin: "Open on LinkedIn ↗", mailTitle: "Email", openMail: "Write an email ↗", siteTitle: "External site", openSite: "Open site ↗", headline: "Senior Full Stack Developer · Applied AI", location: "Manaus, Brazil", stack: "Stack", compras: "Procurement and public bidding portal of the Manaus City Hall, developed by Emanuel at SEMEF.", contratos: "Contract management system of the Manaus City Hall, developed by Emanuel at SEMEF / SEMAD.", shareKind: "Share", shareTitle: "Share this portfolio", shareScan: "Point a phone camera at the code to open the portfolio", shareNow: "Share ↗", shareText: "Emanuel Borges's portfolio — Senior Full Stack Developer building with AI" },
-    pt: { close: "Fechar", copy: "Copiar", copied: "Copiado!", note: "Este site não pode ser exibido dentro do portfólio — abra quando quiser.", whatsTitle: "Conversar no WhatsApp", scan: "Aponte a câmera do celular para o código", openWhats: "Abrir conversa ↗", linkedinTitle: "Perfil no LinkedIn", openLinkedin: "Abrir no LinkedIn ↗", mailTitle: "E-mail", openMail: "Escrever e-mail ↗", siteTitle: "Site externo", openSite: "Abrir site ↗", headline: "Desenvolvedor Full Stack Sênior · IA aplicada", location: "Manaus, AM · Brasil", stack: "Tecnologias", compras: "Portal de compras e licitações da Prefeitura de Manaus, desenvolvido por Emanuel na SEMEF.", contratos: "Sistema de gestão de contratos da Prefeitura de Manaus, desenvolvido por Emanuel na SEMEF / SEMAD.", shareKind: "Compartilhar", shareTitle: "Compartilhe este portfólio", shareScan: "Aponte a câmera do celular para abrir o portfólio", shareNow: "Compartilhar ↗", shareText: "Portfólio de Emanuel Borges — Full Stack Sênior construindo com IA" },
-    es: { close: "Cerrar", copy: "Copiar", copied: "¡Copiado!", note: "Este sitio no puede mostrarse dentro del portafolio — ábrelo cuando quieras.", whatsTitle: "Hablar por WhatsApp", scan: "Apunta la cámara del móvil al código", openWhats: "Abrir chat ↗", linkedinTitle: "Perfil de LinkedIn", openLinkedin: "Abrir en LinkedIn ↗", mailTitle: "Correo", openMail: "Escribir correo ↗", siteTitle: "Sitio externo", openSite: "Abrir sitio ↗", headline: "Desarrollador Full Stack Sénior · IA aplicada", location: "Manaos, Brasil", stack: "Tecnologías", compras: "Portal de compras y licitaciones del Ayuntamiento de Manaos, desarrollado por Emanuel en la SEMEF.", contratos: "Sistema de gestión de contratos del Ayuntamiento de Manaos, desarrollado por Emanuel en la SEMEF / SEMAD.", shareKind: "Compartir", shareTitle: "Comparte este portafolio", shareScan: "Apunta la cámara del móvil al código para abrir el portafolio", shareNow: "Compartir ↗", shareText: "Portafolio de Emanuel Borges — Full Stack Sénior construyendo con IA" },
-    fr: { close: "Fermer", copy: "Copier", copied: "Copié !", note: "Ce site ne peut pas s’afficher dans le portfolio — ouvrez-le quand vous voulez.", whatsTitle: "Discuter sur WhatsApp", scan: "Pointez l’appareil photo du téléphone vers le code", openWhats: "Ouvrir la discussion ↗", linkedinTitle: "Profil LinkedIn", openLinkedin: "Ouvrir sur LinkedIn ↗", mailTitle: "E-mail", openMail: "Écrire un e-mail ↗", siteTitle: "Site externe", openSite: "Ouvrir le site ↗", headline: "Développeur Full Stack Senior · IA appliquée", location: "Manaus, Brésil", stack: "Technologies", compras: "Portail d’achats et d’appels d’offres de la mairie de Manaus, développé par Emanuel à la SEMEF.", contratos: "Système de gestion des contrats de la mairie de Manaus, développé par Emanuel à la SEMEF / SEMAD.", shareKind: "Partager", shareTitle: "Partagez ce portfolio", shareScan: "Pointez l’appareil photo d’un téléphone vers le code pour ouvrir le portfolio", shareNow: "Partager ↗", shareText: "Portfolio d’Emanuel Borges — Développeur Full Stack Senior qui construit avec l’IA" },
-    it: { close: "Chiudi", copy: "Copia", copied: "Copiato!", note: "Questo sito non può essere mostrato nel portfolio — aprilo quando vuoi.", whatsTitle: "Scrivi su WhatsApp", scan: "Inquadra il codice con la fotocamera del telefono", openWhats: "Apri chat ↗", linkedinTitle: "Profilo LinkedIn", openLinkedin: "Apri su LinkedIn ↗", mailTitle: "E-mail", openMail: "Scrivi un’e-mail ↗", siteTitle: "Sito esterno", openSite: "Apri sito ↗", headline: "Sviluppatore Full Stack Senior · IA applicata", location: "Manaus, Brasile", stack: "Tecnologie", compras: "Portale acquisti e gare del Comune di Manaus, sviluppato da Emanuel alla SEMEF.", contratos: "Sistema di gestione dei contratti del Comune di Manaus, sviluppato da Emanuel alla SEMEF / SEMAD.", shareKind: "Condividi", shareTitle: "Condividi questo portfolio", shareScan: "Inquadra il codice con la fotocamera del telefono per aprire il portfolio", shareNow: "Condividi ↗", shareText: "Portfolio di Emanuel Borges — Full Stack Senior che costruisce con l’IA" },
-    de: { close: "Schließen", copy: "Kopieren", copied: "Kopiert!", note: "Diese Website kann nicht im Portfolio angezeigt werden — öffnen Sie sie, wann Sie möchten.", whatsTitle: "Auf WhatsApp schreiben", scan: "Richten Sie die Handykamera auf den Code", openWhats: "Chat öffnen ↗", linkedinTitle: "LinkedIn-Profil", openLinkedin: "Auf LinkedIn öffnen ↗", mailTitle: "E-Mail", openMail: "E-Mail schreiben ↗", siteTitle: "Externe Website", openSite: "Website öffnen ↗", headline: "Senior Full-Stack-Entwickler · Angewandte KI", location: "Manaus, Brasilien", stack: "Technologien", compras: "Einkaufs- und Ausschreibungsportal der Stadt Manaus, von Emanuel bei der SEMEF entwickelt.", contratos: "Vertragsverwaltung der Stadt Manaus, von Emanuel bei SEMEF / SEMAD entwickelt.", shareKind: "Teilen", shareTitle: "Dieses Portfolio teilen", shareScan: "Richten Sie eine Handykamera auf den Code, um das Portfolio zu öffnen", shareNow: "Teilen ↗", shareText: "Portfolio von Emanuel Borges — Senior Full-Stack-Entwickler, der mit KI baut" },
-    zh: { close: "关闭", copy: "复制", copied: "已复制！", note: "该网站无法在作品集中显示——需要时再打开即可。", whatsTitle: "通过 WhatsApp 联系", scan: "用手机相机扫描二维码", openWhats: "打开聊天 ↗", linkedinTitle: "领英主页", openLinkedin: "在领英打开 ↗", mailTitle: "电子邮件", openMail: "写邮件 ↗", siteTitle: "外部网站", openSite: "打开网站 ↗", headline: "高级全栈开发工程师 · 应用 AI", location: "巴西 马瑙斯", stack: "技术", compras: "马瑙斯市政府采购与招标门户，由 Emanuel 在 SEMEF 开发。", contratos: "马瑙斯市政府合同管理系统，由 Emanuel 在 SEMEF / SEMAD 开发。", shareKind: "分享", shareTitle: "分享这个作品集", shareScan: "用手机相机扫描二维码即可打开作品集", shareNow: "分享 ↗", shareText: "Emanuel Borges 的作品集——用 AI 构建产品的高级全栈开发工程师" },
-    ru: { close: "Закрыть", copy: "Копировать", copied: "Скопировано!", note: "Этот сайт нельзя показать внутри портфолио — откройте, когда захотите.", whatsTitle: "Написать в WhatsApp", scan: "Наведите камеру телефона на код", openWhats: "Открыть чат ↗", linkedinTitle: "Профиль LinkedIn", openLinkedin: "Открыть в LinkedIn ↗", mailTitle: "Эл. почта", openMail: "Написать письмо ↗", siteTitle: "Внешний сайт", openSite: "Открыть сайт ↗", headline: "Senior Full Stack разработчик · прикладной ИИ", location: "Манаус, Бразилия", stack: "Технологии", compras: "Портал закупок и тендеров мэрии Манауса, разработанный Emanuel в SEMEF.", contratos: "Система управления контрактами мэрии Манауса, разработанная Emanuel в SEMEF / SEMAD.", shareKind: "Поделиться", shareTitle: "Поделитесь этим портфолио", shareScan: "Наведите камеру телефона на код, чтобы открыть портфолио", shareNow: "Поделиться ↗", shareText: "Портфолио Emanuel Borges — Senior Full Stack разработчик, создающий продукты с ИИ" },
+    en: { close: "Close", copy: "Copy", copied: "Copied!", note: "This site can't be shown inside the portfolio — open it whenever you like.", whatsTitle: "Chat on WhatsApp", scan: "Point your phone's camera at the code", openWhats: "Open chat ↗", linkedinTitle: "LinkedIn profile", openLinkedin: "Open on LinkedIn ↗", mailTitle: "Email", openMail: "Write an email ↗", siteTitle: "External site", openSite: "Open site ↗", stack: "Stack", compras: `Procurement and public bidding portal of the Manaus City Hall, developed by ${PERFIL.nome} at SEMEF.`, contratos: `Contract management system of the Manaus City Hall, developed by ${PERFIL.nome} at SEMEF / SEMAD.`, shareKind: "Share", shareTitle: "Share this portfolio", shareScan: "Point a phone camera at the code to open the portfolio", shareNow: "Share ↗" },
+    pt: { close: "Fechar", copy: "Copiar", copied: "Copiado!", note: "Este site não pode ser exibido dentro do portfólio — abra quando quiser.", whatsTitle: "Conversar no WhatsApp", scan: "Aponte a câmera do celular para o código", openWhats: "Abrir conversa ↗", linkedinTitle: "Perfil no LinkedIn", openLinkedin: "Abrir no LinkedIn ↗", mailTitle: "E-mail", openMail: "Escrever e-mail ↗", siteTitle: "Site externo", openSite: "Abrir site ↗", stack: "Tecnologias", compras: `Portal de compras e licitações da Prefeitura de Manaus, desenvolvido por ${PERFIL.nome} na SEMEF.`, contratos: `Sistema de gestão de contratos da Prefeitura de Manaus, desenvolvido por ${PERFIL.nome} na SEMEF / SEMAD.`, shareKind: "Compartilhar", shareTitle: "Compartilhe este portfólio", shareScan: "Aponte a câmera do celular para abrir o portfólio", shareNow: "Compartilhar ↗" },
+    es: { close: "Cerrar", copy: "Copiar", copied: "¡Copiado!", note: "Este sitio no puede mostrarse dentro del portafolio — ábrelo cuando quieras.", whatsTitle: "Hablar por WhatsApp", scan: "Apunta la cámara del móvil al código", openWhats: "Abrir chat ↗", linkedinTitle: "Perfil de LinkedIn", openLinkedin: "Abrir en LinkedIn ↗", mailTitle: "Correo", openMail: "Escribir correo ↗", siteTitle: "Sitio externo", openSite: "Abrir sitio ↗", stack: "Tecnologías", compras: `Portal de compras y licitaciones del Ayuntamiento de Manaos, desarrollado por ${PERFIL.nome} en la SEMEF.`, contratos: `Sistema de gestión de contratos del Ayuntamiento de Manaos, desarrollado por ${PERFIL.nome} en la SEMEF / SEMAD.`, shareKind: "Compartir", shareTitle: "Comparte este portafolio", shareScan: "Apunta la cámara del móvil al código para abrir el portafolio", shareNow: "Compartir ↗" },
+    fr: { close: "Fermer", copy: "Copier", copied: "Copié !", note: "Ce site ne peut pas s’afficher dans le portfolio — ouvrez-le quand vous voulez.", whatsTitle: "Discuter sur WhatsApp", scan: "Pointez l’appareil photo du téléphone vers le code", openWhats: "Ouvrir la discussion ↗", linkedinTitle: "Profil LinkedIn", openLinkedin: "Ouvrir sur LinkedIn ↗", mailTitle: "E-mail", openMail: "Écrire un e-mail ↗", siteTitle: "Site externe", openSite: "Ouvrir le site ↗", stack: "Technologies", compras: `Portail d’achats et d’appels d’offres de la mairie de Manaus, développé par ${PERFIL.nome} à la SEMEF.`, contratos: `Système de gestion des contrats de la mairie de Manaus, développé par ${PERFIL.nome} à la SEMEF / SEMAD.`, shareKind: "Partager", shareTitle: "Partagez ce portfolio", shareScan: "Pointez l’appareil photo d’un téléphone vers le code pour ouvrir le portfolio", shareNow: "Partager ↗" },
+    it: { close: "Chiudi", copy: "Copia", copied: "Copiato!", note: "Questo sito non può essere mostrato nel portfolio — aprilo quando vuoi.", whatsTitle: "Scrivi su WhatsApp", scan: "Inquadra il codice con la fotocamera del telefono", openWhats: "Apri chat ↗", linkedinTitle: "Profilo LinkedIn", openLinkedin: "Apri su LinkedIn ↗", mailTitle: "E-mail", openMail: "Scrivi un’e-mail ↗", siteTitle: "Sito esterno", openSite: "Apri sito ↗", stack: "Tecnologie", compras: `Portale acquisti e gare del Comune di Manaus, sviluppato da ${PERFIL.nome} alla SEMEF.`, contratos: `Sistema di gestione dei contratti del Comune di Manaus, sviluppato da ${PERFIL.nome} alla SEMEF / SEMAD.`, shareKind: "Condividi", shareTitle: "Condividi questo portfolio", shareScan: "Inquadra il codice con la fotocamera del telefono per aprire il portfolio", shareNow: "Condividi ↗" },
+    de: { close: "Schließen", copy: "Kopieren", copied: "Kopiert!", note: "Diese Website kann nicht im Portfolio angezeigt werden — öffnen Sie sie, wann Sie möchten.", whatsTitle: "Auf WhatsApp schreiben", scan: "Richten Sie die Handykamera auf den Code", openWhats: "Chat öffnen ↗", linkedinTitle: "LinkedIn-Profil", openLinkedin: "Auf LinkedIn öffnen ↗", mailTitle: "E-Mail", openMail: "E-Mail schreiben ↗", siteTitle: "Externe Website", openSite: "Website öffnen ↗", stack: "Technologien", compras: `Einkaufs- und Ausschreibungsportal der Stadt Manaus, von ${PERFIL.nome} bei der SEMEF entwickelt.`, contratos: `Vertragsverwaltung der Stadt Manaus, von ${PERFIL.nome} bei SEMEF / SEMAD entwickelt.`, shareKind: "Teilen", shareTitle: "Dieses Portfolio teilen", shareScan: "Richten Sie eine Handykamera auf den Code, um das Portfolio zu öffnen", shareNow: "Teilen ↗" },
+    zh: { close: "关闭", copy: "复制", copied: "已复制！", note: "该网站无法在作品集中显示——需要时再打开即可。", whatsTitle: "通过 WhatsApp 联系", scan: "用手机相机扫描二维码", openWhats: "打开聊天 ↗", linkedinTitle: "领英主页", openLinkedin: "在领英打开 ↗", mailTitle: "电子邮件", openMail: "写邮件 ↗", siteTitle: "外部网站", openSite: "打开网站 ↗", stack: "技术", compras: `马瑙斯市政府采购与招标门户，由 ${PERFIL.nome} 在 SEMEF 开发。`, contratos: `马瑙斯市政府合同管理系统，由 ${PERFIL.nome} 在 SEMEF / SEMAD 开发。`, shareKind: "分享", shareTitle: "分享这个作品集", shareScan: "用手机相机扫描二维码即可打开作品集", shareNow: "分享 ↗" },
+    ru: { close: "Закрыть", copy: "Копировать", copied: "Скопировано!", note: "Этот сайт нельзя показать внутри портфолио — откройте, когда захотите.", whatsTitle: "Написать в WhatsApp", scan: "Наведите камеру телефона на код", openWhats: "Открыть чат ↗", linkedinTitle: "Профиль LinkedIn", openLinkedin: "Открыть в LinkedIn ↗", mailTitle: "Эл. почта", openMail: "Написать письмо ↗", siteTitle: "Внешний сайт", openSite: "Открыть сайт ↗", stack: "Технологии", compras: `Портал закупок и тендеров мэрии Манауса, разработанный ${PERFIL.nome} в SEMEF.`, contratos: `Система управления контрактами мэрии Манауса, разработанная ${PERFIL.nome} в SEMEF / SEMAD.`, shareKind: "Поделиться", shareTitle: "Поделитесь этим портфолио", shareScan: "Наведите камеру телефона на код, чтобы открыть портфолио", shareNow: "Поделиться ↗" },
   };
   const linkText = () => LINK_LABELS[pageLang()] ?? LINK_LABELS.en;
+
+  // Textos do perfil no idioma da página (cargo, cidade, título): os mesmos do site, em i18n/<idioma>.js.
+  // Na página principal já estão carregados; nas demos e páginas avulsas, o arquivo é baixado quando preciso.
+  const siteTextFiles = {};
+  const siteTexts = (lang) => {
+    if (window.I18N?.[lang]) return Promise.resolve(window.I18N[lang]);
+    siteTextFiles[lang] ??= new Promise((resolve) => {
+      const script = document.createElement("script");
+      script.src = new URL(`i18n/${lang}.js`, SITE_ROOT).href;
+      script.onload = () => resolve(window.I18N?.[lang] ?? {});
+      script.onerror = () => {
+        delete siteTextFiles[lang];
+        resolve({});
+      };
+      document.head.append(script);
+    });
+    return siteTextFiles[lang];
+  };
+  const plainText = (html = "") => html.replace(/<[^>]+>/g, "").replace(/&amp;/g, "&").trim();
   const KNOWN_SITES = {
     "compras.manaus.am.gov.br": { name: "ComprasManaus", key: "compras", stack: "ASP Classic · ASP.NET Web Forms · VB.NET · jQuery · Bootstrap · Highcharts" },
     "contratos.manaus.am.gov.br": { name: "ContratosManaus", key: "contratos", stack: "PHP · jQuery · Bootstrap · Chart.js · Select2" },
@@ -737,7 +758,7 @@
     for (let y = 0; y < n; y += 1) for (let x = 0; x < n; x += 1) if (qr.isDark(y, x)) path += `M${x} ${y}h1v1h-1z`;
     return `<svg viewBox="-2 -2 ${n + 4} ${n + 4}" role="img" aria-label="QR code" shape-rendering="crispEdges"><path d="${path}" fill="#000"/></svg>`;
   };
-  // 5592999771376 → +55 (92) 99977-1376
+  // 5511912345678 → +55 (11) 91234-5678
   const formatPhone = (digits) => (digits.length === 13 ? `+${digits.slice(0, 2)} (${digits.slice(2, 4)}) ${digits.slice(4, 9)}-${digits.slice(9)}` : `+${digits}`);
 
   let linkDialog = null;
@@ -799,15 +820,17 @@
     } else if (kind === "linkedin") {
       linkDialog.querySelector(".link-card-kind").textContent = text.linkedinTitle;
       const photo = el("img", "link-card-photo");
-      photo.src = new URL("imagens/emanuel-borges.jpg", SITE_ROOT).href;
+      photo.src = new URL(PERFIL.foto, SITE_ROOT).href;
       photo.alt = "";
       action.textContent = text.openLinkedin;
-      body.append(photo, el("h2", null, "Emanuel Borges"), el("p", null, `${text.headline}\n${text.location}`), copyRow(`${url.hostname.replace(/^www\./, "")}${url.pathname.replace(/\/$/, "")}`), action);
-      body.querySelector("p").style.whiteSpace = "pre-line";
+      const role = el("p");
+      role.style.whiteSpace = "pre-line";
+      siteTexts(pageLang()).then((site) => (role.textContent = `${plainText(site["cv.role"])}\n${plainText(site["cv.location"])}`));
+      body.append(photo, el("h2", null, PERFIL.nomeCompleto), role, copyRow(`${url.hostname.replace(/^www\./, "")}${url.pathname.replace(/\/$/, "")}`), action);
     } else if (kind === "email") {
       linkDialog.querySelector(".link-card-kind").textContent = text.mailTitle;
       action.textContent = text.openMail;
-      body.append(el("h2", null, "Emanuel Borges"), copyRow(decodeURIComponent(url.pathname)), action);
+      body.append(el("h2", null, PERFIL.nomeCompleto), copyRow(decodeURIComponent(url.pathname)), action);
     } else {
       const known = KNOWN_SITES[url.hostname];
       linkDialog.querySelector(".link-card-kind").textContent = text.siteTitle;
@@ -827,11 +850,13 @@
 
   // "Compartilhar portfólio" ([data-share]): QR code e link do site no idioma atual, botão de copiar,
   // compartilhamento nativo do aparelho (quando houver) e atalhos para WhatsApp, LinkedIn e e-mail.
-  const openShare = () => {
-    if (!linkDialog) linkBuild();
+  const openShare = async () => {
     const text = linkText();
     const lang = pageLang();
-    const url = `https://emanueleborges.github.io/${lang !== "en" ? `?lang=${lang}` : ""}`;
+    const site = await siteTexts(lang);
+    const shareText = [plainText(site["meta.title"]) || PERFIL.nomeCompleto, plainText(site["cv.role"])].filter(Boolean).join(" · ");
+    if (!linkDialog) linkBuild();
+    const url = `${PERFIL.site}${lang !== "en" ? `?lang=${lang}` : ""}`;
     const body = linkDialog.querySelector(".link-card-body");
     linkDialog.querySelector(".link-card-kind").textContent = text.shareKind;
     linkDialog.querySelector(".link-card-close").setAttribute("aria-label", text.close);
@@ -839,9 +864,9 @@
     loadQr().then((qrcode) => (qr.innerHTML = qrSvg(qrcode, url))).catch(() => qr.remove());
     const via = el("div", "link-card-via");
     [
-      ["WhatsApp", `https://wa.me/?text=${encodeURIComponent(`${text.shareText}\n${url}`)}`],
+      ["WhatsApp", `https://wa.me/?text=${encodeURIComponent(`${shareText}\n${url}`)}`],
       ["LinkedIn", `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`],
-      [text.mailTitle, `mailto:?subject=${encodeURIComponent(text.shareText)}&body=${encodeURIComponent(url)}`],
+      [text.mailTitle, `mailto:?subject=${encodeURIComponent(shareText)}&body=${encodeURIComponent(url)}`],
     ].forEach(([label, href]) => {
       const link = el("a", null, label);
       link.href = href;
@@ -857,7 +882,7 @@
     if (navigator.share) {
       const native = el("button", "link-card-open", text.shareNow);
       native.type = "button";
-      native.addEventListener("click", () => navigator.share({ title: "Emanuel Borges", text: text.shareText, url }).catch(() => {}));
+      native.addEventListener("click", () => navigator.share({ title: PERFIL.nomeCompleto, text: shareText, url }).catch(() => {}));
       body.append(native);
     }
     body.append(via);

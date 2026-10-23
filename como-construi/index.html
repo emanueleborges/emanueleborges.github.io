@@ -5,10 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://*.githubusercontent.com https://github.com; connect-src 'self' https://emanuel-portfolio-chat.emanuel-portfolio-chat.workers.dev https://api.github.com https://data.jsdelivr.com https://raw.githubusercontent.com; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests" />
     <meta name="referrer" content="strict-origin-when-cross-origin" />
-    <title data-t="meta.title">How I built this portfolio — Emanuel Borges</title>
-    <meta name="description" data-t-content="meta.description" content="Architecture, decisions and stack behind Emanuel Borges's portfolio: a framework-free static site, a serverless AI assistant with RAG on Cloudflare and in-browser AI demos, all on free tiers." />
-    <link rel="canonical" href="https://emanueleborges.github.io/como-construi/" />
+    <title data-t="meta.title">How I built this portfolio</title>
+    <meta name="description" data-t-content="meta.description" content="Architecture, decisions and stack behind Emanuel Borges's portfolio: a framework-free static site, a serverless AI assistant with RAG on Cloudflare and in-browser AI demos, all on free tiers." data-perfil-content="Architecture, decisions and stack behind {nomeCompleto}'s portfolio: a framework-free static site, a serverless AI assistant with RAG on Cloudflare and in-browser AI demos, all on free tiers." />
+    <link rel="canonical" href="https://emanueleborges.github.io/como-construi/" data-perfil-href="{site}como-construi/" />
     <meta name="theme-color" content="#050f14" />
+    <script src="../idiomas.js"></script>
     <script src="../components/boot.js"></script>
     <link rel="icon" href="/imagens/favicon.svg" type="image/svg+xml" />
     <link rel="icon" href="/imagens/favicon-32.png" sizes="32x32" type="image/png" />
@@ -73,6 +74,7 @@
         .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       }
     </style>
+    <script src="/perfil.js" defer></script>
     <script type="module" src="como-construi.js"></script>
     <script type="module" src="../analytics-consent.js"></script>
     <script src="../components/components.js" defer></script>
@@ -82,7 +84,7 @@
     <div class="glow glow-2" aria-hidden="true"></div>
     <div class="shell">
       <header>
-        <a class="brand" href="/"><site-logo class="brand-logo" size="32"></site-logo> Emanuel Borges</a>
+        <a class="brand" href="/"><site-logo class="brand-logo" size="32"></site-logo><span data-perfil="{nomeCompleto}">Emanuel Borges</span></a>
         <div class="header-tools">
           <share-button></share-button>
           <sound-toggle></sound-toggle>
@@ -108,7 +110,7 @@
         <p class="lead" data-t="lead"></p>
         <div class="links">
           <a class="button" href="/" data-t="back"></a>
-          <a class="button" href="https://github.com/emanueleborges/emanueleborges.github.io" target="_blank" rel="noopener" data-t="code"></a>
+          <a class="button" href="https://github.com/emanueleborges/emanueleborges.github.io" data-perfil-href="{links.github}/{github}.github.io" target="_blank" rel="noopener" data-t="code"></a>
         </div>
 
         <div class="stats">
@@ -252,8 +254,8 @@
           <h2 data-t="moreTitle"></h2>
           <p class="note" data-t="moreText"></p>
           <div class="links">
-            <a class="button primary" href="https://github.com/emanueleborges/emanueleborges.github.io/tree/main/docs/sdd" target="_blank" rel="noopener" data-t="linkSpec"></a>
-            <a class="button" href="https://github.com/emanueleborges/emanueleborges.github.io#readme" target="_blank" rel="noopener" data-t="linkReadme"></a>
+            <a class="button primary" href="https://github.com/emanueleborges/emanueleborges.github.io/tree/main/docs/sdd" data-perfil-href="{links.github}/{github}.github.io/tree/main/docs/sdd" target="_blank" rel="noopener" data-t="linkSpec"></a>
+            <a class="button" href="https://github.com/emanueleborges/emanueleborges.github.io#readme" data-perfil-href="{links.github}/{github}.github.io#readme" target="_blank" rel="noopener" data-t="linkReadme"></a>
             <a class="button" href="/#chat" data-t="linkChat"></a>
           </div>
         </section>

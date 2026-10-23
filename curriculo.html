@@ -2,6 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <script src="idiomas.js"></script>
     <script src="components/boot.js"></script>
     <script>
       // Aberto no modal do portfólio (demo-modal.js): fundo mais enxuto.
@@ -9,7 +10,7 @@
     </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="robots" content="noindex" />
-    <title>Emanuel Borges — CV</title>
+    <title data-perfil="{nomeCompleto} — CV">Emanuel Borges — CV</title>
     <link rel="icon" href="imagens/favicon.svg" type="image/svg+xml" />
     <link rel="icon" href="imagens/favicon-32.png" sizes="32x32" type="image/png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -18,6 +19,7 @@
       href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap"
       rel="stylesheet"
     />
+    <script src="perfil.js"></script>
     <script src="i18n/pt.js"></script>
     <script src="i18n/en.js"></script>
     <script src="i18n/es.js"></script>
@@ -27,6 +29,11 @@
     <script src="i18n/zh.js"></script>
     <script src="i18n/ru.js"></script>
     <script type="module" src="analytics-consent.js"></script>
+    <!-- gerado: dados (não edite aqui: data/ + node scripts/gerar-secoes.mjs) -->
+    <script>
+      window.CURRICULO = {"jobs":[{"title":"job1.title","period":"job1.period","company":{"text":"INDT — Instituto de Desenvolvimento Tecnológico"},"bullets":["job1.b1","job1.b2","job1.b3"]},{"title":"job2.title","period":"job2.period","company":{"text":"ICCT — Instituto CAL-COMP de Tecnologia"},"bullets":["job2.b1","job2.b2","job2.b3"]},{"title":"job3.title","period":"job3.period","company":{"key":"job3.company"},"bullets":["job3.b1","job3.b2","job3.b3"]}],"projects":[{"title":"p1.title","stack":"RAG · LangChain · Ollama · OWASP LLM","desc":"p1.desc"},{"title":"p2.title","stack":"Scikit-learn · XGBoost · Docker","desc":"p2.desc"},{"title":"p3.title","stack":"TensorFlow · LSTM · Flask · Swagger","desc":"p3.desc"},{"title":"p4.title","stack":"LangChain · ChromaDB · FastAPI · Streamlit","desc":"p4.desc"},{"title":"p5.title","stack":"Java 17 · Spring Boot · Kafka · Redis","desc":"p5.desc"},{"name":"Products API","stack":"NestJS · TypeORM · Kafka · Redis","desc":"p6.desc"}],"skills":[{"title":"skills.tab.backend","items":[{"text":"Java"},{"text":"Kotlin"},{"text":"Spring Boot"},{"text":"Node.js"},{"text":"NestJS"},{"text":"Express"},{"text":"PHP/Laravel"},{"text":"Python"},{"text":"Flask"},{"text":"FastAPI"}]},{"title":"skills.tab.frontend","items":[{"text":"TypeScript"},{"text":"JavaScript"},{"text":"React"},{"text":"React Native"},{"text":"Vue.js"},{"text":"Angular"},{"text":"HTML & CSS"}]},{"title":"skills.tab.ia","items":[{"text":"NLP"},{"text":"LLM"},{"text":"RAG"},{"text":"LangChain"},{"text":"TensorFlow"},{"text":"Scikit-learn"},{"text":"Pandas"},{"text":"Hugging Face"}]},{"title":"skills.tab.dados","items":[{"text":"PostgreSQL"},{"text":"Oracle"},{"text":"MySQL"},{"text":"MongoDB"},{"text":"SQL Server"},{"text":"Redis"}]},{"title":"skills.tab.devops","items":[{"text":"Docker"},{"text":"Kubernetes"},{"text":"AWS"},{"text":"Kafka"},{"text":"RabbitMQ"},{"text":"CI/CD"},{"text":"GitLab"}]},{"title":"skills.tab.praticas","items":[{"text":"Clean Architecture"},{"text":"Clean Code"},{"text":"TDD"},{"text":"SDD (Spec-Driven Development)"},{"key":"skill.unit"},{"text":"Code Review"},{"text":"SonarQube"},{"text":"Scrum"}]}],"education":[{"key":"edu.d1","school":"Universidade Federal de Goiás (UFG)","period":"2025 — 2026","logo":"imagens/logos/ufg.svg","manterCores":false},{"key":"edu.d2","school":"FIAP","period":"2025 — 2026","logo":"imagens/logos/fiap.svg","manterCores":false},{"key":"edu.d3","school":"Descomplica","period":"2024 — 2025","logo":"imagens/logos/descomplica-dark.svg","manterCores":true},{"key":"edu.d4","school":"FUCAPI","period":"2000 — 2010","logo":"imagens/logos/fucapi.png","manterCores":false}]};
+    </script>
+    <!-- /gerado: dados -->
     <style>
       @page { size: A4; margin: 13mm 14mm; }
       :root { --ink: #1c1830; --muted: #5d5873; --accent: #6a3df0; --line: #e4def5; }
@@ -83,64 +90,39 @@
   <body>
     <main id="cv"></main>
     <script>
+      const P = window.PERFIL; // dados pessoais (perfil.js)
+      const semProtocolo = (url) => url.replace(/^https?:\/\/(www\.)?/, "").replace(/\/$/, "");
       const all = window.I18N;
       const params = new URLSearchParams(location.search);
       const lang = all[params.get("lang")] ? params.get("lang") : "en";
       const dict = all[lang];
       const tr = (key) => dict[key] ?? all.pt[key] ?? "";
       const plain = (key) => tr(key).replace(/<br\s*\/?>/g, " ").replace(/<span>[↗↘↓]<\/span>/g, "").trim();
-      const htmlLang = { en: "en", pt: "pt-BR", es: "es", fr: "fr", it: "it", de: "de", zh: "zh-CN", ru: "ru" };
+      const htmlLang = Object.fromEntries(Object.entries(globalThis.IDIOMAS).map(([code, idioma]) => [code, idioma.html])); // idiomas.js
 
       document.documentElement.lang = htmlLang[lang];
       document.title = plain("cv.pageTitle");
 
-      const jobs = [
-        { period: "job1.period", title: "job1.title", company: "INDT — Instituto de Desenvolvimento Tecnológico", bullets: ["job1.b1", "job1.b2", "job1.b3"] },
-        { period: "job2.period", title: "job2.title", company: "ICCT — Instituto CAL-COMP de Tecnologia", bullets: ["job2.b1", "job2.b2", "job2.b3"] },
-        { period: "job3.period", title: "job3.title", companyKey: "job3.company", bullets: ["job3.b1", "job3.b2", "job3.b3"] },
-      ];
-
-      const projects = [
-        { title: "p1.title", stack: "RAG · LangChain · Ollama · OWASP LLM", desc: "p1.desc" },
-        { title: "p2.title", stack: "Scikit-learn · XGBoost · Docker", desc: "p2.desc" },
-        { title: "p3.title", stack: "TensorFlow · LSTM · Flask · Swagger", desc: "p3.desc" },
-        { title: "p4.title", stack: "LangChain · ChromaDB · FastAPI · Streamlit", desc: "p4.desc" },
-        { title: "p5.title", stack: "Java 17 · Spring Boot · Kafka · Redis", desc: "p5.desc" },
-        { name: "Products API", stack: "NestJS · TypeORM · Kafka · Redis", desc: "p6.desc" },
-      ];
-
-      const skills = [
-        ["skills.tab.backend", "Java, Kotlin, Spring Boot, Node.js, NestJS, Express, PHP/Laravel, Python, Flask, FastAPI"],
-        ["skills.tab.frontend", "TypeScript, JavaScript, React, React Native, Vue.js, Angular, HTML & CSS"],
-        ["skills.tab.ia", "NLP, LLM, RAG, LangChain, TensorFlow, Scikit-learn, Pandas, Hugging Face"],
-        ["skills.tab.dados", "PostgreSQL, Oracle, MySQL, MongoDB, SQL Server, Redis"],
-        ["skills.tab.devops", "Docker, Kubernetes, AWS, Kafka, RabbitMQ, CI/CD, GitLab"],
-        ["skills.tab.praticas", `Clean Architecture, Clean Code, TDD, SDD (Spec-Driven Development), ${tr("skill.unit")}, Code Review, SonarQube, Scrum`],
-      ];
-
-      const education = [
-        ["edu.d1", "Universidade Federal de Goiás (UFG) · 2025 — 2026", "imagens/logos/ufg.svg"],
-        ["edu.d2", "FIAP · 2025 — 2026", "imagens/logos/fiap.svg"],
-        ["edu.d3", "Descomplica · 2024 — 2025", "imagens/logos/descomplica-dark.svg"],
-        ["edu.d4", "FUCAPI · 2000 — 2010", "imagens/logos/fucapi.png"],
-      ];
+      // Experiência, projetos, habilidades e formação: data/ (bloco gerado acima, window.CURRICULO).
+      const { jobs, projects, skills, education } = window.CURRICULO;
+      const textOf = (value) => (value.key ? tr(value.key) : value.text);
 
       const escapeText = (text) => text.replace(/&(?!amp;|lt;|gt;)/g, "&amp;");
 
       document.querySelector("#cv").innerHTML = `
         <header>
-          <div class="photo"><img src="imagens/emanuel-borges.jpg" alt="${tr("about.photoAlt")}" /></div>
+          <div class="photo"><img src="${P.foto}" alt="${tr("about.photoAlt")}" /></div>
           <div>
-            <h1>Emanuel Borges</h1>
+            <h1>${P.nomeCompleto}</h1>
             <p class="role">${tr("cv.role")}</p>
             <p class="availability">${tr("cv.availability")}</p>
             <div class="contacts">
-              <a href="mailto:emanuel.eborges@gmail.com">emanuel.eborges@gmail.com</a>
-              <a href="https://wa.me/5592999771376">+55 92 99977-1376</a>
+              <a href="${P.links.email}">${P.email}</a>
+              <a href="${P.links.whatsapp}">${P.telefone}</a>
               <span>${tr("cv.location")}</span>
-              <a href="https://www.linkedin.com/in/borgesemmanuell">linkedin.com/in/borgesemmanuell</a>
-              <a href="https://github.com/emanueleborges">github.com/emanueleborges</a>
-              <a href="https://emanueleborges.github.io/?ref=curriculo-${lang}">${tr("cv.portfolio")}: emanueleborges.github.io</a>
+              <a href="${P.links.linkedin}">${semProtocolo(P.links.linkedin)}</a>
+              <a href="${P.links.github}">${semProtocolo(P.links.github)}</a>
+              <a href="${P.site}?ref=curriculo-${lang}">${tr("cv.portfolio")}: ${semProtocolo(P.site)}</a>
             </div>
           </div>
         </header>
@@ -155,7 +137,7 @@
           ${jobs.map((job) => `
             <div class="item">
               <div class="item-head"><strong>${tr(job.title)}</strong><span class="period">${tr(job.period)}</span></div>
-              <div class="company">${job.companyKey ? tr(job.companyKey) : job.company}</div>
+              <div class="company">${textOf(job.company)}</div>
               <ul>${job.bullets.map((b) => `<li>${tr(b)}</li>`).join("")}</ul>
             </div>`).join("")}
         </section>
@@ -175,14 +157,14 @@
         <section>
           <h2>${tr("cv.skills")}</h2>
           <dl class="skills">
-            ${skills.map(([key, list]) => `<dt>${tr(key)}</dt><dd>${escapeText(list)}</dd>`).join("")}
+            ${skills.map((group) => `<dt>${tr(group.title)}</dt><dd>${escapeText(group.items.map(textOf).join(", "))}</dd>`).join("")}
           </dl>
         </section>
 
         <section>
           <h2>${tr("cv.education")}</h2>
           <ul class="edu">
-            ${education.map(([key, meta, logo]) => `<li><span class="edu-logo"><img src="${logo}" alt=""${logo.includes("descomplica") ? ' class="logo-keep"' : ""} /></span><span><strong>${tr(key)}</strong><br /><span>${meta}</span></span></li>`).join("")}
+            ${education.map((c) => `<li><span class="edu-logo"><img src="${c.logo}" alt=""${c.manterCores ? ' class="logo-keep"' : ""} /></span><span><strong>${tr(c.key)}</strong><br /><span>${c.school} · ${c.period}</span></span></li>`).join("")}
           </ul>
         </section>
 

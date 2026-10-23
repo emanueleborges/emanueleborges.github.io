@@ -14,7 +14,7 @@ fi
 [ -n "$CHROME" ] || { echo "Chrome não encontrado (defina a variável CHROME)"; exit 1; }
 TMP=$(mktemp -d)
 trap 'rm -rf "$TMP"' EXIT
-cp -R index.html styles.css script.js i18n.js i18n api.js chat.js chat components imagens tests/runner.js "$TMP"/
+cp -R index.html styles.css idiomas.js perfil.js script.js i18n.js i18n api.js chat.js chat components imagens tests/runner.js "$TMP"/
 # Sem consentimento de analytics nos testes; injeta o executor dos testes.
 # (perl funciona igual no macOS e no Linux, ao contrário de `sed -i`)
 perl -0pi -e 's#</head>#<script src="runner.js" defer></script></head>#' "$TMP/index.html"

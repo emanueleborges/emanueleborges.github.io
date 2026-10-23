@@ -1,10 +1,11 @@
+const { PERFIL } = globalThis; // dados pessoais (perfil.js)
 const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 /* ---------- Idiomas ---------- */
 
 // Os textos vêm de i18n/<idioma>.js (dados em window.I18N, também lidos pelo currículo e pelos geradores).
 const translations = window.I18N || {};
-const htmlLang = { en: "en", pt: "pt-BR", es: "es", fr: "fr", it: "it", de: "de", zh: "zh-CN", ru: "ru" };
+const htmlLang = Object.fromEntries(Object.entries(globalThis.IDIOMAS).map(([code, idioma]) => [code, idioma.html])); // idiomas.js
 const supportedLangs = Object.keys(htmlLang);
 const defaultLang = "en";
 let currentLang = "pt";
@@ -77,7 +78,7 @@ const applyLanguage = (lang) => {
 
   langSelect.value = lang;
   document.querySelectorAll("[data-cv-link]").forEach((link) => {
-    link.href = `cv/curriculo-emanuel-borges-${lang}.pdf`;
+    link.href = PERFIL.cv(lang);
   });
 
   updateMenuLabel();
@@ -201,7 +202,7 @@ const loadRepoData = async () => {
     /* sem sessionStorage: busca de novo */
   }
   if (!repoData) {
-    const response = await fetch("https://api.github.com/users/emanueleborges/repos?per_page=100");
+    const response = await fetch(`https://api.github.com/users/${PERFIL.github}/repos?per_page=100`);
     if (!response.ok) return;
     repoData = Object.fromEntries(
       (await response.json()).map((r) => [r.name, { language: r.language, stars: r.stargazers_count, pushed: r.pushed_at }]),

@@ -9,7 +9,7 @@ const EXAMPLE_KEYS = ["ex1", "ex2", "ex3", "ex4"];
 
 const T = {
   en: {
-    "meta.title": "AI Image Generator — FLUX.1 — Emanuel Borges",
+    "meta.title": "AI Image Generator — FLUX.1",
     "meta.description": "Type a description and generate an image with FLUX.1 [schnell] on Cloudflare Workers AI, with layered moderation and no storage.",
     lang: "Language",
     kicker: "// AI DEMO · TEXT TO IMAGE",
@@ -55,7 +55,7 @@ const T = {
     limits: "<strong>About this demo:</strong> generated images can be inaccurate or strange, and moderation is not perfect. Don't use it for real people, logos or anything you wouldn't show in a job interview.",
   },
   pt: {
-    "meta.title": "Gerador de Imagens com IA — FLUX.1 — Emanuel Borges",
+    "meta.title": "Gerador de Imagens com IA — FLUX.1",
     "meta.description": "Escreva uma descrição e gere uma imagem com o FLUX.1 [schnell] no Cloudflare Workers AI, com moderação em camadas e sem armazenamento.",
     lang: "Idioma",
     kicker: "// DEMO DE IA · TEXTO PARA IMAGEM",
@@ -101,7 +101,7 @@ const T = {
     limits: "<strong>Sobre esta demo:</strong> as imagens geradas podem sair imprecisas ou estranhas, e a moderação não é perfeita. Não use para pessoas reais, marcas ou nada que você não mostraria numa entrevista de emprego.",
   },
   es: {
-    "meta.title": "Generador de Imágenes con IA — FLUX.1 — Emanuel Borges",
+    "meta.title": "Generador de Imágenes con IA — FLUX.1",
     "meta.description": "Escribe una descripción y genera una imagen con FLUX.1 [schnell] en Cloudflare Workers AI, con moderación por capas y sin almacenamiento.",
     lang: "Idioma",
     kicker: "// DEMO DE IA · TEXTO A IMAGEN",
@@ -147,7 +147,7 @@ const T = {
     limits: "<strong>Sobre esta demo:</strong> las imágenes pueden salir imprecisas o extrañas y la moderación no es perfecta. No la uses con personas reales, marcas ni nada que no mostrarías en una entrevista de trabajo.",
   },
   fr: {
-    "meta.title": "Générateur d’images IA — FLUX.1 — Emanuel Borges",
+    "meta.title": "Générateur d’images IA — FLUX.1",
     "meta.description": "Écrivez une description et générez une image avec FLUX.1 [schnell] sur Cloudflare Workers AI, avec une modération en couches et sans stockage.",
     lang: "Langue",
     kicker: "// DÉMO IA · TEXTE VERS IMAGE",
@@ -193,7 +193,7 @@ const T = {
     limits: "<strong>À propos de cette démo :</strong> les images peuvent être imprécises ou étranges, et la modération n’est pas parfaite. Ne l’utilisez pas pour de vraies personnes, des marques ou quoi que ce soit que vous ne montreriez pas en entretien.",
   },
   it: {
-    "meta.title": "Generatore di immagini IA — FLUX.1 — Emanuel Borges",
+    "meta.title": "Generatore di immagini IA — FLUX.1",
     "meta.description": "Scrivi una descrizione e genera un’immagine con FLUX.1 [schnell] su Cloudflare Workers AI, con moderazione a più livelli e senza archiviazione.",
     lang: "Lingua",
     kicker: "// DEMO IA · DA TESTO A IMMAGINE",
@@ -239,7 +239,7 @@ const T = {
     limits: "<strong>Su questa demo:</strong> le immagini possono risultare imprecise o strane e la moderazione non è perfetta. Non usarla per persone reali, marchi o nulla che non mostreresti a un colloquio di lavoro.",
   },
   de: {
-    "meta.title": "KI-Bildgenerator — FLUX.1 — Emanuel Borges",
+    "meta.title": "KI-Bildgenerator — FLUX.1",
     "meta.description": "Gib eine Beschreibung ein und erzeuge ein Bild mit FLUX.1 [schnell] auf Cloudflare Workers AI, mit mehrstufiger Moderation und ohne Speicherung.",
     lang: "Sprache",
     kicker: "// KI-DEMO · TEXT ZU BILD",
@@ -285,7 +285,7 @@ const T = {
     limits: "<strong>Zu dieser Demo:</strong> Erzeugte Bilder können ungenau oder seltsam sein, und die Moderation ist nicht perfekt. Nutze sie nicht für echte Personen, Marken oder etwas, das du nicht im Vorstellungsgespräch zeigen würdest.",
   },
   zh: {
-    "meta.title": "AI 图像生成器 — FLUX.1 — Emanuel Borges",
+    "meta.title": "AI 图像生成器 — FLUX.1",
     "meta.description": "输入描述，用 Cloudflare Workers AI 上的 FLUX.1 [schnell] 生成图像，多层审核，不做任何存储。",
     lang: "语言",
     kicker: "// AI 演示 · 文本生成图像",
@@ -331,7 +331,7 @@ const T = {
     limits: "<strong>关于此演示：</strong>生成的图像可能不准确或奇怪，审核也并不完美。请勿用于真实人物、品牌或任何你不会在面试中展示的内容。",
   },
   ru: {
-    "meta.title": "ИИ-генератор изображений — FLUX.1 — Emanuel Borges",
+    "meta.title": "ИИ-генератор изображений — FLUX.1",
     "meta.description": "Опишите картинку и сгенерируйте её с FLUX.1 [schnell] в Cloudflare Workers AI — с многоуровневой модерацией и без хранения.",
     lang: "Язык",
     kicker: "// ИИ-ДЕМО · ТЕКСТ В ИЗОБРАЖЕНИЕ",

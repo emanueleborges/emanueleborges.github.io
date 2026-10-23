@@ -3,8 +3,8 @@ import { Demo } from "../demos/demos.js";
 // Página "Como construí": resumo do README (arquitetura, assistente, decisões, qualidade e stack) em 8 idiomas.
 const T = {
   en: {
-    "meta.title": "How I built this portfolio — Emanuel Borges",
-    "meta.description": "Architecture, decisions and stack behind Emanuel Borges's portfolio: a framework-free static site, a serverless AI assistant with RAG on Cloudflare and in-browser AI demos, all on free tiers.",
+    "meta.title": "How I built this portfolio",
+    "meta.description": "Architecture, decisions and stack behind {nomeCompleto}'s portfolio: a framework-free static site, a serverless AI assistant with RAG on Cloudflare and in-browser AI demos, all on free tiers.",
     lang: "Language",
     kicker: "// HOW I BUILT IT",
     title: "How this portfolio <span>was built.</span>",
@@ -77,8 +77,8 @@ const T = {
     linkChat: "Ask the assistant →",
   },
   pt: {
-    "meta.title": "Como construí este portfólio — Emanuel Borges",
-    "meta.description": "Arquitetura, decisões e tecnologias do portfólio de Emanuel Borges: site estático sem framework, assistente de IA serverless com RAG na Cloudflare e demos de IA no navegador, tudo em planos gratuitos.",
+    "meta.title": "Como construí este portfólio",
+    "meta.description": "Arquitetura, decisões e tecnologias do portfólio de {nomeCompleto}: site estático sem framework, assistente de IA serverless com RAG na Cloudflare e demos de IA no navegador, tudo em planos gratuitos.",
     lang: "Idioma",
     kicker: "// COMO CONSTRUÍ",
     title: "Como este portfólio <span>foi construído.</span>",
@@ -151,8 +151,8 @@ const T = {
     linkChat: "Pergunte ao assistente →",
   },
   es: {
-    "meta.title": "Cómo construí este portafolio — Emanuel Borges",
-    "meta.description": "Arquitectura, decisiones y tecnologías del portafolio de Emanuel Borges: sitio estático sin framework, asistente de IA serverless con RAG en Cloudflare y demos de IA en el navegador, todo en planes gratuitos.",
+    "meta.title": "Cómo construí este portafolio",
+    "meta.description": "Arquitectura, decisiones y tecnologías del portafolio de {nomeCompleto}: sitio estático sin framework, asistente de IA serverless con RAG en Cloudflare y demos de IA en el navegador, todo en planes gratuitos.",
     lang: "Idioma",
     kicker: "// CÓMO LO CONSTRUÍ",
     title: "Cómo se construyó <span>este portafolio.</span>",
@@ -225,8 +225,8 @@ const T = {
     linkChat: "Pregunta al asistente →",
   },
   fr: {
-    "meta.title": "Comment j’ai construit ce portfolio — Emanuel Borges",
-    "meta.description": "Architecture, choix et technologies du portfolio d’Emanuel Borges : site statique sans framework, assistant IA serverless avec RAG sur Cloudflare et démos d’IA dans le navigateur, le tout en offres gratuites.",
+    "meta.title": "Comment j’ai construit ce portfolio",
+    "meta.description": "Architecture, choix et technologies du portfolio d’{nomeCompleto} : site statique sans framework, assistant IA serverless avec RAG sur Cloudflare et démos d’IA dans le navigateur, le tout en offres gratuites.",
     lang: "Langue",
     kicker: "// COMMENT JE L’AI CONSTRUIT",
     title: "Comment ce portfolio <span>a été construit.</span>",
@@ -299,8 +299,8 @@ const T = {
     linkChat: "Interroger l’assistant →",
   },
   it: {
-    "meta.title": "Come ho costruito questo portfolio — Emanuel Borges",
-    "meta.description": "Architettura, scelte e tecnologie del portfolio di Emanuel Borges: sito statico senza framework, assistente IA serverless con RAG su Cloudflare e demo di IA nel browser, tutto su piani gratuiti.",
+    "meta.title": "Come ho costruito questo portfolio",
+    "meta.description": "Architettura, scelte e tecnologie del portfolio di {nomeCompleto}: sito statico senza framework, assistente IA serverless con RAG su Cloudflare e demo di IA nel browser, tutto su piani gratuiti.",
     lang: "Lingua",
     kicker: "// COME L’HO COSTRUITO",
     title: "Come è stato costruito <span>questo portfolio.</span>",
@@ -373,8 +373,8 @@ const T = {
     linkChat: "Chiedi all’assistente →",
   },
   de: {
-    "meta.title": "Wie ich dieses Portfolio gebaut habe — Emanuel Borges",
-    "meta.description": "Architektur, Entscheidungen und Technologien hinter dem Portfolio von Emanuel Borges: statische Website ohne Framework, serverloser KI-Assistent mit RAG auf Cloudflare und KI-Demos im Browser, alles in Gratis-Tarifen.",
+    "meta.title": "Wie ich dieses Portfolio gebaut habe",
+    "meta.description": "Architektur, Entscheidungen und Technologien hinter dem Portfolio von {nomeCompleto}: statische Website ohne Framework, serverloser KI-Assistent mit RAG auf Cloudflare und KI-Demos im Browser, alles in Gratis-Tarifen.",
     lang: "Sprache",
     kicker: "// WIE ICH ES GEBAUT HABE",
     title: "Wie dieses Portfolio <span>gebaut wurde.</span>",
@@ -447,8 +447,8 @@ const T = {
     linkChat: "Den Assistenten fragen →",
   },
   zh: {
-    "meta.title": "我是如何构建这个作品集的 — Emanuel Borges",
-    "meta.description": "Emanuel Borges 作品集背后的架构、决策和技术：无框架静态网站、基于 Cloudflare 的无服务器 RAG AI 助手，以及在浏览器中运行的 AI 演示，全部使用免费方案。",
+    "meta.title": "我是如何构建这个作品集的",
+    "meta.description": "{nomeCompleto} 作品集背后的架构、决策和技术：无框架静态网站、基于 Cloudflare 的无服务器 RAG AI 助手，以及在浏览器中运行的 AI 演示，全部使用免费方案。",
     lang: "语言",
     kicker: "// 我是如何构建的",
     title: "这个作品集<span>是如何构建的。</span>",
@@ -521,8 +521,8 @@ const T = {
     linkChat: "问问助手 →",
   },
   ru: {
-    "meta.title": "Как я создал это портфолио — Emanuel Borges",
-    "meta.description": "Архитектура, решения и технологии портфолио Emanuel Borges: статический сайт без фреймворка, бессерверный ИИ-ассистент с RAG на Cloudflare и ИИ-демо в браузере — всё на бесплатных тарифах.",
+    "meta.title": "Как я создал это портфолио",
+    "meta.description": "Архитектура, решения и технологии портфолио {nomeCompleto}: статический сайт без фреймворка, бессерверный ИИ-ассистент с RAG на Cloudflare и ИИ-демо в браузере — всё на бесплатных тарифах.",
     lang: "Язык",
     kicker: "// КАК Я ЭТО СДЕЛАЛ",
     title: "Как создавалось <span>это портфолио.</span>",

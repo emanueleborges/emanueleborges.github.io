@@ -125,6 +125,8 @@ O conhecimento da IA é **gerado das próprias traduções do site** (`i18n/`): 
 
 ```
 .
+├── idiomas.js              # Idiomas do site (fonte única): seletor, traduções, SEO, currículo, geradores e IA
+├── perfil.js               # Gerado de data/perfil.json para o navegador (não edite)
 ├── index.html              # Página única do portfólio (SEO, Open Graph, JSON-LD)
 ├── 404.html                # "Página não encontrada" personalizada
 ├── manifest.webmanifest · sw.js · icon-*.png  # App instalável e offline (PWA)
@@ -137,7 +139,9 @@ O conhecimento da IA é **gerado das próprias traduções do site** (`i18n/`): 
 │   ├── guardrail/          # Simulação local de prompt injection contra RAG
 │   └── imagem/             # Gerador de imagens: imagem.js (POST /image no Worker)
 ├── scripts/conferir-modulos.mjs # CI: todo módulo ES importado pelo index.html está no importmap
-├── scripts/gerar-secoes.mjs # Gera os cards de projetos e as habilidades a partir de data/ (--check no CI)
+├── scripts/gerar-secoes.mjs # Gera a parte estática a partir de data/, idiomas.js e i18n/pt.js (e grava o perfil.js): projetos, habilidades,
+│                           #   SEO, textos em português, data-perfil nas páginas, sitemap, robots e manifest (--check no CI)
+├── scripts/dados.mjs       # Lê data/perfil.json, idiomas.js e i18n/ no Node (usado pelos geradores)
 ├── scripts/gerar-dados-filmes.py  # Gera demos/filmes/filmes.json (Wikidata + Wikipédia)
 ├── scripts/lstm/           # Treino (train.py) e exportação (exportar_web.py) do LSTM da demo
 ├── styles.css              # Todo o visual (tema, layout, animações e chat)
@@ -153,11 +157,10 @@ O conhecimento da IA é **gerado das próprias traduções do site** (`i18n/`): 
 ├── chat/                   # Lógica do assistente: texto.js (normalização), regras.js (respostas prontas),
 │                           #   busca.js (busca local na página), ia.js (Worker e avaliações)
 ├── components/             # Web Components e peças comuns a todas as páginas (components.js): <site-logo>, <theme-toggle>, <sound-toggle>, sons/vibração, visualizador do GitHub, cartões de links externos e "Compartilhar"; boot.js (tema antes da pintura); vendor/qrcode.min.js (QR code, MIT)
-├── data/                   # Projetos e habilidades (fonte única) → scripts/gerar-secoes.mjs escreve no index.html
+├── data/                   # Fonte única: perfil.json (dados pessoais), experiência, formação, projetos e habilidades → site, PDFs e IA
 ├── curriculo.html          # Modelo do currículo (A4) usado para gerar os PDFs
-├── gerar-curriculos.sh     # Gera os 8 PDFs em cv/ com Chrome headless
+├── gerar-curriculos.sh     # Gera os 8 PDFs com Chrome headless (na publicação; não ficam no repositório)
 ├── sitemap.xml · robots.txt
-├── cv/                     # Currículos em PDF (um por idioma)
 ├── imagens/                # Todas as imagens: foto, favicons, ícones do app, og-image, logo; logos/ (instituições e habilidades)
 ├── tests/                  # Testes automáticos do chat (96 casos, 8 idiomas)
 ├── .github/workflows/      # GitHub Actions: testes e Lighthouse a cada push
@@ -212,7 +215,7 @@ npm run dev          # gera o conhecimento e roda o Worker localmente
 
 ## Publicação
 
-**Site:** cada `git push` na `main` publica no GitHub Pages em 1–2 minutos (e roda os testes no GitHub Actions).
+**Site:** cada `git push` na `main` roda o workflow `Publicar` (`.github/workflows/publicar.yml`): ele confere as páginas geradas, gera os 8 PDFs do currículo a partir de `data/` e `i18n/` e publica tudo no GitHub Pages em 2–3 minutos. Os PDFs não ficam no repositório. Requer *Settings → Pages → Source: GitHub Actions*.
 
 **Worker:**
 
@@ -241,8 +244,9 @@ Quando houver uma migração D1 pendente, aplique-a **antes** de publicar o Work
 
 | Quero… | Faça |
 |---|---|
-| Mudar um texto do site | Edite `index.html` e `i18n/pt.js` (português) e `i18n/<idioma>.js` (demais idiomas); depois rode `npm run deploy` em `worker/` para a IA aprender. |
-| Atualizar os currículos em PDF | `./gerar-curriculos.sh` |
+| Mudar um texto do site | Edite `i18n/pt.js` (português) e `i18n/<idioma>.js` (demais idiomas) e rode `node scripts/gerar-secoes.mjs` (copia o português para o `index.html`); depois rode `npm run deploy` em `worker/` para a IA aprender. |
+| Trocar dados pessoais (nome, contatos, links, foto, SEO) | Edite só o `data/perfil.json` e rode `node scripts/gerar-secoes.mjs`; depois `npm run deploy` em `worker/`. |
+| Atualizar os currículos em PDF | Automático a cada push. Para ver localmente: `./gerar-curriculos.sh` (grava em `_site/`) |
 | Ver as avaliações 👍/👎 do chat | `cd worker && ./ver-avaliacoes.sh` |
 | **Ver o painel de estatísticas** (totais diários de avaliações e visitas) | `cd worker && npm run painel` — veja [Painel de estatísticas](#painel-de-estatísticas) |
 | Ver uso da IA e métricas do Gateway | Painel do Cloudflare → **AI → AI Gateway → default** |

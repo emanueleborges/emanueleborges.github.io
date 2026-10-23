@@ -13,7 +13,7 @@ const THRESHOLD = 0.55;
 const T = {
   en: {
     idle: "The AI models (~7 MB) download only when you use the camera, a photo or the sample.",
-    "meta.title": "Face Recognition in the Browser — Emanuel Borges",
+    "meta.title": "Face Recognition in the Browser",
     "meta.description": "Real-time face recognition with face-api.js: detection, 128-dimension embeddings and matching, entirely in your browser — the camera never leaves your device.",
     lang: "Language",
     kicker: "// AI DEMO · 100% ON YOUR DEVICE",
@@ -41,12 +41,12 @@ const T = {
     people: "Registered people",
     none: "No one registered yet.",
     remove: "Remove {name}",
-    hint: "<strong>Try it:</strong> turn on the camera, type your name and register your face — then move around and see if the model recognizes you. Or use the sample photo, register it as “Emanuel”, and upload another photo of a different person to see “Unknown”.",
+    hint: "<strong>Try it:</strong> turn on the camera, type your name and register your face — then move around and see if the model recognizes you. Or use the sample photo, register it as “{nome}”, and upload another photo of a different person to see “Unknown”.",
     how: "<strong>How it works:</strong> TinyFaceDetector finds the faces; a 68-point landmark network aligns each one; a ResNet turns it into a 128-number embedding. Two faces belong to the same person when the Euclidean distance between their vectors is below 0.55. Everything runs with TensorFlow.js (WebGL) in your browser.",
   },
   pt: {
     idle: "Os modelos de IA (~7 MB) só são baixados quando você usar a câmera, uma foto ou o exemplo.",
-    "meta.title": "Reconhecimento Facial no Navegador — Emanuel Borges",
+    "meta.title": "Reconhecimento Facial no Navegador",
     "meta.description": "Reconhecimento facial em tempo real com face-api.js: detecção, embeddings de 128 dimensões e comparação, tudo no seu navegador — a câmera nunca sai do seu aparelho.",
     lang: "Idioma",
     kicker: "// DEMO DE IA · 100% NO SEU APARELHO",
@@ -74,12 +74,12 @@ const T = {
     people: "Pessoas cadastradas",
     none: "Ninguém cadastrado ainda.",
     remove: "Remover {name}",
-    hint: "<strong>Experimente:</strong> ligue a câmera, digite seu nome e cadastre seu rosto — depois se mexa e veja se o modelo te reconhece. Ou use a foto de exemplo, cadastre como “Emanuel” e envie a foto de outra pessoa para ver “Desconhecido”.",
+    hint: "<strong>Experimente:</strong> ligue a câmera, digite seu nome e cadastre seu rosto — depois se mexa e veja se o modelo te reconhece. Ou use a foto de exemplo, cadastre como “{nome}” e envie a foto de outra pessoa para ver “Desconhecido”.",
     how: "<strong>Como funciona:</strong> o TinyFaceDetector encontra os rostos; uma rede de 68 pontos alinha cada um; uma ResNet gera um embedding de 128 números. Dois rostos são da mesma pessoa quando a distância euclidiana entre os vetores é menor que 0,55. Tudo roda com TensorFlow.js (WebGL) no seu navegador.",
   },
   es: {
     idle: "Los modelos de IA (~7 MB) solo se descargan cuando uses la cámara, una foto o el ejemplo.",
-    "meta.title": "Reconocimiento Facial en el Navegador — Emanuel Borges",
+    "meta.title": "Reconocimiento Facial en el Navegador",
     "meta.description": "Reconocimiento facial en tiempo real con face-api.js: detección, embeddings de 128 dimensiones y comparación, todo en tu navegador — la cámara nunca sale de tu dispositivo.",
     lang: "Idioma",
     kicker: "// DEMO DE IA · 100% EN TU DISPOSITIVO",
@@ -107,12 +107,12 @@ const T = {
     people: "Personas registradas",
     none: "Nadie registrado todavía.",
     remove: "Eliminar {name}",
-    hint: "<strong>Pruébalo:</strong> enciende la cámara, escribe tu nombre y registra tu rostro — luego muévete y mira si el modelo te reconoce. O usa la foto de ejemplo, regístrala como “Emanuel” y sube la foto de otra persona para ver “Desconocido”.",
+    hint: "<strong>Pruébalo:</strong> enciende la cámara, escribe tu nombre y registra tu rostro — luego muévete y mira si el modelo te reconoce. O usa la foto de ejemplo, regístrala como “{nome}” y sube la foto de otra persona para ver “Desconocido”.",
     how: "<strong>Cómo funciona:</strong> TinyFaceDetector encuentra los rostros; una red de 68 puntos alinea cada uno; una ResNet genera un embedding de 128 números. Dos rostros son de la misma persona cuando la distancia euclidiana entre sus vectores es menor que 0,55. Todo se ejecuta con TensorFlow.js (WebGL) en tu navegador.",
   },
   fr: {
     idle: "Les modèles d'IA (~7 Mo) ne sont téléchargés que lorsque vous utilisez la caméra, une photo ou l'exemple.",
-    "meta.title": "Reconnaissance faciale dans le navigateur — Emanuel Borges",
+    "meta.title": "Reconnaissance faciale dans le navigateur",
     "meta.description": "Reconnaissance faciale en temps réel avec face-api.js : détection, embeddings de 128 dimensions et comparaison, entièrement dans votre navigateur — la caméra ne quitte jamais votre appareil.",
     lang: "Langue",
     kicker: "// DÉMO D'IA · 100 % SUR VOTRE APPAREIL",
@@ -140,12 +140,12 @@ const T = {
     people: "Personnes enregistrées",
     none: "Personne n'est encore enregistré.",
     remove: "Supprimer {name}",
-    hint: "<strong>Essayez :</strong> activez la caméra, saisissez votre nom et enregistrez votre visage — puis bougez et voyez si le modèle vous reconnaît. Ou utilisez la photo d'exemple, enregistrez-la sous « Emanuel » et envoyez la photo d'une autre personne pour voir « Inconnu ».",
+    hint: "<strong>Essayez :</strong> activez la caméra, saisissez votre nom et enregistrez votre visage — puis bougez et voyez si le modèle vous reconnaît. Ou utilisez la photo d'exemple, enregistrez-la sous « {nome} » et envoyez la photo d'une autre personne pour voir « Inconnu ».",
     how: "<strong>Fonctionnement :</strong> TinyFaceDetector trouve les visages ; un réseau de 68 points aligne chacun d'eux ; un ResNet produit un embedding de 128 nombres. Deux visages appartiennent à la même personne lorsque la distance euclidienne entre leurs vecteurs est inférieure à 0,55. Tout s'exécute avec TensorFlow.js (WebGL) dans votre navigateur.",
   },
   it: {
     idle: "I modelli di IA (~7 MB) vengono scaricati solo quando usi la fotocamera, una foto o l'esempio.",
-    "meta.title": "Riconoscimento Facciale nel Browser — Emanuel Borges",
+    "meta.title": "Riconoscimento Facciale nel Browser",
     "meta.description": "Riconoscimento facciale in tempo reale con face-api.js: rilevamento, embedding a 128 dimensioni e confronto, tutto nel tuo browser — la fotocamera non lascia mai il tuo dispositivo.",
     lang: "Lingua",
     kicker: "// DEMO DI IA · 100% SUL TUO DISPOSITIVO",
@@ -173,12 +173,12 @@ const T = {
     people: "Persone registrate",
     none: "Ancora nessuno registrato.",
     remove: "Rimuovi {name}",
-    hint: "<strong>Provalo:</strong> accendi la fotocamera, scrivi il tuo nome e registra il tuo volto — poi muoviti e guarda se il modello ti riconosce. Oppure usa la foto di esempio, registrala come “Emanuel” e carica la foto di un'altra persona per vedere “Sconosciuto”.",
+    hint: "<strong>Provalo:</strong> accendi la fotocamera, scrivi il tuo nome e registra il tuo volto — poi muoviti e guarda se il modello ti riconosce. Oppure usa la foto di esempio, registrala come “{nome}” e carica la foto di un'altra persona per vedere “Sconosciuto”.",
     how: "<strong>Come funziona:</strong> TinyFaceDetector trova i volti; una rete a 68 punti allinea ciascuno; una ResNet genera un embedding di 128 numeri. Due volti appartengono alla stessa persona quando la distanza euclidea tra i vettori è inferiore a 0,55. Tutto gira con TensorFlow.js (WebGL) nel tuo browser.",
   },
   de: {
     idle: "Die KI-Modelle (~7 MB) werden erst geladen, wenn Sie Kamera, Foto oder Beispiel verwenden.",
-    "meta.title": "Gesichtserkennung im Browser — Emanuel Borges",
+    "meta.title": "Gesichtserkennung im Browser",
     "meta.description": "Gesichtserkennung in Echtzeit mit face-api.js: Erkennung, 128-dimensionale Embeddings und Abgleich, komplett in Ihrem Browser – die Kamera verlässt nie Ihr Gerät.",
     lang: "Sprache",
     kicker: "// KI-DEMO · 100 % AUF IHREM GERÄT",
@@ -206,12 +206,12 @@ const T = {
     people: "Registrierte Personen",
     none: "Noch niemand registriert.",
     remove: "{name} entfernen",
-    hint: "<strong>Probieren Sie es aus:</strong> Schalten Sie die Kamera ein, geben Sie Ihren Namen ein und registrieren Sie Ihr Gesicht – bewegen Sie sich dann und sehen Sie, ob das Modell Sie erkennt. Oder registrieren Sie das Beispielfoto als „Emanuel“ und laden Sie das Foto einer anderen Person hoch, um „Unbekannt“ zu sehen.",
+    hint: "<strong>Probieren Sie es aus:</strong> Schalten Sie die Kamera ein, geben Sie Ihren Namen ein und registrieren Sie Ihr Gesicht – bewegen Sie sich dann und sehen Sie, ob das Modell Sie erkennt. Oder registrieren Sie das Beispielfoto als „{nome}“ und laden Sie das Foto einer anderen Person hoch, um „Unbekannt“ zu sehen.",
     how: "<strong>So funktioniert es:</strong> TinyFaceDetector findet die Gesichter; ein 68-Punkte-Netz richtet jedes aus; ein ResNet erzeugt ein Embedding aus 128 Zahlen. Zwei Gesichter gehören zur selben Person, wenn der euklidische Abstand ihrer Vektoren unter 0,55 liegt. Alles läuft mit TensorFlow.js (WebGL) in Ihrem Browser.",
   },
   zh: {
     idle: "AI 模型（约 7 MB）仅在你使用摄像头、照片或示例时下载。",
-    "meta.title": "浏览器中的人脸识别 — Emanuel Borges",
+    "meta.title": "浏览器中的人脸识别",
     "meta.description": "基于 face-api.js 的实时人脸识别：检测、128 维嵌入向量与比对，全部在浏览器中完成——摄像头画面不会离开你的设备。",
     lang: "语言",
     kicker: "// AI 演示 · 100% 在你的设备上运行",
@@ -239,12 +239,12 @@ const T = {
     people: "已登记人员",
     none: "尚未登记任何人。",
     remove: "移除 {name}",
-    hint: "<strong>试一试：</strong>打开摄像头，输入你的名字并登记你的脸——然后移动一下，看看模型是否认出你。或者使用示例照片，登记为“Emanuel”，再上传另一个人的照片，看看显示“未知”。",
+    hint: "<strong>试一试：</strong>打开摄像头，输入你的名字并登记你的脸——然后移动一下，看看模型是否认出你。或者使用示例照片，登记为“{nome}”，再上传另一个人的照片，看看显示“未知”。",
     how: "<strong>工作原理：</strong>TinyFaceDetector 找到人脸；68 点关键点网络对齐每张脸；ResNet 生成 128 维嵌入向量。当两个向量之间的欧氏距离小于 0.55 时，判定为同一个人。全部通过 TensorFlow.js（WebGL）在你的浏览器中运行。",
   },
   ru: {
     idle: "Модели ИИ (~7 МБ) загружаются, только когда вы используете камеру, фото или пример.",
-    "meta.title": "Распознавание лиц в браузере — Emanuel Borges",
+    "meta.title": "Распознавание лиц в браузере",
     "meta.description": "Распознавание лиц в реальном времени с face-api.js: обнаружение, 128-мерные эмбеддинги и сравнение — полностью в вашем браузере, изображение с камеры не покидает устройство.",
     lang: "Язык",
     kicker: "// ДЕМО ИИ · 100% НА ВАШЕМ УСТРОЙСТВЕ",
@@ -272,7 +272,7 @@ const T = {
     people: "Зарегистрированные люди",
     none: "Пока никто не зарегистрирован.",
     remove: "Удалить {name}",
-    hint: "<strong>Попробуйте:</strong> включите камеру, введите своё имя и зарегистрируйте лицо — затем подвигайтесь и проверьте, узнаёт ли вас модель. Или зарегистрируйте пример фото как «Emanuel» и загрузите фото другого человека, чтобы увидеть «Неизвестный».",
+    hint: "<strong>Попробуйте:</strong> включите камеру, введите своё имя и зарегистрируйте лицо — затем подвигайтесь и проверьте, узнаёт ли вас модель. Или зарегистрируйте пример фото как «{nome}» и загрузите фото другого человека, чтобы увидеть «Неизвестный».",
     how: "<strong>Как это работает:</strong> TinyFaceDetector находит лица; сеть из 68 точек выравнивает каждое; ResNet создаёт эмбеддинг из 128 чисел. Два лица принадлежат одному человеку, если евклидово расстояние между векторами меньше 0,55. Всё работает на TensorFlow.js (WebGL) в вашем браузере.",
   },
 };
@@ -464,8 +464,8 @@ function init() {
 
   $("[data-camera]").addEventListener("click", withAI(() => (stream ? stopCamera() : startCamera())));
   $("[data-sample]").addEventListener("click", withAI(() => {
-    showImage("/imagens/emanuel-borges.jpg");
-    $("[data-name]").value ||= "Emanuel";
+    showImage(`/${globalThis.PERFIL.foto}`);
+    $("[data-name]").value ||= globalThis.PERFIL.nome;
   }));
   $("[data-upload]").addEventListener("change", (event) => {
     const file = event.target.files[0];

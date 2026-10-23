@@ -1,5 +1,5 @@
 {
-  "_doc": "Projetos da seção Projetos. Textos em português vêm do i18n/pt.js (pela chave); gere o HTML com: node scripts/gerar-secoes.mjs. Métricas opcionais em \"metrics\": [{ value: {text|key}, label: {key} }] — só números verificáveis.",
+  "_doc": "Projetos da seção Projetos. Link do código: github.com/<perfil.github>/<repo>[/<path>] ({github} no repo vem do data/perfil.json). Textos em português vêm do i18n/pt.js (pela chave); gere o HTML com: node scripts/gerar-secoes.mjs. Métricas opcionais em \"metrics\": [{ value: {text|key}, label: {key} }] — só números verificáveis. Currículo: só os projetos com \"cv\": { stack, name? (nome no lugar do título) }, na ordem do arquivo.",
   "projects": [
     {
       "id": "p1",
@@ -18,7 +18,9 @@
         "key": "p1.desc"
       },
       "repo": "tcc-ufg",
-      "repoUrl": "https://github.com/emanueleborges/tcc-ufg"
+      "cv": {
+        "stack": "RAG · LangChain · Ollama · OWASP LLM"
+      }
     },
     {
       "id": "p2",
@@ -36,7 +38,6 @@
         "key": "p2.desc"
       },
       "repo": "fiaptech5",
-      "repoUrl": "https://github.com/emanueleborges/fiaptech5",
       "metrics": [
         {
           "value": {
@@ -54,7 +55,10 @@
             "key": "p2.m2"
           }
         }
-      ]
+      ],
+      "cv": {
+        "stack": "Scikit-learn · XGBoost · Docker"
+      }
     },
     {
       "id": "p3",
@@ -72,7 +76,6 @@
         "key": "p3.desc"
       },
       "repo": "fiaptech4",
-      "repoUrl": "https://github.com/emanueleborges/fiaptech4",
       "demo": {
         "name": "lstm",
         "href": "demos/lstm/"
@@ -94,7 +97,10 @@
             "key": "p3.m2"
           }
         }
-      ]
+      ],
+      "cv": {
+        "stack": "TensorFlow · LSTM · Flask · Swagger"
+      }
     },
     {
       "id": "p4",
@@ -112,7 +118,9 @@
         "key": "p4.desc"
       },
       "repo": "rag-llm-deepseek-documentos",
-      "repoUrl": "https://github.com/emanueleborges/rag-llm-deepseek-documentos"
+      "cv": {
+        "stack": "LangChain · ChromaDB · FastAPI · Streamlit"
+      }
     },
     {
       "id": "p5",
@@ -130,7 +138,9 @@
         "key": "p5.desc"
       },
       "repo": "financial",
-      "repoUrl": "https://github.com/emanueleborges/financial"
+      "cv": {
+        "stack": "Java 17 · Spring Boot · Kafka · Redis"
+      }
     },
     {
       "id": "p6",
@@ -148,7 +158,10 @@
         "key": "p6.desc"
       },
       "repo": "nest_typeorm_postgres_redis_kafka",
-      "repoUrl": "https://github.com/emanueleborges/nest_typeorm_postgres_redis_kafka"
+      "cv": {
+        "name": "Products API",
+        "stack": "NestJS · TypeORM · Kafka · Redis"
+      }
     },
     {
       "id": "p7",
@@ -167,7 +180,6 @@
         "key": "p7.desc"
       },
       "repo": "challenge-movies",
-      "repoUrl": "https://github.com/emanueleborges/challenge-movies",
       "demo": {
         "name": "filmes",
         "href": "demos/filmes/"
@@ -208,7 +220,6 @@
         "key": "p8.desc"
       },
       "repo": "face-recognition-poc",
-      "repoUrl": "https://github.com/emanueleborges/face-recognition-poc",
       "demo": {
         "name": "face",
         "href": "demos/face/"
@@ -247,8 +258,7 @@
       "desc": {
         "key": "p9.desc"
       },
-      "repo": "kotlin-desktop",
-      "repoUrl": "https://github.com/emanueleborges/kotlin-desktop"
+      "repo": "kotlin-desktop"
     },
     {
       "id": "p10",
@@ -266,8 +276,8 @@
       "desc": {
         "key": "p10.desc"
       },
-      "repo": "emanueleborges.github.io",
-      "repoUrl": "https://github.com/emanueleborges/emanueleborges.github.io/tree/main/worker",
+      "repo": "{github}.github.io",
+      "path": "tree/main/worker",
       "demo": {
         "name": "chat",
         "href": "#chat",
@@ -315,8 +325,8 @@
       "desc": {
         "key": "p11.desc"
       },
-      "repo": "emanueleborges.github.io",
-      "repoUrl": "https://github.com/emanueleborges/emanueleborges.github.io/tree/main/demos/guardrail",
+      "repo": "{github}.github.io",
+      "path": "tree/main/demos/guardrail",
       "demo": {
         "name": "guardrail",
         "href": "demos/guardrail/"
@@ -355,8 +365,8 @@
       "desc": {
         "key": "p12.desc"
       },
-      "repo": "emanueleborges.github.io",
-      "repoUrl": "https://github.com/emanueleborges/emanueleborges.github.io/tree/main/demos/imagem",
+      "repo": "{github}.github.io",
+      "path": "tree/main/demos/imagem",
       "demo": {
         "name": "imagem",
         "href": "demos/imagem/"

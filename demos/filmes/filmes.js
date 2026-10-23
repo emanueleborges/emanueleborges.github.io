@@ -8,7 +8,7 @@ const QUERIES = ["space adventure with robots", "mafia family crime", "haunted h
 
 const T = {
   en: {
-    "meta.title": "Movie Recommender with TF-IDF — Emanuel Borges",
+    "meta.title": "Movie Recommender with TF-IDF",
     "meta.description": "Content-based movie recommendations with TF-IDF and cosine similarity over 1,500 films, computed in your browser, with the terms that explain each match.",
     lang: "Language",
     kicker: "// AI DEMO · RUNS IN YOUR BROWSER",
@@ -38,7 +38,7 @@ const T = {
     credits: "Data: <a href=\"https://www.wikidata.org\" target=\"_blank\" rel=\"noopener\">Wikidata</a> (CC0) and English <a href=\"https://en.wikipedia.org\" target=\"_blank\" rel=\"noopener\">Wikipedia</a> summaries (CC BY-SA 4.0), shortened. Each card links to its article.",
   },
   pt: {
-    "meta.title": "Recomendação de Filmes com TF-IDF — Emanuel Borges",
+    "meta.title": "Recomendação de Filmes com TF-IDF",
     "meta.description": "Recomendação de filmes por conteúdo com TF-IDF e similaridade de cosseno sobre 1.500 filmes, calculada no seu navegador, mostrando os termos que explicam cada resultado.",
     lang: "Idioma",
     kicker: "// DEMO DE IA · RODA NO SEU NAVEGADOR",
@@ -68,7 +68,7 @@ const T = {
     credits: "Dados: <a href=\"https://www.wikidata.org\" target=\"_blank\" rel=\"noopener\">Wikidata</a> (CC0) e resumos da <a href=\"https://en.wikipedia.org\" target=\"_blank\" rel=\"noopener\">Wikipédia</a> em inglês (CC BY-SA 4.0), encurtados. Cada card leva ao artigo original.",
   },
   es: {
-    "meta.title": "Recomendación de Películas con TF-IDF — Emanuel Borges",
+    "meta.title": "Recomendación de Películas con TF-IDF",
     "meta.description": "Recomendación de películas por contenido con TF-IDF y similitud de coseno sobre 1.500 películas, calculada en tu navegador, mostrando los términos que explican cada resultado.",
     lang: "Idioma",
     kicker: "// DEMO DE IA · SE EJECUTA EN TU NAVEGADOR",
@@ -98,7 +98,7 @@ const T = {
     credits: "Datos: <a href=\"https://www.wikidata.org\" target=\"_blank\" rel=\"noopener\">Wikidata</a> (CC0) y resúmenes de la <a href=\"https://en.wikipedia.org\" target=\"_blank\" rel=\"noopener\">Wikipedia</a> en inglés (CC BY-SA 4.0), acortados. Cada tarjeta enlaza a su artículo.",
   },
   fr: {
-    "meta.title": "Recommandation de Films avec TF-IDF — Emanuel Borges",
+    "meta.title": "Recommandation de Films avec TF-IDF",
     "meta.description": "Recommandation de films basée sur le contenu avec TF-IDF et similarité cosinus sur 1 500 films, calculée dans votre navigateur, avec les termes qui expliquent chaque résultat.",
     lang: "Langue",
     kicker: "// DÉMO D'IA · S'EXÉCUTE DANS VOTRE NAVIGATEUR",
@@ -128,7 +128,7 @@ const T = {
     credits: "Données : <a href=\"https://www.wikidata.org\" target=\"_blank\" rel=\"noopener\">Wikidata</a> (CC0) et résumés de <a href=\"https://en.wikipedia.org\" target=\"_blank\" rel=\"noopener\">Wikipédia</a> en anglais (CC BY-SA 4.0), raccourcis. Chaque carte renvoie à son article.",
   },
   it: {
-    "meta.title": "Raccomandazione di Film con TF-IDF — Emanuel Borges",
+    "meta.title": "Raccomandazione di Film con TF-IDF",
     "meta.description": "Raccomandazione di film basata sui contenuti con TF-IDF e similarità del coseno su 1.500 film, calcolata nel tuo browser, con i termini che spiegano ogni risultato.",
     lang: "Lingua",
     kicker: "// DEMO DI IA · GIRA NEL TUO BROWSER",
@@ -158,7 +158,7 @@ const T = {
     credits: "Dati: <a href=\"https://www.wikidata.org\" target=\"_blank\" rel=\"noopener\">Wikidata</a> (CC0) e trame di <a href=\"https://en.wikipedia.org\" target=\"_blank\" rel=\"noopener\">Wikipedia</a> in inglese (CC BY-SA 4.0), accorciate. Ogni scheda rimanda alla sua voce.",
   },
   de: {
-    "meta.title": "Filmempfehlungen mit TF-IDF — Emanuel Borges",
+    "meta.title": "Filmempfehlungen mit TF-IDF",
     "meta.description": "Inhaltsbasierte Filmempfehlungen mit TF-IDF und Kosinus-Ähnlichkeit über 1.500 Filme, berechnet in Ihrem Browser, mit den Begriffen, die jeden Treffer erklären.",
     lang: "Sprache",
     kicker: "// KI-DEMO · LÄUFT IN IHREM BROWSER",
@@ -188,7 +188,7 @@ const T = {
     credits: "Daten: <a href=\"https://www.wikidata.org\" target=\"_blank\" rel=\"noopener\">Wikidata</a> (CC0) und gekürzte Zusammenfassungen aus der englischen <a href=\"https://en.wikipedia.org\" target=\"_blank\" rel=\"noopener\">Wikipedia</a> (CC BY-SA 4.0). Jede Karte verlinkt auf ihren Artikel.",
   },
   zh: {
-    "meta.title": "基于 TF-IDF 的电影推荐 — Emanuel Borges",
+    "meta.title": "基于 TF-IDF 的电影推荐",
     "meta.description": "基于内容的电影推荐：在浏览器中对 1,500 部电影计算 TF-IDF 与余弦相似度，并展示解释每个结果的关键词。",
     lang: "语言",
     kicker: "// AI 演示 · 在你的浏览器中运行",
@@ -218,7 +218,7 @@ const T = {
     credits: "数据：<a href=\"https://www.wikidata.org\" target=\"_blank\" rel=\"noopener\">Wikidata</a>（CC0）和英文<a href=\"https://en.wikipedia.org\" target=\"_blank\" rel=\"noopener\">维基百科</a>简介（CC BY-SA 4.0，已缩短）。每张卡片都链接到原文。",
   },
   ru: {
-    "meta.title": "Рекомендации фильмов с TF-IDF — Emanuel Borges",
+    "meta.title": "Рекомендации фильмов с TF-IDF",
     "meta.description": "Контентные рекомендации фильмов на основе TF-IDF и косинусного сходства по 1500 фильмам, вычисляемые в вашем браузере, с терминами, объясняющими каждый результат.",
     lang: "Язык",
     kicker: "// ДЕМО ИИ · РАБОТАЕТ В ВАШЕМ БРАУЗЕРЕ",

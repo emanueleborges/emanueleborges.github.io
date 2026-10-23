@@ -1,0 +1,54 @@
+{
+  "_doc": "Dados pessoais do portfólio — fonte única. Troque estes dados e rode node scripts/gerar-secoes.mjs: ele gera o perfil.js (lido pelas páginas, traduções, chat, currículo, demos e service worker), o HTML estático, SEO, sitemap, robots, manifest e as variáveis do worker/wrangler.jsonc; depois rode npm run deploy em worker/. curriculo: prefixo dos PDFs (<curriculo>-<idioma>.pdf). compartilhamento e SEO em inglês (idioma padrão). Empresa atual e escolas vêm de experiencia.json e formacao.json.",
+  "nome": "Emanuel",
+  "sobrenome": "Borges",
+  "nomeCivil": "Emanuel Melo Borges",
+  "email": "emanuel.eborges@gmail.com",
+  "telefone": "+55 92 99977-1376",
+  "github": "emanueleborges",
+  "linkedin": "borgesemmanuell",
+  "site": "https://emanueleborges.github.io/",
+  "foto": "imagens/emanuel-borges.jpg",
+  "curriculo": "cv/curriculo-emanuel-borges",
+  "googleVerificacao": "4hxCxYtZIODldYdYJvIOxejABtc2_GRdp5L6Ug72eEE",
+  "cargo": "Senior Full Stack Developer",
+  "titulo": "Senior Full Stack Developer · AI & NLP",
+  "resumo": "Senior Full Stack Developer (Java/Kotlin, Node.js, React, React Native) with 10+ years of experience, specializing in applied AI (Machine Learning and NLP).",
+  "compartilhamento": {
+    "descricao": "10+ years building systems with Java, Kotlin, Node.js, React and React Native — now applying Machine Learning and NLP. Portfolio in 8 languages with an AI assistant, live AI demos and a job-match tool for recruiters.",
+    "descricaoCurta": "Portfolio and résumé in 8 languages, an AI assistant, live AI demos and a tool that matches your job description to my profile.",
+    "imagem": "imagens/og-image.jpg?v=20261011",
+    "imagemAlt": "Senior Full Stack Developer, AI & NLP — AI made in the Amazon"
+  },
+  "endereco": {
+    "cidade": "Manaus",
+    "estado": "AM",
+    "pais": "BR"
+  },
+  "conhecimentos": [
+    "Java",
+    "Kotlin",
+    "Spring Boot",
+    "Node.js",
+    "NestJS",
+    "React",
+    "React Native",
+    "TypeScript",
+    "Python",
+    "Machine Learning",
+    "Natural Language Processing",
+    "RAG",
+    "LLM",
+    "Docker",
+    "Kubernetes",
+    "AWS",
+    "Kafka",
+    "PostgreSQL",
+    "Oracle"
+  ],
+  "idiomasFalados": [
+    "pt-BR",
+    "es",
+    "en"
+  ]
+}

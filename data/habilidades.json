@@ -1,5 +1,5 @@
 {
-  "_doc": "Habilidades da seção Caixa de ferramentas; gere o HTML com: node scripts/gerar-secoes.mjs",
+  "_doc": "Habilidades da seção Caixa de ferramentas e do currículo (agrupadas por categoria, nesta ordem; full: nome por extenso no currículo); gere o HTML com: node scripts/gerar-secoes.mjs",
   "skills": [
     {
       "name": "Java",
@@ -208,6 +208,7 @@
     },
     {
       "name": "SDD",
+      "full": "SDD (Spec-Driven Development)",
       "category": "praticas",
       "icon": "imagens/logos/skills/sdd.svg"
     },

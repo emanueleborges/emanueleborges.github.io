@@ -2,10 +2,14 @@
 // - Página: rede primeiro (sempre a versão mais nova); sem rede, a última cópia salva.
 // - CSS, JS e imagens do próprio site: cópia salva primeiro, atualizada em segundo plano.
 // - Outros domínios (IA, GitHub, fontes, estatísticas) não passam por aqui.
-const CACHE = "portfolio-v6";
+importScripts("perfil.js"); // dados pessoais: a foto vem de lá
+
+const CACHE = "portfolio-v8";
 const PRECACHE = [
   "./",
   "styles.css",
+  "idiomas.js",
+  "perfil.js",
   "i18n.js",
   "i18n/pt.js",
   "i18n/en.js",
@@ -25,7 +29,7 @@ const PRECACHE = [
   "components/components.js",
   "imagens/logo.svg",
   "imagens/favicon.svg",
-  "imagens/emanuel-borges.jpg",
+  PERFIL.foto,
 ];
 
 self.addEventListener("install", (event) => {

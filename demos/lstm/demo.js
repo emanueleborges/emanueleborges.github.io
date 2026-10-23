@@ -10,7 +10,7 @@ const T = {
   en: {
     groupB3: "Brazil (B3)",
     groupUS: "United States (NASDAQ)",
-    "meta.title": "LSTM Stock Forecasting — Emanuel Borges",
+    "meta.title": "LSTM Stock Forecasting",
     "meta.description": "LSTM neural network that forecasts the next stock close, running in your browser in plain JavaScript and evaluated against a naive baseline.",
     lang: "Language",
     kicker: "// AI DEMO · RUNS IN YOUR BROWSER",
@@ -44,7 +44,7 @@ const T = {
   pt: {
     groupB3: "Brasil (B3)",
     groupUS: "EUA (NASDAQ)",
-    "meta.title": "Previsão de Ações com LSTM — Emanuel Borges",
+    "meta.title": "Previsão de Ações com LSTM",
     "meta.description": "Rede neural LSTM que prevê o próximo fechamento de ações, rodando no seu navegador em JavaScript puro e avaliada contra um baseline ingênuo.",
     lang: "Idioma",
     kicker: "// DEMO DE IA · RODA NO SEU NAVEGADOR",
@@ -78,7 +78,7 @@ const T = {
   es: {
     groupB3: "Brasil (B3)",
     groupUS: "Estados Unidos (NASDAQ)",
-    "meta.title": "Predicción de Acciones con LSTM — Emanuel Borges",
+    "meta.title": "Predicción de Acciones con LSTM",
     "meta.description": "Red neuronal LSTM que predice el próximo cierre de acciones, ejecutándose en tu navegador en JavaScript puro y evaluada frente a un baseline ingenuo.",
     lang: "Idioma",
     kicker: "// DEMO DE IA · SE EJECUTA EN TU NAVEGADOR",
@@ -112,7 +112,7 @@ const T = {
   fr: {
     groupB3: "Brésil (B3)",
     groupUS: "États-Unis (NASDAQ)",
-    "meta.title": "Prévision d'actions avec LSTM — Emanuel Borges",
+    "meta.title": "Prévision d'actions avec LSTM",
     "meta.description": "Réseau de neurones LSTM qui prévoit la prochaine clôture d'une action, exécuté dans votre navigateur en JavaScript pur et évalué face à une référence naïve.",
     lang: "Langue",
     kicker: "// DÉMO D'IA · S'EXÉCUTE DANS VOTRE NAVIGATEUR",
@@ -146,7 +146,7 @@ const T = {
   it: {
     groupB3: "Brasile (B3)",
     groupUS: "Stati Uniti (NASDAQ)",
-    "meta.title": "Previsione di Azioni con LSTM — Emanuel Borges",
+    "meta.title": "Previsione di Azioni con LSTM",
     "meta.description": "Rete neurale LSTM che prevede la prossima chiusura di un'azione, eseguita nel tuo browser in JavaScript puro e valutata rispetto a un baseline ingenuo.",
     lang: "Lingua",
     kicker: "// DEMO DI IA · GIRA NEL TUO BROWSER",
@@ -180,7 +180,7 @@ const T = {
   de: {
     groupB3: "Brasilien (B3)",
     groupUS: "USA (NASDAQ)",
-    "meta.title": "Aktienprognose mit LSTM — Emanuel Borges",
+    "meta.title": "Aktienprognose mit LSTM",
     "meta.description": "LSTM-Netz, das den nächsten Schlusskurs einer Aktie prognostiziert – läuft in Ihrem Browser in reinem JavaScript und wird mit einer naiven Baseline verglichen.",
     lang: "Sprache",
     kicker: "// KI-DEMO · LÄUFT IN IHREM BROWSER",
@@ -214,7 +214,7 @@ const T = {
   zh: {
     groupB3: "巴西 (B3)",
     groupUS: "美国 (NASDAQ)",
-    "meta.title": "LSTM 股价预测 — Emanuel Borges",
+    "meta.title": "LSTM 股价预测",
     "meta.description": "预测股票下一个收盘价的 LSTM 神经网络，以纯 JavaScript 在浏览器中运行，并与朴素基线对比评估。",
     lang: "语言",
     kicker: "// AI 演示 · 在你的浏览器中运行",
@@ -248,7 +248,7 @@ const T = {
   ru: {
     groupB3: "Бразилия (B3)",
     groupUS: "США (NASDAQ)",
-    "meta.title": "Прогноз акций с LSTM — Emanuel Borges",
+    "meta.title": "Прогноз акций с LSTM",
     "meta.description": "Нейросеть LSTM, прогнозирующая следующую цену закрытия акции, работает в вашем браузере на чистом JavaScript и сравнивается с наивным бейзлайном.",
     lang: "Язык",
     kicker: "// ДЕМО ИИ · РАБОТАЕТ В ВАШЕМ БРАУЗЕРЕ",

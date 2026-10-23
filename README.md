@@ -125,6 +125,8 @@ The AI knowledge is **generated from the site's own translations** (`i18n/`): wh
 
 ```
 .
+├── idiomas.js              # Site languages (single source): selector, translations, SEO, résumé, generators and AI
+├── perfil.js               # Generated from data/perfil.json for the browser (don't edit)
 ├── index.html              # Single-page portfolio (SEO, Open Graph, JSON-LD)
 ├── 404.html                # Custom "page not found"
 ├── manifest.webmanifest · sw.js · icon-*.png  # Installable, offline app (PWA)
@@ -137,7 +139,9 @@ The AI knowledge is **generated from the site's own translations** (`i18n/`): wh
 │   ├── guardrail/          # Local prompt-injection simulation for RAG
 │   └── imagem/             # Image generator: imagem.js (POST /image on the Worker)
 ├── scripts/conferir-modulos.mjs # CI: every ES module imported by index.html is in the import map
-├── scripts/gerar-secoes.mjs # Renders project cards and skill chips from data/ (--check in CI)
+├── scripts/gerar-secoes.mjs # Renders the static parts from data/, idiomas.js and i18n/pt.js (and writes perfil.js): projects, skills,
+│                           #   SEO, Portuguese text, data-perfil on every page, sitemap, robots and manifest (--check in CI)
+├── scripts/dados.mjs       # Loads data/perfil.json, idiomas.js and i18n/ in Node (used by the generators)
 ├── scripts/gerar-dados-filmes.py  # Builds demos/filmes/filmes.json (Wikidata + Wikipedia)
 ├── scripts/lstm/           # Training (train.py) and export (exportar_web.py) of the demo's LSTM
 ├── styles.css              # All styling (theme, layout, animations and chat)
@@ -153,11 +157,10 @@ The AI knowledge is **generated from the site's own translations** (`i18n/`): wh
 ├── chat/                   # Assistant logic: texto.js (normalization), regras.js (ready-made answers),
 │                           #   busca.js (local search on the page), ia.js (Worker and ratings)
 ├── components/             # Web Components and pieces shared by every page (components.js): <site-logo>, <theme-toggle>, <sound-toggle>, sounds/haptics, GitHub viewer, external-link cards and "Share"; boot.js (theme before paint); vendor/qrcode.min.js (QR codes, MIT)
-├── data/                   # Projects and skills (single source) → scripts/gerar-secoes.mjs writes them into index.html
+├── data/                   # Single source: perfil.json (personal data), experience, education, projects and skills → site, PDFs and AI
 ├── curriculo.html          # A4 résumé template used to generate the PDFs
-├── gerar-curriculos.sh     # Generates the 8 PDFs in cv/ with headless Chrome
+├── gerar-curriculos.sh     # Generates the 8 PDFs with headless Chrome (at deploy time; not stored in the repo)
 ├── sitemap.xml · robots.txt
-├── cv/                     # PDF résumés (one per language)
 ├── imagens/                # All images: photo, favicons, PWA icons, og-image, logo; logos/ (institutions and skills)
 ├── tests/                  # Automated chat tests (96 cases, 8 languages)
 ├── .github/workflows/      # GitHub Actions: tests and Lighthouse on every push
@@ -212,7 +215,7 @@ npm run dev          # builds the knowledge and runs the Worker locally
 
 ## Deployment
 
-**Site:** every `git push` to `main` deploys to GitHub Pages in 1–2 minutes (and runs the tests in GitHub Actions).
+**Site:** every `git push` to `main` runs the `Publicar` workflow (`.github/workflows/publicar.yml`): it checks the generated pages, builds the 8 résumé PDFs from `data/` and `i18n/` and deploys everything to GitHub Pages in 2–3 minutes. The PDFs are not stored in the repo. Requires *Settings → Pages → Source: GitHub Actions*.
 
 **Worker:**
 
@@ -241,8 +244,9 @@ If a D1 migration is pending, apply it **before** deploying the Worker: `npx wra
 
 | I want to… | Do this |
 |---|---|
-| Change site text | Edit `index.html` and `i18n/pt.js` (Portuguese) and `i18n/<lang>.js` (other languages), then run `npm run deploy` in `worker/` so the AI learns it. |
-| Update the PDF résumés | `./gerar-curriculos.sh` |
+| Change site text | Edit `i18n/pt.js` (Portuguese) and `i18n/<lang>.js` (other languages) and run `node scripts/gerar-secoes.mjs` (copies the Portuguese text into `index.html`), then run `npm run deploy` in `worker/` so the AI learns it. |
+| Change personal data (name, contacts, links, photo, SEO) | Edit only `data/perfil.json` and run `node scripts/gerar-secoes.mjs`, then `npm run deploy` in `worker/`. |
+| Update the PDF résumés | Automatic on every push. To see them locally: `./gerar-curriculos.sh` (writes to `_site/`) |
 | See chat ratings 👍/👎 | `cd worker && ./ver-avaliacoes.sh` |
 | **Open the stats dashboard** (daily rating totals and visits) | `cd worker && npm run painel` — see [Stats dashboard](#stats-dashboard) |
 | See AI usage and Gateway metrics | Cloudflare dashboard → **AI → AI Gateway → default** |

@@ -1,8 +1,8 @@
-// POST /match — "Essa vaga combina com o Emanuel?": a IA lê a vaga, separa os requisitos e
+// POST /match — "Essa vaga combina com a pessoa do portfólio?": a IA lê a vaga, separa os requisitos e
 // classifica cada um contra os trechos do perfil. O Worker confere tudo: só aceita evidências
 // que existem, rebaixa requisito sem evidência para "none" e calcula a nota por regra (não pela IA).
 // O texto da vaga não é salvo.
-import { CHUNKS } from "../conhecimento.js";
+import { CHUNKS, NOME, PRIMEIRO_NOME } from "../conhecimento.js";
 import { LANGUAGES, MODEL, aiText, isHuman, json, languageOf, rateLimited } from "../comum.js";
 
 const MIN_JOB_LENGTH = 80;
@@ -36,7 +36,7 @@ const EXTRACT_SCHEMA = {
 };
 
 // Etapa 2 — avaliar cada requisito da lista fixa contra os trechos do perfil.
-const GRADE_INSTRUCTIONS = `You check a numbered list of job requirements against Emanuel Borges's professional profile, for a recruiter.
+const GRADE_INSTRUCTIONS = `You check a numbered list of job requirements against ${NOME}'s professional profile, for a recruiter.
 
 The profile is given as excerpts, each with an id. Grade EVERY requirement, once, using its number.
 
@@ -49,7 +49,7 @@ Rules:
 - A technology listed in a skills excerpt is evidence of a listed skill, but not by itself proof of professional use or a specific project. Grade that as "partial"; use "strong" only when an experience or project excerpt demonstrates it.
 - When the profile states his level and it falls short (for example a spoken language below what is asked, or a location he isn't in), use "none", cite that excerpt and say so in the reason.
 - reason: one concise sentence of at most 12 words, using only facts in cited excerpts (name the job or project when relevant). Never invent facts, numbers, projects or skills. Never write excerpt ids (like job1, p4 or skills-ai) in any text field.
-- pitch: at most 2 concise sentences and 35 words total, in the third person, on how Emanuel fits this role, honest about the gaps.
+- pitch: at most 2 concise sentences and 35 words total, in the third person, on how ${PRIMEIRO_NOME} fits this role, honest about the gaps.
 - Write "reason" and "pitch" in LANGUAGE. Keep names of technologies, companies, projects and universities as written.`;
 
 const GRADE_SCHEMA = {

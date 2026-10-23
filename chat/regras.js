@@ -1,7 +1,10 @@
 // Assistente (2/4) — regras: sinônimos, assuntos, intenções e respostas prontas.
 // Os textos das respostas ficam no i18n/ (chat.faq.<chave>); aqui só o que dispara cada uma.
 
-import { fold } from "./texto.js";
+import { fold, normalize } from "./texto.js";
+
+// Primeiro nome da pessoa do portfólio (perfil.js), como aparece nas perguntas já normalizadas.
+const nome = normalize(globalThis.PERFIL.nome).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
 // Estes temas sempre usam a resposta pronta local (rápida, sem custo e controlada).
 // "education" usa resposta conferida: o modelo gratuito às vezes traduz errado nomes de cursos e universidades.
@@ -157,7 +160,7 @@ const faqs = [
   },
   {
     key: "about",
-    pattern: /wer ist (er|emanuel)|erzahl.* uber (ihn|emanuel)|uber ihn|quem e (voce|ele|o emanuel|emanuel)|(fale|conte|fala) (mais )?sobre (ele|voce|o emanuel|emanuel)|resumo (dele|profissional)|who is (he|emanuel)|tell me about (him|emanuel|yourself)|about (him|emanuel)|quien es|hablame (de|sobre) (el|emanuel)|qui est|parlez-moi (de lui|d.emanuel)|chi e|parlami (di lui|di emanuel)|他是谁|是谁|介绍一下|кто (он|такой)|расскажи о (нем|себе|emanuel)/,
+    pattern: new RegExp(String.raw`wer ist (er|${nome})|erzahl.* uber (ihn|${nome})|uber ihn|quem e (voce|ele|o ${nome}|${nome})|(fale|conte|fala) (mais )?sobre (ele|voce|o ${nome}|${nome})|resumo (dele|profissional)|who is (he|${nome})|tell me about (him|${nome}|yourself)|about (him|${nome})|quien es|hablame (de|sobre) (el|${nome})|qui est|parlez-moi (de lui|d.${nome})|chi e|parlami (di lui|di ${nome})|他是谁|是谁|介绍一下|кто (он|такой)|расскажи о (нем|себе|${nome})`),
     target: "#sobre",
     related: ["seeking", "differential", "ai"],
   },

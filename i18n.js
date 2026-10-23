@@ -3,7 +3,7 @@
 // os outros idiomas só são baixados quando o visitante escolhe um: I18N.load("fr") → Promise<boolean>.
 (() => {
   const I18N = (window.I18N = window.I18N || {});
-  const LANGS = ["pt", "en", "es", "fr", "it", "de", "zh", "ru"];
+  const LANGS = Object.keys(window.IDIOMAS); // idiomas.js
   const base = new URL("i18n/", document.currentScript.src);
   const pending = {};
 

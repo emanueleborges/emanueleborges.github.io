@@ -1,5 +1,5 @@
 // Cloudflare Worker do portfólio (tudo no plano gratuito do Cloudflare):
-//   POST /         → chat com IA (Workers AI), usando só o perfil do Emanuel (src/conhecimento.js)
+//   POST /         → chat com IA (Workers AI), usando só o perfil da pessoa do portfólio (src/conhecimento.js)
 //   POST /feedback → total diário agregado de avaliações 👍/👎, sem texto associado
 //   POST /match    → "Essa vaga combina?": requisitos da vaga × perfil, com evidências e nota
 //   POST /visit    → contagem agregada por continente, somente após consentimento

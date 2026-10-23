@@ -5,7 +5,9 @@ export const MODEL = "@cf/qwen/qwen3-30b-a3b-fp8";
 // Modelo de embeddings multilíngue: a pergunta em qualquer idioma encontra os trechos em inglês.
 export const EMBEDDING_MODEL = "@cf/baai/bge-m3";
 export const MAX_QUESTION_LENGTH = 500;
-export const LANGUAGES = { en: "English", pt: "Brazilian Portuguese", es: "Spanish", fr: "French", it: "Italian", de: "German", zh: "Simplified Chinese", ru: "Russian" };
+import "../../idiomas.js"; // idiomas do site (globalThis.IDIOMAS), os mesmos da página
+
+export const LANGUAGES = Object.fromEntries(Object.entries(globalThis.IDIOMAS).map(([code, idioma]) => [code, idioma.ia]));
 
 // Idioma pedido pelo site; qualquer valor desconhecido vira inglês.
 export const languageOf = (payload) => (LANGUAGES[payload?.lang] ? payload.lang : "en");
@@ -52,7 +54,7 @@ export async function rateLimited(limiter, ip, origin) {
 export const escapeHtml = (value) => value.replace(/[&<>"']/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[char]);
 
 // E-mail pelo Resend (plano gratuito). Sem domínio próprio, o remetente de testes
-// onboarding@resend.dev só entrega para o e-mail da conta do Resend — que é o do Emanuel.
+// onboarding@resend.dev só entrega para o e-mail da conta do Resend — que é o da pessoa do portfólio.
 export const emailEnabled = (env) => Boolean(env.RESEND_API_KEY && env.NOTIFY_EMAIL);
 
 export async function sendEmail(env, { subject, html, text, replyTo }) {

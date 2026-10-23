@@ -5,9 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://*.githubusercontent.com https://github.com; connect-src 'self' https://api.github.com https://data.jsdelivr.com https://raw.githubusercontent.com; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests" />
     <meta name="referrer" content="strict-origin-when-cross-origin" />
-    <title data-t="meta.title">RAG Security Lab — Prompt Injection — Emanuel Borges</title>
+    <title data-t="meta.title">RAG Security Lab — Prompt Injection</title>
     <meta name="description" data-t-content="meta.description" content="An interactive, local-only simulation showing how prompt injection can affect RAG systems and how defensive boundaries help." />
     <meta name="theme-color" content="#050f14" />
+    <script src="../../idiomas.js"></script>
     <script src="../../components/boot.js"></script>
     <link rel="icon" href="/imagens/favicon.svg" type="image/svg+xml" />
     <link rel="icon" href="/imagens/favicon-32.png" sizes="32x32" type="image/png" />
@@ -40,6 +41,7 @@
       .defense-grid p { margin: 0; color: var(--muted); font-size: 13px; }
       @media (max-width: 640px) { .scenario-grid, .compare-grid, .defense-grid { grid-template-columns: 1fr; } }
     </style>
+    <script src="/perfil.js" defer></script>
     <script type="module" src="guardrail.js"></script>
     <script type="module" src="../../analytics-consent.js"></script>
     <script src="../../components/components.js" defer></script>
@@ -49,7 +51,7 @@
     <div class="glow glow-2" aria-hidden="true"></div>
     <div class="shell">
       <header>
-        <a class="brand" href="/"><site-logo class="brand-logo" size="32"></site-logo> Emanuel Borges</a>
+        <a class="brand" href="/"><site-logo class="brand-logo" size="32"></site-logo><span data-perfil="{nomeCompleto}">Emanuel Borges</span></a>
         <div class="header-tools">
           <share-button></share-button>
           <sound-toggle></sound-toggle>
@@ -75,7 +77,7 @@
         <p class="lead" data-t="lead"></p>
         <div class="links">
           <a class="button" href="/#projetos" data-t="back"></a>
-          <a class="button" href="https://github.com/emanueleborges/emanueleborges.github.io/tree/main/demos/guardrail" target="_blank" rel="noopener" data-t="code"></a>
+          <a class="button" href="https://github.com/emanueleborges/emanueleborges.github.io/tree/main/demos/guardrail" data-perfil-href="{links.github}/{github}.github.io/tree/main/demos/guardrail" target="_blank" rel="noopener" data-t="code"></a>
         </div>
         <p class="notice" data-t="disclaimer"></p>
 
