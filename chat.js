@@ -474,9 +474,14 @@ function initChat() {
     root.classList.toggle("is-open", open);
     if (open) {
       ai.prepare();
-      if (!messages.children.length) addMessage("bot", el("p", null, tc("greeting")));
+      if (!messages.children.length) greet();
       input.focus();
     }
+  }
+
+  // Saudação inicial também aparece com o efeito de digitação.
+  function greet() {
+    typeOut(addMessage("bot", el("p", null, tc("greeting"))));
   }
 
   toggle.addEventListener("click", () => setOpen(panel.hidden));
@@ -499,7 +504,7 @@ function initChat() {
   document.addEventListener("languagechange", () => {
     renderTexts();
     messages.replaceChildren();
-    if (!panel.hidden) addMessage("bot", el("p", null, tc("greeting")));
+    if (!panel.hidden) greet();
   });
   renderTexts();
 
