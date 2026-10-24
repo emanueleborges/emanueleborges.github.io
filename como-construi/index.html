@@ -95,11 +95,6 @@
               <option value="en" lang="en">English</option>
               <option value="pt" lang="pt-BR">Português</option>
               <option value="es" lang="es">Español</option>
-              <option value="fr" lang="fr">Français</option>
-              <option value="it" lang="it">Italiano</option>
-              <option value="de" lang="de">Deutsch</option>
-              <option value="zh" lang="zh-CN">中文</option>
-              <option value="ru" lang="ru">Русский</option>
             </select>
           </label>
         </div>
@@ -116,7 +111,7 @@
 
         <div class="stats">
           <div class="stat"><strong>0</strong><span data-t="statFramework"></span></div>
-          <div class="stat"><strong>8</strong><span data-t="statLangs"></span></div>
+          <div class="stat"><strong>3</strong><span data-t="statLangs"></span></div>
           <div class="stat"><strong>4</strong><span data-t="statDemos"></span></div>
           <div class="stat"><strong>$0</strong><span data-t="statCost"></span></div>
         </div>
@@ -158,19 +153,20 @@
               <rect class="box key" x="330" y="198" width="196" height="198" rx="12" />
               <text class="t" x="346" y="226">Cloudflare Worker</text>
               <text class="s" x="346" y="246" data-t="g.workerSub"></text>
-              <text class="m hot" x="346" y="276">POST /        chat</text>
-              <text class="m hot" x="346" y="296">POST /match   vaga</text>
-              <text class="m hot" x="346" y="316">POST /image   FLUX</text>
-              <text class="m" x="346" y="336">POST /feedback</text>
-              <text class="m" x="346" y="356">POST /visit · /click</text>
-              <text class="m" x="346" y="376">GET  /prices</text>
+              <text class="m hot" x="346" y="272">POST /        chat</text>
+              <text class="m hot" x="346" y="289">POST /match   vaga</text>
+              <text class="m hot" x="346" y="306">POST /image   FLUX</text>
+              <text class="m hot" x="346" y="323">POST /transcribe voz</text>
+              <text class="m" x="346" y="340">POST /feedback</text>
+              <text class="m" x="346" y="357">POST /visit · /click</text>
+              <text class="m" x="346" y="374">GET  /prices · /cv</text>
 
               <rect class="box" x="590" y="198" width="334" height="34" rx="9" />
               <text class="t" x="606" y="220">Turnstile</text>
               <text class="s" x="908" y="220" text-anchor="end" data-t="g.turnstile"></text>
               <rect class="box key" x="590" y="240" width="334" height="34" rx="9" />
               <text class="t" x="606" y="262">Workers AI</text>
-              <text class="m hot mm" x="908" y="262" text-anchor="end">Qwen3 · BGE-M3 · FLUX · Llama Guard</text>
+              <text class="m hot mm" x="908" y="262" text-anchor="end">Qwen3 · BGE-M3 · Whisper · FLUX · Guard</text>
               <rect class="box" x="590" y="282" width="334" height="34" rx="9" />
               <text class="t" x="606" y="304">Vectorize</text>
               <text class="s" x="908" y="304" text-anchor="end" data-t="g.vectorize"></text>
@@ -244,9 +240,9 @@
           <div><h3 data-t="stack.front"></h3>
             <ul class="chips"><li>HTML5</li><li>CSS3</li><li>JavaScript ES2020+</li><li>Web Components</li><li>Canvas 2D</li><li>IntersectionObserver</li><li>Intl</li><li>Service Worker</li></ul></div>
           <div><h3 data-t="stack.back"></h3>
-            <ul class="chips"><li>Cloudflare Workers</li><li>Cron Triggers</li><li>Workers AI</li><li>Vectorize</li><li>AI Gateway</li><li>D1 (SQLite)</li><li>Turnstile</li><li>Rate Limiting</li><li>Resend</li></ul></div>
+            <ul class="chips"><li>Cloudflare Workers</li><li>Cron Triggers</li><li>Workers AI</li><li>Vectorize</li><li>AI Gateway</li><li>D1 (SQLite)</li><li>Turnstile</li><li>Rate Limiting</li><li>Browser Run</li><li>Resend</li></ul></div>
           <div><h3 data-t="stack.ai"></h3>
-            <ul class="chips"><li>Qwen3 30B</li><li>BGE-M3</li><li>RAG</li><li>Keras / TensorFlow</li><li>LSTM</li><li>face-api.js</li><li>TensorFlow.js</li><li>TF-IDF</li></ul></div>
+            <ul class="chips"><li>Qwen3 30B</li><li>BGE-M3</li><li>Whisper</li><li>RAG</li><li>Keras / TensorFlow</li><li>LSTM</li><li>face-api.js</li><li>TensorFlow.js</li><li>TF-IDF</li></ul></div>
           <div><h3 data-t="stack.tools"></h3>
             <ul class="chips"><li>GitHub Actions</li><li>GitHub Pages</li><li>Lighthouse CI</li><li>Chrome headless</li><li>Wrangler</li><li>Node.js</li><li>Python</li></ul></div>
         </div>

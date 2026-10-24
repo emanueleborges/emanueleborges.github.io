@@ -84,7 +84,7 @@ window.I18N.es = ((P) => ({
   "p8.m2": "imágenes enviadas en la demo",
   "p9.desc": "Aplicación de escritorio moderna con Jetpack Compose for Desktop, que consume un backend REST en Kotlin y Spring Boot.",
   "p10.title": "Asistente con IA de este portafolio",
-  "p10.desc": "Chat híbrido en 8 idiomas: respuestas listas, búsqueda local (TF-IDF con corrección de errores tipográficos) y RAG con embeddings BGE-M3 en Vectorize y generación con Qwen3 30B en Workers AI, protegido por Turnstile y límites por IP — todo en planes gratuitos.",
+  "p10.desc": "Chat híbrido en 3 idiomas: respuestas listas, búsqueda local (TF-IDF con corrección de errores tipográficos) y RAG con embeddings BGE-M3 en Vectorize y generación con Qwen3 30B en Workers AI, protegido por Turnstile y límites por IP — todo en planes gratuitos.",
   "p10.m1": "idiomas",
   "p10.m2": "pruebas automáticas",
   "p10.m3": "costo mensual",

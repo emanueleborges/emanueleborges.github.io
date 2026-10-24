@@ -295,7 +295,7 @@
       "metrics": [
         {
           "value": {
-            "text": "8"
+            "text": "3"
           },
           "label": {
             "key": "p10.m1"
@@ -303,7 +303,7 @@
         },
         {
           "value": {
-            "text": "104"
+            "text": "70"
           },
           "label": {
             "key": "p10.m2"

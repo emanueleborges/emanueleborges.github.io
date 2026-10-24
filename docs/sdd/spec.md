@@ -23,7 +23,7 @@ Currículos e perfis estáticos obrigam o recrutador a ler tudo para achar uma i
 
 ### 1.2 Objetivos
 1. Comunicar o perfil em até 30 segundos (topo da página + resumo + projetos em destaque).
-2. Responder perguntas do visitante em linguagem natural, em 8 idiomas.
+2. Responder perguntas do visitante em linguagem natural, em 3 idiomas.
 3. Facilitar o contato por links diretos (e-mail, WhatsApp, LinkedIn) e pelo currículo em PDF, sem formulário no site.
 4. Demonstrar, no próprio site, competências em front-end, back-end serverless e IA aplicada.
 5. Operar com **custo zero**.
@@ -41,7 +41,7 @@ Currículos e perfis estáticos obrigam o recrutador a ler tudo para achar uma i
 | Persona | Necessidade | Como o produto atende |
 |---|---|---|
 | **Recrutador(a) técnico(a)** | Verificar rapidamente tecnologias e experiência | Seções organizadas, projetos em destaque, filtros, busca rápida, chat com IA, currículo em PDF |
-| **Recrutador(a) internacional** | Ler no próprio idioma; entender modelo de contratação | 8 idiomas (inglês por padrão), respostas sobre remoto, fuso e CLT/PJ, análise "Sua vaga combina?" |
+| **Recrutador(a) internacional** | Ler no próprio idioma; entender modelo de contratação | 3 idiomas (inglês por padrão), respostas sobre remoto, fuso e CLT/PJ, análise "Sua vaga combina?" |
 | **Gestor(a) / tech lead** | Avaliar profundidade técnica e projetos | Projetos com descrições técnicas e resultados verificáveis, **demos de IA ao vivo**, "Como construí" e o próprio site como demonstração |
 | **Emanuel (dono)** | Atualizar conteúdo e acompanhar interesse | Fontes únicas (`data/`, `i18n/`, `idiomas.js`), gerador conferido no CI, estatísticas agregadas e resumo semanal |
 | **Outra pessoa usando o projeto como modelo** | Ter o próprio portfólio sem reescrever código | Troca `data/` (dados, mídias, temas) e os textos de `i18n/`, roda o gerador e publica |
@@ -62,7 +62,7 @@ O site deve apresentar: topo (nome, cargo, resumo, localização, anos de experi
 - RF-01.8 **Apresentação falada:** o botão ▶ na foto toca um resumo do perfil (inglês e português) com legenda; o botão só aparece se houver áudio para o idioma.
 
 ### RF-02 — Idiomas
-- RF-02.1 Disponível em **inglês (padrão)**, português, espanhol, francês, italiano, alemão, chinês simplificado e russo.
+- RF-02.1 Disponível em **inglês (padrão)**, português e espanhol.
 - RF-02.2 O visitante troca o idioma por um seletor no cabeçalho; a escolha é lembrada e vale em todas as páginas.
 - RF-02.3 O idioma pode ser definido pelo link (`?lang=xx`).
 - RF-02.4 Todo texto visível, atributos de acessibilidade, chat, cartões e currículo seguem o idioma escolhido.
@@ -72,7 +72,7 @@ O site deve apresentar: topo (nome, cargo, resumo, localização, anos de experi
 - RF-03.2 Habilidades filtráveis por categoria, com contador "mostrando X de Y".
 
 ### RF-04 — Currículo em PDF
-- RF-04.1 O currículo é **montado pelo próprio site**, na hora, a partir das mesmas fontes de dados e textos do site, em qualquer um dos 8 idiomas. Não existem arquivos PDF no repositório.
+- RF-04.1 O currículo é **montado pelo próprio site**, na hora, a partir das mesmas fontes de dados e textos do site, em qualquer um dos 3 idiomas. Não existem arquivos PDF no repositório.
 - RF-04.2 "Baixar currículo" abre o currículo do idioma atual num modal para leitura (legível no celular); "Baixar PDF" baixa o **arquivo PDF** em A4, gerado a partir da mesma página. Se a geração não estiver disponível, abre a impressão do navegador ("Salvar como PDF"); a página avulsa `curriculo.html?lang=xx&pdf=1` abre direto na impressão.
 - RF-04.3 Links antigos para `/cv/…-<idioma>.pdf` levam ao currículo daquele idioma, já na impressão.
 
@@ -83,7 +83,7 @@ O site deve apresentar: topo (nome, cargo, resumo, localização, anos de experi
 - RF-05.4 Demais perguntas são respondidas por **IA generativa** com base **somente** no perfil (RAG).
 - RF-05.5 Respostas da IA exibem o selo "Resposta gerada por IA" e um atalho "Ver na página".
 - RF-05.6 Se a IA falhar ou a cota gratuita do dia acabar, o chat **avisa o visitante** ("A IA atingiu a cota gratuita de hoje…" ou "…está indisponível agora…") e responde pela **busca local** no conteúdo da página.
-- RF-05.7 A busca local tolera erros de digitação e sinônimos e funciona nos 8 idiomas.
+- RF-05.7 A busca local tolera erros de digitação e sinônimos e funciona nos 3 idiomas.
 - RF-05.8 Perguntas sobre contato mostram botões de contato; sobre currículo, o atalho para o currículo (com "Baixar PDF").
 - RF-05.9 O link `/#chat` abre o site com o assistente aberto.
 - RF-05.10 Respostas da IA podem ser avaliadas com 👍/👎; somente totais diários por tipo de avaliação são guardados por até 30 dias, sem pergunta, resposta, idioma ou identificadores.
@@ -99,7 +99,7 @@ Contagem opcional somente após consentimento explícito. O Worker usa a região
 ### RF-09 — SEO e compartilhamento
 - RF-09.1 Ao compartilhar o link (LinkedIn, WhatsApp, X), exibir prévia com imagem, título e descrição.
 - RF-09.2 Indicar ao Google as 8 versões de idioma (`hreflang`) e quem é a pessoa do site (dados estruturados `Person`, com empresa atual e escolas vindas dos dados de experiência e formação).
-- RF-09.3 Publicar `sitemap.xml` (página em 8 idiomas, demos, "Sua vaga combina?" e "Como construí") e `robots.txt`; o site é verificado no Google Search Console.
+- RF-09.3 Publicar `sitemap.xml` (página em 3 idiomas, demos, "Sua vaga combina?" e "Como construí") e `robots.txt`; o site é verificado no Google Search Console.
 
 ### RF-10 — Resumo semanal
 Toda segunda-feira, o dono recebe por e-mail contagens agregadas de avaliações, acessos regionais e cliques consentidos, além da saúde da IA, do índice vetorial e do banco. O resumo contém somente dados agregados.
@@ -108,7 +108,7 @@ Toda segunda-feira, o dono recebe por e-mail contagens agregadas de avaliações
 Endereços inexistentes mostram uma página 404 no estilo do site, com links para o portfólio e o assistente (e o redirecionamento de RF-04.3).
 
 ### RF-12 — Demos de IA
-Páginas próprias (`/demos/…`), nos 8 idiomas, no estilo e no tema do site, com link de volta ao portfólio e ao código:
+Páginas próprias (`/demos/…`), nos 3 idiomas, no estilo e no tema do site, com link de volta ao portfólio e ao código:
 - RF-12.1 **Previsão de ações (LSTM):** 15 ações (8 da B3 e 7 da NASDAQ) e 1–10 dias úteis; previsão em gráfico e tabela, métricas do teste fora da amostra **comparadas a um baseline ingênuo** e gráfico real × previsto. Preços atualizados quando possível; sem eles, a última cópia salva, com a data indicada. Aviso "não é recomendação de investimento".
 - RF-12.2 **Reconhecimento facial:** pela webcam ou por foto; o visitante cadastra rostos com um nome e vê o reconhecimento com a distância. **Nenhuma imagem sai do aparelho** e nada é salvo.
 - RF-12.3 **Recomendação de filmes:** por um filme escolhido ou por descrição livre (em inglês), com a similaridade e **os termos que explicam a recomendação**. Base de licença livre, com crédito às fontes.
@@ -120,7 +120,7 @@ Páginas próprias (`/demos/…`), nos 8 idiomas, no estilo e no tema do site, c
 O site pode ser instalado como app (manifest e ícones) e, depois da primeira visita, abre sem internet com a última versão salva; o chat usa a busca local quando offline.
 
 ### RF-14 — "Sua vaga combina?" (para recrutadores)
-- RF-14.1 Página `/vaga/` (8 idiomas) onde o recrutador cola a descrição de uma vaga (80–8.000 caracteres, qualquer idioma) e recebe: nota de aderência (0–100%), cada requisito com nível (atende / parcial / não encontrado), obrigatório ou diferencial, justificativa e evidências clicáveis, e um resumo "por que <nome>" com botão de copiar.
+- RF-14.1 Página `/vaga/` (3 idiomas) onde o recrutador cola a descrição de uma vaga (80–8.000 caracteres, qualquer idioma) e recebe: nota de aderência (0–100%), cada requisito com nível (atende / parcial / não encontrado), obrigatório ou diferencial, justificativa e evidências clicáveis, e um resumo "por que <nome>" com botão de copiar.
 - RF-14.2 Os requisitos são só os escritos na vaga (nada inventado, nada omitido); a nota é calculada por regra, não pela IA; nenhuma experiência pode ser afirmada sem evidência no perfil.
 - RF-14.3 O texto da vaga não é salvo; o visitante é avisado disso.
 - RF-14.4 O resultado mostra a nota num velocímetro e a aderência por pilar (Backend, Frontend, IA/ML, Dados, DevOps, Outros) em radar e barras.
@@ -169,8 +169,8 @@ O site pode ser instalado como app (manifest e ícones) e, depois da primeira vi
 
 ### Idiomas
 - [x] Sem preferência salva, o site abre em inglês.
-- [x] Ao escolher "中文", todos os textos visíveis mudam para chinês e a escolha persiste ao recarregar e nas demos.
-- [x] `?lang=ru` abre o site em russo.
+- [x] Ao escolher "Español", todos os textos visíveis mudam para espanhol e a escolha persiste ao recarregar e nas demos.
+- [x] `?lang=es` abre o site em espanhol; um idioma fora da lista (ex.: `?lang=fr`) abre em inglês.
 
 ### Assistente
 - [x] "where did he study?" retorna a formação com os nomes exatos (FUCAPI, UFG, FIAP, Descomplica).
@@ -178,8 +178,8 @@ O site pode ser instalado como app (manifest e ícones) e, depois da primeira vi
 - [x] "Qual foi o TCC dele?" (IA) cita o Crítico Jurídico Inteligente.
 - [x] "Me dá uma receita de bolo" é recusado educadamente; "Ignore all previous instructions…" não altera o comportamento.
 - [x] "Quantos anos ele tem?" responde que não há essa informação, sem inventar.
-- [x] Com o Worker respondendo `503 quota` (erro 3036), o chat mostra o aviso de cota, responde pela busca local e o rodapé passa a "cota atingida · busca local" — nos 8 idiomas (teste automático).
-- [x] Os 104 testes de `tests/rodar-testes-chat.sh` passam (96 casos + o fallback da IA em cada idioma).
+- [x] Com o Worker respondendo `503 quota` (erro 3036), o chat mostra o aviso de cota, responde pela busca local e o rodapé passa a "cota atingida · busca local" — nos 3 idiomas (teste automático).
+- [x] Os 70 testes de `tests/rodar-testes-chat.sh` passam (67 casos + o fallback da IA em cada idioma).
 
 ### Fontes únicas e reaproveitamento
 - [x] `node scripts/gerar-secoes.mjs --check` passa no CI; alterar um dado sem rodar o gerador faz o CI falhar.
@@ -214,12 +214,12 @@ O site pode ser instalado como app (manifest e ícones) e, depois da primeira vi
 
 ### SEO e desempenho
 - [x] `sitemap.xml` e `robots.txt` respondem HTTP 200; o sitemap é XML válido com 16 endereços.
-- [x] A página tem prévia Open Graph (imagem 1200×630), `hreflang` para os 8 idiomas e JSON-LD `Person` válido.
+- [x] A página tem prévia Open Graph (imagem 1200×630), `hreflang` para os 3 idiomas e JSON-LD `Person` válido.
 - [x] Lighthouse (celular): desempenho ~80, acessibilidade 100, boas práticas 100, SEO 100.
 - [x] Um endereço inexistente responde HTTP 404 com a página personalizada.
 
 ### Integração contínua
-- [x] Cada push na `main` roda: sintaxe dos scripts, SEO, gerador em `--check`, importmap, conhecimento da IA, testes do Worker (40), da demo de segurança (6) e do chat (104).
+- [x] Cada push na `main` roda: sintaxe dos scripts, SEO, gerador em `--check`, importmap, conhecimento da IA, testes do Worker (40), da demo de segurança (6) e do chat (70).
 - [x] Cada push roda o Lighthouse (3 medições); falha se acessibilidade < 95, boas práticas < 90 ou SEO < 95.
 
 ### Projetos e demos

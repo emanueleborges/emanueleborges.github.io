@@ -21,43 +21,12 @@ import { PortfolioApi } from "./api.js";
       accept: "Aceptar",
       reject: "Rechazar",
     },
-    fr: {
-      title: "Statistiques d’utilisation facultatives",
-      text: "Si vous acceptez, votre navigateur contacte notre Worker Cloudflare, qui utilise l’adresse IP de connexion pour estimer le continent. Le portfolio conserve uniquement des totaux quotidiens pendant 30 jours maximum : visites par continent et clics par lien (comme LinkedIn, GitHub et le CV) ; il ne conserve pas votre IP, page, langue ou identifiant d’appareil. Votre choix est enregistré uniquement dans ce navigateur. Pour le modifier plus tard, effacez les données enregistrées pour ce site dans les paramètres du navigateur.",
-      accept: "Accepter",
-      reject: "Refuser",
-    },
-    it: {
-      title: "Statistiche di utilizzo facoltative",
-      text: "Se accetti, il browser contatterà il nostro Worker su Cloudflare, che usa l’IP di connessione per stimare il continente. Il portfolio conserva solo totali giornalieri per un massimo di 30 giorni: visite per continente e clic per link (come LinkedIn, GitHub e il curriculum); non conserva IP, pagina, lingua o identificativi del dispositivo. La scelta viene salvata solo in questo browser. Per cambiarla in seguito, cancella i dati salvati di questo sito dalle impostazioni del browser.",
-      accept: "Accetta",
-      reject: "Rifiuta",
-    },
-    de: {
-      title: "Optionale Nutzungsstatistiken",
-      text: "Wenn du zustimmst, kontaktiert dein Browser unseren Cloudflare-Worker, der anhand der Verbindungs-IP den Kontinent schätzt. Das Portfolio speichert höchstens 30 Tage lang nur Tagessummen: Besuche je Kontinent und Klicks je Link (etwa LinkedIn, GitHub und Lebenslauf), nicht deine IP, Seite, Sprache oder Gerätekennung. Deine Auswahl wird nur in diesem Browser gespeichert. Um sie später zu ändern, lösche die für diese Website gespeicherten Daten in den Browsereinstellungen.",
-      accept: "Zustimmen",
-      reject: "Ablehnen",
-    },
-    zh: {
-      title: "可选使用统计",
-      text: "如果你同意，浏览器会访问我们的 Cloudflare Worker，由它使用连接 IP 估算所在洲。作品集最多保存 30 天的每日汇总：各大洲的访问次数和各链接（如 LinkedIn、GitHub 和简历）的点击次数，不保存你的 IP、页面、语言或设备标识。你的选择仅保存在此浏览器中。以后如需更改，请在浏览器设置中清除此网站保存的数据。",
-      accept: "允许",
-      reject: "拒绝",
-    },
-    ru: {
-      title: "Необязательная статистика использования",
-      text: "Если вы согласны, браузер обратится к нашему Worker в Cloudflare, который использует IP подключения для определения континента. Портфолио хранит только суточные итоги не более 30 дней: посещения по континентам и клики по ссылкам (например, LinkedIn, GitHub и резюме); IP, страницу, язык и идентификатор устройства не сохраняет. Выбор сохраняется только в этом браузере. Чтобы изменить его позже, удалите сохранённые данные этого сайта в настройках браузера.",
-      accept: "Разрешить",
-      reject: "Отклонить",
-    },
   };
 
   const language = () => {
     const queryLang = new URLSearchParams(location.search).get("lang");
     const lang = queryLang || document.documentElement.lang || "en";
     if (lang.startsWith("pt")) return "pt";
-    if (lang.startsWith("zh")) return "zh";
     return COPY[lang.slice(0, 2)] ? lang.slice(0, 2) : "en";
   };
 

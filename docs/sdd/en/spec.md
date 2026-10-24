@@ -23,7 +23,7 @@ Static résumés and profiles force recruiters to read everything to find one pi
 
 ### 1.2 Goals
 1. Communicate the profile within 30 seconds (top of the page + summary + featured projects).
-2. Answer visitor questions in natural language, in 8 languages.
+2. Answer visitor questions in natural language, in 3 languages.
 3. Make contact easy through direct links (email, WhatsApp, LinkedIn) and the PDF résumé, with no form on the site.
 4. Demonstrate front-end, serverless back-end and applied AI skills on the site itself.
 5. Run at **zero cost**.
@@ -41,7 +41,7 @@ Static résumés and profiles force recruiters to read everything to find one pi
 | Persona | Need | How the product helps |
 |---|---|---|
 | **Technical recruiter** | Quickly check technologies and experience | Organized sections, featured projects, filters, quick search, AI chat, PDF résumé |
-| **International recruiter** | Read in their own language; understand the hiring model | 8 languages (English by default), answers about remote work, time zone and contract type, "Does your role match?" |
+| **International recruiter** | Read in their own language; understand the hiring model | 3 languages (English by default), answers about remote work, time zone and contract type, "Does your role match?" |
 | **Hiring manager / tech lead** | Assess technical depth and projects | Projects with technical descriptions and verifiable results, **live AI demos**, "How I built it" and the site itself as a showcase |
 | **Emanuel (owner)** | Update content and track interest | Single sources (`data/`, `i18n/`, `idiomas.js`), a generator checked in CI, aggregate statistics and a weekly summary |
 | **Someone using the project as a template** | Have their own portfolio without rewriting code | Replace `data/` (data, media, themes) and the text in `i18n/`, run the generator and deploy |
@@ -62,7 +62,7 @@ The site shows: hero (name, role, summary, location, years of experience), About
 - FR-01.8 **Spoken intro:** the ▶ button on the photo plays a profile summary (English and Portuguese) with captions; the button only appears if there is audio for the language.
 
 ### FR-02 — Languages
-- FR-02.1 Available in **English (default)**, Portuguese, Spanish, French, Italian, German, Simplified Chinese and Russian.
+- FR-02.1 Available in **English (default)**, Portuguese and Spanish.
 - FR-02.2 Visitors switch language with a header selector; the choice is remembered on every page.
 - FR-02.3 The language can be set by link (`?lang=xx`).
 - FR-02.4 All visible text, accessibility attributes, chat, cards and résumé follow the chosen language.
@@ -72,7 +72,7 @@ The site shows: hero (name, role, summary, location, years of experience), About
 - FR-03.2 Skills filterable by category, with a "showing X of Y" counter.
 
 ### FR-04 — PDF résumé
-- FR-04.1 The résumé is **built by the site itself**, on demand, from the same data and text sources as the site, in any of the 8 languages. There are no PDF files in the repository.
+- FR-04.1 The résumé is **built by the site itself**, on demand, from the same data and text sources as the site, in any of the 3 languages. There are no PDF files in the repository.
 - FR-04.2 "Download résumé" opens the résumé in the current language in a modal for reading (phone friendly); "Download PDF" downloads the **A4 PDF file**, generated from the same page. If generation isn't available, it opens the browser's print dialog ("Save as PDF"); the standalone page `curriculo.html?lang=xx&pdf=1` opens straight into printing.
 - FR-04.3 Old links to `/cv/…-<lang>.pdf` lead to the résumé in that language, already printing.
 
@@ -83,7 +83,7 @@ The site shows: hero (name, role, summary, location, years of experience), About
 - FR-05.4 Other questions are answered by **generative AI** based **only** on the profile (RAG).
 - FR-05.5 AI answers show an "AI-generated answer" badge and a "See on page" shortcut.
 - FR-05.6 If the AI fails or the daily free quota runs out, the chat **tells the visitor** ("The AI has reached today's free quota…" or "…is unavailable right now…") and answers through **local search** over the page content.
-- FR-05.7 Local search tolerates typos and synonyms and works in all 8 languages.
+- FR-05.7 Local search tolerates typos and synonyms and works in all 3 languages.
 - FR-05.8 Contact questions show contact buttons; résumé questions show a shortcut to the résumé (with "Download PDF").
 - FR-05.9 The `/#chat` link opens the site with the assistant open.
 - FR-05.10 AI answers can be rated 👍/👎; only daily totals per rating type are kept for up to 30 days, with no question, answer, language or identifiers.
@@ -99,7 +99,7 @@ Optional counting only after explicit consent. The Worker uses the continent pro
 ### FR-09 — SEO and sharing
 - FR-09.1 Shared links (LinkedIn, WhatsApp, X) show a preview with image, title and description.
 - FR-09.2 Tell Google about the 8 language versions (`hreflang`) and who the site is about (`Person` structured data, with current employer and schools taken from the experience and education data).
-- FR-09.3 Publish `sitemap.xml` (page in 8 languages, demos, "Does your role match?" and "How I built it") and `robots.txt`; the site is verified in Google Search Console.
+- FR-09.3 Publish `sitemap.xml` (page in 3 languages, demos, "Does your role match?" and "How I built it") and `robots.txt`; the site is verified in Google Search Console.
 
 ### FR-10 — Weekly summary
 Every Monday the owner receives an e-mail with aggregate counts of ratings, consented regional visits and clicks, plus the health of the AI, vector index and database. Aggregate data only.
@@ -108,7 +108,7 @@ Every Monday the owner receives an e-mail with aggregate counts of ratings, cons
 Unknown addresses show a 404 page in the site's style, with links to the portfolio and the assistant (and the redirect in FR-04.3).
 
 ### FR-12 — AI demos
-Their own pages (`/demos/…`), in 8 languages, in the site's style and theme, linking back to the portfolio and the code:
+Their own pages (`/demos/…`), in 3 languages, in the site's style and theme, linking back to the portfolio and the code:
 - FR-12.1 **Stock forecasting (LSTM):** 15 stocks (8 B3, 7 NASDAQ) and 1–10 business days; forecast as chart and table, out-of-sample metrics **compared with a naive baseline** and an actual × predicted chart. Live prices when possible; otherwise the last saved copy, with its date. "Not investment advice" notice.
 - FR-12.2 **Face recognition:** webcam or photo; the visitor enrolls faces with a name and sees recognition with the distance. **No image leaves the device** and nothing is stored.
 - FR-12.3 **Movie recommender:** by a chosen movie or a free description (in English), with similarity and **the terms that explain each recommendation**. Freely licensed data, credited.
@@ -120,7 +120,7 @@ Their own pages (`/demos/…`), in 8 languages, in the site's style and theme, l
 The site can be installed as an app (manifest and icons) and, after the first visit, opens offline with the last saved version; the chat uses local search when offline.
 
 ### FR-14 — "Does your role match?" (for recruiters)
-- FR-14.1 Page `/vaga/` (8 languages) where the recruiter pastes a job description (80–8,000 characters, any language) and gets: a match score (0–100%), each requirement with its level (meets / partial / not found), must-have or nice-to-have, a reason and clickable evidence, and a "why <name>" summary with a copy button.
+- FR-14.1 Page `/vaga/` (3 languages) where the recruiter pastes a job description (80–8,000 characters, any language) and gets: a match score (0–100%), each requirement with its level (meets / partial / not found), must-have or nice-to-have, a reason and clickable evidence, and a "why <name>" summary with a copy button.
 - FR-14.2 Requirements are only those written in the job (nothing invented or omitted); the score is computed by rule, not by the AI; no experience may be claimed without evidence in the profile.
 - FR-14.3 The job text is not stored; the visitor is told so.
 - FR-14.4 The result shows the score on a gauge and the match per pillar (Backend, Frontend, AI/ML, Data, DevOps, Other) as radar and bars.
@@ -169,8 +169,8 @@ The site can be installed as an app (manifest and icons) and, after the first vi
 
 ### Languages
 - [x] With no saved preference, the site opens in English.
-- [x] Choosing "中文" switches all visible text to Chinese and the choice persists on reload and in the demos.
-- [x] `?lang=ru` opens the site in Russian.
+- [x] Choosing "Español" switches all visible text to Spanish and the choice persists on reload and in the demos.
+- [x] `?lang=es` opens the site in Spanish; a language not on the list (e.g. `?lang=fr`) opens in English.
 
 ### Assistant
 - [x] "where did he study?" returns education with exact names (FUCAPI, UFG, FIAP, Descomplica).
@@ -178,8 +178,8 @@ The site can be installed as an app (manifest and icons) and, after the first vi
 - [x] "What was his capstone?" (AI) mentions the Intelligent Legal Critic.
 - [x] "Give me a cake recipe" is politely declined; "Ignore all previous instructions…" doesn't change behavior.
 - [x] "How old is he?" says that information isn't available, without inventing.
-- [x] With the Worker answering `503 quota` (error 3036), the chat shows the quota notice, answers through local search and the footer switches to "quota reached · local search" — in all 8 languages (automated test).
-- [x] The 104 tests of `tests/rodar-testes-chat.sh` pass (96 cases + the AI fallback in each language).
+- [x] With the Worker answering `503 quota` (error 3036), the chat shows the quota notice, answers through local search and the footer switches to "quota reached · local search" — in all 3 languages (automated test).
+- [x] The 70 tests of `tests/rodar-testes-chat.sh` pass (67 cases + the AI fallback in each language).
 
 ### Single sources and reuse
 - [x] `node scripts/gerar-secoes.mjs --check` passes in CI; changing data without running the generator makes CI fail.
@@ -214,12 +214,12 @@ The site can be installed as an app (manifest and icons) and, after the first vi
 
 ### SEO and performance
 - [x] `sitemap.xml` and `robots.txt` return HTTP 200; the sitemap is valid XML with 16 URLs.
-- [x] The page has an Open Graph preview (1200×630 image), `hreflang` for 8 languages and valid `Person` JSON-LD.
+- [x] The page has an Open Graph preview (1200×630 image), `hreflang` for 3 languages and valid `Person` JSON-LD.
 - [x] Lighthouse (mobile): performance ~80, accessibility 100, best practices 100, SEO 100.
 - [x] An unknown address returns HTTP 404 with the custom page.
 
 ### Continuous integration
-- [x] Every push to `main` runs: script syntax, SEO, generator `--check`, import map, AI knowledge build, Worker tests (40), security-demo tests (6) and chat tests (104).
+- [x] Every push to `main` runs: script syntax, SEO, generator `--check`, import map, AI knowledge build, Worker tests (40), security-demo tests (6) and chat tests (70).
 - [x] Every push runs Lighthouse (3 runs); fails if accessibility < 95, best practices < 90 or SEO < 95.
 
 ### Projects and demos

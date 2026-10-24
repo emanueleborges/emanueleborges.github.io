@@ -12,12 +12,7 @@
       "nome": {
         "en": "Amazon",
         "pt": "Amazônia",
-        "es": "Amazonia",
-        "fr": "Amazonie",
-        "it": "Amazzonia",
-        "de": "Amazonien",
-        "zh": "亚马逊",
-        "ru": "Амазония"
+        "es": "Amazonia"
       },
       "esquema": "dark",
       "cores": {
@@ -102,12 +97,7 @@
       "nome": {
         "en": "Editorial",
         "pt": "Editorial",
-        "es": "Editorial",
-        "fr": "Éditorial",
-        "it": "Editoriale",
-        "de": "Editorial",
-        "zh": "编辑风",
-        "ru": "Редакционный"
+        "es": "Editorial"
       },
       "esquema": "dark",
       "cores": {

@@ -1,5 +1,5 @@
 // Base compartilhada das páginas de demo (demos/*): idioma, textos, formatação e estatísticas.
-// Cada página chama Demo.setup(textos, render) com os textos nos 8 idiomas. Nos textos, {nome} e
+// Cada página chama Demo.setup(textos, render) com os textos em todos os idiomas do site. Nos textos, {nome} e
 // {nomeCompleto} vêm do perfil (data/perfil.json), e o título da aba ganha " — <nome completo>" (não repita nos textos).
 // Dentro do modal do portfólio (?embed=1, demo-modal.js): sem cabeçalho nem "Voltar ao portfólio",
 // e links para o resto do site abrem na janela principal, não dentro do modal.

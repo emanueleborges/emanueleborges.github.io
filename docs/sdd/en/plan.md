@@ -71,7 +71,7 @@ flowchart TB
 | `data/formacao.json` | Courses (i18n key, school, period, `emAndamento`, logos, extra AI context) | Education section, résumé, AI, JSON-LD `alumniOf` |
 | `data/projetos.json` | Projects (`featured`, categories, label, repo + path, demo, metrics, `cv`) | Featured and "More projects" cards (numbered by display order), résumé |
 | `data/habilidades.json` | Technologies by category (icon, `full` for the résumé) | Toolbox, graph, résumé, AI |
-| `data/temas.json` | Themes (names in 8 languages, scheme, CSS variables), default theme, intensity limits and `escurecer` | `temas.css`, the `// gerado: temas` block in `components/boot.js`, `manifest` colors, `theme-color` |
+| `data/temas.json` | Themes (names in 3 languages, scheme, CSS variables), default theme, intensity limits and `escurecer` | `temas.css`, the `// gerado: temas` block in `components/boot.js`, `manifest` colors, `theme-color` |
 | `idiomas.js` | Languages (`html`, `og`, `nome`, `ia`) | Language selectors, i18n loader, SEO, Worker (`LANGUAGES`) |
 | `i18n/<lang>.js` | All text; each file is `((P) => ({…}))(globalThis.PERFIL)` | Site, chat, résumé, cards and AI; the static Portuguese in `index.html` is **copied from `i18n/pt.js`** by the generator |
 | `data/imagens/`, `data/audio/` | Photo, share image, spoken intro and reference voice | Site, résumé, previews, "About me" player |
@@ -126,7 +126,7 @@ Data are classic scripts (not JSON or modules) so they run before paint, in `fil
 ### 3.4 Assistant local search
 1. **Index** built from the DOM in the current language (About, jobs, projects with category and badge, skill groups, education, certifications, languages).
 2. **Normalization** (lowercase, no accents, `ё→е`); the person's name (from the profile) is a stopword.
-3. **Terms** without stopwords (8 languages), simple stemming, character pairs for Chinese, synonyms.
+3. **Terms** without stopwords (multilingual), simple stemming, character pairs for Chinese, synonyms.
 4. **Typo correction** (Damerau-Levenshtein ≤ 1 or ≤ 2 depending on length).
 5. **Ranking** IDF-like with title and section weights; up to 4 results.
 
@@ -142,7 +142,7 @@ question
 ```
 
 ### 3.6 SEO
-Open Graph/Twitter tags, `hreflang` (8 languages + `x-default`), `Person` JSON-LD (current employer and schools from `data/`) and Google verification — all generated from `data/perfil.json`. `sitemap.xml` (16 URLs; dates edited by hand, origin generated) and `robots.txt`. No `canonical` on the home page (it would conflict with the per-language alternates).
+Open Graph/Twitter tags, `hreflang` (3 languages + `x-default`), `Person` JSON-LD (current employer and schools from `data/`) and Google verification — all generated from `data/perfil.json`. `sitemap.xml` (16 URLs; dates edited by hand, origin generated) and `robots.txt`. No `canonical` on the home page (it would conflict with the per-language alternates).
 
 ### 3.7 Themes and intensity
 - `temas.css` (generated) defines each theme's variables; the default applies without `data-theme` and is the base, other themes only declare what changes.
@@ -182,7 +182,7 @@ Web Audio sounds and haptics; modals for site pages; GitHub viewer (listing from
 | Hourly cron / Monday 12:00 UTC | Purge old data / weekly summary e-mail | — | deletes totals 29+ days old |
 
 #### `POST /` — chat
-**Request:** `{ "question": "1–500 chars", "lang": "en|pt|es|fr|it|de|zh|ru", "turnstileToken": "…" }` · **200:** `{ "answer": "…" }` · **Errors:** `400 invalid_question` · `403 forbidden_origin` · `403 turnstile_failed` · `429 rate_limited` · `502 empty_answer` · `503 quota` (daily free quota, error 3036) · `503 unavailable` (any other failure).
+**Request:** `{ "question": "1–500 chars", "lang": "en|pt|es", "turnstileToken": "…" }` · **200:** `{ "answer": "…" }` · **Errors:** `400 invalid_question` · `403 forbidden_origin` · `403 turnstile_failed` · `429 rate_limited` · `502 empty_answer` · `503 quota` (daily free quota, error 3036) · `503 unavailable` (any other failure).
 
 **Flow:** origin → limit → validation → Turnstile → normalization → **RAG** (BGE-M3 → Vectorize top 6 → fixed summary + excerpts; on failure, full profile) → Qwen3 30B (`temperature 0.1`, `max_tokens 600`, `/no_think`) through AI Gateway **without cache** → cleanup (`<think>`, Markdown). On error, `aiErrorKind()` classifies it and, for quota, marks the AI as "quota" until 00:00 UTC (in that Worker instance's memory).
 
@@ -247,7 +247,7 @@ There are no tables for messages, questions or answers. Every D1 table holds **d
 
 ## 7. Quality
 
-- **CI (`.github/workflows/testes.yml`):** `node --check` on every script; `sitemap.xml` and JSON-LD validation; `gerar-secoes.mjs --check`; `conferir-modulos.mjs`; knowledge build; Worker tests (40), security-demo tests (6) and chat tests (104 = 96 cases + AI fallback in 8 languages, headless Chrome with no network); Lighthouse (3 runs; accessibility ≥ 95, best practices ≥ 90, SEO ≥ 95).
+- **CI (`.github/workflows/testes.yml`):** `node --check` on every script; `sitemap.xml` and JSON-LD validation; `gerar-secoes.mjs --check`; `conferir-modulos.mjs`; knowledge build; Worker tests (40), security-demo tests (6) and chat tests (104 = 96 cases + AI fallback in 3 languages, headless Chrome with no network); Lighthouse (3 runs; accessibility ≥ 95, best practices ≥ 90, SEO ≥ 95).
 - **Worker tests:** wrong origin, invalid fields, Turnstile, limits, unknown route, aggregation, retention, image, job match, error 3036 → `503 quota` and `ai: "quota"` on `/status`.
 - **Recorded manual checks:** full profile swap with a fictitious person; computed colors before/after the theme move; header measured at 320–390 px; PDF text identical to the previous PDFs.
 

@@ -118,6 +118,7 @@ Legend: ✅ done · ⏳ pending · 💡 idea
 - ✅ **T101** Workers Logs (only the Worker's own messages) and technical metrics in Analytics Engine (route, result, time; RAG falling back to the full profile), with an "AI and routes" section in the dashboard — NFR-03, NFR-05
 - ✅ **T102** Real PDF résumé: `GET /cv` with Browser Run, D1 cache (migration 0009) and printing as fallback; modal, résumé and job-match buttons point to `PERFIL.cvPdf` — FR-04
 - ✅ **T104** Voice questions in the chat: `chat/voz.js` + `POST /transcribe` (Whisper turbo), texts in 8 languages, Worker tests and an end-to-end test (real recording → Whisper) — FR-05.12
+- ✅ **T105** Languages reduced to English, Portuguese and Spanish (French, Italian, German, Chinese and Russian removed from `idiomas.js`, `i18n/`, demos, tests and docs); old `?lang=` links fall back to English. The chat's synonym lists stay multilingual — FR-02
 
 ---
 
@@ -129,7 +130,7 @@ Legend: ✅ done · ⏳ pending · 💡 idea
 | ⏳ **T98** | Refresh the LinkedIn link preview (Post Inspector), since the share image moved | Emanuel | FR-09.1 |
 | ⏳ **T99** | Decide whether institution logos move to `data/imagens/logos/` (technology icons stay in `imagens/`) | Emanuel | FR-17 |
 | ⏳ **T33** | Impact numbers in the jobs (e.g. deploy time, % of bugs) | Emanuel's data | FR-01 |
-| ⏳ **T35** | Native-speaker review of translations (priority: Chinese and Russian) | Reviewer | FR-02 |
+| ⏳ **T35** | Native-speaker review of the Spanish translation | Reviewer | FR-02 |
 
 ## Ideas
 

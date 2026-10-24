@@ -71,7 +71,7 @@ flowchart TB
 | `data/formacao.json` | Cursos (chave do i18n, escola, período, `emAndamento`, logos, contexto extra para a IA) | Seção Formação, currículo, IA, `alumniOf` do JSON-LD |
 | `data/projetos.json` | Projetos (`featured`, categorias, rótulo, repositório + caminho, demo, métricas, `cv`) | Cards em destaque e "Mais projetos" (numeração pela ordem de exibição), currículo |
 | `data/habilidades.json` | Tecnologias por categoria (ícone, `full` para o currículo) | Caixa de ferramentas, grafo, currículo, IA |
-| `data/temas.json` | Temas (nomes nos 8 idiomas, esquema, variáveis CSS), tema padrão, limites e `escurecer` da intensidade | `temas.css`, bloco `// gerado: temas` do `components/boot.js`, cores do `manifest`, `theme-color` |
+| `data/temas.json` | Temas (nomes nos 3 idiomas, esquema, variáveis CSS), tema padrão, limites e `escurecer` da intensidade | `temas.css`, bloco `// gerado: temas` do `components/boot.js`, cores do `manifest`, `theme-color` |
 | `idiomas.js` | Idiomas (`html`, `og`, `nome`, `ia`) | Seletores de idioma, carregador do i18n, SEO, Worker (`LANGUAGES`) |
 | `i18n/<idioma>.js` | Todos os textos; cada arquivo é `((P) => ({…}))(globalThis.PERFIL)` | Site, chat, currículo, cartões e IA; o português estático do `index.html` é **copiado do `i18n/pt.js`** pelo gerador |
 | `data/imagens/`, `data/audio/` | Foto, imagem de compartilhamento, apresentação falada e voz de referência | Site, currículo, prévias, player do "Sobre mim" |
@@ -112,7 +112,7 @@ Os dados são scripts clássicos (e não JSON ou módulos) para rodar antes da p
 | `apresentacao.js` | Player da apresentação falada (faixas em `PERFIL.audio.apresentacao`, legenda por frase). |
 | `components/components.js` | Web Components `<site-logo>`, `<theme-toggle>` (com `<theme-intensity>` dentro), `<theme-intensity>` (também sozinho, no menu ☰), `<sound-toggle>`; sons; visualizador do GitHub; cartões de links externos; "Compartilhar". Carrega `i18n/<idioma>.js` sob demanda (`siteTexts`) quando um cartão precisa de texto do perfil numa página sem traduções. |
 | `components/boot.js` | Tema, intensidade e idioma antes da pintura; bloco de temas gerado. |
-| `demos/demos.css` · `demos/demos.js` | Base das demos, vaga e "Como construí": `Demo.setup(textos)` com dicionário próprio nos 8 idiomas; `t()` preenche `{nome}`/`{nomeCompleto}` e acrescenta " — <nome completo>" ao título da aba. |
+| `demos/demos.css` · `demos/demos.js` | Base das demos, vaga e "Como construí": `Demo.setup(textos)` com dicionário próprio nos 3 idiomas; `t()` preenche `{nome}`/`{nomeCompleto}` e acrescenta " — <nome completo>" ao título da aba. |
 | `curriculo.html` | Currículo A4 montado no navegador a partir de `window.CURRICULO` (bloco gerado), `PERFIL` e `I18N`; botão "Baixar PDF" (impressão); `?pdf=1` imprime ao carregar. |
 | `temas.css` · `styles.css` | Cores dos temas (gerado) · visual do site. |
 | `manifest.webmanifest` · `sw.js` | App instalável e offline; o `sw.js` importa o `perfil.js` para pré-carregar a foto. |
@@ -126,7 +126,7 @@ Os dados são scripts clássicos (e não JSON ou módulos) para rodar antes da p
 ### 3.4 Busca local do assistente
 1. **Índice** construído do DOM no idioma atual (Sobre, empregos, projetos com categoria e marca, grupos de habilidades, formação, certificações, idiomas).
 2. **Normalização** (minúsculas, sem acentos, `ё→е`); o nome da pessoa (do perfil) é *stopword*.
-3. **Termos** sem *stopwords* (8 idiomas), radical simples, pares de caracteres para chinês, sinônimos.
+3. **Termos** sem *stopwords* (multilíngues), radical simples, pares de caracteres para chinês, sinônimos.
 4. **Correção de digitação** (Damerau-Levenshtein ≤ 1 ou ≤ 2 conforme o tamanho).
 5. **Ranking** tipo IDF com pesos por título e por seção; até 4 resultados.
 
@@ -142,7 +142,7 @@ pergunta
 ```
 
 ### 3.6 SEO
-Tags Open Graph/Twitter, `hreflang` (8 idiomas + `x-default`), JSON-LD `Person` (empresa atual e escolas vindas de `data/`) e verificação do Google — tudo gerado a partir do `data/perfil.json`. `sitemap.xml` (16 endereços; datas editadas à mão, origem gerada) e `robots.txt`. Sem `canonical` na página inicial (conflitaria com as alternativas por idioma).
+Tags Open Graph/Twitter, `hreflang` (3 idiomas + `x-default`), JSON-LD `Person` (empresa atual e escolas vindas de `data/`) e verificação do Google — tudo gerado a partir do `data/perfil.json`. `sitemap.xml` (16 endereços; datas editadas à mão, origem gerada) e `robots.txt`. Sem `canonical` na página inicial (conflitaria com as alternativas por idioma).
 
 ### 3.7 Temas e intensidade
 - `temas.css` (gerado) define as variáveis de cada tema; o padrão vale sem `data-theme` e serve de base, os outros só declaram o que muda.
@@ -182,7 +182,7 @@ Sons por Web Audio e vibração; modais para páginas do site; visualizador do G
 | Cron horário / segunda 12:00 UTC | Expurgo de dados antigos / resumo semanal por e-mail | — | apaga totais com 29+ dias |
 
 #### `POST /` — chat
-**Requisição:** `{ "question": "1–500 caracteres", "lang": "en|pt|es|fr|it|de|zh|ru", "turnstileToken": "…" }` · **200:** `{ "answer": "…" }` · **Erros:** `400 invalid_question` · `403 forbidden_origin` · `403 turnstile_failed` · `429 rate_limited` · `502 empty_answer` · `503 quota` (cota gratuita do dia, erro 3036) · `503 unavailable` (outra falha).
+**Requisição:** `{ "question": "1–500 caracteres", "lang": "en|pt|es", "turnstileToken": "…" }` · **200:** `{ "answer": "…" }` · **Erros:** `400 invalid_question` · `403 forbidden_origin` · `403 turnstile_failed` · `429 rate_limited` · `502 empty_answer` · `503 quota` (cota gratuita do dia, erro 3036) · `503 unavailable` (outra falha).
 
 **Fluxo:** origem → limite → validação → Turnstile → normalização → **RAG** (BGE-M3 → Vectorize top 6 → resumo fixo + trechos; em falha, perfil completo) → Qwen3 30B (`temperature 0.1`, `max_tokens 600`, `/no_think`) pelo AI Gateway **sem cache** → limpeza (`<think>`, Markdown). Em erro, `aiErrorKind()` classifica e, se for cota, marca a IA como "quota" até 00:00 UTC (na memória daquela instância do Worker).
 
@@ -247,7 +247,7 @@ Não há tabelas de mensagens, perguntas ou respostas. Todas as tabelas do D1 s�
 
 ## 7. Qualidade
 
-- **CI (`.github/workflows/testes.yml`):** `node --check` em todos os scripts; validação do `sitemap.xml` e do JSON-LD; `gerar-secoes.mjs --check`; `conferir-modulos.mjs`; geração do conhecimento; testes do Worker (40), da demo de segurança (6) e do chat (104 = 96 casos + fallback da IA nos 8 idiomas, em Chrome headless sem rede); Lighthouse (3 medições; acessibilidade ≥ 95, boas práticas ≥ 90, SEO ≥ 95).
+- **CI (`.github/workflows/testes.yml`):** `node --check` em todos os scripts; validação do `sitemap.xml` e do JSON-LD; `gerar-secoes.mjs --check`; `conferir-modulos.mjs`; geração do conhecimento; testes do Worker (40), da demo de segurança (6) e do chat (104 = 96 casos + fallback da IA nos 3 idiomas, em Chrome headless sem rede); Lighthouse (3 medições; acessibilidade ≥ 95, boas práticas ≥ 90, SEO ≥ 95).
 - **Testes do Worker:** origem errada, campos inválidos, Turnstile, limites, rota inexistente, agregações, retenção, imagem, vaga, erro 3036 → `503 quota` e `ai: "quota"` no `/status`.
 - **Verificações manuais registradas:** troca completa do perfil por uma pessoa fictícia; comparação das cores calculadas antes/depois dos temas; medição do cabeçalho em 320–390 px; texto do PDF igual ao dos PDFs anteriores.
 

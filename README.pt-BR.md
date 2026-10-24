@@ -40,7 +40,7 @@ Site estático, sem framework, com backend *serverless* no Cloudflare para o cha
 
 | Área | O que faz |
 |---|---|
-| **8 idiomas** | Inglês (padrão), português, espanhol, francês, italiano, alemão, chinês e russo. O visitante escolhe no cabeçalho; a escolha fica salva e pode vir no link (`?lang=pt`). |
+| **3 idiomas** | Inglês (padrão), português e espanhol. O visitante escolhe no cabeçalho; a escolha fica salva e pode vir no link (`?lang=pt`). |
 | **Seções** | Sobre (com foto), Experiência (como **esteira de CI/CD**: cada emprego é uma etapa concluída ou em execução, com o "log" das conquistas e a stack mais citada no período), Projetos (4 em **destaque**, em cards grandes com métricas, e 8 em "Mais projetos", compactos; 6 com demo ao vivo; filtros, link para o código e linguagem/estrelas/última atualização vindos da API do GitHub), Habilidades (46 tecnologias em **grade** — padrão — ou **grafo** interativo habilidades × projetos), Formação (com logos das instituições) e Contato. |
 | **Temas** | Dois temas que o visitante escolhe no cabeçalho (a escolha fica salva e vale em todas as páginas, inclusive demos e 404): **Amazônia** (padrão — verde-floresta escuro e lima mesclados com o azul de tecnologia, "IA feita na Amazônia") e **Editorial** (escuro — azul-noite quase preto, cards em ardósia e destaque ciano). Também pelo link: `?theme=editorial`. Ao lado do botão, uma **barra de intensidade** deixa as cores mais fortes ou mais fracas (no celular, fica no menu ☰). Tudo aplicado antes da pintura, sem piscar. Cores, nomes e limites em `data/temas.json`. |
 | **Visual** | Tema escolhido pelo visitante, imagens de fundo em movimento (duotone), rede de partículas em Canvas, animações ao rolar e cabeçalho fixo com barra de progresso. Respeita "reduzir movimento". |
@@ -52,13 +52,13 @@ Site estático, sem framework, com backend *serverless* no Cloudflare para o cha
 | **Assistente com IA** | Híbrido: **respostas prontas** locais para perguntas frequentes, **IA generativa com RAG** para o resto e **busca local** como reserva. As respostas aparecem com **efeito de digitação** (até ~2,5 s; clicar completa). Respostas da IA podem ser avaliadas com 👍/👎. Veja [Arquitetura](#arquitetura). **Perguntas por voz:** o botão 🎤 grava a pergunta (até 20 s), o Worker transcreve com o **Whisper** do Workers AI e o texto vai para o campo, para o visitante revisar e enviar; o áudio não é guardado. |
 | **Currículo em PDF** | Montado a partir de `data/` e `i18n/`, sem arquivos PDF no repositório. O botão abre o currículo **num modal para leitura** (legível também no celular) e **"Baixar PDF"** baixa o arquivo gerado pelo Worker com o **Browser Run** (navegador da Cloudflare, plano gratuito), que renderiza a própria página `curriculo.html` em A4 e guarda o PDF no D1 — um por idioma e versão do conteúdo. Se o limite diário do Browser Run acabar, o link cai na impressão do navegador ("Salvar como PDF"). Links antigos `/cv/…pdf` são redirecionados. |
 | **Contatos diretos** | E-mail, WhatsApp, LinkedIn e GitHub, cada um com seu cartão em modal; sem formulário nem armazenamento de mensagens pelo portfólio. |
-| **SEO** | Prévia de link (Open Graph/Twitter), `hreflang` para os 8 idiomas, dados estruturados de `Person` (JSON-LD), `sitemap.xml` e `robots.txt`; verificado no Google Search Console. |
+| **SEO** | Prévia de link (Open Graph/Twitter), `hreflang` para os 3 idiomas, dados estruturados de `Person` (JSON-LD), `sitemap.xml` e `robots.txt`; verificado no Google Search Console. |
 | **Estatísticas** | Contagem opcional, somente após consentimento explícito. O Worker da Cloudflare usa o IP da conexão para estimar o continente e grava no D1 apenas totais diários: acessos por continente e cliques por link (LinkedIn, GitHub, currículo, código e demos dos projetos…); não grava IP, URL, idioma ou identificadores. Os agregados são removidos antes de completar 30 dias. A escolha fica salva no navegador; para alterá-la depois, limpe os dados salvos deste site nas configurações do navegador. |
 | **Resumo semanal** | Toda segunda, um e-mail com avaliações agregadas, acessos regionais consentidos e saúde da IA, do índice vetorial e do banco. |
-| **Como construí** | Página `/como-construi/` (8 idiomas) que resume este README para visitantes: diagrama da arquitetura, como o assistente responde, decisões e trade-offs, verificações de qualidade e tecnologias. Link no rodapé. |
+| **Como construí** | Página `/como-construi/` (3 idiomas) que resume este README para visitantes: diagrama da arquitetura, como o assistente responde, decisões e trade-offs, verificações de qualidade e tecnologias. Link no rodapé. |
 | **Página 404** | Página personalizada no estilo do site, com links para o portfólio e o assistente. |
-| **Demo de IA: previsão de ações com LSTM** | Página `/demos/lstm/` (8 idiomas) onde o LSTM do projeto FIAP roda **no navegador, em JavaScript puro** (pesos exportados do Keras, mesma saída até ~1e-8). Preços recentes pelo Worker (Yahoo Finance), com cópia salva se ele falhar; métricas do teste comparadas com um baseline ingênuo. |
-| **"Sua vaga combina?" (para recrutadores)** | Página `/vaga/` (8 idiomas): o recrutador cola a vaga e vê a **nota de aderência**, cada requisito como ✅ atende / 🟡 parcial / ⚪ não encontrado com **evidências clicáveis** no portfólio, e um resumo "por que o Emanuel" para copiar. A IA extrai os requisitos lendo só a vaga e depois avalia cada um; o Worker confere as evidências, rebaixa tecnologias ausentes do perfil e calcula a nota por regra. O resultado traz um **velocímetro** da nota e a **aderência por pilar** (Backend, Frontend, IA/ML, Dados, DevOps, Outros) em radar e barras, com a mesma regra por pilar. O texto da vaga não é salvo. |
+| **Demo de IA: previsão de ações com LSTM** | Página `/demos/lstm/` (3 idiomas) onde o LSTM do projeto FIAP roda **no navegador, em JavaScript puro** (pesos exportados do Keras, mesma saída até ~1e-8). Preços recentes pelo Worker (Yahoo Finance), com cópia salva se ele falhar; métricas do teste comparadas com um baseline ingênuo. |
+| **"Sua vaga combina?" (para recrutadores)** | Página `/vaga/` (3 idiomas): o recrutador cola a vaga e vê a **nota de aderência**, cada requisito como ✅ atende / 🟡 parcial / ⚪ não encontrado com **evidências clicáveis** no portfólio, e um resumo "por que o Emanuel" para copiar. A IA extrai os requisitos lendo só a vaga e depois avalia cada um; o Worker confere as evidências, rebaixa tecnologias ausentes do perfil e calcula a nota por regra. O resultado traz um **velocímetro** da nota e a **aderência por pilar** (Backend, Frontend, IA/ML, Dados, DevOps, Outros) em radar e barras, com a mesma regra por pilar. O texto da vaga não é salvo. |
 | **Demo de IA: reconhecimento facial** | Página `/demos/face/` com face-api.js (TensorFlow.js): detecção, embeddings de 128 números e reconhecimento pela webcam ou por foto. **Nada sai do aparelho** do visitante. |
 | **Demo de IA: recomendação de filmes** | Página `/demos/filmes/`: TF-IDF + cosseno em JavaScript puro sobre ~1.500 filmes (Wikidata CC0 + resumos da Wikipédia CC BY-SA), por filme ou por descrição livre, mostrando os termos que explicam cada recomendação. |
 | **Demo de segurança RAG** | Página `/demos/guardrail/`: comparação local e interativa de prompt injection na pergunta e em documentos recuperados, com exemplos de defesas em camadas. As respostas são simuladas; nenhum modelo roda e o texto digitado não é enviado. |
@@ -91,7 +91,7 @@ As **demos de IA** fazem a inferência no navegador: o LSTM roda em JavaScript p
 ### Como o assistente responde
 
 1. **Contato, currículo e pedidos de imagem** → botões de contato, o currículo (com "Baixar PDF") ou atalho para o gerador de imagens com o pedido já preenchido (local, sem gastar IA).
-2. **Respostas prontas** (19 temas, 8 idiomas) → saudação, agradecimento, salário, data de início e **formação** são **sempre locais**, sem custo e com texto conferido. Os demais temas prontos (tipo de vaga, remoto, IA, tecnologias…) são respondidos pela IA quando ela está disponível.
+2. **Respostas prontas** (19 temas, 3 idiomas) → saudação, agradecimento, salário, data de início e **formação** são **sempre locais**, sem custo e com texto conferido. Os demais temas prontos (tipo de vaga, remoto, IA, tecnologias…) são respondidos pela IA quando ela está disponível.
 3. **IA com RAG** → o Worker:
    1. confere o token do **Turnstile**;
    2. gera o vetor da pergunta com **BGE-M3** (multilíngue);
@@ -187,7 +187,7 @@ Cada informação existe em **um lugar só**; o resto do projeto lê dali ou é 
 ├── curriculo.html          # Currículo (A4) montado com data/ e i18n/; gera o PDF pela impressão do navegador (?pdf=1 abre direto)
 ├── sitemap.xml · robots.txt
 ├── imagens/                # Imagens do site: favicons, ícones do app, logo; logos/ (instituições e habilidades)
-├── tests/                  # Testes automáticos do chat (96 casos + fallback da IA sem cota, 8 idiomas)
+├── tests/                  # Testes automáticos do chat (67 casos + fallback da IA sem cota, 3 idiomas)
 ├── .github/workflows/      # GitHub Actions: testes e Lighthouse a cada push
 ├── lighthouserc.json       # Notas mínimas do Lighthouse no CI
 ├── scripts/pre-commit      # Hook do git: data de atualização e versão dos arquivos
@@ -309,7 +309,7 @@ Os **logs** do Worker (só as mensagens de erro técnicas que ele mesmo escreve)
 
 | Verificação | Resultado |
 |---|---|
-| **GitHub Actions** a cada push | Sintaxe dos JavaScript, validação do `sitemap.xml` e do JSON-LD, **arquivos gerados em dia com `data/`, `idiomas.js` e `i18n/`**, geração do conhecimento da IA, testes do Worker e os **104 testes do chat** (inclui a IA sem cota: aviso, busca local e estado no rodapé, nos 8 idiomas) |
+| **GitHub Actions** a cada push | Sintaxe dos JavaScript, validação do `sitemap.xml` e do JSON-LD, **arquivos gerados em dia com `data/`, `idiomas.js` e `i18n/`**, geração do conhecimento da IA, testes do Worker e os **70 testes do chat** (inclui a IA sem cota: aviso, busca local e estado no rodapé, nos 3 idiomas) |
 | **Lighthouse (celular)** | Desempenho ~80 · Acessibilidade 100 · Boas práticas 100 · SEO 100 |
 | **Lighthouse no CI** a cada push | 3 medições; falha se acessibilidade < 95, boas práticas < 90 ou SEO < 95 (desempenho < 70 só avisa). O link do relatório aparece no log do GitHub Actions. |
 | **Worker** | Erro 3036 (cota) e outras falhas da IA → 503 com o motivo e estado no `/status`, origem errada, campos inválidos, token ausente/falso, rota inexistente, limites por minuto, agregação de avaliações e `GET /prices` (ação fora da lista e outra origem recusadas) |

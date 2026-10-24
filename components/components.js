@@ -36,22 +36,12 @@
     en: "Theme: {current}. Switch to {next}",
     pt: "Tema: {current}. Mudar para {next}",
     es: "Tema: {current}. Cambiar a {next}",
-    fr: "Thème : {current}. Passer à {next}",
-    it: "Tema: {current}. Passa a {next}",
-    de: "Design: {current}. Zu {next} wechseln",
-    zh: "主题：{current}。切换到{next}",
-    ru: "Тема: {current}. Переключить на {next}",
   };
   // Barra de intensidade das cores (mais forte ↔ mais fraca), ao lado do botão; limites em data/temas.json.
   const INTENSITY_LABELS = {
     en: "Color intensity",
     pt: "Intensidade da cor",
     es: "Intensidad del color",
-    fr: "Intensité de la couleur",
-    it: "Intensità del colore",
-    de: "Farbintensität",
-    zh: "颜色强度",
-    ru: "Насыщенность цвета",
   };
   const INTENSITY_STYLE = `
     theme-toggle { align-items: center; gap: 8px; }
@@ -266,11 +256,6 @@
     en: "Interface sounds",
     pt: "Sons da interface",
     es: "Sonidos de la interfaz",
-    fr: "Sons de l’interface",
-    it: "Suoni dell’interfaccia",
-    de: "Oberflächenklänge",
-    zh: "界面音效",
-    ru: "Звуки интерфейса",
   };
   const ICON_ON =
     '<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="M15.5 9a4 4 0 0 1 0 6M18.2 6.5a7.5 7.5 0 0 1 0 11"/></svg>';
@@ -330,11 +315,6 @@
     en: ["Back", "Close", "GITHUB ↗", "Loading…", "Couldn't load this from GitHub right now.", "GitHub's hourly request limit was reached. Try again in a few minutes or open it on GitHub.", "Repositories"],
     pt: ["Voltar", "Fechar", "GITHUB ↗", "Carregando…", "Não foi possível carregar do GitHub agora.", "O limite de consultas por hora do GitHub foi atingido. Tente em alguns minutos ou abra no GitHub.", "Repositórios"],
     es: ["Volver", "Cerrar", "GITHUB ↗", "Cargando…", "No se pudo cargar desde GitHub ahora.", "Se alcanzó el límite de consultas por hora de GitHub. Inténtalo en unos minutos o ábrelo en GitHub.", "Repositorios"],
-    fr: ["Retour", "Fermer", "GITHUB ↗", "Chargement…", "Impossible de charger depuis GitHub pour le moment.", "La limite horaire de requêtes GitHub est atteinte. Réessayez dans quelques minutes ou ouvrez-le sur GitHub.", "Dépôts"],
-    it: ["Indietro", "Chiudi", "GITHUB ↗", "Caricamento…", "Impossibile caricare da GitHub in questo momento.", "Raggiunto il limite orario di richieste a GitHub. Riprova tra qualche minuto o aprilo su GitHub.", "Repository"],
-    de: ["Zurück", "Schließen", "GITHUB ↗", "Wird geladen…", "Konnte gerade nicht von GitHub geladen werden.", "Das stündliche Anfragelimit von GitHub ist erreicht. Versuchen Sie es in ein paar Minuten erneut oder öffnen Sie es auf GitHub.", "Repositorys"],
-    zh: ["返回", "关闭", "GITHUB ↗", "加载中…", "暂时无法从 GitHub 加载。", "已达到 GitHub 每小时请求上限。请几分钟后再试，或在 GitHub 上打开。", "仓库"],
-    ru: ["Назад", "Закрыть", "GITHUB ↗", "Загрузка…", "Сейчас не удалось загрузить с GitHub.", "Достигнут почасовой лимит запросов к GitHub. Попробуйте через несколько минут или откройте на GitHub.", "Репозитории"],
   };
   const ghText = () => GH_LABELS[pageLang()] ?? GH_LABELS.en;
 
@@ -737,11 +717,6 @@
     en: { close: "Close", copy: "Copy", copied: "Copied!", note: "This site can't be shown inside the portfolio — open it whenever you like.", whatsTitle: "Chat on WhatsApp", scan: "Point your phone's camera at the code", openWhats: "Open chat ↗", linkedinTitle: "LinkedIn profile", openLinkedin: "Open on LinkedIn ↗", mailTitle: "Email", openMail: "Write an email ↗", siteTitle: "External site", openSite: "Open site ↗", stack: "Stack", shareKind: "Share", shareTitle: "Share this portfolio", shareScan: "Point a phone camera at the code to open the portfolio", shareNow: "Share ↗" },
     pt: { close: "Fechar", copy: "Copiar", copied: "Copiado!", note: "Este site não pode ser exibido dentro do portfólio — abra quando quiser.", whatsTitle: "Conversar no WhatsApp", scan: "Aponte a câmera do celular para o código", openWhats: "Abrir conversa ↗", linkedinTitle: "Perfil no LinkedIn", openLinkedin: "Abrir no LinkedIn ↗", mailTitle: "E-mail", openMail: "Escrever e-mail ↗", siteTitle: "Site externo", openSite: "Abrir site ↗", stack: "Tecnologias", shareKind: "Compartilhar", shareTitle: "Compartilhe este portfólio", shareScan: "Aponte a câmera do celular para abrir o portfólio", shareNow: "Compartilhar ↗" },
     es: { close: "Cerrar", copy: "Copiar", copied: "¡Copiado!", note: "Este sitio no puede mostrarse dentro del portafolio — ábrelo cuando quieras.", whatsTitle: "Hablar por WhatsApp", scan: "Apunta la cámara del móvil al código", openWhats: "Abrir chat ↗", linkedinTitle: "Perfil de LinkedIn", openLinkedin: "Abrir en LinkedIn ↗", mailTitle: "Correo", openMail: "Escribir correo ↗", siteTitle: "Sitio externo", openSite: "Abrir sitio ↗", stack: "Tecnologías", shareKind: "Compartir", shareTitle: "Comparte este portafolio", shareScan: "Apunta la cámara del móvil al código para abrir el portafolio", shareNow: "Compartir ↗" },
-    fr: { close: "Fermer", copy: "Copier", copied: "Copié !", note: "Ce site ne peut pas s’afficher dans le portfolio — ouvrez-le quand vous voulez.", whatsTitle: "Discuter sur WhatsApp", scan: "Pointez l’appareil photo du téléphone vers le code", openWhats: "Ouvrir la discussion ↗", linkedinTitle: "Profil LinkedIn", openLinkedin: "Ouvrir sur LinkedIn ↗", mailTitle: "E-mail", openMail: "Écrire un e-mail ↗", siteTitle: "Site externe", openSite: "Ouvrir le site ↗", stack: "Technologies", shareKind: "Partager", shareTitle: "Partagez ce portfolio", shareScan: "Pointez l’appareil photo d’un téléphone vers le code pour ouvrir le portfolio", shareNow: "Partager ↗" },
-    it: { close: "Chiudi", copy: "Copia", copied: "Copiato!", note: "Questo sito non può essere mostrato nel portfolio — aprilo quando vuoi.", whatsTitle: "Scrivi su WhatsApp", scan: "Inquadra il codice con la fotocamera del telefono", openWhats: "Apri chat ↗", linkedinTitle: "Profilo LinkedIn", openLinkedin: "Apri su LinkedIn ↗", mailTitle: "E-mail", openMail: "Scrivi un’e-mail ↗", siteTitle: "Sito esterno", openSite: "Apri sito ↗", stack: "Tecnologie", shareKind: "Condividi", shareTitle: "Condividi questo portfolio", shareScan: "Inquadra il codice con la fotocamera del telefono per aprire il portfolio", shareNow: "Condividi ↗" },
-    de: { close: "Schließen", copy: "Kopieren", copied: "Kopiert!", note: "Diese Website kann nicht im Portfolio angezeigt werden — öffnen Sie sie, wann Sie möchten.", whatsTitle: "Auf WhatsApp schreiben", scan: "Richten Sie die Handykamera auf den Code", openWhats: "Chat öffnen ↗", linkedinTitle: "LinkedIn-Profil", openLinkedin: "Auf LinkedIn öffnen ↗", mailTitle: "E-Mail", openMail: "E-Mail schreiben ↗", siteTitle: "Externe Website", openSite: "Website öffnen ↗", stack: "Technologien", shareKind: "Teilen", shareTitle: "Dieses Portfolio teilen", shareScan: "Richten Sie eine Handykamera auf den Code, um das Portfolio zu öffnen", shareNow: "Teilen ↗" },
-    zh: { close: "关闭", copy: "复制", copied: "已复制！", note: "该网站无法在作品集中显示——需要时再打开即可。", whatsTitle: "通过 WhatsApp 联系", scan: "用手机相机扫描二维码", openWhats: "打开聊天 ↗", linkedinTitle: "领英主页", openLinkedin: "在领英打开 ↗", mailTitle: "电子邮件", openMail: "写邮件 ↗", siteTitle: "外部网站", openSite: "打开网站 ↗", stack: "技术", shareKind: "分享", shareTitle: "分享这个作品集", shareScan: "用手机相机扫描二维码即可打开作品集", shareNow: "分享 ↗" },
-    ru: { close: "Закрыть", copy: "Копировать", copied: "Скопировано!", note: "Этот сайт нельзя показать внутри портфолио — откройте, когда захотите.", whatsTitle: "Написать в WhatsApp", scan: "Наведите камеру телефона на код", openWhats: "Открыть чат ↗", linkedinTitle: "Профиль LinkedIn", openLinkedin: "Открыть в LinkedIn ↗", mailTitle: "Эл. почта", openMail: "Написать письмо ↗", siteTitle: "Внешний сайт", openSite: "Открыть сайт ↗", stack: "Технологии", shareKind: "Поделиться", shareTitle: "Поделитесь этим портфолио", shareScan: "Наведите камеру телефона на код, чтобы открыть портфолио", shareNow: "Поделиться ↗" },
   };
   const linkText = () => LINK_LABELS[pageLang()] ?? LINK_LABELS.en;
 

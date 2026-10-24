@@ -118,6 +118,7 @@ Legenda: ✅ concluída · ⏳ pendente · 💡 ideia
 - ✅ **T101** Workers Logs (só mensagens do Worker) e métricas técnicas no Analytics Engine (rota, resultado, tempo; RAG caindo para o perfil completo), com seção "IA e rotas" no painel — RNF-03, RNF-05
 - ✅ **T102** Currículo em PDF de verdade: `GET /cv` com Browser Run, cache no D1 (migração 0009) e a impressão como reserva; botões do modal, do currículo e da vaga apontam para `PERFIL.cvPdf` — RF-04
 - ✅ **T104** Pergunta por voz no chat: `chat/voz.js` + `POST /transcribe` (Whisper turbo), textos nos 8 idiomas, testes no Worker e teste de ponta a ponta (gravação real → Whisper) — RF-05.12
+- ✅ **T105** Idiomas reduzidos a inglês, português e espanhol (francês, italiano, alemão, chinês e russo removidos de `idiomas.js`, `i18n/`, demos, testes e documentação); `?lang=` antigo cai no inglês. As listas de sinônimos do chat continuam multilíngues — RF-02
 
 ---
 
@@ -129,7 +130,7 @@ Legenda: ✅ concluída · ⏳ pendente · 💡 ideia
 | ⏳ **T98** | Atualizar a prévia do link no LinkedIn (Post Inspector), pois a imagem de compartilhamento mudou de endereço | Emanuel | RF-09.1 |
 | ⏳ **T99** | Decidir se os logos das instituições vão para `data/imagens/logos/` (ícones de tecnologias ficam em `imagens/`) | Emanuel | RF-17 |
 | ⏳ **T33** | Números de impacto nas experiências (ex.: tempo de deploy, % de bugs) | Dados do Emanuel | RF-01 |
-| ⏳ **T35** | Revisão das traduções por falantes nativos (prioridade: chinês e russo) | Revisor | RF-02 |
+| ⏳ **T35** | Revisão da tradução em espanhol por falante nativo | Revisor | RF-02 |
 
 ## Ideias
 

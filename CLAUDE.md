@@ -11,7 +11,7 @@ python3 -m http.server 8000                 # serve the site locally (no build);
 node scripts/gerar-secoes.mjs               # regenerate everything derived from data/, idiomas.js and i18n/pt.js
 node scripts/gerar-secoes.mjs --check       # CI: fails if any generated file is out of date
 node scripts/conferir-modulos.mjs           # CI: every ES module imported by index.html is in its importmap
-./tests/rodar-testes-chat.sh                # chat tests in headless Chrome, all 8 languages (CHROME=... to override path)
+./tests/rodar-testes-chat.sh                # chat tests in headless Chrome, all site languages (CHROME=... to override path)
 node --test worker/tests/*.test.js          # Worker unit tests
 node --test worker/tests/chat.test.js       # a single test file (add --test-name-pattern "quota" for one test)
 node --test demos/guardrail/core.test.js    # RAG security demo tests
