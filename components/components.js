@@ -1,7 +1,8 @@
 // Componentes da interface (Web Components nativos, sem framework e sem build), usados no site,
 // nas demos, na página de vagas e na 404:
 //   <site-logo size="34">   logo "E." animado, nas cores do tema
-//   <theme-toggle>          botão que passa ao próximo tema (data/temas.json)
+//   <theme-toggle>          botão que passa ao próximo tema, com a barra de intensidade das cores (data/temas.json)
+//   <theme-intensity>       só a barra de intensidade (com [label]: com o nome visível, como no menu do celular)
 //   <sound-toggle>          liga/desliga os cliques sonoros e a vibração da interface (padrão: ligado)
 //   links do GitHub         abrem num visualizador em modal (pastas, README e código) em vez de sair do site
 //   outros links externos   (LinkedIn, WhatsApp, e-mail, sites) abrem um cartão em modal; o site só abre se pedido
@@ -41,6 +42,73 @@
     zh: "主题：{current}。切换到{next}",
     ru: "Тема: {current}. Переключить на {next}",
   };
+  // Barra de intensidade das cores (mais forte ↔ mais fraca), ao lado do botão; limites em data/temas.json.
+  const INTENSITY_LABELS = {
+    en: "Color intensity",
+    pt: "Intensidade da cor",
+    es: "Intensidad del color",
+    fr: "Intensité de la couleur",
+    it: "Intensità del colore",
+    de: "Farbintensität",
+    zh: "颜色强度",
+    ru: "Насыщенность цвета",
+  };
+  const INTENSITY_STYLE = `
+    theme-toggle { align-items: center; gap: 8px; }
+    theme-intensity { display: inline-flex; align-items: center; gap: 10px; }
+    .theme-intensity { width: 72px; height: 18px; margin: 0; accent-color: var(--accent); background: transparent; cursor: pointer; }
+    .theme-intensity:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 3px; border-radius: 4px; }
+    theme-intensity[label] .theme-intensity { flex: 1; width: auto; min-width: 90px; }
+    @media (max-width: 760px) { theme-toggle .theme-intensity { width: 52px; } }
+    /* Celular estreito: sem espaço no topo; a barra aparece no menu ☰ (onde houver) e a escolha vale no site todo. */
+    @media (max-width: 420px) { theme-toggle theme-intensity { display: none; } }`;
+  let intensityStyled = false;
+  const currentIntensity = () => parseFloat(document.documentElement.style.getPropertyValue("--intensidade")) || 1;
+
+  // <theme-intensity>: a barra (dentro do <theme-toggle>, ou sozinha, com [label], no menu do celular).
+  // Todas as barras da página ficam sincronizadas (evento "intensitychange").
+  class ThemeIntensity extends HTMLElement {
+    connectedCallback() {
+      if (this.input) return;
+      if (!intensityStyled) {
+        const style = document.createElement("style");
+        style.textContent = INTENSITY_STYLE;
+        document.head.append(style);
+        intensityStyled = true;
+      }
+      const { min, max, passo } = TEMAS.intensidade;
+      this.innerHTML = `${this.hasAttribute("label") ? '<span class="theme-intensity-label"></span>' : ""}<input class="theme-intensity" type="range" min="${min}" max="${max}" step="${passo}" data-theme-intensity />`;
+      this.input = this.querySelector("input");
+      this.input.value = currentIntensity();
+      this.input.addEventListener("input", () => {
+        document.documentElement.style.setProperty("--intensidade", this.input.value);
+        try {
+          localStorage.setItem("intensidade", this.input.value);
+        } catch {
+          /* navegação privada: vale só nesta visita */
+        }
+        document.dispatchEvent(new CustomEvent("intensitychange", { detail: { value: this.input.value } }));
+      });
+      this.sync = (event) => (this.input.value = event.detail.value);
+      this.refresh = () => this.update();
+      document.addEventListener("intensitychange", this.sync);
+      document.addEventListener("languagechange", this.refresh);
+      this.update();
+    }
+
+    disconnectedCallback() {
+      document.removeEventListener("intensitychange", this.sync);
+      document.removeEventListener("languagechange", this.refresh);
+    }
+
+    update() {
+      const label = INTENSITY_LABELS[pageLang()] ?? INTENSITY_LABELS.en;
+      this.input.setAttribute("aria-label", label);
+      this.input.title = label;
+      const visible = this.querySelector(".theme-intensity-label");
+      if (visible) visible.textContent = label;
+    }
+  }
   const currentTheme = () => (TEMAS.temas[document.documentElement.dataset.theme] ? document.documentElement.dataset.theme : TEMAS.padrao);
   const nextTheme = () => THEMES[(THEMES.indexOf(currentTheme()) + 1) % THEMES.length];
   const themeName = (id) => TEMAS.temas[id].nome[pageLang()] ?? TEMAS.temas[id].nome.en;
@@ -50,7 +118,7 @@
     connectedCallback() {
       if (this.button) return;
       this.innerHTML =
-        '<button class="theme-toggle" type="button" data-theme-toggle><span class="theme-swatch" aria-hidden="true"></span><span class="theme-name"></span></button>';
+        '<button class="theme-toggle" type="button" data-theme-toggle><span class="theme-swatch" aria-hidden="true"></span><span class="theme-name"></span></button><theme-intensity></theme-intensity>';
       this.button = this.querySelector("button");
       this.button.addEventListener("click", () => this.toggle());
       this.refresh = () => this.update();
@@ -943,6 +1011,7 @@
   }
 
   customElements.define("site-logo", SiteLogo);
+  customElements.define("theme-intensity", ThemeIntensity);
   customElements.define("theme-toggle", ThemeToggle);
   customElements.define("sound-toggle", SoundToggle);
   customElements.define("share-button", ShareButton);

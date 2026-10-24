@@ -2,7 +2,7 @@
 
 // Áudios gerados uma vez por scripts/gerar-apresentacao.py (voz da pessoa do portfólio, clonada por IA) e servidos
 // como arquivos estáticos: tocar não chama nenhuma IA. Fala um resumo do perfil, uma faixa por frase, com legenda.
-const BASE = new URL("audio/apresentacao/", document.baseURI);
+const BASE = new URL(globalThis.PERFIL.audio.apresentacao, document.baseURI); // data/perfil.json
 const button = document.querySelector("[data-voice]");
 const figure = button?.closest(".about-photo");
 const label = button?.querySelector("[data-voice-label]");

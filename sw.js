@@ -65,7 +65,7 @@ self.addEventListener("fetch", (event) => {
   if (request.method !== "GET" || new URL(request.url).origin !== location.origin) return;
   // Apresentação falada: vai direto à rede, para legenda (faixas.json) e áudio serem sempre da mesma versão
   // (e o áudio pede pedaços do arquivo, que o cache não guarda).
-  if (request.headers.has("range") || new URL(request.url).pathname.includes("/audio/")) return;
+  if (request.headers.has("range") || /\.(mp3|wav)$/.test(new URL(request.url).pathname)) return;
 
   if (request.mode === "navigate") {
     event.respondWith(

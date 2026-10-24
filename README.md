@@ -159,10 +159,11 @@ The AI knowledge is **generated from the site's own translations** (`i18n/`): wh
 │                           #   busca.js (local search on the page), ia.js (Worker and ratings)
 ├── components/             # Web Components and pieces shared by every page (components.js): <site-logo>, <theme-toggle>, <sound-toggle>, sounds/haptics, GitHub viewer, external-link cards and "Share"; boot.js (theme before paint); vendor/qrcode.min.js (QR codes, MIT)
 ├── data/                   # Single source: perfil.json (personal data, Worker address), temas.json (theme colors and names),
-│                           #   experience (with the sites built), education, projects and skills → site, résumé and AI
+│                           #   experience (with the sites built), education, projects and skills → site, résumé and AI;
+│                           #   imagens/ (photo, share image) and audio/ (spoken intro and reference voice)
 ├── curriculo.html          # Résumé (A4) built from data/ and i18n/; makes the PDF via the browser's print (?pdf=1 opens it directly)
 ├── sitemap.xml · robots.txt
-├── imagens/                # All images: photo, favicons, PWA icons, og-image, logo; logos/ (institutions and skills)
+├── imagens/                # Site images: favicons, PWA icons, logo; logos/ (institutions and skills)
 ├── tests/                  # Automated chat tests (96 cases, 8 languages)
 ├── .github/workflows/      # GitHub Actions: tests and Lighthouse on every push
 ├── lighthouserc.json       # Minimum Lighthouse scores in CI
@@ -246,7 +247,7 @@ If a D1 migration is pending, apply it **before** deploying the Worker: `npx wra
 | I want to… | Do this |
 |---|---|
 | Change site text | Edit `i18n/pt.js` (Portuguese) and `i18n/<lang>.js` (other languages) and run `node scripts/gerar-secoes.mjs` (copies the Portuguese text into `index.html`), then run `npm run deploy` in `worker/` so the AI learns it. |
-| Change a theme's colors, the default theme or add a theme | Edit only `data/temas.json` and run `node scripts/gerar-secoes.mjs`. |
+| Change a theme's colors, the default theme or add a theme | Edit only `data/temas.json` and run `node scripts/gerar-secoes.mjs`. The slider next to the theme button makes the colors stronger or weaker for each visitor (limits in `intensidade`, same file). |
 | Change personal data (name, contacts, links, photo, SEO) | Edit only `data/perfil.json` and run `node scripts/gerar-secoes.mjs`, then `npm run deploy` in `worker/`. |
 | See chat ratings 👍/👎 | `cd worker && ./ver-avaliacoes.sh` |
 | **Open the stats dashboard** (daily rating totals and visits) | `cd worker && npm run painel` — see [Stats dashboard](#stats-dashboard) |

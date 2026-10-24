@@ -1,6 +1,11 @@
 {
-  "_doc": "Temas do site — fonte única. Cada tema: nome no seletor (por idioma), esquema de cores do navegador e as variáveis CSS (--bg é a cor da barra do navegador e do app instalado). padrao: tema de quem visita pela primeira vez. Para criar um tema, copie um bloco e mude o nome e as cores. Rode node scripts/gerar-secoes.mjs: ele gera temas.css (todas as páginas), o bloco de temas do components/boot.js, a cor do manifest.webmanifest e o theme-color das páginas.",
+  "_doc": "Temas do site — fonte única. Cada tema: nome no seletor (por idioma), esquema de cores do navegador e as variáveis CSS (--bg é a cor da barra do navegador e do app instalado). padrao: tema de quem visita pela primeira vez. Para criar um tema, copie um bloco e mude o nome e as cores. Rode node scripts/gerar-secoes.mjs: ele gera temas.css (todas as páginas), o bloco de temas do components/boot.js, a cor do manifest.webmanifest e o theme-color das páginas. intensidade: limites da barra ao lado do botão de tema, que deixa as cores do tema mais fortes ou mais fracas (1 = como definidas aqui; 0 = cinza).",
   "padrao": "amazonia",
+  "intensidade": {
+    "min": 0.3,
+    "max": 1.7,
+    "passo": 0.05
+  },
   "temas": {
     "amazonia": {
       "nome": {

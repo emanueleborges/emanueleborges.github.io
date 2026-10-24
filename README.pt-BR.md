@@ -159,10 +159,11 @@ O conhecimento da IA é **gerado das próprias traduções do site** (`i18n/`): 
 │                           #   busca.js (busca local na página), ia.js (Worker e avaliações)
 ├── components/             # Web Components e peças comuns a todas as páginas (components.js): <site-logo>, <theme-toggle>, <sound-toggle>, sons/vibração, visualizador do GitHub, cartões de links externos e "Compartilhar"; boot.js (tema antes da pintura); vendor/qrcode.min.js (QR code, MIT)
 ├── data/                   # Fonte única: perfil.json (dados pessoais, endereço do Worker), temas.json (cores e nomes dos temas),
-│                           #   experiência (com os sites desenvolvidos), formação, projetos e habilidades → site, currículo e IA
+│                           #   experiência (com os sites desenvolvidos), formação, projetos e habilidades → site, currículo e IA;
+│                           #   imagens/ (foto, imagem de compartilhamento) e audio/ (apresentação falada e voz de referência)
 ├── curriculo.html          # Currículo (A4) montado com data/ e i18n/; gera o PDF pela impressão do navegador (?pdf=1 abre direto)
 ├── sitemap.xml · robots.txt
-├── imagens/                # Todas as imagens: foto, favicons, ícones do app, og-image, logo; logos/ (instituições e habilidades)
+├── imagens/                # Imagens do site: favicons, ícones do app, logo; logos/ (instituições e habilidades)
 ├── tests/                  # Testes automáticos do chat (96 casos, 8 idiomas)
 ├── .github/workflows/      # GitHub Actions: testes e Lighthouse a cada push
 ├── lighthouserc.json       # Notas mínimas do Lighthouse no CI
@@ -246,7 +247,7 @@ Quando houver uma migração D1 pendente, aplique-a **antes** de publicar o Work
 | Quero… | Faça |
 |---|---|
 | Mudar um texto do site | Edite `i18n/pt.js` (português) e `i18n/<idioma>.js` (demais idiomas) e rode `node scripts/gerar-secoes.mjs` (copia o português para o `index.html`); depois rode `npm run deploy` em `worker/` para a IA aprender. |
-| Mudar as cores de um tema, o tema padrão ou criar um tema | Edite só o `data/temas.json` e rode `node scripts/gerar-secoes.mjs`. |
+| Mudar as cores de um tema, o tema padrão ou criar um tema | Edite só o `data/temas.json` e rode `node scripts/gerar-secoes.mjs`. A barra ao lado do botão de tema deixa as cores mais fortes ou mais fracas para cada visitante (limites em `intensidade`, no mesmo arquivo). |
 | Trocar dados pessoais (nome, contatos, links, foto, SEO) | Edite só o `data/perfil.json` e rode `node scripts/gerar-secoes.mjs`; depois `npm run deploy` em `worker/`. |
 | Ver as avaliações 👍/👎 do chat | `cd worker && ./ver-avaliacoes.sh` |
 | **Ver o painel de estatísticas** (totais diários de avaliações e visitas) | `cd worker && npm run painel` — veja [Painel de estatísticas](#painel-de-estatísticas) |

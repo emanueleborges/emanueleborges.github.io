@@ -1,11 +1,11 @@
 # Gera os áudios da apresentação falada do "Sobre mim" (botão ▶ na foto) com a voz da pessoa do portfólio,
 # clonada pelo Chatterbox Multilingual (modelo aberto, licença MIT) na demo gratuita do Hugging Face.
-# Os arquivos ficam em audio/apresentacao/ e são servidos pelo GitHub Pages: o visitante nunca chama
+# Os arquivos ficam na pasta de data/perfil.json (audio.apresentacao) e são servidos pelo GitHub Pages: o visitante nunca chama
 # a IA, então o custo por acesso é zero.
 # O texto falado é o resumo do perfil em "about.speech" (i18n/<idioma>.js). Um arquivo por frase,
 # para a legenda acompanhar a fala sem precisar de marcação de tempo. Frases que não mudaram
 # desde a última geração são reaproveitadas (a cota gratuita de GPU da demo é pequena).
-# Voz de referência: scripts/voz-referencia.wav, 16 s do pitch "Aplicativos Híbridos para Gestão
+# Voz de referência: data/perfil.json → audio.vozReferencia (data/audio/voz-referencia.wav), 16 s do pitch "Aplicativos Híbridos para Gestão
 # de Cupons e Promoções" (youtube.com/watch?v=W6EMlj5NCdY).
 # Uso: pip install gradio_client && python3 scripts/gerar-apresentacao.py   (requer ffmpeg;
 # HF_TOKEN opcional, para usar a cota da sua conta do Hugging Face)
@@ -18,15 +18,17 @@ from pathlib import Path
 from gradio_client import Client, handle_file
 
 ROOT = Path(__file__).resolve().parent.parent
-OUT = ROOT / "audio" / "apresentacao"
-VOICE = ROOT / "scripts" / "voz-referencia.wav"
+PERFIL = json.loads((ROOT / "data" / "perfil.json").read_text(encoding="utf-8"))
+OUT = ROOT / PERFIL["audio"]["apresentacao"]
+VOICE = ROOT / PERFIL["audio"]["vozReferencia"]
 LANGS = ["en", "pt"]  # nos outros idiomas do site o botão não aparece
 SEED = 42  # mesma semente, mesma entonação ao gerar de novo
 
 
 def speech(lang):
-    source = (ROOT / "i18n" / f"{lang}.js").read_text(encoding="utf-8")
-    return json.loads(re.search(r'^  "about\.speech": (".*"),$', source, re.M).group(1))
+    # Texto já com o nome do perfil preenchido: lido pelo mesmo módulo dos outros geradores.
+    code = f'import {{ i18n }} from "./scripts/dados.mjs"; process.stdout.write(i18n.{lang}["about.speech"])'
+    return subprocess.run(["node", "--input-type=module", "-e", code], cwd=ROOT, check=True, capture_output=True, text=True).stdout
 
 
 # Frases do resumo; cada uma vira uma faixa e uma legenda (a demo aceita até 300 caracteres).
@@ -46,7 +48,7 @@ for lang in LANGS:
     manifest[lang] = []
     for i, text in enumerate(sentences(speech(lang))):
         file = folder / f"{i}.mp3"
-        track = {"text": text, "file": f"{lang}/{i}.mp3", "voice": "emanuel"}
+        track = {"text": text, "file": f"{lang}/{i}.mp3", "voice": PERFIL["audio"]["voz"]}
         # Reaproveita a faixa se o texto e a voz são os mesmos da última geração.
         if not (i < len(old) and old[i] == track and file.exists()):
             wav = client.predict(text, lang, handle_file(str(VOICE)), 0.5, 0.8, SEED, 0.5, api_name="/generate_tts_audio")
@@ -61,4 +63,4 @@ for lang in LANGS:
     print(f"{lang}: {len(manifest[lang])} frases")
 
 manifest_path.write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-print("Áudios em audio/apresentacao/.")
+print(f"Áudios em {OUT.relative_to(ROOT)}/.")

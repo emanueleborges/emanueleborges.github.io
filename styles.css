@@ -37,8 +37,9 @@ sound-toggle:not(:defined) { width: 34px; height: 34px; }
 .sound-toggle:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 2px; }
 theme-toggle { order: 3; display: inline-flex; }
 /* Antes do componente carregar, reserva o espaço do botão (evita deslocar o cabeçalho). */
-theme-toggle:not(:defined) { width: 112px; height: 34px; }
-@media (max-width: 760px) { theme-toggle:not(:defined) { width: 34px; } }
+theme-toggle:not(:defined) { width: 192px; height: 34px; }
+@media (max-width: 760px) { theme-toggle:not(:defined) { width: 94px; } }
+@media (max-width: 420px) { theme-toggle:not(:defined) { width: 34px; } }
 .theme-toggle { display: inline-flex; align-items: center; gap: 8px; padding: 7px 13px 7px 8px; border: 1px solid var(--line); border-radius: 999px; background: var(--surface-2); color: var(--text); font: 600 12px var(--sans); letter-spacing: .02em; cursor: pointer; transition: border-color .2s; }
 .theme-toggle:hover { border-color: rgba(var(--accent-rgb),.5); }
 .theme-toggle:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 2px; }
@@ -282,7 +283,7 @@ blockquote { margin: 32px 0 0; padding: 12px 0 12px 16px; border-left: 2px solid
 .nav-search:hover { border-color: rgba(var(--accent-rgb),.5); color: var(--text-strong); }
 .nav-search:focus-visible, .nav-links-search:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 2px; }
 .nav-search kbd, .spotlight kbd { padding: 1px 6px; border: 1px solid var(--line-strong); border-radius: 5px; color: var(--muted); font-size: 11px; line-height: 1.4; }
-.nav-links-search, .nav-links-share { display: none; }
+.nav-links-search, .nav-links-share, .nav-links-intensity { display: none; }
 .nav-search[hidden], .nav-links-search[hidden] { display: none !important; }
 .spotlight { width: min(640px, calc(100% - 32px)); max-height: min(560px, calc(100dvh - 120px)); margin: 12vh auto auto; padding: 0; border: 1px solid rgba(var(--accent-rgb),.35); border-radius: 18px; background: var(--surface); color: var(--text); box-shadow: 0 30px 80px var(--shadow-strong), 0 0 0 1px var(--line), 0 0 40px rgba(var(--accent-rgb),.12); overflow: hidden; }
 .spotlight[open] { display: flex; animation: spotlight-in .18s ease-out; }
@@ -605,6 +606,8 @@ main, .footer { position: relative; z-index: 1; }
 
 @media (max-width: 420px) {
   .site-header .brand > span { display: none; }
+  /* A barra de intensidade das cores (fora do topo nesta largura) aparece no menu ☰. */
+  .nav-links-intensity { display: flex; padding: 13px 5px; border-top: 1px solid var(--line); color: var(--text-soft); font: 600 14px var(--sans); }
   .lang-select select { padding: 9px 26px 9px 11px; }
   .lang-select::after { right: 10px; }
 }

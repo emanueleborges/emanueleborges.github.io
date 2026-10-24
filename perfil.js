@@ -10,7 +10,12 @@
     "github": "emanueleborges",
     "linkedin": "borgesemmanuell",
     "site": "https://emanueleborges.github.io/",
-    "foto": "imagens/emanuel-borges.jpg",
+    "foto": "data/imagens/emanuel-borges.jpg",
+    "audio": {
+      "apresentacao": "data/audio/apresentacao/",
+      "vozReferencia": "data/audio/voz-referencia.wav",
+      "voz": "emanuel"
+    },
     "googleVerificacao": "4hxCxYtZIODldYdYJvIOxejABtc2_GRdp5L6Ug72eEE",
     "cargo": "Senior Full Stack Developer",
     "titulo": "Senior Full Stack Developer · AI & NLP",
@@ -18,7 +23,7 @@
     "compartilhamento": {
       "descricao": "10+ years building systems with Java, Kotlin, Node.js, React and React Native — now applying Machine Learning and NLP. Portfolio in 8 languages with an AI assistant, live AI demos and a job-match tool for recruiters.",
       "descricaoCurta": "Portfolio and résumé in 8 languages, an AI assistant, live AI demos and a tool that matches your job description to my profile.",
-      "imagem": "imagens/og-image.jpg?v=20261011",
+      "imagem": "data/imagens/og-image.jpg?v=20261011",
       "imagemAlt": "Senior Full Stack Developer, AI & NLP — AI made in the Amazon"
     },
     "endereco": {

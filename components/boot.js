@@ -3,7 +3,7 @@
 // Com data-i18n, já começa a baixar o arquivo do idioma salvo/pedido (pt e en vêm na própria página).
 (function () {
   // gerado: temas (não edite aqui: data/temas.json + node scripts/gerar-secoes.mjs)
-  var TEMAS = (window.TEMAS = {"padrao":"amazonia","temas":{"amazonia":{"nome":{"en":"Amazon","pt":"Amazônia","es":"Amazonia","fr":"Amazonie","it":"Amazzonia","de":"Amazonien","zh":"亚马逊","ru":"Амазония"},"fundo":"#050f14"},"editorial":{"nome":{"en":"Editorial","pt":"Editorial","es":"Editorial","fr":"Éditorial","it":"Editoriale","de":"Editorial","zh":"编辑风","ru":"Редакционный"},"fundo":"#0b0f19"}}});
+  var TEMAS = (window.TEMAS = {"padrao":"amazonia","intensidade":{"min":0.3,"max":1.7,"passo":0.05},"temas":{"amazonia":{"nome":{"en":"Amazon","pt":"Amazônia","es":"Amazonia","fr":"Amazonie","it":"Amazzonia","de":"Amazonien","zh":"亚马逊","ru":"Амазония"},"fundo":"#050f14"},"editorial":{"nome":{"en":"Editorial","pt":"Editorial","es":"Editorial","fr":"Éditorial","it":"Editoriale","de":"Editorial","zh":"编辑风","ru":"Редакционный"},"fundo":"#0b0f19"}}});
   // /gerado: temas
   var boot = document.currentScript;
   var params = new URLSearchParams(location.search);
@@ -32,6 +32,9 @@
     }
   }
   document.documentElement.dataset.theme = theme;
+  // Intensidade das cores salva pela barra ao lado do botão de tema (limites em data/temas.json).
+  var forca = parseFloat(stored("intensidade"));
+  if (forca >= TEMAS.intensidade.min && forca <= TEMAS.intensidade.max) document.documentElement.style.setProperty("--intensidade", forca);
   var meta = document.querySelector('meta[name="theme-color"]');
   if (meta) meta.content = TEMAS.temas[theme].fundo;
 })();

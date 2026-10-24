@@ -224,21 +224,39 @@ const fundoPadrao = temas.temas[temas.padrao].cores["--bg"];
 
 // Variáveis CSS de cada tema. O padrão vale também sem data-theme e serve de base: os outros
 // temas só precisam declarar o que muda.
+// Intensidade (barra ao lado do botão de tema): cada cor do tema passa por oklch(from …), que multiplica
+// a saturação (croma) por --intensidade e mantém luminosidade, tom e transparência. Navegadores sem
+// suporte a essa sintaxe ficam com as cores originais (bloco @supports).
+const comIntensidade = (valor) =>
+  valor.replace(/#[0-9a-f]{3,8}\b|rgba?\([^()]*\)/gi, (cor) => `oklch(from ${cor} l calc(c * var(--intensidade)) h)`);
+
 function temasCss() {
   const ordem = [temas.padrao, ...Object.keys(temas.temas).filter((id) => id !== temas.padrao)];
+  const seletor = (id) => (id === temas.padrao ? `:root, :root[data-theme="${id}"]` : `:root[data-theme="${id}"]`);
   const blocos = ordem.map((id) => {
     const tema = temas.temas[id];
-    const seletor = id === temas.padrao ? `:root, :root[data-theme="${id}"]` : `:root[data-theme="${id}"]`;
     const linhas = Object.entries(tema.cores).map(([nome, valor]) => `  ${nome}: ${valor};`);
-    return `${seletor} {\n  color-scheme: ${tema.esquema};\n${linhas.join("\n")}\n}`;
+    return `${seletor(id)} {\n  color-scheme: ${tema.esquema};\n${linhas.join("\n")}\n}`;
   });
-  return `/* Gerado por scripts/gerar-secoes.mjs a partir de data/temas.json — não edite aqui. */\n${blocos.join("\n\n")}\n`;
+  const intensos = ordem.map((id) => {
+    const linhas = Object.entries(temas.temas[id].cores)
+      .filter(([, valor]) => comIntensidade(valor) !== valor)
+      .map(([nome, valor]) => `    ${nome}: ${comIntensidade(valor)};`);
+    return `  ${seletor(id)} {\n${linhas.join("\n")}\n  }`;
+  });
+  return [
+    "/* Gerado por scripts/gerar-secoes.mjs a partir de data/temas.json — não edite aqui. */",
+    ":root { --intensidade: 1; }",
+    ...blocos,
+    `@supports (color: oklch(from red l c h)) {\n${intensos.join("\n\n")}\n}`,
+  ].join("\n\n") + "\n";
 }
 
 // No boot.js (roda antes da pintura): lista de temas, padrão, nome no seletor e cor da barra do navegador.
 function bootTemas(js) {
   const dados = {
     padrao: temas.padrao,
+    intensidade: temas.intensidade,
     temas: Object.fromEntries(Object.entries(temas.temas).map(([id, tema]) => [id, { nome: tema.nome, fundo: tema.cores["--bg"] }])),
   };
   const start = "  // gerado: temas (não edite aqui: data/temas.json + node scripts/gerar-secoes.mjs)\n";
