@@ -622,8 +622,26 @@ main, .footer { position: relative; z-index: 1; }
   .chat { right: 16px; bottom: 16px; }
   .chat-hint { max-width: 210px; padding: 10px 6px 10px 12px; }
   .chat-hint-text { font-size: 12px; }
-  .chat-panel { position: fixed; left: 8px; right: 8px; bottom: 8px; width: auto; height: min(78vh, 620px); }
-  .guide-launcher { bottom: 16px; left: 16px; }
+  /* Chat no celular: 30% mais baixo que antes (era min(78vh, 620px)) e mais compacto, para não tomar a tela.
+     dvh acompanha a barra do navegador e o teclado; 16px no campo evita o zoom automático do iPhone. */
+  .chat-panel { position: fixed; left: 8px; right: 8px; bottom: 8px; width: auto; height: min(55vh, 434px); height: min(55dvh, 434px); }
+  .chat-header { gap: 10px; padding: 10px 12px; }
+  .chat-avatar { width: 30px; height: 30px; }
+  .chat-header > div { flex: 1; min-width: 0; }
+  .chat-header h2 { font-size: 14px; }
+  .chat-header p { overflow: hidden; margin-top: 1px; font-size: 11px; text-overflow: ellipsis; white-space: nowrap; }
+  .chat-messages { gap: 10px; padding: 12px; }
+  .chat-suggestions { flex-wrap: nowrap; overflow-x: auto; padding: 0 12px 8px; scrollbar-width: none; }
+  .chat-chip { flex: none; padding: 6px 10px; }
+  .chat-form { padding: 8px 12px 6px; }
+  .chat-form input { padding: 8px 11px; font-size: 16px; }
+  .chat-form button { width: 40px; }
+  .chat-note { padding: 0 12px 8px; font-size: 10px; line-height: 1.35; }
+  /* No celular o "Guia rápido" vira um botão redondo só com o ícone, para não cobrir o conteúdo; o texto
+     continua no botão para leitores de tela. */
+  .guide-launcher { bottom: 16px; left: 16px; justify-content: center; width: 48px; min-height: 48px; padding: 0; }
+  .guide-launcher [aria-hidden] { font-size: 21px; line-height: 1; }
+  .guide-launcher [data-i18n] { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
   .quick-guide { right: 16px; bottom: 76px; left: 16px; width: auto; padding: 18px; }
 }
 
