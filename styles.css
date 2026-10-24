@@ -544,6 +544,14 @@ main, .footer { position: relative; z-index: 1; }
 @keyframes chat-ring { from { transform: scale(1); opacity: .9; } to { transform: scale(1.7); opacity: 0; } }
 .chat-hint { position: absolute; right: 0; bottom: 70px; display: flex; align-items: flex-start; gap: 4px; width: max-content; max-width: 250px; padding: 12px 8px 12px 14px; border: 1px solid rgba(var(--accent-rgb),.35); border-radius: 16px 16px 4px 16px; background: var(--panel-bg); box-shadow: 0 14px 40px var(--shadow-strong); animation: chat-hint-in .35s cubic-bezier(.2,.7,.2,1); }
 .chat-hint[hidden], .chat.is-open .chat-hint { display: none; }
+/* Botão do chat arrastado (script.js → arrastavel): o balão abre para o lado com mais espaço. */
+.chat.chat-a-esquerda .chat-hint { right: auto; left: 0; border-radius: 16px 16px 16px 4px; }
+.chat.chat-no-topo .chat-hint { bottom: auto; top: 70px; border-radius: 16px 4px 16px 16px; }
+.chat.chat-a-esquerda.chat-no-topo .chat-hint { border-radius: 4px 16px 16px 16px; }
+.chat-toggle, .guide-launcher { cursor: grab; }
+@media (min-width: 761px) { .quick-guide-heading { cursor: grab; } }
+[data-arrastando], [data-arrastando] * { cursor: grabbing !important; user-select: none; }
+[data-arrastando] .chat-toggle, .guide-launcher[data-arrastando] { transform: none; transition: none; }
 @keyframes chat-hint-in { from { opacity: 0; transform: translateY(8px) scale(.96); } }
 .chat-hint-text { padding: 0; border: 0; background: none; color: var(--text); font: 600 13px/1.45 var(--sans); text-align: left; cursor: pointer; }
 .chat-hint-text:hover { color: var(--text-strong); text-decoration: underline; text-decoration-color: rgba(var(--accent-rgb),.6); }

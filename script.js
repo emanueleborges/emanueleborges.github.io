@@ -204,6 +204,105 @@ if (location.protocol.startsWith("http")) loadRepoData().catch(() => {});
 
 applyLanguage(window.IDIOMA_INICIAL); // ?lang=, o salvo ou o padrão (components/boot.js)
 
+/* ---------- Elementos flutuantes arrastáveis (botão do chat, guia rápido) ---------- */
+
+// Arrastar pela alça leva o elemento (position: fixed) para qualquer ponto da tela; a posição vale só até
+// recarregar a página (não é salva) e é ajustada quando a janela muda de tamanho. Um movimento curto continua sendo clique.
+// aoMover(x, y) recebe o centro do elemento, para quem precisa abrir painéis do lado certo da tela.
+// Os botões marcados com "separado" nunca ficam um sobre o outro: quem se move desvia de quem está parado.
+const MARGEM_ARRASTO = 8;
+const LIMIAR_ARRASTO = 6;
+const separados = new Set();
+
+const sobrepoe = (a, b) =>
+  a.left < b.right + MARGEM_ARRASTO && a.right > b.left - MARGEM_ARRASTO && a.top < b.bottom + MARGEM_ARRASTO && a.bottom > b.top - MARGEM_ARRASTO;
+
+// Desvia o retângulo (x, y, w, h) dos outros botões: vai para o lado livre mais próximo que caiba na tela.
+function desviar(el, x, y, w, h) {
+  for (const outro of separados) {
+    if (outro === el) continue;
+    const r = outro.getBoundingClientRect();
+    if (!r.width || !sobrepoe({ left: x, top: y, right: x + w, bottom: y + h }, r)) continue;
+    const lados = [
+      { x: r.left - MARGEM_ARRASTO - w, y },
+      { x: r.right + MARGEM_ARRASTO, y },
+      { x, y: r.top - MARGEM_ARRASTO - h },
+      { x, y: r.bottom + MARGEM_ARRASTO },
+    ].filter((p) => p.x >= MARGEM_ARRASTO && p.y >= MARGEM_ARRASTO && p.x + w <= innerWidth - MARGEM_ARRASTO && p.y + h <= innerHeight - MARGEM_ARRASTO);
+    lados.sort((a, b) => Math.hypot(a.x - x, a.y - y) - Math.hypot(b.x - x, b.y - y));
+    if (lados.length) ({ x, y } = lados[0]);
+  }
+  return { x, y };
+}
+
+function arrastavel(el, { alca = el, ativo = () => true, aoMover, separado = false } = {}) {
+  let posicao = null; // null: posição padrão do CSS
+  if (separado) separados.add(el);
+
+  const padrao = () => Object.assign(el.style, { left: "", top: "", right: "", bottom: "" }); // posição do CSS
+  const aplicar = () => {
+    if (!ativo()) return padrao();
+    if (!el.getBoundingClientRect().width) return; // oculto (ex.: botão do chat com o painel aberto): fica onde está
+    padrao();
+    const { left, top, width, height } = el.getBoundingClientRect();
+    // Sem arrasto, fica no lugar do CSS, a não ser que encoste no outro botão (telas estreitas).
+    const base = posicao ?? { x: left, y: top };
+    let x = Math.min(Math.max(MARGEM_ARRASTO, base.x), innerWidth - width - MARGEM_ARRASTO);
+    let y = Math.min(Math.max(MARGEM_ARRASTO, base.y), innerHeight - height - MARGEM_ARRASTO);
+    if (separado) ({ x, y } = desviar(el, x, y, width, height));
+    if (!posicao && x === left && y === top) return;
+    Object.assign(el.style, { left: `${x}px`, top: `${y}px`, right: "auto", bottom: "auto" });
+    aoMover?.(x + width / 2, y + height / 2);
+  };
+
+  let inicio = null;
+  let arrastou = false;
+  alca.style.touchAction = "none";
+  alca.addEventListener("pointerdown", (event) => {
+    const interativo = event.target.closest("button, a, input");
+    if (event.button !== 0 || !ativo() || (interativo && interativo !== alca)) return;
+    const { left, top } = el.getBoundingClientRect();
+    inicio = { px: event.clientX, py: event.clientY, left, top };
+    arrastou = false;
+  });
+  // Movimento e soltura são ouvidos na janela: um movimento rápido sai da alça antes de virar arrasto.
+  addEventListener("pointermove", (event) => {
+    if (!inicio) return;
+    const dx = event.clientX - inicio.px;
+    const dy = event.clientY - inicio.py;
+    if (!arrastou && Math.hypot(dx, dy) < LIMIAR_ARRASTO) return;
+    if (!arrastou) {
+      arrastou = true;
+      el.dataset.arrastando = "";
+    }
+    posicao = { x: inicio.left + dx, y: inicio.top + dy };
+    aplicar();
+  });
+  const soltar = () => {
+    if (!inicio) return;
+    inicio = null;
+    if (!arrastou) return;
+    delete el.dataset.arrastando;
+  };
+  addEventListener("pointerup", soltar);
+  addEventListener("pointercancel", soltar);
+  // O clique que encerra um arrasto não abre nem fecha nada (o próximo pointerdown zera "arrastou").
+  alca.addEventListener(
+    "click",
+    (event) => {
+      if (!arrastou) return;
+      arrastou = false;
+      event.preventDefault();
+      event.stopImmediatePropagation();
+    },
+    true,
+  );
+  addEventListener("resize", aplicar);
+  document.addEventListener("languagechange", () => requestAnimationFrame(aplicar)); // o texto muda a largura
+  aplicar();
+  return aplicar; // para reposicionar quando o elemento aparece ou muda de tamanho
+}
+
 /* ---------- Guia rápido do portfólio ---------- */
 
 const guide = document.querySelector("[data-quick-guide]");
@@ -267,9 +366,16 @@ const closeGuide = () => {
 };
 
 guideOpen.hidden = false;
+arrastavel(guideOpen, { separado: true });
+// O painel do guia se arrasta pelo título; no celular ele ocupa a largura da tela e fica fixo.
+const posicionarGuia = arrastavel(guide, {
+  alca: guide.querySelector(".quick-guide-heading"),
+  ativo: () => matchMedia("(min-width: 761px)").matches,
+});
 guideOpen.addEventListener("click", () => {
   guideIndex = 0;
   guide.hidden = false;
+  posicionarGuia();
   renderGuideStep();
   guideNext.focus();
 });
@@ -308,6 +414,7 @@ try {
   if (!localStorage.getItem("portfolio-guide-seen") && !location.hash) {
     setTimeout(() => {
       guide.hidden = false;
+      posicionarGuia();
       renderGuideStep();
       guideNext.focus();
     }, 1200);
@@ -507,4 +614,4 @@ if ("serviceWorker" in navigator && (location.protocol === "https:" || location.
 }
 
 // Usado pelo assistente (chat.js) e pelo formulário (contact.js). currentLang acompanha a troca de idioma.
-export { currentLang, prefersReducedMotion, t };
+export { arrastavel, currentLang, prefersReducedMotion, t };

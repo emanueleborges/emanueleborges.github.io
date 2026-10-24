@@ -1,7 +1,7 @@
 // Assistente do portfólio — interface: painel, mensagens, sugestões e a barra "Pergunte à minha IA".
 // A lógica fica em chat/: texto.js (normalização), regras.js (respostas prontas),
 // busca.js (busca local na página), ia.js (Worker) e voz.js (pergunta falada pelo microfone).
-import { currentLang, prefersReducedMotion, t } from "./script.js";
+import { arrastavel, currentLang, prefersReducedMotion, t } from "./script.js";
 import { normalize } from "./chat/texto.js";
 import { LOCAL_ONLY, intents, faqs, findFaq } from "./chat/regras.js";
 import { text, search } from "./chat/busca.js";
@@ -475,9 +475,11 @@ function initChat() {
       markHintSeen();
     }
     panel.hidden = !open;
+    posicionarPainel();
     if (!open) discardRecording();
     toggle.setAttribute("aria-expanded", String(open));
     root.classList.toggle("is-open", open);
+    if (!open) posicionarBotao(); // com o painel aberto o botão some e a janela pode ter mudado
     if (open) {
       ai.prepare();
       if (!messages.children.length) greet();
@@ -489,6 +491,39 @@ function initChat() {
   function greet() {
     typeOut(addMessage("bot", el("p", null, tc("greeting"))));
   }
+
+  /* ---------- Botão arrastável: o painel e o balão abrem para o lado com mais espaço ---------- */
+
+  let botao = toggle.getBoundingClientRect(); // última medida visível do botão (ele some com o painel aberto)
+  const telaLarga = () => matchMedia("(min-width: 761px)").matches; // no celular o painel ocupa a largura da tela
+
+  function posicionarPainel() {
+    Object.assign(panel.style, { position: "", left: "", top: "", right: "", bottom: "" });
+    if (panel.hidden || !telaLarga() || !root.style.left) return;
+    if (toggle.offsetWidth) botao = toggle.getBoundingClientRect();
+    const { width, height } = panel.getBoundingClientRect();
+    const direita = botao.left + botao.width / 2 > innerWidth / 2;
+    const embaixo = botao.top + botao.height / 2 > innerHeight / 2;
+    const x = direita ? botao.right - width : botao.left;
+    const y = embaixo ? botao.bottom - height : botao.top;
+    Object.assign(panel.style, {
+      position: "fixed",
+      left: `${Math.min(Math.max(8, x), innerWidth - width - 8)}px`,
+      top: `${Math.min(Math.max(8, y), innerHeight - height - 8)}px`,
+      right: "auto",
+      bottom: "auto",
+    });
+  }
+
+  const posicionarBotao = arrastavel(root, {
+    alca: toggle,
+    separado: true, // nunca por cima do botão "Guia rápido"
+    aoMover: (x, y) => {
+      root.classList.toggle("chat-a-esquerda", x < innerWidth / 2);
+      root.classList.toggle("chat-no-topo", y < innerHeight / 2);
+      posicionarPainel();
+    },
+  });
 
   toggle.addEventListener("click", () => setOpen(panel.hidden));
   root.querySelector(".chat-close").addEventListener("click", () => {
