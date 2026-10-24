@@ -22,6 +22,7 @@ Site estático, sem framework, com backend *serverless* no Cloudflare para o cha
 
 - [Funcionalidades](#funcionalidades)
 - [Arquitetura](#arquitetura)
+- [Onde fica cada informação](#onde-fica-cada-informação)
 - [Tecnologias](#tecnologias)
 - [Estrutura do projeto](#estrutura-do-projeto)
 - [Como rodar localmente](#como-rodar-localmente)
@@ -41,7 +42,7 @@ Site estático, sem framework, com backend *serverless* no Cloudflare para o cha
 |---|---|
 | **8 idiomas** | Inglês (padrão), português, espanhol, francês, italiano, alemão, chinês e russo. O visitante escolhe no cabeçalho; a escolha fica salva e pode vir no link (`?lang=pt`). |
 | **Seções** | Sobre (com foto), Experiência (como **esteira de CI/CD**: cada emprego é uma etapa concluída ou em execução, com o "log" das conquistas e a stack mais citada no período), Projetos (12 cards, 6 com demo ao vivo; filtros, link para o código e linguagem/estrelas/última atualização vindos da API do GitHub), Habilidades (46 tecnologias em **grade** — padrão — ou **grafo** interativo habilidades × projetos), Formação (com logos das instituições) e Contato. |
-| **Temas** | Dois temas que o visitante escolhe no cabeçalho (a escolha fica salva e vale em todas as páginas, inclusive demos e 404): **Amazônia** (padrão — verde-floresta escuro e lima mesclados com o azul de tecnologia, "IA feita na Amazônia") e **Editorial** (escuro — azul-noite quase preto, cards em ardósia e destaque ciano). Também pelo link: `?theme=editorial`. Aplicado antes da pintura, sem piscar. |
+| **Temas** | Dois temas que o visitante escolhe no cabeçalho (a escolha fica salva e vale em todas as páginas, inclusive demos e 404): **Amazônia** (padrão — verde-floresta escuro e lima mesclados com o azul de tecnologia, "IA feita na Amazônia") e **Editorial** (escuro — azul-noite quase preto, cards em ardósia e destaque ciano). Também pelo link: `?theme=editorial`. Ao lado do botão, uma **barra de intensidade** deixa as cores mais fortes ou mais fracas (no celular, fica no menu ☰). Tudo aplicado antes da pintura, sem piscar. Cores, nomes e limites em `data/temas.json`. |
 | **Visual** | Tema escolhido pelo visitante, imagens de fundo em movimento (duotone), rede de partículas em Canvas, animações ao rolar e cabeçalho fixo com barra de progresso. Respeita "reduzir movimento". |
 | **Sons e vibração** | Cliques de interface e teclas de teclado mecânico ao digitar, sintetizados com Web Audio (sem arquivos de áudio), e vibração curta no celular. Botão de alto-falante no cabeçalho de todas as páginas para mutar; a escolha fica salva. |
 | **Busca rápida** | `/` ou Ctrl/⌘+K abre uma barra estilo Spotlight que encontra projetos, experiências, habilidades, seções e ações (tema, sons, currículo, vaga, compartilhar), **filtra os projetos por assunto** (ex.: "rag") e leva perguntas ao assistente. Usa a mesma busca local do chat; nada é enviado. |
@@ -89,7 +90,7 @@ As **demos de IA** fazem a inferência no navegador: o LSTM roda em JavaScript p
 
 ### Como o assistente responde
 
-1. **Contato, currículo e pedidos de imagem** → botões de contato, link do PDF ou atalho para o gerador de imagens com o pedido já preenchido (local, sem gastar IA).
+1. **Contato, currículo e pedidos de imagem** → botões de contato, o currículo (com "Baixar PDF") ou atalho para o gerador de imagens com o pedido já preenchido (local, sem gastar IA).
 2. **Respostas prontas** (19 temas, 8 idiomas) → saudação, agradecimento, salário, data de início e **formação** são **sempre locais**, sem custo e com texto conferido. Os demais temas prontos (tipo de vaga, remoto, IA, tecnologias…) são respondidos pela IA quando ela está disponível.
 3. **IA com RAG** → o Worker:
    1. confere o token do **Turnstile**;
@@ -99,7 +100,26 @@ As **demos de IA** fazem a inferência no navegador: o LSTM roda em JavaScript p
    5. envia a solicitação pelo **AI Gateway**, sem armazenar perguntas ou respostas em cache.
 4. **Busca local** (reserva) → se a IA falhar ou a cota do dia acabar, o chat procura no próprio conteúdo da página: ranking estilo TF-IDF, correção de digitação (Damerau-Levenshtein), sinônimos e tratamento de chinês.
 
-O conhecimento da IA é **gerado das próprias traduções do site** (`i18n/`): ao mudar o site e publicar o Worker, a IA e o índice vetorial acompanham.
+O conhecimento da IA é **gerado das mesmas fontes do site** (`data/` e `i18n/`): ao mudar o site e publicar o Worker, a IA e o índice vetorial acompanham.
+
+---
+
+## Onde fica cada informação
+
+Cada informação existe em **um lugar só**; o resto do projeto lê dali ou é gerado a partir dali. Depois de editar, rode `node scripts/gerar-secoes.mjs` (o CI falha se algo gerado ficar desatualizado) e, para a IA aprender, `npm run deploy` em `worker/`.
+
+| Arquivo | O que guarda | Quem usa |
+|---|---|---|
+| `data/perfil.json` | Nome, contatos, links, endereço do site, foto, áudios, textos de SEO, endereço do Worker e chave do Turnstile | Todas as páginas (pelo `perfil.js` gerado), currículo, chat, SEO, `sitemap.xml`, `robots.txt`, `manifest`, CSP, `worker/wrangler.jsonc` e IA |
+| `data/experiencia.json` | Empregos e os sites desenvolvidos em cada um (os textos ficam no `i18n/`) | Seção Experiência, currículo, cartões dos sistemas, IA e SEO (empresa atual) |
+| `data/formacao.json` | Cursos, escolas, períodos e logos | Seção Formação, currículo, IA e SEO |
+| `data/projetos.json` · `data/habilidades.json` | Projetos (repositório, demo, métricas, tecnologias do currículo) e tecnologias por categoria | Seções Projetos e Habilidades, currículo e IA |
+| `data/temas.json` | Temas: nomes, cores, tema padrão e limites da barra de intensidade | `temas.css`, `components/boot.js`, botão de tema e `manifest` |
+| `data/imagens/` · `data/audio/` | Foto, imagem de compartilhamento, apresentação falada e voz de referência | Site, currículo, prévias de link e o player do "Sobre mim" |
+| `idiomas.js` | Idiomas do site | Seletores de idioma, traduções, SEO, currículo, geradores e Worker |
+| `i18n/<idioma>.js` | Todos os textos (o nome vem do perfil) | Site, chat, currículo, cartões e IA |
+
+**Para usar como modelo de outro portfólio:** troque os arquivos de `data/` (incluindo foto e áudios — ou apague a pasta `audio/apresentacao/` e o botão de voz some), os textos de `i18n/`, o `servicos` do `perfil.json` (seu Worker e seu Turnstile) e o `name` do Worker em `worker/wrangler.jsonc`; depois rode o gerador.
 
 ---
 
@@ -140,12 +160,15 @@ O conhecimento da IA é **gerado das próprias traduções do site** (`i18n/`): 
 │   ├── guardrail/          # Simulação local de prompt injection contra RAG
 │   └── imagem/             # Gerador de imagens: imagem.js (POST /image no Worker)
 ├── scripts/conferir-modulos.mjs # CI: todo módulo ES importado pelo index.html está no importmap
-├── scripts/gerar-secoes.mjs # Gera a parte estática a partir de data/, idiomas.js e i18n/pt.js (e grava o perfil.js): projetos, habilidades,
-│                           #   SEO, textos em português, data-perfil nas páginas, sitemap, robots e manifest (--check no CI)
+├── scripts/gerar-secoes.mjs # Gera tudo o que vem de data/, idiomas.js e i18n/pt.js: perfil.js, temas.css, seções do index.html
+│                           #   (projetos, habilidades, experiência, formação, SEO, textos em português), dados do currículo,
+│                           #   seletores de idioma, data-perfil e CSP das páginas, sitemap, robots, manifest, bloco de temas
+│                           #   do boot.js e variáveis do wrangler.jsonc (--check no CI)
 ├── scripts/dados.mjs       # Lê data/perfil.json, idiomas.js e i18n/ no Node (usado pelos geradores)
 ├── scripts/gerar-dados-filmes.py  # Gera demos/filmes/filmes.json (Wikidata + Wikipédia)
+├── scripts/gerar-apresentacao.py  # Gera os áudios da apresentação falada (voz clonada), em data/audio/
 ├── scripts/lstm/           # Treino (train.py) e exportação (exportar_web.py) do LSTM da demo
-├── styles.css              # Todo o visual (tema, layout, animações e chat)
+├── styles.css              # Visual do site (layout, animações e chat); as cores vêm do temas.css
 ├── i18n/                   # Textos, um arquivo por idioma (site, chat e currículo)
 ├── i18n.js                 # Carregador: pt e en vêm com a página; os demais idiomas baixam quando escolhidos
 ├── script.js               # Idiomas, menu, filtros, animações, partículas, estatísticas
@@ -157,7 +180,7 @@ O conhecimento da IA é **gerado das próprias traduções do site** (`i18n/`): 
 ├── demo-modal.js           # Modal para demos, "Como construí", vagas e currículo (iframe com ?embed=1)
 ├── chat/                   # Lógica do assistente: texto.js (normalização), regras.js (respostas prontas),
 │                           #   busca.js (busca local na página), ia.js (Worker e avaliações)
-├── components/             # Web Components e peças comuns a todas as páginas (components.js): <site-logo>, <theme-toggle>, <sound-toggle>, sons/vibração, visualizador do GitHub, cartões de links externos e "Compartilhar"; boot.js (tema antes da pintura); vendor/qrcode.min.js (QR code, MIT)
+├── components/             # Web Components e peças comuns a todas as páginas (components.js): <site-logo>, <theme-toggle>, <theme-intensity>, <sound-toggle>, sons/vibração, visualizador do GitHub, cartões de links externos e "Compartilhar"; boot.js (tema, intensidade e idioma antes da pintura); vendor/qrcode.min.js (QR code, MIT)
 ├── data/                   # Fonte única: perfil.json (dados pessoais, endereço do Worker), temas.json (cores e nomes dos temas),
 │                           #   experiência (com os sites desenvolvidos), formação, projetos e habilidades → site, currículo e IA;
 │                           #   imagens/ (foto, imagem de compartilhamento) e audio/ (apresentação falada e voz de referência)
@@ -172,10 +195,10 @@ O conhecimento da IA é **gerado das próprias traduções do site** (`i18n/`): 
 └── worker/                 # Cloudflare Worker
     ├── src/index.js            # Roteador: chat, avaliações, vaga, visitas regionais, preços + Cron
     ├── src/rotas/              # Um arquivo por rota: chat, avaliacao, vaga, imagem, precos, visitas, metricas
-    ├── src/comum.js            # Compartilhado: modelos, idiomas, CORS/JSON, Turnstile, limite, e-mail
+    ├── src/comum.js            # Compartilhado: modelos, idiomas (de idiomas.js), CORS/JSON, Turnstile, limite, e-mail
     ├── src/agendado.js         # Resumo semanal por e-mail e retenção de dados (LGPD)
     ├── src/conhecimento.js     # Gerado: resumo, trechos, perfil completo e versão
-    ├── gerar-conhecimento.mjs  # Gera o conhecimento da IA a partir do i18n/en.js
+    ├── gerar-conhecimento.mjs  # Gera o conhecimento da IA a partir de data/ e i18n/
     ├── indexar-vectorize.mjs   # Gera embeddings e atualiza o índice Vectorize
     ├── migrations/             # Esquema do D1 (feedback_daily, regional_visits; mensagens removidas)
     ├── ver-avaliacoes.sh       # Resumo das avaliações 👍/👎 do chat
@@ -226,7 +249,7 @@ cd worker
 npm run deploy
 ```
 
-Esse comando (1) gera o conhecimento a partir do `i18n/`, (2) publica o Worker e (3) atualiza o índice do Vectorize.
+Esse comando (1) gera o conhecimento a partir de `data/` e `i18n/`, (2) publica o Worker e (3) atualiza o índice do Vectorize.
 Quando houver uma migração D1 pendente, aplique-a **antes** de publicar o Worker: `npx wrangler d1 migrations apply portfolio-contact --remote`. As migrações `0007_imagens.sql` e `0008_cota_imagens.sql` criam a contagem diária e a cota por visitante do gerador de imagens. As migrações `0004_agregar_avaliacoes.sql` e `0005_remover_mensagens.sql` substituem avaliações individuais por totais diários e apagam permanentemente mensagens antigas de contato.
 
 **Recursos do Cloudflare** (criados uma vez):
@@ -249,6 +272,9 @@ Quando houver uma migração D1 pendente, aplique-a **antes** de publicar o Work
 | Mudar um texto do site | Edite `i18n/pt.js` (português) e `i18n/<idioma>.js` (demais idiomas) e rode `node scripts/gerar-secoes.mjs` (copia o português para o `index.html`); depois rode `npm run deploy` em `worker/` para a IA aprender. |
 | Mudar as cores de um tema, o tema padrão ou criar um tema | Edite só o `data/temas.json` e rode `node scripts/gerar-secoes.mjs`. A barra ao lado do botão de tema deixa as cores mais fortes ou mais fracas para cada visitante (limites em `intensidade`, no mesmo arquivo). |
 | Trocar dados pessoais (nome, contatos, links, foto, SEO) | Edite só o `data/perfil.json` e rode `node scripts/gerar-secoes.mjs`; depois `npm run deploy` em `worker/`. |
+| Mudar experiência, formação, projetos ou habilidades | Edite o arquivo em `data/` (e os textos no `i18n/`), rode `node scripts/gerar-secoes.mjs` e `npm run deploy` em `worker/`. Site, currículo e IA acompanham. |
+| Adicionar um idioma | Inclua-o em `idiomas.js`, crie `i18n/<código>.js` e os textos das páginas de demo/vaga/"como construí"; rode `node scripts/gerar-secoes.mjs`. |
+| Regravar a apresentação falada | `pip install gradio_client && python3 scripts/gerar-apresentacao.py` (requer ffmpeg; só regrava as frases que mudaram) |
 | Ver as avaliações 👍/👎 do chat | `cd worker && ./ver-avaliacoes.sh` |
 | **Ver o painel de estatísticas** (totais diários de avaliações e visitas) | `cd worker && npm run painel` — veja [Painel de estatísticas](#painel-de-estatísticas) |
 | Ver uso da IA e métricas do Gateway | Painel do Cloudflare → **AI → AI Gateway → default** |
@@ -278,7 +304,7 @@ As contagens regionais são consultadas diretamente no D1 remoto pelo painel. N�
 
 | Verificação | Resultado |
 |---|---|
-| **GitHub Actions** a cada push | Sintaxe dos JavaScript, validação do `sitemap.xml` e do JSON-LD, geração do conhecimento da IA e os **92 testes do chat** |
+| **GitHub Actions** a cada push | Sintaxe dos JavaScript, validação do `sitemap.xml` e do JSON-LD, **arquivos gerados em dia com `data/`, `idiomas.js` e `i18n/`**, geração do conhecimento da IA, testes do Worker e os **96 testes do chat** |
 | **Lighthouse (celular)** | Desempenho ~80 · Acessibilidade 100 · Boas práticas 100 · SEO 100 |
 | **Lighthouse no CI** a cada push | 3 medições; falha se acessibilidade < 95, boas práticas < 90 ou SEO < 95 (desempenho < 70 só avisa). O link do relatório aparece no log do GitHub Actions. |
 | **Worker** | Origem errada, campos inválidos, token ausente/falso, rota inexistente, limites por minuto, agregação de avaliações e `GET /prices` (ação fora da lista e outra origem recusadas) |
@@ -295,7 +321,7 @@ As contagens regionais são consultadas diretamente no D1 remoto pelo painel. N�
 - **Rota de preços (`GET /prices`):** só leitura, aceita apenas a origem do site e as 15 ações da demo, com limite por IP e cache de 1 h.
 - **Integridade de scripts externos (SRI):** o face-api.js da demo facial tem `integrity` (SHA-384); se o arquivo do CDN for alterado, o navegador não o executa.
 - **HTTPS obrigatório** com HSTS (GitHub Pages).
-- **Política de conteúdo (CSP)** em todas as páginas, por meta tag: só carrega scripts, estilos, fontes, imagens e conexões dos domínios usados (Google Fonts, Unsplash, Cloudflare, API do GitHub, jsDelivr); bloqueia plugins (`object-src 'none'`) e troca de `<base>`. Política de referenciador `strict-origin-when-cross-origin`.
+- **Política de conteúdo (CSP)** em todas as páginas, por meta tag: só carrega scripts, estilos, fontes, imagens e conexões dos domínios usados (Google Fonts, Unsplash, Cloudflare, API do GitHub, jsDelivr); bloqueia plugins (`object-src 'none'`) e troca de `<base>`. O endereço do Worker na CSP vem do `data/perfil.json`. Política de referenciador `strict-origin-when-cross-origin`.
 - **Retenção (LGPD):** o Worker apaga a cada hora os totais diários de avaliações, cliques e acessos regionais antes de completarem 30 dias.
 - **Contas:** a proteção mais importante é a verificação em duas etapas (2FA) no GitHub, Cloudflare, Google e Resend.
 - **Limites por IP:** 10 perguntas/min (chat), 20 avaliações/min, 3 análises de vaga/min, 2 imagens por dia por visitante (com teto global de 40/dia), 30 consultas de preços/min. O limitador do Cloudflare é permissivo (contadores com pequeno atraso): segura abusos em volume, não um pedido exato.

@@ -22,6 +22,7 @@ A framework-free static site with a Cloudflare serverless backend for the AI cha
 
 - [Features](#features)
 - [Architecture](#architecture)
+- [Where each piece of data lives](#where-each-piece-of-data-lives)
 - [Tech stack](#tech-stack)
 - [Project structure](#project-structure)
 - [Running locally](#running-locally)
@@ -41,7 +42,7 @@ A framework-free static site with a Cloudflare serverless backend for the AI cha
 |---|---|
 | **8 languages** | English (default), Portuguese, Spanish, French, Italian, German, Chinese and Russian. Visitors pick one in the header; the choice is remembered and can come in the link (`?lang=pt`). |
 | **Sections** | About (with photo), Experience (as a **CI/CD pipeline**: each job is a passed or running stage with a "log" of achievements and the most cited stack for the period), Projects (12 cards, 6 with a live demo; filters, a link to the code and language/stars/last update from the GitHub API), Skills (46 technologies as a **grid** — default — or an interactive skills × projects **graph**), Education (with institution logos) and Contact. |
-| **Themes** | Two themes the visitor picks in the header (saved and applied on every page, demos and 404 included): **Amazon** (default — dark forest green and lime blended with tech blue, "AI made in the Amazon") and **Editorial** (dark — near-black navy, slate cards and cyan accent). Also via link: `?theme=editorial`. Applied before first paint, no flash. |
+| **Themes** | Two themes the visitor picks in the header (saved and applied on every page, demos and 404 included): **Amazon** (default — dark forest green and lime blended with tech blue, "AI made in the Amazon") and **Editorial** (dark — near-black navy, slate cards and cyan accent). Also via link: `?theme=editorial`. Next to the button, an **intensity slider** makes the colors stronger or weaker (on phones it sits in the ☰ menu). All applied before first paint, no flash. Colors, names and limits live in `data/temas.json`. |
 | **Visuals** | Visitor-chosen theme, moving duotone background images, Canvas particle network, scroll animations and a sticky header with reading progress. Respects "reduce motion". |
 | **Sound and haptics** | Interface clicks and mechanical-keyboard keystrokes while typing, synthesized with Web Audio (no audio files), plus a short vibration on phones. A speaker button in every page header mutes them; the choice is remembered. |
 | **Quick search** | `/` or Ctrl/⌘+K opens a Spotlight-style bar that finds projects, experience, skills, sections and actions (theme, sounds, résumé, job match, share), **filters the projects by topic** (e.g. "rag") and sends questions to the assistant. It uses the chat's local search; nothing is sent. |
@@ -89,7 +90,7 @@ The **AI demos** run inference in the browser: the LSTM runs in plain JavaScript
 
 ### How the assistant answers
 
-1. **Contact, résumé and image requests** → contact buttons, the PDF link or a shortcut to the image generator with the request already filled in (local, no AI quota used).
+1. **Contact, résumé and image requests** → contact buttons, the résumé (with "Download PDF") or a shortcut to the image generator with the request already filled in (local, no AI quota used).
 2. **Ready-made answers** (19 topics, 8 languages) → greetings, thanks, salary, start date and **education** are **always answered locally**, at no cost and with verified text. Other ready-made topics (roles sought, remote work, AI, technologies…) are answered by the AI when it is available.
 3. **AI with RAG** → the Worker:
    1. validates the **Turnstile** token;
@@ -99,7 +100,26 @@ The **AI demos** run inference in the browser: the LSTM runs in plain JavaScript
    5. sends the request through **AI Gateway** without caching visitor questions or answers.
 4. **Local search** (fallback) → if the AI fails or the daily quota runs out, the chat searches the page content itself: TF-IDF-style ranking, typo tolerance (Damerau-Levenshtein), synonyms and Chinese handling.
 
-The AI knowledge is **generated from the site's own translations** (`i18n/`): when the site changes and the Worker is deployed, the AI and the vector index follow.
+The AI knowledge is **generated from the same sources as the site** (`data/` and `i18n/`): when the site changes and the Worker is deployed, the AI and the vector index follow.
+
+---
+
+## Where each piece of data lives
+
+Every piece of data lives in **one place only**; the rest of the project reads it from there or is generated from it. After editing, run `node scripts/gerar-secoes.mjs` (CI fails if anything generated is out of date) and, for the AI to learn it, `npm run deploy` in `worker/`.
+
+| File | What it holds | Used by |
+|---|---|---|
+| `data/perfil.json` | Name, contacts, links, site address, photo, audio, SEO text, Worker address and Turnstile key | Every page (through the generated `perfil.js`), résumé, chat, SEO, `sitemap.xml`, `robots.txt`, `manifest`, CSP, `worker/wrangler.jsonc` and AI |
+| `data/experiencia.json` | Jobs and the sites built at each (text lives in `i18n/`) | Experience section, résumé, system cards, AI and SEO (current employer) |
+| `data/formacao.json` | Courses, schools, periods and logos | Education section, résumé, AI and SEO |
+| `data/projetos.json` · `data/habilidades.json` | Projects (repo, demo, metrics, résumé stack) and technologies by category | Projects and Skills sections, résumé and AI |
+| `data/temas.json` | Themes: names, colors, default theme and intensity-slider limits | `temas.css`, `components/boot.js`, theme button and `manifest` |
+| `data/imagens/` · `data/audio/` | Photo, share image, spoken intro and reference voice | Site, résumé, link previews and the "About me" player |
+| `idiomas.js` | Site languages | Language selectors, translations, SEO, résumé, generators and Worker |
+| `i18n/<lang>.js` | All text (the name comes from the profile) | Site, chat, résumé, cards and AI |
+
+**To use it as a template for another portfolio:** replace the files in `data/` (photo and audio included — or delete `audio/apresentacao/` and the voice button disappears), the text in `i18n/`, `servicos` in `perfil.json` (your Worker and Turnstile) and the Worker `name` in `worker/wrangler.jsonc`; then run the generator.
 
 ---
 
@@ -140,12 +160,15 @@ The AI knowledge is **generated from the site's own translations** (`i18n/`): wh
 │   ├── guardrail/          # Local prompt-injection simulation for RAG
 │   └── imagem/             # Image generator: imagem.js (POST /image on the Worker)
 ├── scripts/conferir-modulos.mjs # CI: every ES module imported by index.html is in the import map
-├── scripts/gerar-secoes.mjs # Renders the static parts from data/, idiomas.js and i18n/pt.js (and writes perfil.js): projects, skills,
-│                           #   SEO, Portuguese text, data-perfil on every page, sitemap, robots and manifest (--check in CI)
+├── scripts/gerar-secoes.mjs # Generates everything that comes from data/, idiomas.js and i18n/pt.js: perfil.js, temas.css, index.html
+│                           #   sections (projects, skills, experience, education, SEO, Portuguese text), résumé data, language
+│                           #   selectors, data-perfil and CSP on every page, sitemap, robots, manifest, the theme block in
+│                           #   boot.js and the wrangler.jsonc vars (--check in CI)
 ├── scripts/dados.mjs       # Loads data/perfil.json, idiomas.js and i18n/ in Node (used by the generators)
 ├── scripts/gerar-dados-filmes.py  # Builds demos/filmes/filmes.json (Wikidata + Wikipedia)
+├── scripts/gerar-apresentacao.py  # Builds the spoken-intro audio (cloned voice) into data/audio/
 ├── scripts/lstm/           # Training (train.py) and export (exportar_web.py) of the demo's LSTM
-├── styles.css              # All styling (theme, layout, animations and chat)
+├── styles.css              # Site styling (layout, animations and chat); colors come from temas.css
 ├── i18n/                   # Text, one file per language (site, chat and résumé)
 ├── i18n.js                 # Loader: pt and en come with the page; other languages download when chosen
 ├── script.js               # Languages, menu, filters, animations, particles, analytics
@@ -157,7 +180,7 @@ The AI knowledge is **generated from the site's own translations** (`i18n/`): wh
 ├── demo-modal.js           # Modal for demos, "How I built it", job match and the résumé (iframe with ?embed=1)
 ├── chat/                   # Assistant logic: texto.js (normalization), regras.js (ready-made answers),
 │                           #   busca.js (local search on the page), ia.js (Worker and ratings)
-├── components/             # Web Components and pieces shared by every page (components.js): <site-logo>, <theme-toggle>, <sound-toggle>, sounds/haptics, GitHub viewer, external-link cards and "Share"; boot.js (theme before paint); vendor/qrcode.min.js (QR codes, MIT)
+├── components/             # Web Components and pieces shared by every page (components.js): <site-logo>, <theme-toggle>, <theme-intensity>, <sound-toggle>, sounds/haptics, GitHub viewer, external-link cards and "Share"; boot.js (theme, intensity and language before paint); vendor/qrcode.min.js (QR codes, MIT)
 ├── data/                   # Single source: perfil.json (personal data, Worker address), temas.json (theme colors and names),
 │                           #   experience (with the sites built), education, projects and skills → site, résumé and AI;
 │                           #   imagens/ (photo, share image) and audio/ (spoken intro and reference voice)
@@ -172,10 +195,10 @@ The AI knowledge is **generated from the site's own translations** (`i18n/`): wh
 └── worker/                 # Cloudflare Worker
     ├── src/index.js            # Router: chat, ratings, job match, regional visits, prices + Cron
     ├── src/rotas/              # One file per route: chat, avaliacao, vaga, imagem, precos, visitas, metricas
-    ├── src/comum.js            # Shared: models, languages, CORS/JSON, Turnstile, rate limit, e-mail
+    ├── src/comum.js            # Shared: models, languages (from idiomas.js), CORS/JSON, Turnstile, rate limit, e-mail
     ├── src/agendado.js         # Weekly summary e-mail and data retention (LGPD)
     ├── src/conhecimento.js     # Generated: summary, excerpts, full profile, version
-    ├── gerar-conhecimento.mjs  # Builds the AI knowledge from i18n/en.js
+    ├── gerar-conhecimento.mjs  # Builds the AI knowledge from data/ and i18n/
     ├── indexar-vectorize.mjs   # Generates embeddings and updates the Vectorize index
     ├── migrations/             # D1 schema (feedback_daily, regional_visits; old messages removed)
     ├── ver-avaliacoes.sh       # 👍/👎 summary of chat answers
@@ -226,7 +249,7 @@ cd worker
 npm run deploy
 ```
 
-This (1) builds the knowledge from `i18n/`, (2) deploys the Worker and (3) updates the Vectorize index.
+This (1) builds the knowledge from `data/` and `i18n/`, (2) deploys the Worker and (3) updates the Vectorize index.
 If a D1 migration is pending, apply it **before** deploying the Worker: `npx wrangler d1 migrations apply portfolio-contact --remote`. Migrations `0007_imagens.sql` and `0008_cota_imagens.sql` create the image generator's daily count and per-visitor quota. Migrations `0004_agregar_avaliacoes.sql` and `0005_remover_mensagens.sql` replace individual ratings with daily totals and permanently delete stored contact messages.
 
 **Cloudflare resources** (created once):
@@ -249,6 +272,9 @@ If a D1 migration is pending, apply it **before** deploying the Worker: `npx wra
 | Change site text | Edit `i18n/pt.js` (Portuguese) and `i18n/<lang>.js` (other languages) and run `node scripts/gerar-secoes.mjs` (copies the Portuguese text into `index.html`), then run `npm run deploy` in `worker/` so the AI learns it. |
 | Change a theme's colors, the default theme or add a theme | Edit only `data/temas.json` and run `node scripts/gerar-secoes.mjs`. The slider next to the theme button makes the colors stronger or weaker for each visitor (limits in `intensidade`, same file). |
 | Change personal data (name, contacts, links, photo, SEO) | Edit only `data/perfil.json` and run `node scripts/gerar-secoes.mjs`, then `npm run deploy` in `worker/`. |
+| Change experience, education, projects or skills | Edit the file in `data/` (and the text in `i18n/`), run `node scripts/gerar-secoes.mjs` and `npm run deploy` in `worker/`. Site, résumé and AI follow. |
+| Add a language | Add it to `idiomas.js`, create `i18n/<code>.js` and the text of the demo/job-match/"how I built it" pages; run `node scripts/gerar-secoes.mjs`. |
+| Re-record the spoken intro | `pip install gradio_client && python3 scripts/gerar-apresentacao.py` (needs ffmpeg; only re-records sentences that changed) |
 | See chat ratings 👍/👎 | `cd worker && ./ver-avaliacoes.sh` |
 | **Open the stats dashboard** (daily rating totals and visits) | `cd worker && npm run painel` — see [Stats dashboard](#stats-dashboard) |
 | See AI usage and Gateway metrics | Cloudflare dashboard → **AI → AI Gateway → default** |
@@ -278,7 +304,7 @@ Regional counts are queried directly from remote D1 by the dashboard. No analyti
 
 | Check | Result |
 |---|---|
-| **GitHub Actions** on every push | JavaScript syntax, `sitemap.xml` and JSON-LD validation, AI knowledge build and the **92 chat tests** |
+| **GitHub Actions** on every push | JavaScript syntax, `sitemap.xml` and JSON-LD validation, **generated files up to date with `data/`, `idiomas.js` and `i18n/`**, AI knowledge build, Worker tests and the **96 chat tests** |
 | **Lighthouse (mobile)** | Performance ~80 · Accessibility 100 · Best practices 100 · SEO 100 |
 | **Lighthouse in CI** on every push | 3 runs; fails if accessibility < 95, best practices < 90 or SEO < 95 (performance < 70 only warns). The report link appears in the GitHub Actions log. |
 | **Worker** | Wrong origin, invalid fields, missing/fake token, unknown route, per-minute limits, honeypot and `GET /prices` (unlisted stock and other origins rejected) |
@@ -295,7 +321,7 @@ Regional counts are queried directly from remote D1 by the dashboard. No analyti
 - **Prices route (`GET /prices`):** read-only; only accepts the site's origin and the demo's 15 stocks, with a per-IP limit and a 1 h cache.
 - **External script integrity (SRI):** the face demo's face-api.js has an `integrity` (SHA-384) attribute; if the CDN file is altered, the browser won't run it.
 - **HTTPS enforced** with HSTS (GitHub Pages).
-- **Content Security Policy** on every page via meta tag: scripts, styles, fonts, images and connections only from the domains in use (Google Fonts, Unsplash, Cloudflare, GitHub API, jsDelivr); plugins blocked (`object-src 'none'`) and `<base>` locked. Referrer policy `strict-origin-when-cross-origin`.
+- **Content Security Policy** on every page via meta tag: scripts, styles, fonts, images and connections only from the domains in use (Google Fonts, Unsplash, Cloudflare, GitHub API, jsDelivr); plugins blocked (`object-src 'none'`) and `<base>` locked. The Worker address in the CSP comes from `data/perfil.json`. Referrer policy `strict-origin-when-cross-origin`.
 - **Retention (privacy):** the Worker deletes daily chat-rating, click and regional aggregates before they reach 30 days.
 - **Accounts:** the most important protection is two-factor authentication (2FA) on GitHub, Cloudflare, Google and Resend.
 - **Per-IP limits:** 10 questions/min (chat), 20 ratings/min, 3 job analyses/min, 2 images per day per visitor (with a global ceiling of 40/day), 30 price lookups/min. Cloudflare's limiter is permissive (counters lag slightly): it stops high-volume abuse, not an exact request count.

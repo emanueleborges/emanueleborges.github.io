@@ -225,10 +225,16 @@ const fundoPadrao = temas.temas[temas.padrao].cores["--bg"];
 // Variáveis CSS de cada tema. O padrão vale também sem data-theme e serve de base: os outros
 // temas só precisam declarar o que muda.
 // Intensidade (barra ao lado do botão de tema): cada cor do tema passa por oklch(from …), que multiplica
-// a saturação (croma) por --intensidade e mantém luminosidade, tom e transparência. Navegadores sem
-// suporte a essa sintaxe ficam com as cores originais (bloco @supports).
+// a saturação (croma) por --intensidade e mantém tom e transparência. Acima de 1 (do meio para o fim da
+// barra), as cores também escurecem na proporção do croma: verdes e azuis ficam mais profundos, enquanto
+// textos claros e fundos (pouco croma) quase não mudam. Navegadores sem suporte a essa sintaxe ficam com
+// as cores originais (bloco @supports).
+const escurecer = temas.intensidade.escurecer ?? 0;
 const comIntensidade = (valor) =>
-  valor.replace(/#[0-9a-f]{3,8}\b|rgba?\([^()]*\)/gi, (cor) => `oklch(from ${cor} l calc(c * var(--intensidade)) h)`);
+  valor.replace(
+    /#[0-9a-f]{3,8}\b|rgba?\([^()]*\)/gi,
+    (cor) => `oklch(from ${cor} calc(l - max(0, var(--intensidade) - 1) * c * ${escurecer}) calc(c * var(--intensidade)) h)`,
+  );
 
 function temasCss() {
   const ordem = [temas.padrao, ...Object.keys(temas.temas).filter((id) => id !== temas.padrao)];
