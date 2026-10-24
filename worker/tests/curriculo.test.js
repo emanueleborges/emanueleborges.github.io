@@ -49,11 +49,11 @@ test("falls back to the print version when the browser is unavailable or the IP 
   const failing = async () => {
     throw new Error("429 Browser time limit exceeded for today");
   };
-  const down = await handleCv(request("de"), setup().env, ORIGIN, failing);
+  const down = await handleCv(request("es"), setup().env, ORIGIN, failing);
   assert.equal(down.status, 302);
-  assert.equal(down.headers.get("Location"), `${ORIGIN}/curriculo.html?lang=de&pdf=1`);
+  assert.equal(down.headers.get("Location"), `${ORIGIN}/curriculo.html?lang=es&pdf=1`);
 
-  const limited = await handleCv(request("de"), setup({ limited: true }).env, ORIGIN, fakePdf([]));
+  const limited = await handleCv(request("es"), setup({ limited: true }).env, ORIGIN, fakePdf([]));
   assert.equal(limited.status, 302);
 });
 

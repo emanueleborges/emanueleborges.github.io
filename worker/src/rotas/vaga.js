@@ -124,21 +124,11 @@ const TECH_REASON = {
     en: "Listed in the profile's skills; the portfolio does not detail a specific project using it.",
     pt: "Listada nas habilidades do perfil; o portfólio não detalha um projeto específico com essa tecnologia.",
     es: "Aparece en las habilidades del perfil; el portafolio no detalla un proyecto específico con esta tecnología.",
-    fr: "Cette compétence figure dans le profil, mais le portfolio ne détaille pas de projet précis qui l’utilise.",
-    it: "È elencata tra le competenze del profilo, ma il portfolio non descrive un progetto specifico che la utilizzi.",
-    de: "Die Technologie ist im Kompetenzprofil aufgeführt; ein konkretes Projekt damit wird im Portfolio nicht beschrieben.",
-    zh: "该技术列在个人资料的技能中，但作品集没有介绍使用它的具体项目。",
-    ru: "Технология указана среди навыков, но в портфолио нет описания конкретного проекта с её использованием.",
   },
   mentioned: {
     en: "The profile mentions this technology, but the listed evidence does not establish the required level of experience.",
     pt: "A tecnologia aparece no perfil, mas as evidências disponíveis não confirmam o nível de experiência exigido.",
     es: "La tecnología aparece en el perfil, pero las evidencias disponibles no confirman el nivel de experiencia requerido.",
-    fr: "La technologie apparaît dans le profil, mais les éléments disponibles ne confirment pas le niveau d’expérience requis.",
-    it: "La tecnologia compare nel profilo, ma le prove disponibili non confermano il livello di esperienza richiesto.",
-    de: "Die Technologie wird im Profil erwähnt, aber die Belege bestätigen nicht das geforderte Erfahrungsniveau.",
-    zh: "个人资料中提到了该技术，但现有证据无法确认所要求的经验水平。",
-    ru: "Технология упоминается в профиле, но имеющиеся данные не подтверждают требуемый уровень опыта.",
   },
 };
 const techEvidence = (term) => CHUNKS.filter((chunk) => termPattern(term).test(chunk.text));
