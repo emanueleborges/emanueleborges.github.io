@@ -29,10 +29,10 @@ const jobs = readData("experiencia.json").jobs.map(({ id, company }) => {
   return { id, title: `Experience: ${get(`${id}.title`)} at ${name}`, text: `${get(`${id}.title`)} — ${name}, ${get(`${id}.period`)}. ${bullets.map(get).join(" ")}` };
 });
 const plainPt = (key) => pt[key].replace(/<[^>]+>/g, "").replace(/&amp;/g, "&");
-const education = readData("formacao.json").courses.map(({ key, school, period, ia = {} }, i) => ({
+const education = readData("formacao.json").courses.map(({ key, school, period, emAndamento, ia = {} }, i) => ({
   id: `edu${i + 1}`,
   title: `Education: ${get(key)}`,
-  text: `${get(key)}${ia.grau ? ` — ${ia.grau}` : ""} (in Portuguese: ${plainPt(key)}${ia.nota ? `; ${ia.nota}` : ""}) — ${school}${ia.sobre ? `, ${ia.sobre}` : ""}, ${period.replace(" — ", "–")}.`,
+  text: `${get(key)}${ia.grau ? ` — ${ia.grau}` : ""} (in Portuguese: ${plainPt(key)}${ia.nota ? `; ${ia.nota}` : ""}) — ${school}${ia.sobre ? `, ${ia.sobre}` : ""}, ${period.replace(" — ", "–")}${emAndamento ? " (in progress)" : ""}.`,
 }));
 
 const CHUNKS = [

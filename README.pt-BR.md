@@ -41,14 +41,14 @@ Site estático, sem framework, com backend *serverless* no Cloudflare para o cha
 | Área | O que faz |
 |---|---|
 | **8 idiomas** | Inglês (padrão), português, espanhol, francês, italiano, alemão, chinês e russo. O visitante escolhe no cabeçalho; a escolha fica salva e pode vir no link (`?lang=pt`). |
-| **Seções** | Sobre (com foto), Experiência (como **esteira de CI/CD**: cada emprego é uma etapa concluída ou em execução, com o "log" das conquistas e a stack mais citada no período), Projetos (12 cards, 6 com demo ao vivo; filtros, link para o código e linguagem/estrelas/última atualização vindos da API do GitHub), Habilidades (46 tecnologias em **grade** — padrão — ou **grafo** interativo habilidades × projetos), Formação (com logos das instituições) e Contato. |
+| **Seções** | Sobre (com foto), Experiência (como **esteira de CI/CD**: cada emprego é uma etapa concluída ou em execução, com o "log" das conquistas e a stack mais citada no período), Projetos (4 em **destaque**, em cards grandes com métricas, e 8 em "Mais projetos", compactos; 6 com demo ao vivo; filtros, link para o código e linguagem/estrelas/última atualização vindos da API do GitHub), Habilidades (46 tecnologias em **grade** — padrão — ou **grafo** interativo habilidades × projetos), Formação (com logos das instituições) e Contato. |
 | **Temas** | Dois temas que o visitante escolhe no cabeçalho (a escolha fica salva e vale em todas as páginas, inclusive demos e 404): **Amazônia** (padrão — verde-floresta escuro e lima mesclados com o azul de tecnologia, "IA feita na Amazônia") e **Editorial** (escuro — azul-noite quase preto, cards em ardósia e destaque ciano). Também pelo link: `?theme=editorial`. Ao lado do botão, uma **barra de intensidade** deixa as cores mais fortes ou mais fracas (no celular, fica no menu ☰). Tudo aplicado antes da pintura, sem piscar. Cores, nomes e limites em `data/temas.json`. |
 | **Visual** | Tema escolhido pelo visitante, imagens de fundo em movimento (duotone), rede de partículas em Canvas, animações ao rolar e cabeçalho fixo com barra de progresso. Respeita "reduzir movimento". |
 | **Sons e vibração** | Cliques de interface e teclas de teclado mecânico ao digitar, sintetizados com Web Audio (sem arquivos de áudio), e vibração curta no celular. Botão de alto-falante no cabeçalho de todas as páginas para mutar; a escolha fica salva. |
 | **Busca rápida** | `/` ou Ctrl/⌘+K abre uma barra estilo Spotlight que encontra projetos, experiências, habilidades, seções e ações (tema, sons, currículo, vaga, compartilhar), **filtra os projetos por assunto** (ex.: "rag") e leva perguntas ao assistente. Usa a mesma busca local do chat; nada é enviado. |
 | **Navegação sem sair do site** | Demos, "Como construí", a página de vagas e o currículo abrem num **modal**. Links do GitHub abrem num **visualizador próprio** (pastas, README e Markdown formatados e código; lista de arquivos pelo jsDelivr e conteúdo pelo `raw.githubusercontent.com`, sem o limite de 60 consultas/hora da API do GitHub). LinkedIn, WhatsApp, e-mail e outros sites — que proíbem ser exibidos dentro de outra página — abrem um **cartão** com o essencial (QR code do WhatsApp, perfil, e-mail para copiar, descrição e tecnologia dos sistemas da Prefeitura); o site externo só abre se o visitante pedir. Ctrl/⌘+clique abre o original. |
 | **Compartilhar** | Ícone no cabeçalho de todas as páginas (no menu ☰ em telas muito estreitas), cartão no contato, botão no rodapé e ação na busca rápida: **QR code** do portfólio no idioma atual, link para copiar, compartilhamento nativo do aparelho e atalhos para WhatsApp, LinkedIn e e-mail. |
-| **Rodapé técnico** | Linha estilo terminal com o modelo de IA do chat; ao clicar em "medir conexão", mostra o ping até o Worker e o data center da Cloudflare que atendeu (`GET /status`). Sem clique, nada é enviado. |
+| **Rodapé técnico** | Linha estilo terminal com o modelo de IA do chat e o **estado da IA** (online / cota atingida → busca local), atualizado pela última pergunta ao chat; ao clicar em "medir conexão", mostra o ping até o Worker e o data center da Cloudflare que atendeu (`GET /status`). Sem clique, nada é enviado. |
 | **Assistente com IA** | Híbrido: **respostas prontas** locais para perguntas frequentes, **IA generativa com RAG** para o resto e **busca local** como reserva. As respostas aparecem com **efeito de digitação** (até ~2,5 s; clicar completa). Respostas da IA podem ser avaliadas com 👍/👎. Veja [Arquitetura](#arquitetura). |
 | **Currículo em PDF** | Gerado pelo próprio site, na hora, a partir de `data/` e `i18n/` (sem arquivos PDF no repositório). O botão abre o currículo **num modal para leitura** (legível também no celular) e **"Baixar PDF"** abre a impressão do navegador já no layout A4 → "Salvar como PDF". Links antigos `/cv/…pdf` são redirecionados. |
 | **Contatos diretos** | E-mail, WhatsApp, LinkedIn e GitHub, cada um com seu cartão em modal; sem formulário nem armazenamento de mensagens pelo portfólio. |
@@ -98,7 +98,7 @@ As **demos de IA** fazem a inferência no navegador: o LSTM roda em JavaScript p
    3. busca no **Vectorize** os 6 trechos do perfil mais parecidos em significado;
    4. envia ao **Qwen3 30B** um resumo fixo do perfil + esses trechos, com regras para responder só sobre o perfil e nunca inventar dados;
    5. envia a solicitação pelo **AI Gateway**, sem armazenar perguntas ou respostas em cache.
-4. **Busca local** (reserva) → se a IA falhar ou a cota do dia acabar, o chat procura no próprio conteúdo da página: ranking estilo TF-IDF, correção de digitação (Damerau-Levenshtein), sinônimos e tratamento de chinês.
+4. **Busca local** (reserva) → se a IA falhar ou a cota do dia acabar (erro 3036), o chat **avisa o visitante** e procura no próprio conteúdo da página: ranking estilo TF-IDF, correção de digitação (Damerau-Levenshtein), sinônimos e tratamento de chinês.
 
 O conhecimento da IA é **gerado das mesmas fontes do site** (`data/` e `i18n/`): ao mudar o site e publicar o Worker, a IA e o índice vetorial acompanham.
 
@@ -112,8 +112,8 @@ Cada informação existe em **um lugar só**; o resto do projeto lê dali ou é 
 |---|---|---|
 | `data/perfil.json` | Nome, contatos, links, endereço do site, foto, áudios, textos de SEO, endereço do Worker e chave do Turnstile | Todas as páginas (pelo `perfil.js` gerado), currículo, chat, SEO, `sitemap.xml`, `robots.txt`, `manifest`, CSP, `worker/wrangler.jsonc` e IA |
 | `data/experiencia.json` | Empregos e os sites desenvolvidos em cada um (os textos ficam no `i18n/`) | Seção Experiência, currículo, cartões dos sistemas, IA e SEO (empresa atual) |
-| `data/formacao.json` | Cursos, escolas, períodos e logos | Seção Formação, currículo, IA e SEO |
-| `data/projetos.json` · `data/habilidades.json` | Projetos (repositório, demo, métricas, tecnologias do currículo) e tecnologias por categoria | Seções Projetos e Habilidades, currículo e IA |
+| `data/formacao.json` | Cursos, escolas, períodos (com "em andamento") e logos | Seção Formação, currículo, IA e SEO |
+| `data/projetos.json` · `data/habilidades.json` | Projetos (destaque, repositório, demo, métricas, tecnologias do currículo) e tecnologias por categoria | Seções Projetos e Habilidades, currículo e IA |
 | `data/temas.json` | Temas: nomes, cores, tema padrão e limites da barra de intensidade | `temas.css`, `components/boot.js`, botão de tema e `manifest` |
 | `data/imagens/` · `data/audio/` | Foto, imagem de compartilhamento, apresentação falada e voz de referência | Site, currículo, prévias de link e o player do "Sobre mim" |
 | `idiomas.js` | Idiomas do site | Seletores de idioma, traduções, SEO, currículo, geradores e Worker |
@@ -187,7 +187,7 @@ Cada informação existe em **um lugar só**; o resto do projeto lê dali ou é 
 ├── curriculo.html          # Currículo (A4) montado com data/ e i18n/; gera o PDF pela impressão do navegador (?pdf=1 abre direto)
 ├── sitemap.xml · robots.txt
 ├── imagens/                # Imagens do site: favicons, ícones do app, logo; logos/ (instituições e habilidades)
-├── tests/                  # Testes automáticos do chat (96 casos, 8 idiomas)
+├── tests/                  # Testes automáticos do chat (96 casos + fallback da IA sem cota, 8 idiomas)
 ├── .github/workflows/      # GitHub Actions: testes e Lighthouse a cada push
 ├── lighthouserc.json       # Notas mínimas do Lighthouse no CI
 ├── scripts/pre-commit      # Hook do git: data de atualização e versão dos arquivos
@@ -304,10 +304,10 @@ As contagens regionais são consultadas diretamente no D1 remoto pelo painel. N�
 
 | Verificação | Resultado |
 |---|---|
-| **GitHub Actions** a cada push | Sintaxe dos JavaScript, validação do `sitemap.xml` e do JSON-LD, **arquivos gerados em dia com `data/`, `idiomas.js` e `i18n/`**, geração do conhecimento da IA, testes do Worker e os **96 testes do chat** |
+| **GitHub Actions** a cada push | Sintaxe dos JavaScript, validação do `sitemap.xml` e do JSON-LD, **arquivos gerados em dia com `data/`, `idiomas.js` e `i18n/`**, geração do conhecimento da IA, testes do Worker e os **104 testes do chat** (inclui a IA sem cota: aviso, busca local e estado no rodapé, nos 8 idiomas) |
 | **Lighthouse (celular)** | Desempenho ~80 · Acessibilidade 100 · Boas práticas 100 · SEO 100 |
 | **Lighthouse no CI** a cada push | 3 medições; falha se acessibilidade < 95, boas práticas < 90 ou SEO < 95 (desempenho < 70 só avisa). O link do relatório aparece no log do GitHub Actions. |
-| **Worker** | Origem errada, campos inválidos, token ausente/falso, rota inexistente, limites por minuto, agregação de avaliações e `GET /prices` (ação fora da lista e outra origem recusadas) |
+| **Worker** | Erro 3036 (cota) e outras falhas da IA → 503 com o motivo e estado no `/status`, origem errada, campos inválidos, token ausente/falso, rota inexistente, limites por minuto, agregação de avaliações e `GET /prices` (ação fora da lista e outra origem recusadas) |
 | **Demos de IA** | LSTM em JS conferido contra o Keras (diferença ~1e-8); demo facial reconhece uma foto espelhada e girada (distância 0,19); demo de filmes indexa ~1.500 filmes em < 50 ms; as três testadas no Chrome (desktop e celular, vários idiomas) e no site publicado |
 | **Offline** | Com o *service worker* ativo, a página recarrega sem internet, com o visual e os projetos |
 | **Ponta a ponta** | Perguntas e avaliações no site publicado, numa janela real do Chrome (o Turnstile recusa navegadores automatizados invisíveis, como esperado) |

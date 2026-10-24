@@ -10,6 +10,7 @@ export const PortfolioApi = (() => {
 
   // Carrega o script do Turnstile só quando for necessário (chat aberto ou formulário em uso).
   const loadTurnstile = () => {
+    if (window.turnstile) return Promise.resolve(window.turnstile);
     ready ??= new Promise((resolve, reject) => {
       const script = document.createElement("script");
       script.src = "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";
@@ -108,7 +109,7 @@ export const PortfolioApi = (() => {
       data = await response.json();
       if (i > 0) best = Math.min(best, performance.now() - start);
     }
-    return { ms: Math.round(best), colo: data.colo, model: data.model };
+    return { ms: Math.round(best), colo: data.colo, model: data.model, ai: data.ai };
   };
 
   return { enabled: Boolean(BASE), loadTurnstile, post, recordVisit, recordClick, status };

@@ -46,6 +46,19 @@ export async function isHuman(token, ip, env) {
 }
 
 // Limite de pedidos por IP (Rate Limiting do Cloudflare); devolve a resposta 429 ou null.
+// Estado da IA: a cota gratuita diária do Workers AI (erro 3036) renova às 00:00 UTC. Fica na memória
+// desta instância do Worker (cada data center tem a sua), então é uma indicação, não um registro global.
+let quotaUntil = 0;
+
+export function aiErrorKind(error) {
+  if (!/\b3036\b|daily free allocation/i.test(String(error?.message ?? error))) return "unavailable";
+  const now = new Date();
+  quotaUntil = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + 1);
+  return "quota";
+}
+
+export const aiState = () => (Date.now() < quotaUntil ? "quota" : "online");
+
 export async function rateLimited(limiter, ip, origin) {
   const { success } = await limiter.limit({ key: ip });
   return success ? null : json({ error: "rate_limited" }, 429, origin);

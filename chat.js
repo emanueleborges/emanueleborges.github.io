@@ -305,8 +305,10 @@ function initChat() {
 
   // Resposta da IA + atalho "Ver na página" para o trecho mais relevante do site.
   const aiReply = async (question) => {
-    const reply = await ai.ask(question, currentLang);
-    if (!reply) return answer(question);
+    const { answer: reply, error } = await ai.ask(question, currentLang);
+    // IA fora do ar ou sem cota: avisa e responde pela busca local; o rodapé técnico mostra o mesmo estado.
+    document.dispatchEvent(new CustomEvent("aistate", { detail: { state: reply ? "online" : error } }));
+    if (!reply) return [el("p", "chat-ai-fallback", tc(error === "quota" ? "aiQuota" : "aiDown")), ...answer(question)];
     const nodes = [el("span", "chat-ai-label", tc("aiLabel"))];
     reply.split(/\n{2,}/).forEach((paragraph) => nodes.push(el("p", null, paragraph)));
     const { results } = search(question);
@@ -578,6 +580,7 @@ function initChat() {
         .map((node) => node.textContent)
         .join(" | "),
     search: (query) => search(query).results.map((result) => result.label),
+    aiAnswerText: async (query) => (await aiReply(query)).map((node) => node.textContent).join(" | "),
   };
 }
 

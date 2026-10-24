@@ -18,14 +18,14 @@ test("removed contact route returns 404 without reading submitted fields", async
   assert.equal(request.bodyUsed, false);
 });
 
-test("status route reports the Cloudflare data center and chat model only to the site", async () => {
+test("status route reports the Cloudflare data center, chat model and AI state only to the site", async () => {
   const env = { ALLOWED_ORIGIN: "https://emanueleborges.github.io" };
   const request = new Request("https://worker.example/status", { headers: { Origin: env.ALLOWED_ORIGIN } });
   Object.defineProperty(request, "cf", { value: { colo: "GRU" } });
 
   const response = await Worker.fetch(request, env, {});
   assert.equal(response.status, 200);
-  assert.deepEqual(await response.json(), { colo: "GRU", model: "qwen3-30b-a3b-fp8" });
+  assert.deepEqual(await response.json(), { colo: "GRU", model: "qwen3-30b-a3b-fp8", ai: "online" });
 
   const foreign = await Worker.fetch(new Request("https://worker.example/status", { headers: { Origin: "https://evil.example" } }), env, {});
   assert.equal(foreign.status, 403);

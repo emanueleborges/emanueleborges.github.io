@@ -24,7 +24,7 @@ const escape = (text) => String(text).replace(/[&<>"]/g, (c) => ({ "&": "&amp;",
 const plain = (html) => html.replace(/<[^>]+>/g, "").replace(/&amp;/g, "&");
 const field = (value) => (value.key ? { attr: ` data-i18n="${value.key}"`, html: ptText(value.key) } : { attr: "", html: escape(value.text) });
 
-function projectCard(p) {
+function projectCard(p, position) {
   const type = field(p.type);
   const title = field(p.title);
   const repo = preencher(p.repo);
@@ -39,7 +39,7 @@ function projectCard(p) {
   const actions = demo ? `<span class="project-actions">${demo}${code}</span>` : code;
   return [
     `          <article data-category="${p.categories.join(" ")}" class="project-card${p.featured ? " project-featured" : ""}">`,
-    `            <span class="art-number mono">${escape(p.label)}</span>`,
+    `            <span class="art-number mono">${String(position + 1).padStart(2, "0")} / ${escape(p.label)}</span>`,
     `            <p class="mono project-type"${type.attr}>${type.html}</p>`,
     `            <h3${title.attr}>${title.html}</h3>`,
     `            <p class="muted" data-i18n="${p.desc.key}">${ptText(p.desc.key)}</p>`,
@@ -83,7 +83,7 @@ function jobItem(job) {
 
 function courseItem(c) {
   const img = `<img${c.manterCores ? ' class="logo-keep"' : ""} src="${escape(c.logo)}" alt="${escape(c.alt)}" loading="lazy" />`;
-  return `            <li><span class="edu-logo">${img}</span><span class="edu-text"><strong data-i18n="${c.key}">${ptText(c.key)}</strong><span>${escape(c.school)} · ${escape(c.period)}</span></span></li>`;
+  return `            <li><span class="edu-logo">${img}</span><span class="edu-text"><strong data-i18n="${c.key}">${ptText(c.key)}</strong><span>${escape(c.school)} · ${escape(c.period)}${c.emAndamento ? ` <span data-i18n="edu.inProgress">${ptText("edu.inProgress")}</span>` : ""}</span></span></li>`;
 }
 
 // Dados do currículo (curriculo.html monta o A4 no navegador, em qualquer idioma): só chaves e textos fixos.
@@ -97,7 +97,7 @@ function cvData() {
     jobs: jobs.map((job) => ({ title: `${job.id}.title`, period: `${job.id}.period`, company: job.company, bullets: bulletKeys(job) })),
     projects: projects.filter((p) => p.cv).map((p) => ({ title: p.title.key, name: p.cv.name, stack: p.cv.stack, desc: p.desc.key })),
     skills: [...byCategory].map(([category, items]) => ({ title: `skills.tab.${category}`, items })),
-    education: courses.map((c) => ({ key: c.key, school: c.school, period: c.period, logo: c.logoImpresso ?? c.logo, manterCores: Boolean(c.manterCores) })),
+    education: courses.map((c) => ({ key: c.key, school: c.school, period: c.period, emAndamento: Boolean(c.emAndamento), logo: c.logoImpresso ?? c.logo, manterCores: Boolean(c.manterCores) })),
   };
   return `    <script>\n      window.CURRICULO = ${JSON.stringify(data).replace(/</g, "\\u003c")};\n    </script>`;
 }
@@ -294,7 +294,11 @@ files.set(
     .replace(/("NOTIFY_EMAIL": )"[^"]*"/, (_, key) => `${key}${JSON.stringify(perfil.email)}`),
 );
 
-let index = replaceBlock(read("index.html"), "projetos", projects.map(projectCard).join("\n"));
+// Projetos em destaque (featured) em cards grandes; os demais em "Mais projetos", compactos.
+const featured = projects.filter((p) => p.featured);
+const others = projects.filter((p) => !p.featured);
+let index = replaceBlock(read("index.html"), "projetos", featured.map((p, i) => projectCard(p, i)).join("\n"));
+index = replaceBlock(index, "projetos-mais", others.map((p, i) => projectCard(p, featured.length + i)).join("\n"));
 index = replaceBlock(index, "habilidades", skills.map(skillChip).join("\n"));
 index = replaceBlock(index, "experiencia", jobs.map(jobItem).join("\n"));
 index = replaceBlock(index, "formacao", courses.map(courseItem).join("\n"));

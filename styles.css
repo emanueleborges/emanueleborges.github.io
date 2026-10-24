@@ -160,7 +160,17 @@ blockquote { margin: 32px 0 0; padding: 12px 0 12px 16px; border-left: 2px solid
 .projects-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 42px 24px; }
 .project-card { position: relative; overflow: hidden; min-width: 0; display: flex; flex-direction: column; padding: 58px 26px 26px; border: 1px solid var(--line); border-radius: 12px; background: radial-gradient(ellipse at 85% 0%, var(--card-glow), transparent 60%), var(--surface); transition: border-color .2s, transform .2s; }
 .project-card:hover { border-color: rgba(var(--accent-rgb),.35); transform: translateY(-2px); }
-.project-featured { grid-column: 1 / -1; background: var(--featured-bg); }
+.project-featured { background: var(--featured-bg); }
+/* "Mais projetos": cards compactos (descrição em 2 linhas, sem métricas), três por linha; o título some se o filtro esconder todos. */
+.projects-more-title { margin: 56px 0 20px; color: var(--kicker); font-size: 12px; font-weight: 500; letter-spacing: .14em; }
+.projects-more-title:not(:has(+ .projects-compact > .project-card:not([hidden]))) { display: none; }
+.projects-compact { grid-template-columns: repeat(3, 1fr); gap: 18px; }
+.projects-compact .project-card { padding: 46px 20px 20px; }
+.projects-compact .art-number { left: 20px; top: 20px; }
+.projects-compact .project-card h3 { font-size: 17px; }
+.projects-compact .project-metrics { display: none; }
+.projects-compact .project-card .muted { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; font-size: 13px; line-height: 1.6; }
+@media (max-width: 1000px) { .projects-compact { grid-template-columns: 1fr 1fr; } }
 .art-number { position: absolute; left: 26px; top: 24px; font-size: 11px; color: var(--subtle); letter-spacing: .1em; }
 .project-type { margin: 0 0 9px; font-size: 10px; letter-spacing: .12em; color: var(--cyan-soft); }
 .project-card h3 { margin: 0; font-size: 19px; letter-spacing: -.04em; }
@@ -406,6 +416,8 @@ html:has(dialog[open]) { overflow: hidden; }
 .footer { flex-wrap: wrap; }
 .system-bar { order: 10; flex-basis: 100%; display: flex; flex-wrap: wrap; align-items: center; gap: 6px 18px; padding: 12px 0 18px; border-top: 1px dashed var(--line); color: var(--subtle); font-size: 10px; letter-spacing: .06em; }
 .system-bar strong { color: var(--text-soft); font-weight: 500; }
+.system-bar [data-system-state][data-state="online"] { color: var(--success); }
+.system-bar [data-system-state][data-state="quota"], .system-bar [data-system-state][data-state="unavailable"] { color: var(--warn); }
 .system-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--subtle); }
 .system-dot[data-state="ok"] { background: #4ade80; box-shadow: 0 0 8px #4ade80; }
 .system-dot[data-state="busy"] { background: #facc15; animation: system-blink .6s steps(2) infinite; }
@@ -498,6 +510,8 @@ main, .footer { position: relative; z-index: 1; }
 .chat-rate-button[disabled]:not([aria-pressed="true"]) { opacity: .4; }
 .chat-rate-button:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 2px; }
 .chat-rate-note { flex-basis: 100%; color: var(--subtle); font-size: 10.5px; }
+/* IA sem cota ou fora do ar: aviso antes da resposta da busca local. */
+.chat-ai-fallback { margin: 0 0 8px; padding: 6px 10px; border-left: 2px solid var(--warn); color: var(--text-soft); font-size: 13px; }
 .chat-ai-label { display: inline-block; margin-bottom: 6px; padding: 2px 8px; border-radius: 999px; background: rgba(var(--accent-2-rgb),.14); color: var(--cyan-soft); font: 600 10px var(--mono); letter-spacing: .06em; text-transform: uppercase; }
 .chat-msg .chat-goto { margin-top: 8px; text-align: left; }
 .chat-summary { margin-top: 6px !important; color: var(--text-soft); font-size: 12.5px; }
@@ -578,7 +592,6 @@ main, .footer { position: relative; z-index: 1; }
   .section-topline { align-items: start; flex-direction: column; gap: 15px; margin-bottom: 29px; }
   .section-aside br { display: none; }
   .projects-grid { grid-template-columns: 1fr; gap: 34px; }
-  .project-featured { grid-column: auto; }
   .project-card { padding: 52px 20px 22px; }
   .art-number { left: 20px; }
   .project-featured h3 { font-size: 22px; }

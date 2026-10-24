@@ -1,6 +1,6 @@
 // POST / — chat com IA (Workers AI) sobre o perfil da pessoa do portfólio, com RAG no Vectorize.
 import { CORE, NOME, PRIMEIRO_NOME, PROFILE } from "../conhecimento.js";
-import { EMBEDDING_MODEL, MAX_QUESTION_LENGTH, LANGUAGES, MODEL, aiText, isHuman, json, languageOf, rateLimited } from "../comum.js";
+import { EMBEDDING_MODEL, MAX_QUESTION_LENGTH, LANGUAGES, MODEL, aiErrorKind, aiText, isHuman, json, languageOf, rateLimited } from "../comum.js";
 
 const TOP_K = 6;
 
@@ -60,8 +60,9 @@ export async function handleChat(payload, ip, env, origin) {
     if (!answer) return json({ error: "empty_answer" }, 502, origin);
     return json({ answer }, 200, origin);
   } catch (error) {
-    // Inclui o caso de a cota gratuita do dia acabar: o site volta para a busca local.
+    // "quota": a cota gratuita do dia acabou (erro 3036); "unavailable": outra falha. Nos dois casos o
+    // site responde pela busca local e avisa o visitante.
     console.error("Erro no Workers AI:", error?.message ?? error);
-    return json({ error: "unavailable" }, 503, origin);
+    return json({ error: aiErrorKind(error) }, 503, origin);
   }
 }

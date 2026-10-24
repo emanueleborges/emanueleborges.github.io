@@ -1,39 +1,53 @@
 {
-  "_doc": "Formação acadêmica. Nome do curso no i18n/ pela chave; escola e período iguais em todos os idiomas. logo: no site; logoImpresso: no currículo, se diferente; manterCores: o site não recolore o logo. ia: contexto extra só para a IA (em inglês). Usada no index.html, no currículo, no SEO e na IA; gere com: node scripts/gerar-secoes.mjs",
+  "_doc": "Formação acadêmica. Nome do curso no i18n/ pela chave; escola e período iguais em todos os idiomas. logo: no site; logoImpresso: no currículo, se diferente; manterCores: o site não recolore o logo. ia: contexto extra só para a IA (em inglês). Usada no index.html, no currículo, no SEO e na IA; gere com: node scripts/gerar-secoes.mjs emAndamento: true mostra \"(em andamento)\" ao lado do período (site, currículo e IA).",
   "courses": [
     {
       "key": "edu.d1",
       "school": "Universidade Federal de Goiás (UFG)",
       "alt": "UFG",
       "period": "2025 — 2026",
+      "emAndamento": true,
       "logo": "imagens/logos/ufg.svg",
-      "ia": { "sobre": "a public federal university in Goiás, Brazil" }
+      "ia": {
+        "sobre": "a public federal university in Goiás, Brazil"
+      }
     },
     {
       "key": "edu.d2",
       "school": "FIAP",
       "alt": "FIAP",
       "period": "2025 — 2026",
+      "emAndamento": true,
       "logo": "imagens/logos/fiap.svg",
-      "ia": { "sobre": "a technology college in São Paulo, Brazil" }
+      "ia": {
+        "sobre": "a technology college in São Paulo, Brazil"
+      }
     },
     {
       "key": "edu.d3",
       "school": "Descomplica",
       "alt": "Descomplica",
       "period": "2024 — 2025",
+      "emAndamento": false,
       "logo": "imagens/logos/descomplica-light.svg",
       "logoImpresso": "imagens/logos/descomplica-dark.svg",
       "manterCores": true,
-      "ia": { "sobre": "an online college in Brazil" }
+      "ia": {
+        "sobre": "an online college in Brazil"
+      }
     },
     {
       "key": "edu.d4",
       "school": "FUCAPI",
       "alt": "FUCAPI",
       "period": "2000 — 2010",
+      "emAndamento": false,
       "logo": "imagens/logos/fucapi.png",
-      "ia": { "sobre": "a college in Manaus, Brazil", "grau": "his undergraduate degree", "nota": "this is Systems Analysis, not Information Systems" }
+      "ia": {
+        "sobre": "a college in Manaus, Brazil",
+        "grau": "his undergraduate degree",
+        "nota": "this is Systems Analysis, not Information Systems"
+      }
     }
   ]
 }
