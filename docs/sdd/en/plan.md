@@ -151,7 +151,7 @@ Open Graph/Twitter tags, `hreflang` (8 languages + `x-default`), `Person` JSON-L
 - Some glows use `*-rgb` variables (numeric triplets) and don't follow the intensity.
 
 ### 3.8 Résumé and PDF
-`curriculo.html` builds the A4 page in the requested language from the generated data; the PDF comes from the browser's print (`@page A4`), with the page title as the suggested file name. On the site the résumé opens in the modal (`demo-modal.js`), whose button calls `print()` on the iframe; direct links use `?pdf=1`. `404.html` redirects `/cv/…-xx.pdf` (old links) to `curriculo.html?lang=xx&pdf=1`.
+`curriculo.html` builds the A4 page in the requested language from the generated data. "Download PDF" uses `PERFIL.cvPdf(lang)` → Worker `GET /cv?lang=` (`src/rotas/curriculo.js`): **Browser Run** opens the published page, renders an A4 PDF and stores it in D1 (`cv_pdf`, keyed by language + knowledge `VERSION`; the cron deletes old versions); the response is a download (`curriculo-<name>-<lang>.pdf`). On any failure (10 min/day limit, 1 new browser every 20 s, D1) the Worker redirects to `curriculo.html?lang=xx&pdf=1`, which opens the browser's print dialog. With no Worker configured, `cvPdf` already points to the print version. `404.html` redirects `/cv/…-xx.pdf` (old links) to `curriculo.html?lang=xx&pdf=1`.
 
 ### 3.9 AI demos
 Inference **in the browser**: LSTM in plain JavaScript with weights exported from Keras (prices via `GET /prices`, with a saved copy as fallback), face recognition with face-api.js (jsDelivr, SRI), movie recommendation with TF-IDF + cosine. The RAG security demo is a local simulation. The image generator uses the Worker (`POST /image`).
@@ -176,6 +176,7 @@ Web Audio sounds and haptics; modals for site pages; GitHub viewer (listing from
 | `POST /visit` | Count per continent (after consent) | origin, 20/min/IP | daily total per continent |
 | `POST /click` | Clicks per link (after consent) | origin, 30/min/IP, Turnstile, fixed targets | daily total per target |
 | `GET /prices?symbol=` | LSTM demo prices | origin, 30/min/IP, 15 fixed stocks, 1 h cache | nothing |
+| `GET /cv?lang=` | Résumé PDF (Browser Run) | 5/min/IP, validated language; navigation (no `Origin`), public content | PDF per language and version (`cv_pdf`) |
 | `GET /status` | Technical footer | origin | nothing |
 | Hourly cron / Monday 12:00 UTC | Purge old data / weekly summary e-mail | — | deletes totals 29+ days old |
 
@@ -200,6 +201,8 @@ Web Audio sounds and haptics; modals for site pages; GitHub viewer (listing from
 | `CHAT_LIMITER` · `FEEDBACK_LIMITER` · `MATCH_LIMITER` · `PRICES_LIMITER` · `VISIT_LIMITER` · `CLICK_LIMITER` · `IMAGE_LIMITER` | 10 · 20 · 3 · 30 · 20 · 30 · 2 requests/60 s |
 | `ALLOWED_ORIGIN` · `NOTIFY_EMAIL` | **generated** from `data/perfil.json` |
 | `TURNSTILE_SECRET` · `RESEND_API_KEY` | secrets (outside the repo) |
+| `METRICAS` | Workers Analytics Engine, dataset `portfolio_metricas`: one metric per response (route, result, ms), recorded in the router; read by `npm run painel` (token with *Account Analytics: Read*) |
+| `observability` | Workers Logs with only the Worker's own messages (`invocation_logs: false`, `redact_query_string`) |
 
 `src/comum.js` gathers models, languages (from `idiomas.js`), CORS/JSON, Turnstile, limits, `aiErrorKind`/`aiState` and e-mail; `src/agendado.js` runs the purge and the weekly summary. `worker/package.json` pins a patched `undici` through `overrides` (don't use `npm audit fix --force`, which downgrades wrangler).
 
@@ -220,6 +223,7 @@ There are no tables for messages, questions or answers. Every D1 table holds **d
 | `click_daily` | (`click_date`, `target`) | consented clicks per fixed target | < 30 days |
 | `image_daily` | `image_date` | images generated that day (global cap) | < 30 days |
 | `image_visitor_daily` | (`image_date`, `visitor`) | images per daily HMAC of the IP (quota) | deleted the next day |
+| `cv_pdf` | (`lang`, `versao`) | résumé PDF (public site content, not visitor data) | deleted when the content version changes |
 
 **Vectorize `portfolio-profile`:** one 1024-dimension vector per excerpt, with a stable `id` (`job1`, `p5`, `edu4`…) and `{ title, text }` metadata.
 
@@ -285,3 +289,5 @@ There are no tables for messages, questions or answers. Every D1 table holds **d
 | ADR-41 | Personal media in `data/imagens` and `data/audio` | Mixed into `imagens/` and `audio/` | Separates what belongs to the person from site assets; technology icons stay in `imagens/` as a library. |
 | ADR-42 | Featured projects (4) + compact "More projects" | 12 equal cards | Curation: recruiters see what matters most first. |
 | ADR-43 | AI state kept in the Worker instance's memory | KV/D1 | No cost or writes; it is an indication (each data center has its own), and the chat reports the real state on each question. |
+| ADR-45 | Résumé PDF via **Browser Run** with a D1 cache and the browser's print as fallback | Print only (ADR-39); PDFs in the repo; JS PDF library | A real file in one click, from the same template (`curriculo.html`); the per-version cache keeps usage far below the free 10 min/day. Puppeteer's Chrome-download dependencies (flagged by `npm audit`) are not part of the deployed Worker. |
+| ADR-44 | Workers Logs with only the Worker's messages + technical metrics in Analytics Engine, recorded in one place (router) | Full request logs; metrics in D1; third-party analytics | Visibility into errors, quota and response time without storing visitor data; free; no D1 writes. |

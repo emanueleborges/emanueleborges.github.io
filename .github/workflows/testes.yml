@@ -26,7 +26,7 @@ jobs:
           for f in script.js api.js chat.js analytics-consent.js busca-rapida.js sistema.js pipeline-grafo.js demo-modal.js apresentacao.js chat/*.js demos/*.js demos/*/*.js vaga/*.js como-construi/*.js worker/src/*.js worker/src/rotas/*.js; do
             node --input-type=module --check < "$f" || { echo "Erro de sintaxe em $f"; exit 1; }
           done
-          for f in worker/gerar-conhecimento.mjs worker/indexar-vectorize.mjs scripts/*.mjs; do
+          for f in worker/*.mjs scripts/*.mjs; do
             node --check "$f"
           done
 
@@ -51,7 +51,10 @@ jobs:
         run: node worker/gerar-conhecimento.mjs
 
       - name: Comparação de vagas
-        run: node --test worker/tests/*.test.js
+        run: |
+          # Só as dependências de produção (o puppeteer da rota do currículo), sem o wrangler e sem binários
+          npm ci --prefix worker --omit=dev --ignore-scripts
+          node --test worker/tests/*.test.js
 
       - name: Demo de segurança RAG
         run: node --test demos/guardrail/core.test.js

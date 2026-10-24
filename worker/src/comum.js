@@ -59,6 +59,16 @@ export function aiErrorKind(error) {
 
 export const aiState = () => (Date.now() < quotaUntil ? "quota" : "online");
 
+// Métricas técnicas (Workers Analytics Engine): rota, resultado ("ok" ou o código do erro) e tempo em ms.
+// Nunca grava texto, IP, idioma ou identificador do visitante; uma falha aqui não afeta a resposta.
+export function registrarMetrica(env, rota, resultado, ms = 0) {
+  try {
+    env.METRICAS?.writeDataPoint({ indexes: [rota], blobs: [rota, resultado], doubles: [ms] });
+  } catch (error) {
+    console.error("Métrica não registrada:", error?.message ?? error);
+  }
+}
+
 export async function rateLimited(limiter, ip, origin) {
   const { success } = await limiter.limit({ key: ip });
   return success ? null : json({ error: "rate_limited" }, 429, origin);

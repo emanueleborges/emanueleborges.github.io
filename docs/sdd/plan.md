@@ -151,7 +151,7 @@ Tags Open Graph/Twitter, `hreflang` (8 idiomas + `x-default`), JSON-LD `Person` 
 - Alguns brilhos usam variáveis `*-rgb` (triplas numéricas) e não acompanham a intensidade.
 
 ### 3.8 Currículo e PDF
-`curriculo.html` monta o A4 no idioma pedido a partir dos dados gerados; o PDF sai da impressão do navegador (`@page A4`), com o título da página como nome sugerido do arquivo. No site, o currículo abre no modal (`demo-modal.js`), cujo botão chama `print()` no iframe; links diretos usam `?pdf=1`. O `404.html` redireciona `/cv/…-xx.pdf` (links antigos) para `curriculo.html?lang=xx&pdf=1`.
+`curriculo.html` monta o A4 no idioma pedido a partir dos dados gerados. "Baixar PDF" usa `PERFIL.cvPdf(idioma)` → `GET /cv?lang=` no Worker (`src/rotas/curriculo.js`): o **Browser Run** abre a página publicada, gera o PDF A4 e o guarda no D1 (`cv_pdf`, chave idioma + `VERSION` do conhecimento; o cron apaga versões antigas); a resposta vem como download (`curriculo-<nome>-<idioma>.pdf`). Em qualquer falha (limite de 10 min/dia, 1 navegador novo a cada 20 s, D1), o Worker redireciona para `curriculo.html?lang=xx&pdf=1`, que abre a impressão do navegador. Sem Worker configurado, `cvPdf` já aponta para a impressão. O `404.html` redireciona `/cv/…-xx.pdf` (links antigos) para `curriculo.html?lang=xx&pdf=1`.
 
 ### 3.9 Demos de IA
 Inferência **no navegador**: LSTM em JavaScript puro com pesos exportados do Keras (preços via `GET /prices`, com cópia salva como reserva), reconhecimento facial com face-api.js (jsDelivr, SRI), recomendação de filmes com TF-IDF + cosseno. A demo de segurança RAG é uma simulação local. O gerador de imagens usa o Worker (`POST /image`).
@@ -176,6 +176,7 @@ Sons por Web Audio e vibração; modais para páginas do site; visualizador do G
 | `POST /visit` | Contagem por continente (após consentimento) | origem, 20/min/IP | total diário por continente |
 | `POST /click` | Cliques por link (após consentimento) | origem, 30/min/IP, Turnstile, alvos fixos | total diário por alvo |
 | `GET /prices?symbol=` | Preços da demo do LSTM | origem, 30/min/IP, 15 ações fixas, cache 1 h | nada |
+| `GET /cv?lang=` | Currículo em PDF (Browser Run) | 5/min/IP, idioma validado; navegação (sem `Origin`), conteúdo público | PDF por idioma e versão (`cv_pdf`) |
 | `GET /status` | Rodapé técnico | origem | nada |
 | Cron horário / segunda 12:00 UTC | Expurgo de dados antigos / resumo semanal por e-mail | — | apaga totais com 29+ dias |
 
@@ -200,6 +201,8 @@ Sons por Web Audio e vibração; modais para páginas do site; visualizador do G
 | `CHAT_LIMITER` · `FEEDBACK_LIMITER` · `MATCH_LIMITER` · `PRICES_LIMITER` · `VISIT_LIMITER` · `CLICK_LIMITER` · `IMAGE_LIMITER` | 10 · 20 · 3 · 30 · 20 · 30 · 2 pedidos/60 s |
 | `ALLOWED_ORIGIN` · `NOTIFY_EMAIL` | **gerados** a partir do `data/perfil.json` |
 | `TURNSTILE_SECRET` · `RESEND_API_KEY` | *secrets* (fora do repositório) |
+| `METRICAS` | Workers Analytics Engine, dataset `portfolio_metricas`: uma métrica por resposta (rota, resultado, ms), registrada no roteador; lida pelo `npm run painel` (token com *Account Analytics: Read*) |
+| `observability` | Workers Logs só com as mensagens do próprio Worker (`invocation_logs: false`, `redact_query_string`) |
 
 `src/comum.js` reúne modelos, idiomas (do `idiomas.js`), CORS/JSON, Turnstile, limites, `aiErrorKind`/`aiState` e e-mail; `src/agendado.js` faz o expurgo e o resumo semanal.
 
@@ -220,6 +223,7 @@ Não há tabelas de mensagens, perguntas ou respostas. Todas as tabelas do D1 s�
 | `click_daily` | (`click_date`, `target`) | cliques consentidos por alvo fixo | < 30 dias |
 | `image_daily` | `image_date` | imagens geradas no dia (teto global) | < 30 dias |
 | `image_visitor_daily` | (`image_date`, `visitor`) | imagens por HMAC diário do IP (cota) | apagada no dia seguinte |
+| `cv_pdf` | (`lang`, `versao`) | PDF do currículo (conteúdo público do site, não é dado de visitante) | apagado quando o conteúdo muda de versão |
 
 **Vectorize `portfolio-profile`:** um vetor de 1024 dimensões por trecho, com `id` estável (`job1`, `p5`, `edu4`…) e metadados `{ title, text }`.
 
@@ -285,3 +289,5 @@ Não há tabelas de mensagens, perguntas ou respostas. Todas as tabelas do D1 s�
 | ADR-41 | Mídias pessoais em `data/imagens` e `data/audio` | Misturadas em `imagens/` e `audio/` | Separa o que é da pessoa do que é do site; ícones de tecnologias continuam em `imagens/` como biblioteca. |
 | ADR-42 | Projetos em destaque (4) + "Mais projetos" compactos | 12 cards iguais | Curadoria: o recrutador vê primeiro o que mais importa. |
 | ADR-43 | Estado da IA guardado na memória da instância do Worker | KV/D1 | Custo e gravações zero; é uma indicação (cada data center tem a sua), e o chat informa o estado real a cada pergunta. |
+| ADR-45 | PDF do currículo pelo **Browser Run** com cache no D1 e a impressão do navegador como reserva | Só a impressão (ADR-39); PDFs no repositório; biblioteca de PDF em JS | Arquivo de verdade com um clique, a partir do mesmo modelo (`curriculo.html`); o cache por versão mantém o uso bem abaixo dos 10 min/dia grátis. As dependências de download do Chrome do puppeteer (com alerta no `npm audit`) não entram no Worker publicado. |
+| ADR-44 | Workers Logs só com as mensagens do Worker + métricas técnicas no Analytics Engine, registradas num ponto só (roteador) | Logs completos dos pedidos; métricas no D1; analytics de terceiros | Visibilidade de erros, cota e tempo de resposta sem guardar dados do visitante; gratuito; sem gravações no D1. |

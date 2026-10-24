@@ -36,6 +36,9 @@ export function perfilScript() {
   };
   // Currículo: página montada com os dados; o PDF é gerado nela, pela impressão do navegador.
   perfil.cv = (lang) => \`curriculo.html?lang=\${lang}\`;
+  // PDF para baixar: gerado pelo Worker (GET /cv, Browser Run); sem Worker, a versão de impressão do site.
+  perfil.cvPdf = (lang) =>
+    perfil.servicos?.worker ? \`\${perfil.servicos.worker}/cv?lang=\${lang}\` : \`curriculo.html?lang=\${lang}&pdf=1\`;
   // Sites desenvolvidos (data/experiencia.json): domínio → { nome, key, stack }.
   perfil.sistemas = ${JSON.stringify(sistemas, null, 2).replace(/\n/g, "\n  ")};
 

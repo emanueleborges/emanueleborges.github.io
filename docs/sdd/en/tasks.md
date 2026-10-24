@@ -115,6 +115,8 @@ Legend: ✅ done · ⏳ pending · 💡 idea
 - ✅ **T96** `CLAUDE.md` and SDD updated for the whole application — NFR-09
 - ✅ **T97** Worker deployed (wrangler 4.152): knowledge with education "in progress", `ai` on `/status`, 33 excerpts reindexed in Vectorize — FR-05.6, FR-01.7
 - ✅ **T100** AI knowledge base reviewed: outdated facts fixed (contact form, PDFs), project p11 added, current role, public sector and "what visitors can do" excerpts, verifiable metrics and code/demo links per project, City Hall systems; nothing hand-written in the generator (37 excerpts) — FR-05.4, FR-17
+- ✅ **T101** Workers Logs (only the Worker's own messages) and technical metrics in Analytics Engine (route, result, time; RAG falling back to the full profile), with an "AI and routes" section in the dashboard — NFR-03, NFR-05
+- ✅ **T102** Real PDF résumé: `GET /cv` with Browser Run, D1 cache (migration 0009) and printing as fallback; modal, résumé and job-match buttons point to `PERFIL.cvPdf` — FR-04
 
 ---
 
@@ -122,6 +124,7 @@ Legend: ✅ done · ⏳ pending · 💡 idea
 
 | ID | Task | Depends on | Requirement |
 |---|---|---|---|
+| ⏳ **T103** | Apply migration `0009` to remote D1 and deploy the Worker (résumé PDF, logs and metrics); create a token with *Account Analytics: Read* for the dashboard | Emanuel | FR-04, NFR-03 |
 | ⏳ **T98** | Refresh the LinkedIn link preview (Post Inspector), since the share image moved | Emanuel | FR-09.1 |
 | ⏳ **T99** | Decide whether institution logos move to `data/imagens/logos/` (technology icons stay in `imagens/`) | Emanuel | FR-17 |
 | ⏳ **T33** | Impact numbers in the jobs (e.g. deploy time, % of bugs) | Emanuel's data | FR-01 |

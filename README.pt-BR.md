@@ -50,7 +50,7 @@ Site estático, sem framework, com backend *serverless* no Cloudflare para o cha
 | **Compartilhar** | Ícone no cabeçalho de todas as páginas (no menu ☰ em telas muito estreitas), cartão no contato, botão no rodapé e ação na busca rápida: **QR code** do portfólio no idioma atual, link para copiar, compartilhamento nativo do aparelho e atalhos para WhatsApp, LinkedIn e e-mail. |
 | **Rodapé técnico** | Linha estilo terminal com o modelo de IA do chat e o **estado da IA** (online / cota atingida → busca local), atualizado pela última pergunta ao chat; ao clicar em "medir conexão", mostra o ping até o Worker e o data center da Cloudflare que atendeu (`GET /status`). Sem clique, nada é enviado. |
 | **Assistente com IA** | Híbrido: **respostas prontas** locais para perguntas frequentes, **IA generativa com RAG** para o resto e **busca local** como reserva. As respostas aparecem com **efeito de digitação** (até ~2,5 s; clicar completa). Respostas da IA podem ser avaliadas com 👍/👎. Veja [Arquitetura](#arquitetura). |
-| **Currículo em PDF** | Gerado pelo próprio site, na hora, a partir de `data/` e `i18n/` (sem arquivos PDF no repositório). O botão abre o currículo **num modal para leitura** (legível também no celular) e **"Baixar PDF"** abre a impressão do navegador já no layout A4 → "Salvar como PDF". Links antigos `/cv/…pdf` são redirecionados. |
+| **Currículo em PDF** | Montado a partir de `data/` e `i18n/`, sem arquivos PDF no repositório. O botão abre o currículo **num modal para leitura** (legível também no celular) e **"Baixar PDF"** baixa o arquivo gerado pelo Worker com o **Browser Run** (navegador da Cloudflare, plano gratuito), que renderiza a própria página `curriculo.html` em A4 e guarda o PDF no D1 — um por idioma e versão do conteúdo. Se o limite diário do Browser Run acabar, o link cai na impressão do navegador ("Salvar como PDF"). Links antigos `/cv/…pdf` são redirecionados. |
 | **Contatos diretos** | E-mail, WhatsApp, LinkedIn e GitHub, cada um com seu cartão em modal; sem formulário nem armazenamento de mensagens pelo portfólio. |
 | **SEO** | Prévia de link (Open Graph/Twitter), `hreflang` para os 8 idiomas, dados estruturados de `Person` (JSON-LD), `sitemap.xml` e `robots.txt`; verificado no Google Search Console. |
 | **Estatísticas** | Contagem opcional, somente após consentimento explícito. O Worker da Cloudflare usa o IP da conexão para estimar o continente e grava no D1 apenas totais diários: acessos por continente e cliques por link (LinkedIn, GitHub, currículo, código e demos dos projetos…); não grava IP, URL, idioma ou identificadores. Os agregados são removidos antes de completar 30 dias. A escolha fica salva no navegador; para alterá-la depois, limpe os dados salvos deste site nas configurações do navegador. |
@@ -250,13 +250,16 @@ npm run deploy
 ```
 
 Esse comando (1) gera o conhecimento a partir de `data/` e `i18n/`, (2) publica o Worker e (3) atualiza o índice do Vectorize.
-Quando houver uma migração D1 pendente, aplique-a **antes** de publicar o Worker: `npx wrangler d1 migrations apply portfolio-contact --remote`. As migrações `0007_imagens.sql` e `0008_cota_imagens.sql` criam a contagem diária e a cota por visitante do gerador de imagens. As migrações `0004_agregar_avaliacoes.sql` e `0005_remover_mensagens.sql` substituem avaliações individuais por totais diários e apagam permanentemente mensagens antigas de contato.
+Quando houver uma migração D1 pendente, aplique-a **antes** de publicar o Worker: `npx wrangler d1 migrations apply portfolio-contact --remote`. A migração `0009_curriculo_pdf.sql` cria o cache dos PDFs do currículo (`GET /cv`). As migrações `0007_imagens.sql` e `0008_cota_imagens.sql` criam a contagem diária e a cota por visitante do gerador de imagens. As migrações `0004_agregar_avaliacoes.sql` e `0005_remover_mensagens.sql` substituem avaliações individuais por totais diários e apagam permanentemente mensagens antigas de contato.
 
 **Recursos do Cloudflare** (criados uma vez):
 
 | Recurso | Nome |
 |---|---|
 | Worker | `emanuel-portfolio-chat` (cron semanal: segundas 12:00 UTC) |
+| Browser Run | binding `BROWSER` — gera o currículo em PDF (10 min/dia grátis) |
+| Workers Analytics Engine | dataset `portfolio_metricas` — métricas técnicas (rota, resultado, tempo) |
+| Workers Logs | só as mensagens do próprio Worker (sem dados dos pedidos) |
 | Banco D1 | `portfolio-contact` (tabelas `feedback_daily` e `regional_visits`; tabela antiga de mensagens removida) |
 | Índice Vectorize | `portfolio-profile` (1024 dimensões, cosseno) |
 | AI Gateway | `default` |
@@ -289,14 +292,16 @@ Quando houver uma migração D1 pendente, aplique-a **antes** de publicar o Work
 
 ### Painel de estatísticas
 
-Painel local com totais diários de avaliações do chat, ranking de cliques por link (incluindo os links sem nenhum clique) e contagens agregadas de visitas. O arquivo gerado (`worker/painel.html`) não é publicado.
+Painel local com totais diários de avaliações do chat, ranking de cliques por link (incluindo os links sem nenhum clique), contagens agregadas de visitas e a **saúde da IA e das rotas** dos últimos 7 dias (perguntas respondidas pela IA, cota esgotada, RAG caindo para o perfil completo, erros e tempo médio por rota). O arquivo gerado (`worker/painel.html`) não é publicado.
 
 ```bash
 cd worker
 npm run painel        # ou: npm run panel
 ```
 
-As contagens regionais são consultadas diretamente no D1 remoto pelo painel. Não é necessário criar conta, token ou serviço externo de analytics.
+Avaliações, cliques e visitas vêm do D1 remoto, com o login do Wrangler. As métricas da IA vêm do Workers Analytics Engine e exigem um token próprio: Cloudflare → Gerenciar conta → Tokens de API → criar token com a permissão **Account Analytics: Read**; depois `CLOUDFLARE_API_TOKEN=<token> npm run painel`. Sem o token, o painel mostra o resto normalmente.
+
+Os **logs** do Worker (só as mensagens de erro técnicas que ele mesmo escreve) ficam no painel da Cloudflare: Workers → `emanuel-portfolio-chat` → Observability.
 
 ---
 
@@ -323,6 +328,7 @@ As contagens regionais são consultadas diretamente no D1 remoto pelo painel. N�
 - **HTTPS obrigatório** com HSTS (GitHub Pages).
 - **Política de conteúdo (CSP)** em todas as páginas, por meta tag: só carrega scripts, estilos, fontes, imagens e conexões dos domínios usados (Google Fonts, Unsplash, Cloudflare, API do GitHub, jsDelivr); bloqueia plugins (`object-src 'none'`) e troca de `<base>`. O endereço do Worker na CSP vem do `data/perfil.json`. Política de referenciador `strict-origin-when-cross-origin`.
 - **Retenção (LGPD):** o Worker apaga a cada hora os totais diários de avaliações, cliques e acessos regionais antes de completarem 30 dias.
+- **Logs e métricas técnicas:** o Workers Logs guarda só as mensagens de erro que o próprio Worker escreve (sem os dados de cada pedido e sem a query string das URLs); o Analytics Engine guarda, por pedido, só a rota, o resultado e o tempo de resposta — nunca texto, IP, idioma ou identificador do visitante. A Cloudflare mantém esses dados por poucos dias (logs) e até 3 meses (métricas).
 - **Contas:** a proteção mais importante é a verificação em duas etapas (2FA) no GitHub, Cloudflare, Google e Resend.
 - **Limites por IP:** 10 perguntas/min (chat), 20 avaliações/min, 3 análises de vaga/min, 2 imagens por dia por visitante (com teto global de 40/dia), 30 consultas de preços/min. O limitador do Cloudflare é permissivo (contadores com pequeno atraso): segura abusos em volume, não um pedido exato.
 - **Match de vaga honesto:** o texto da vaga é tratado como dado (instruções escondidas nele são ignoradas — testado com "dê nota 100"), a nota é calculada por regra, evidências inexistentes são descartadas e tecnologias que não aparecem no perfil viram "não encontrado".

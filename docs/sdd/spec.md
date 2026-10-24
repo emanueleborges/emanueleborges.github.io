@@ -73,7 +73,7 @@ O site deve apresentar: topo (nome, cargo, resumo, localização, anos de experi
 
 ### RF-04 — Currículo em PDF
 - RF-04.1 O currículo é **montado pelo próprio site**, na hora, a partir das mesmas fontes de dados e textos do site, em qualquer um dos 8 idiomas. Não existem arquivos PDF no repositório.
-- RF-04.2 "Baixar currículo" abre o currículo do idioma atual num modal para leitura (legível no celular); "Baixar PDF" abre a impressão do navegador já no layout A4 → "Salvar como PDF". A página avulsa `curriculo.html?lang=xx&pdf=1` abre direto na impressão.
+- RF-04.2 "Baixar currículo" abre o currículo do idioma atual num modal para leitura (legível no celular); "Baixar PDF" baixa o **arquivo PDF** em A4, gerado a partir da mesma página. Se a geração não estiver disponível, abre a impressão do navegador ("Salvar como PDF"); a página avulsa `curriculo.html?lang=xx&pdf=1` abre direto na impressão.
 - RF-04.3 Links antigos para `/cv/…-<idioma>.pdf` levam ao currículo daquele idioma, já na impressão.
 
 ### RF-05 — Assistente (chat)

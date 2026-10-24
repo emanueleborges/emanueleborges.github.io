@@ -24,19 +24,17 @@ if (dialog?.showModal) {
     if (dialog.open) dialog.close();
   };
 
-  // Currículo: curriculo.html, montado com os dados de data/. O PDF é gerado na hora pela própria página
-  // (impressão do navegador → "Salvar como PDF"), no botão da barra; sem arquivos PDF no site.
+  // Currículo: curriculo.html (dados de data/) para leitura; o botão da barra baixa o PDF gerado pelo Worker
+  // (PERFIL.cvPdf: Browser Run, com a versão de impressão do site como reserva).
   const openCv = (link) => {
     opener = link;
     const page = new URL(link.getAttribute("href"), location.href);
     page.searchParams.set("lang", page.searchParams.get("lang") ?? currentLang);
     page.searchParams.delete("pdf");
-    const standalone = new URL(page);
-    standalone.searchParams.set("pdf", "1");
+    newTab.href = new URL(globalThis.PERFIL.cvPdf(page.searchParams.get("lang")), location.href).href;
     page.searchParams.set("embed", "1");
-    newTab.href = standalone.href; // Ctrl/⌘+clique: abre a página avulsa já na impressão
-    newTab.dataset.print = "";
-    newTab.removeAttribute("target");
+    newTab.dataset.cv = "";
+    newTab.target = "_blank"; // o PDF vem como download; a reserva (impressão) abre noutra aba
     newTab.textContent = t("demo.download");
     title.textContent = `~${page.pathname} · ${t("demo.cvTitle")}`;
     frame.title = t("demo.cvTitle");
@@ -48,7 +46,7 @@ if (dialog?.showModal) {
 
   const open = (link) => {
     opener = link;
-    delete newTab.dataset.print;
+    delete newTab.dataset.cv;
     newTab.target = "_blank";
     newTab.innerHTML = t("demo.newTab");
     const url = new URL(link.getAttribute("href"), location.href);
@@ -69,12 +67,8 @@ if (dialog?.showModal) {
   dialog.addEventListener("cancel", cleanup); // Esc
   dialog.addEventListener("close", cleanup);
   dialog.querySelector("[data-demo-modal-close]").addEventListener("click", close);
-  newTab.addEventListener("click", (event) => {
-    if (!("print" in newTab.dataset)) return close();
-    if (event.metaKey || event.ctrlKey || event.shiftKey) return;
-    event.preventDefault();
-    frame.contentWindow.print(); // imprime só o currículo do iframe (mesma origem)
-  });
+  // "Nova aba" fecha o modal; "Baixar PDF" (currículo) só baixa e mantém o currículo aberto.
+  newTab.addEventListener("click", () => "cv" in newTab.dataset || close());
   // Clique no fundo escurecido fecha.
   dialog.addEventListener("click", (event) => event.target === dialog && close());
   document.addEventListener("languagechange", () => dialog.querySelector("[data-demo-modal-close]").setAttribute("aria-label", t("demo.close")));

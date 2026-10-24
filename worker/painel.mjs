@@ -1,6 +1,6 @@
-// Painel local de dados operacionais: avaliações do chat, cliques por link
-// e visitas por continente.
-// Busca os agregados no D1, gera painel.html fora do git e abre no navegador. Nada é publicado.
+// Painel local de dados operacionais: avaliações do chat, cliques por link, visitas por continente
+// (agregados no D1) e saúde da IA e das rotas (métricas técnicas no Workers Analytics Engine).
+// Gera painel.html fora do git e abre no navegador. Nada é publicado.
 //
 // Uso:  cd worker && npm run painel
 
@@ -9,6 +9,7 @@ import { writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 import { CLICK_TARGETS } from "./src/rotas/metricas.js";
+import { contaCloudflare } from "./conta-cloudflare.mjs";
 
 const DIR = dirname(fileURLToPath(import.meta.url));
 const OUT = join(DIR, "painel.html");
@@ -151,6 +152,50 @@ const clicksHtml = `<div class="tiles">${tile("Cliques consentidos (30 dias)", c
   </div></div>
   <p class="muted">Somente totais diários por link, após consentimento, sem IP, página, idioma ou identificadores. Projetos aparecem quando recebem o primeiro clique.</p>`;
 
+/* ---------- IA e rotas do Worker (Analytics Engine) ---------- */
+
+// Lido pela API SQL do Analytics Engine; exige um token com "Account Analytics: Read"
+// (variável CLOUDFLARE_API_TOKEN) — o login do Wrangler normalmente não tem essa permissão.
+async function workerMetrics() {
+  try {
+    const { accountId, apiToken, oauth } = contaCloudflare();
+    const sql = `SELECT blob1 AS rota, blob2 AS resultado, SUM(_sample_interval) AS total, ROUND(SUM(_sample_interval * double1) / SUM(_sample_interval)) AS ms
+      FROM portfolio_metricas WHERE timestamp > NOW() - INTERVAL '7' DAY GROUP BY rota, resultado ORDER BY rota, total DESC`;
+    const response = await fetch(`https://api.cloudflare.com/client/v4/accounts/${accountId}/analytics_engine/sql`, {
+      method: "POST",
+      headers: { Authorization: `Bearer ${apiToken ?? oauth}` },
+      body: sql,
+    });
+    if (!response.ok) return { error: `${response.status} ${(await response.text()).slice(0, 160)}` };
+    return { rows: (await response.json()).data ?? [] };
+  } catch (error) {
+    return { error: error.message };
+  }
+}
+
+console.log("Buscando métricas técnicas no Analytics Engine…");
+const metrics = await workerMetrics();
+const routeNames = { "/": "Chat com IA", "/match": "Sua vaga combina?", "/image": "Gerador de imagens", "/feedback": "Avaliações", "/visit": "Visitas", "/click": "Cliques", "/prices": "Preços (LSTM)", "/status": "Rodapé técnico", outra: "Outros caminhos (robôs)" };
+const metricsHtml = (() => {
+  if (metrics.error) {
+    return `<p class="muted">Não foi possível ler as métricas (${escape(metrics.error)}). Crie um token em Cloudflare → Gerenciar conta → Tokens de API com a permissão <b>Account Analytics: Read</b> e rode <code>CLOUDFLARE_API_TOKEN=… npm run painel</code>. Logo depois do primeiro deploy com métricas, a tabela pode demorar alguns minutos para existir.</p>`;
+  }
+  const chat = metrics.rows.filter((row) => row.rota === "/");
+  const count = (resultado) => Number(chat.find((row) => row.resultado === resultado)?.total ?? 0);
+  const asked = chat.filter((row) => row.resultado !== "rag_fallback").reduce((sum, row) => sum + Number(row.total), 0);
+  const aiMs = chat.find((row) => row.resultado === "ok")?.ms;
+  return `<div class="tiles">
+    ${tile("Perguntas ao chat com IA (7 dias)", asked.toLocaleString("pt-BR"))}
+    ${tile("Respondidas pela IA", count("ok").toLocaleString("pt-BR"), aiMs ? `tempo médio ${Number(aiMs).toLocaleString("pt-BR")} ms` : "")}
+    ${tile("Cota da IA esgotada", count("quota").toLocaleString("pt-BR"), "o site respondeu pela busca local")}
+    ${tile("RAG caiu para o perfil completo", count("rag_fallback").toLocaleString("pt-BR"), "Vectorize indisponível")}
+  </div>
+  <div class="table-wrap" style="margin-top:12px"><table><thead><tr><th>Rota</th><th>Resultado</th><th class="num">Pedidos</th><th class="num">Tempo médio</th></tr></thead><tbody>
+    ${metrics.rows.map((row) => `<tr><td>${escape(routeNames[row.rota] ?? row.rota)}</td><td>${escape(row.resultado)}</td><td class="num">${Number(row.total).toLocaleString("pt-BR")}</td><td class="num">${row.resultado === "rag_fallback" ? "—" : `${Number(row.ms).toLocaleString("pt-BR")} ms`}</td></tr>`).join("") || '<tr><td colspan="4">Nenhum pedido nos últimos 7 dias.</td></tr>'}
+  </tbody></table></div>
+  <p class="muted">Métricas técnicas do Worker: rota, resultado ("ok" ou o código do erro) e tempo de resposta. Sem texto, IP, idioma ou identificador do visitante.</p>`;
+})();
+
 const continentNames = { AF: "África", AN: "Antártida", AS: "Ásia", EU: "Europa", NA: "América do Norte", OC: "Oceania", SA: "América do Sul" };
 const visitsHtml = `<div class="tiles">${tile("Acessos regionais consentidos (30 dias)", visitTotal.toLocaleString("pt-BR"))}</div>
   <div class="table-wrap"><table><thead><tr><th>Continente</th><th class="num">Acessos</th></tr></thead><tbody>
@@ -220,6 +265,9 @@ const html = `<!doctype html>
     <tbody>${weeks.map((w, i) => `<tr><td>${weekLabel(w)}</td><td class="num">${ratingsWeek[0].values[i]}</td><td class="num">${ratingsWeek[1].values[i]}</td></tr>`).join("")}</tbody>
   </table></div></details>
   <p class="muted">São armazenados somente totais diários de 👍/👎 por até 30 dias; perguntas, respostas e idiomas não são guardados junto à avaliação.</p>
+
+  <h2>IA e rotas do Worker</h2>
+  ${metricsHtml}
 
   <h2>Cliques por link</h2>
   ${clicksHtml}

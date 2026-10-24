@@ -6,11 +6,12 @@
 //   POST /click    → total diário de cliques por link (LinkedIn, GitHub…), somente após consentimento
 //   POST /image    → demo do gerador de imagens (FLUX.1 schnell), com moderação e teto diário
 //   GET  /prices   → preços das ações da demo do LSTM (Yahoo Finance)
+//   GET  /cv       → currículo em PDF (Browser Run, com cache no D1; sem ele, a versão de impressão)
 //   GET  /status   → rodapé técnico: data center da Cloudflare, modelo do chat e estado da IA (nada é salvo)
 //   Cron (horário) → limpeza de dados expirados; (segunda 12:00 UTC) resumo agregado semanal
 //
 // Cada rota fica em src/rotas/; as peças comuns em src/comum.js; o cron em src/agendado.js.
-import { MODEL, aiState, corsHeaders, json } from "./comum.js";
+import { MODEL, aiState, corsHeaders, json, registrarMetrica } from "./comum.js";
 import { handleChat } from "./rotas/chat.js";
 import { handleFeedback } from "./rotas/avaliacao.js";
 import { handleMatch } from "./rotas/vaga.js";
@@ -18,6 +19,7 @@ import { handlePrices } from "./rotas/precos.js";
 import { handleVisit } from "./rotas/visitas.js";
 import { handleClick } from "./rotas/metricas.js";
 import { handleImage } from "./rotas/imagem.js";
+import { handleCv } from "./rotas/curriculo.js";
 import { purgeOldData, sendWeeklySummary } from "./agendado.js";
 
 // Rotas POST: caminho → função (payload, ip, env, origin, ctx, request).
@@ -30,6 +32,41 @@ const POST_ROUTES = {
   "/visit": (_payload, _ip, env, origin, _ctx, request) => handleVisit(request, env, origin),
 };
 
+// Rotas conhecidas nas métricas; caminhos inventados (robôs) entram como "outra".
+const METRIC_ROUTES = new Set([...Object.keys(POST_ROUTES), "/prices", "/status", "/cv"]);
+
+// Roteamento de cada pedido (métricas em fetch, abaixo).
+async function responder(request, env, ctx) {
+  const origin = env.ALLOWED_ORIGIN;
+  if (request.method === "OPTIONS") return new Response(null, { status: 204, headers: corsHeaders(origin) });
+  if (request.method === "GET" && new URL(request.url).pathname === "/prices") {
+    if (request.headers.get("Origin") !== origin) return json({ error: "forbidden_origin" }, 403, origin);
+    return handlePrices(request, request.headers.get("CF-Connecting-IP") ?? "unknown", env, origin);
+  }
+  // Currículo em PDF: link aberto pelo visitante (navegação, sem cabeçalho Origin); conteúdo público.
+  if (request.method === "GET" && new URL(request.url).pathname === "/cv") return handleCv(request, env, origin);
+  if (request.method === "GET" && new URL(request.url).pathname === "/status") {
+    if (request.headers.get("Origin") !== origin) return json({ error: "forbidden_origin" }, 403, origin);
+    return json({ colo: request.cf?.colo ?? null, model: MODEL.split("/").pop(), ai: aiState() }, 200, origin);
+  }
+  if (request.method !== "POST") return json({ error: "method_not_allowed" }, 405, origin);
+  if (request.headers.get("Origin") !== origin) return json({ error: "forbidden_origin" }, 403, origin);
+
+  const { pathname } = new URL(request.url);
+  if (pathname === "/visit") return POST_ROUTES[pathname](null, null, env, origin, ctx, request);
+  const handler = Object.hasOwn(POST_ROUTES, pathname) ? POST_ROUTES[pathname] : null;
+  if (!handler) return json({ error: "not_found" }, 404, origin);
+
+  let payload;
+  try {
+    payload = await request.json();
+  } catch {
+    return json({ error: "invalid_json" }, 400, origin);
+  }
+  const ip = request.headers.get("CF-Connecting-IP") ?? "unknown";
+  return handler(payload, ip, env, origin, ctx, request);
+}
+
 export default {
   async scheduled(event, env, ctx) {
     const tasks = [purgeOldData(env)];
@@ -37,32 +74,15 @@ export default {
     ctx.waitUntil(Promise.all(tasks));
   },
 
+  // Toda resposta (menos o preflight CORS) vira uma métrica técnica: rota, resultado e tempo.
   async fetch(request, env, ctx) {
-    const origin = env.ALLOWED_ORIGIN;
-    if (request.method === "OPTIONS") return new Response(null, { status: 204, headers: corsHeaders(origin) });
-    if (request.method === "GET" && new URL(request.url).pathname === "/prices") {
-      if (request.headers.get("Origin") !== origin) return json({ error: "forbidden_origin" }, 403, origin);
-      return handlePrices(request, request.headers.get("CF-Connecting-IP") ?? "unknown", env, origin);
+    const inicio = Date.now();
+    const response = await responder(request, env, ctx);
+    if (request.method !== "OPTIONS") {
+      const resultado = response.ok ? "ok" : ((await response.clone().json().catch(() => null))?.error ?? String(response.status));
+      const { pathname } = new URL(request.url);
+      registrarMetrica(env, METRIC_ROUTES.has(pathname) ? pathname : "outra", resultado, Date.now() - inicio);
     }
-    if (request.method === "GET" && new URL(request.url).pathname === "/status") {
-      if (request.headers.get("Origin") !== origin) return json({ error: "forbidden_origin" }, 403, origin);
-      return json({ colo: request.cf?.colo ?? null, model: MODEL.split("/").pop(), ai: aiState() }, 200, origin);
-    }
-    if (request.method !== "POST") return json({ error: "method_not_allowed" }, 405, origin);
-    if (request.headers.get("Origin") !== origin) return json({ error: "forbidden_origin" }, 403, origin);
-
-    const { pathname } = new URL(request.url);
-    if (pathname === "/visit") return POST_ROUTES[pathname](null, null, env, origin, ctx, request);
-    const handler = Object.hasOwn(POST_ROUTES, pathname) ? POST_ROUTES[pathname] : null;
-    if (!handler) return json({ error: "not_found" }, 404, origin);
-
-    let payload;
-    try {
-      payload = await request.json();
-    } catch {
-      return json({ error: "invalid_json" }, 400, origin);
-    }
-    const ip = request.headers.get("CF-Connecting-IP") ?? "unknown";
-    return handler(payload, ip, env, origin, ctx, request);
+    return response;
   },
 };

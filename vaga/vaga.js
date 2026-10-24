@@ -511,7 +511,7 @@ function renderResult() {
       </li>`)
     .join("");
   $("[data-pitch]").textContent = result.pitch;
-  $("[data-cv]").href = `/${globalThis.PERFIL.cv(Demo.lang)}&pdf=1`; // abre o currículo já na impressão (Salvar como PDF)
+  $("[data-cv]").href = new URL(globalThis.PERFIL.cvPdf(Demo.lang), `${location.origin}/`).href; // PDF do Worker (ou a impressão)
   $("[data-contact]").href = `/?lang=${Demo.lang}#contato`;
 }
 

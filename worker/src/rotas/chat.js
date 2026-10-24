@@ -1,6 +1,6 @@
 // POST / — chat com IA (Workers AI) sobre o perfil da pessoa do portfólio, com RAG no Vectorize.
 import { CORE, NOME, PRIMEIRO_NOME, PROFILE } from "../conhecimento.js";
-import { EMBEDDING_MODEL, MAX_QUESTION_LENGTH, LANGUAGES, MODEL, aiErrorKind, aiText, isHuman, json, languageOf, rateLimited } from "../comum.js";
+import { EMBEDDING_MODEL, MAX_QUESTION_LENGTH, LANGUAGES, MODEL, aiErrorKind, aiText, isHuman, json, languageOf, rateLimited, registrarMetrica } from "../comum.js";
 
 const TOP_K = 6;
 
@@ -25,6 +25,7 @@ async function profileContext(question, env) {
     return `${CORE}\n\n${excerpts.map((match) => `## ${match.metadata.title}\n${match.metadata.text}`).join("\n\n")}`;
   } catch (error) {
     console.error("RAG indisponível, usando o perfil completo:", error?.message ?? error);
+    registrarMetrica(env, "/", "rag_fallback");
     return PROFILE;
   }
 }

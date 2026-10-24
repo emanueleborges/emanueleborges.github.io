@@ -73,7 +73,7 @@ The site shows: hero (name, role, summary, location, years of experience), About
 
 ### FR-04 — PDF résumé
 - FR-04.1 The résumé is **built by the site itself**, on demand, from the same data and text sources as the site, in any of the 8 languages. There are no PDF files in the repository.
-- FR-04.2 "Download résumé" opens the résumé in the current language in a modal for reading (phone friendly); "Download PDF" opens the browser's print dialog already in A4 layout → "Save as PDF". The standalone page `curriculo.html?lang=xx&pdf=1` opens straight into printing.
+- FR-04.2 "Download résumé" opens the résumé in the current language in a modal for reading (phone friendly); "Download PDF" downloads the **A4 PDF file**, generated from the same page. If generation isn't available, it opens the browser's print dialog ("Save as PDF"); the standalone page `curriculo.html?lang=xx&pdf=1` opens straight into printing.
 - FR-04.3 Old links to `/cv/…-<lang>.pdf` lead to the résumé in that language, already printing.
 
 ### FR-05 — Assistant (chat)

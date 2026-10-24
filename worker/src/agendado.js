@@ -1,4 +1,5 @@
 // Tarefas agendadas: limpeza horária de dados expirados e resumo semanal agregado.
+import { VERSION } from "./conhecimento.js";
 import { EMBEDDING_MODEL, MODEL, aiText, emailEnabled, escapeHtml, sendEmail } from "./comum.js";
 
 // Saúde dos serviços usados pelo site (IA, embeddings, Vectorize e D1).
@@ -46,6 +47,12 @@ export async function purgeOldData(env) {
     }
   } catch (error) {
     console.error("Retenção de dados falhou:", error?.message ?? error);
+  }
+  // PDFs do currículo de versões anteriores do conteúdo (GET /cv gera de novo quando alguém pedir).
+  try {
+    await env.DB.prepare("DELETE FROM cv_pdf WHERE versao != ?").bind(VERSION).run();
+  } catch (error) {
+    console.error("Limpeza dos PDFs do currículo falhou:", error?.message ?? error);
   }
 }
 

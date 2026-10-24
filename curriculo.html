@@ -112,11 +112,13 @@
       // O título vira o nome sugerido do arquivo ao salvar como PDF.
       document.title = plain("cv.pageTitle");
 
-      // PDF gerado pela própria página: o botão (ou ?pdf=1, usado pelos links "Baixar currículo") abre a
-      // impressão, já com o layout A4 (@page) — "Salvar como PDF" no computador e no celular.
+      // "Baixar PDF": o PDF gerado pelo Worker (PERFIL.cvPdf, Browser Run). Na versão de impressão
+      // (?pdf=1 — a reserva do Worker, ou sem Worker), o botão e o carregamento abrem a impressão
+      // do navegador, já com o layout A4 (@page) → "Salvar como PDF".
       const printButton = document.querySelector("[data-print]");
       printButton.textContent = plain("demo.download");
-      printButton.addEventListener("click", () => print());
+      const workerPdf = !params.has("pdf") && P.servicos?.worker;
+      printButton.addEventListener("click", () => (workerPdf ? (location.href = P.cvPdf(lang)) : print()));
       if (params.has("pdf")) addEventListener("load", () => document.fonts.ready.then(() => print()));
 
       // Experiência, projetos, habilidades e formação: data/ (bloco gerado acima, window.CURRICULO).

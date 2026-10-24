@@ -3,7 +3,7 @@
 // que existem, rebaixa requisito sem evidência para "none" e calcula a nota por regra (não pela IA).
 // O texto da vaga não é salvo.
 import { CHUNKS, NOME, PRIMEIRO_NOME } from "../conhecimento.js";
-import { LANGUAGES, MODEL, aiText, isHuman, json, languageOf, rateLimited } from "../comum.js";
+import { aiErrorKind, aiText, isHuman, json, languageOf, LANGUAGES, MODEL, rateLimited } from "../comum.js";
 
 const MIN_JOB_LENGTH = 80;
 const MAX_JOB_LENGTH = 8000;
@@ -279,6 +279,7 @@ export async function handleMatch(payload, ip, env, origin) {
     return json(match, 200, origin);
   } catch (error) {
     console.error("Erro no match de vaga:", error?.message ?? error);
-    return json({ error: "unavailable" }, 503, origin);
+    // "quota" (cota gratuita do dia, erro 3036) ou "unavailable"; a página mostra a mesma mensagem para os dois.
+    return json({ error: aiErrorKind(error) }, 503, origin);
   }
 }

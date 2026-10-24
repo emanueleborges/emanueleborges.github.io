@@ -6,17 +6,15 @@ import fs from "node:fs";
 import os from "node:os";
 import { execFileSync } from "node:child_process";
 import { CHUNKS } from "./src/conhecimento.js";
+import { contaCloudflare } from "./conta-cloudflare.mjs";
 
 const INDEX = "portfolio-profile";
 const EMBEDDING_MODEL = "@cf/baai/bge-m3";
 const MANIFEST = new URL("./vetores-ids.json", import.meta.url);
 
 // Conta e login do Wrangler (o mesmo usado para publicar o Worker).
-const whoami = execFileSync("npx", ["wrangler", "whoami", "--json"], { encoding: "utf8" });
-const accountId = JSON.parse(whoami).accounts?.[0]?.id;
-const configPath = `${os.homedir()}/Library/Preferences/.wrangler/config/default.toml`;
-const token = fs.existsSync(configPath) ? fs.readFileSync(configPath, "utf8").match(/^oauth_token = "([^"]+)"/m)?.[1] : process.env.CLOUDFLARE_API_TOKEN;
-if (!accountId || !token) throw new Error("Faça login com `npx wrangler login` antes de indexar.");
+const { accountId, oauth, apiToken } = contaCloudflare();
+const token = oauth ?? apiToken;
 
 // Gera os vetores em lotes.
 const vectors = [];
