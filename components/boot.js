@@ -15,11 +15,15 @@
       return null; // navegação privada
     }
   };
-  var theme = TEMAS.temas[params.get("theme")] ? params.get("theme") : stored("theme");
-  theme = TEMAS.temas[theme] ? theme : TEMAS.padrao;
+  // Só chaves próprias: "constructor" ou "__proto__" na URL não contam como tema ou idioma.
+  var tem = function (obj, key) {
+    return key != null && Object.prototype.hasOwnProperty.call(obj, key);
+  };
+  var theme = tem(TEMAS.temas, params.get("theme")) ? params.get("theme") : stored("theme");
+  theme = tem(TEMAS.temas, theme) ? theme : TEMAS.padrao;
   var idiomas = window.IDIOMAS;
-  var lang = idiomas[params.get("lang")] ? params.get("lang") : stored("lang");
-  lang = idiomas[lang] ? lang : Object.keys(idiomas)[0];
+  var lang = tem(idiomas, params.get("lang")) ? params.get("lang") : stored("lang");
+  lang = tem(idiomas, lang) ? lang : Object.keys(idiomas)[0];
   window.IDIOMA_INICIAL = lang; // idioma da página: script.js, demos/demos.js
   if (boot && boot.hasAttribute("data-i18n")) {
     // pt e en já vêm na página; os outros idiomas do site (idiomas.js) são pré-carregados.

@@ -84,6 +84,7 @@ const DANGLING = /(?:,?\s+(?:conforme(?:\s+mencionad[oa])?(?:\s+(?:em|no|na))?|m
 const text = (value, max) =>
   typeof value === "string"
     ? value
+        .slice(0, 2 * max) // limita o texto antes das regex (DANGLING fica lenta com textos muito longos)
         .replace(QUOTED_ID, "")
         .replace(CODE_ID, "")
         .replace(DANGLING, "$1")

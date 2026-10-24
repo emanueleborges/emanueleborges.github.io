@@ -777,8 +777,10 @@
     }
     if (url.protocol === "mailto:") return "email";
     if (!/^https?:$/.test(url.protocol) || url.host === location.host) return null;
-    if (url.hostname === "wa.me" || url.hostname.endsWith("whatsapp.com")) return "whatsapp";
-    if (url.hostname.endsWith("linkedin.com")) return "linkedin";
+    // O domínio ou um subdomínio dele (www.linkedin.com), nunca algo como "evillinkedin.com".
+    const dominio = (base) => url.hostname === base || url.hostname.endsWith(`.${base}`);
+    if (dominio("wa.me") || dominio("whatsapp.com")) return "whatsapp";
+    if (dominio("linkedin.com")) return "linkedin";
     return "site";
   };
 

@@ -91,6 +91,5 @@
     }
   ],
   // Retenção verificada a cada hora; resumo agregado semanal na segunda às 12:00 UTC.
-  "triggers": { "crons": ["0 * * * *", "0 12 * * 1"] },
-  "observability": { "enabled": true }
+  "triggers": { "crons": ["0 * * * *", "0 12 * * 1"] }
 }

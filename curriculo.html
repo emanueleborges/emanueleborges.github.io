@@ -102,7 +102,7 @@
       const semProtocolo = (url) => url.replace(/^https?:\/\/(www\.)?/, "").replace(/\/$/, "");
       const all = window.I18N;
       const params = new URLSearchParams(location.search);
-      const lang = all[params.get("lang")] ? params.get("lang") : "en";
+      const lang = Object.hasOwn(all, params.get("lang") ?? "") ? params.get("lang") : "en";
       const dict = all[lang];
       const tr = (key) => dict[key] ?? all.pt[key] ?? "";
       const plain = (key) => tr(key).replace(/<br\s*\/?>/g, " ").replace(/<span>[↗↘↓]<\/span>/g, "").trim();
