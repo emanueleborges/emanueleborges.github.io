@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://emanueleborges.github.io/</loc>
-    <lastmod>2026-10-10</lastmod>
+    <lastmod>2026-10-24</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://emanueleborges.github.io/?lang=en" />
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://emanueleborges.github.io/?lang=pt" />
     <xhtml:link rel="alternate" hreflang="es" href="https://emanueleborges.github.io/?lang=es" />
@@ -10,7 +10,7 @@
   </url>
   <url>
     <loc>https://emanueleborges.github.io/?lang=en</loc>
-    <lastmod>2026-10-10</lastmod>
+    <lastmod>2026-10-24</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://emanueleborges.github.io/?lang=en" />
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://emanueleborges.github.io/?lang=pt" />
     <xhtml:link rel="alternate" hreflang="es" href="https://emanueleborges.github.io/?lang=es" />
@@ -18,7 +18,7 @@
   </url>
   <url>
     <loc>https://emanueleborges.github.io/?lang=pt</loc>
-    <lastmod>2026-10-10</lastmod>
+    <lastmod>2026-10-24</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://emanueleborges.github.io/?lang=en" />
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://emanueleborges.github.io/?lang=pt" />
     <xhtml:link rel="alternate" hreflang="es" href="https://emanueleborges.github.io/?lang=es" />
@@ -26,7 +26,7 @@
   </url>
   <url>
     <loc>https://emanueleborges.github.io/?lang=es</loc>
-    <lastmod>2026-10-10</lastmod>
+    <lastmod>2026-10-24</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://emanueleborges.github.io/?lang=en" />
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://emanueleborges.github.io/?lang=pt" />
     <xhtml:link rel="alternate" hreflang="es" href="https://emanueleborges.github.io/?lang=es" />
@@ -34,30 +34,30 @@
   </url>
   <url>
     <loc>https://emanueleborges.github.io/demos/lstm/</loc>
-    <lastmod>2026-10-10</lastmod>
+    <lastmod>2026-10-24</lastmod>
   </url>
   <url>
     <loc>https://emanueleborges.github.io/demos/face/</loc>
-    <lastmod>2026-10-10</lastmod>
+    <lastmod>2026-10-24</lastmod>
   </url>
   <url>
     <loc>https://emanueleborges.github.io/demos/filmes/</loc>
-    <lastmod>2026-10-10</lastmod>
+    <lastmod>2026-10-24</lastmod>
   </url>
   <url>
     <loc>https://emanueleborges.github.io/demos/guardrail/</loc>
-    <lastmod>2026-10-11</lastmod>
+    <lastmod>2026-10-24</lastmod>
   </url>
   <url>
     <loc>https://emanueleborges.github.io/demos/imagem/</loc>
-    <lastmod>2026-10-17</lastmod>
+    <lastmod>2026-10-24</lastmod>
   </url>
   <url>
     <loc>https://emanueleborges.github.io/vaga/</loc>
-    <lastmod>2026-10-10</lastmod>
+    <lastmod>2026-10-24</lastmod>
   </url>
   <url>
     <loc>https://emanueleborges.github.io/como-construi/</loc>
-    <lastmod>2026-10-17</lastmod>
+    <lastmod>2026-10-24</lastmod>
   </url>
 </urlset>

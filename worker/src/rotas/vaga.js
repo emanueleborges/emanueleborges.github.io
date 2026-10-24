@@ -80,16 +80,18 @@ const QUOTES = "'\"`‘’“”";
 const QUOTED_ID = new RegExp("[(\\[]?[" + QUOTES + "](" + ESCAPED_IDS.join("|") + ")[" + QUOTES + "][)\\]]?", "g");
 const CODE_ID = new RegExp("\\b(" + ESCAPED_IDS.filter((id) => /\d|\\-/.test(id)).join("|") + ")\\b", "g");
 // Conectores que sobram no fim da frase depois de remover um id ("conforme mencionado em.", "como e.").
-const DANGLING = /(?:,?\s+(?:conforme(?:\s+mencionad[oa])?(?:\s+(?:em|no|na))?|mencionad[oa]\s+(?:em|no|na)|como|em|e|no|na|in|as|mentioned in|according to|and|y|et|und|и))+\s*([.;]|$)/gi;
+// Uma palavra por repetição (sem alternativas que se sobreponham, como "conforme mencionado em" inteiro e
+// em partes): sem backtracking exponencial. Os espaços já chegam normalizados (ver text, abaixo).
+const DANGLING = /(?:,?\s+(?:conforme|mencionad[oa]|mentioned|according to|como|em|no|na|in|as|and|e|y)\b)+\s*([.;]|$)/gi;
 const text = (value, max) =>
   typeof value === "string"
     ? value
-        .slice(0, 2 * max) // limita o texto antes das regex (DANGLING fica lenta com textos muito longos)
+        .slice(0, 2 * max) // limita o texto antes das regex
         .replace(QUOTED_ID, "")
         .replace(CODE_ID, "")
-        .replace(DANGLING, "$1")
         .replace(/\s+([,.;:])/g, "$1")
         .replace(/\s+/g, " ")
+        .replace(DANGLING, "$1")
         .trim()
         .slice(0, max)
     : "";
