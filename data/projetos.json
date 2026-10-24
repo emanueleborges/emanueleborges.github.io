@@ -1,5 +1,5 @@
 {
-  "_doc": "Projetos da seção Projetos. Link do código: github.com/<perfil.github>/<repo>[/<path>] ({github} no repo vem do data/perfil.json). Textos em português vêm do i18n/pt.js (pela chave); gere o HTML com: node scripts/gerar-secoes.mjs. Métricas opcionais em \"metrics\": [{ value: {text|key}, label: {key} }] — só números verificáveis. Currículo: só os projetos com \"cv\": { stack, name? (nome no lugar do título) }, na ordem do arquivo. featured: true = projeto em destaque (card grande no topo, com métricas); os demais vão para \"Mais projetos\", em cards compactos. label: rótulo do card; o número (01, 02…) é gerado pela ordem de exibição.",
+  "_doc": "Projetos da seção Projetos. Link do código: github.com/<perfil.github>/<repo>[/<path>] ({github} no repo vem do data/perfil.json). Textos em português vêm do i18n/pt.js (pela chave); gere o HTML com: node scripts/gerar-secoes.mjs. Métricas opcionais em \"metrics\": [{ value: {text|key}, label: {key} }] — só números verificáveis. Currículo: só os projetos com \"cv\": { stack, name? (nome no lugar do título) }, na ordem do arquivo. featured: true = projeto em destaque (card grande no topo, com métricas); os demais vão para \"Mais projetos\", em cards compactos. label: rótulo do card; o número (01, 02…) é gerado pela ordem de exibição. ia (opcional): contexto extra só para a IA, em inglês.",
   "projects": [
     {
       "id": "p1",
@@ -17,6 +17,7 @@
       "desc": {
         "key": "p1.desc"
       },
+      "ia": "final postgraduate project (TCC, capstone thesis) of the Natural Language Processing postgraduate program at UFG (Universidade Federal de Goiás, Brazil)",
       "repo": "tcc-ufg",
       "cv": {
         "stack": "RAG · LangChain · Ollama · OWASP LLM"
@@ -302,7 +303,7 @@
         },
         {
           "value": {
-            "text": "92"
+            "text": "104"
           },
           "label": {
             "key": "p10.m2"
@@ -326,7 +327,7 @@
       ],
       "label": "SEGURANÇA DE IA",
       "type": {
-        "text": "RAG · PROMPT INJECTION · SEGURANÇA DE LLM"
+        "key": "p11.type"
       },
       "title": {
         "key": "p11.title"

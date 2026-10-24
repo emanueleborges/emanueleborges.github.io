@@ -29,7 +29,8 @@
     "endereco": {
       "cidade": "Manaus",
       "estado": "AM",
-      "pais": "BR"
+      "pais": "BR",
+      "fuso": "UTC−4"
     },
     "conhecimentos": [
       "Java",

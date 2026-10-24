@@ -89,6 +89,7 @@ window.I18N.es = ((P) => ({
   "p10.m2": "pruebas automáticas",
   "p10.m3": "costo mensual",
   "p11.title": "Laboratorio de seguridad RAG",
+  "p11.type": "RAG · PROMPT INJECTION · SEGURIDAD DE LLM",
   "p11.desc": "Demo local e interactiva de prompt injection en preguntas y documentos recuperados: compara un flujo vulnerable con otro protegido y explica defensas por capas. Sin inferencia de IA ni envío del texto; solo usa un secreto ficticio.",
   "p11.m1": "escenarios para probar",
   "p11.m2": "bytes enviados a un servidor",

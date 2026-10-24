@@ -10,320 +10,278 @@
 
 ```mermaid
 flowchart TB
+  subgraph Fontes["Fontes únicas (editadas à mão)"]
+    DATA["data/*.json<br/>perfil, experiência, formação,<br/>projetos, habilidades, temas"]
+    MEDIA["data/imagens · data/audio"]
+    LANGS[idiomas.js]
+    I18N["i18n/&lt;idioma&gt;.js"]
+  end
+  GEN["scripts/gerar-secoes.mjs<br/>(--check no CI)"]
+  KNOW["worker/gerar-conhecimento.mjs"]
+  subgraph Gerados["Gerados"]
+    PERFIL[perfil.js]
+    TEMAS[temas.css + bloco do boot.js]
+    HTML["index.html (blocos), curriculo.html (dados),<br/>data-perfil, CSP e seletores de idioma das páginas"]
+    SEO[sitemap · robots · manifest]
+    WCFG[worker/wrangler.jsonc vars]
+    CONH[worker/src/conhecimento.js]
+  end
   subgraph Navegador
-    HTML[index.html + styles.css]
-    I18N[i18n.js]
-    SCRIPT[script.js]
-    API[api.js]
-    CHAT[chat.js]
+    PAGES["index.html · demos/ · vaga/ · como-construi/ · curriculo.html · 404"]
     SW[sw.js — offline]
-    DEMOS["demos/ — LSTM, facial, filmes<br/>(inferência no navegador)"]
   end
-  subgraph "GitHub Pages"
-    STATIC[Arquivos estáticos + PDFs + pesos e dados das demos]
-  end
-  subgraph "Cloudflare (plano gratuito)"
-    WORKER[Worker emanuel-portfolio-chat]
+  subgraph CF["Cloudflare (plano gratuito)"]
+    WORKER[Worker]
     TURN[Turnstile]
-    GATE[AI Gateway default]
-    WAI[Workers AI]
-    VEC[Vectorize portfolio-profile]
-    DB[(D1 portfolio-contact<br/>totais agregados)]
-    RL[Rate Limiting]
+    WAI["Workers AI via AI Gateway<br/>(sem cache)"]
+    VEC[Vectorize]
+    DB[(D1 — totais diários)]
   end
-  GH[API pública do GitHub]
+  GH[API do GitHub · jsDelivr · raw.githubusercontent]
   YF[Yahoo Finance]
-  CDN[jsDelivr — face-api.js e modelos]
 
-  STATIC --> HTML
-  STATIC --> DEMOS
-  SW -. cache .-> STATIC
-  CHAT --> API
-  API -->|POST / e /feedback| WORKER
-  API -->|token invisível| TURN
+  DATA --> GEN
+  LANGS --> GEN
+  I18N --> GEN
+  GEN --> PERFIL & TEMAS & HTML & SEO & WCFG
+  DATA --> KNOW
+  I18N --> KNOW
+  KNOW --> CONH
+  PERFIL & TEMAS & HTML & MEDIA --> PAGES
+  PAGES -->|chat, vaga, imagem, avaliação, estatísticas| WORKER
+  PAGES --> GH
   WORKER --> TURN
-  WORKER --> RL
-  WORKER --> GATE --> WAI
+  WORKER --> WAI
   WORKER --> VEC
   WORKER --> DB
-  SCRIPT --> GOAT
-  SCRIPT -->|repositórios| GH
-  DEMOS -->|GET /prices| WORKER
-  WORKER -->|fechamentos| YF
-  DEMOS -->|facial| CDN
+  WORKER -->|GET /prices| YF
+  SW -. cache .-> PAGES
 ```
 
-**Princípios:** site estático sem build · backend mínimo e *serverless* · fonte única de textos · degradação graciosa (tudo funciona, com menos recursos, se o backend falhar) · custo zero.
+**Princípios:** site estático sem build · cada informação num lugar só, o resto gerado e conferido no CI · backend mínimo e *serverless* · degradação graciosa (tudo funciona, com menos recursos, se o backend falhar) · privacidade por padrão · custo zero.
 
 ---
 
-## 2. Componentes do front-end
+## 2. Fontes únicas e geração
 
+| Fonte (editada à mão) | Conteúdo | Gerado / consumido por |
+|---|---|---|
+| `data/perfil.json` | Nome, contatos, links, endereço do site, foto, áudios, textos de SEO, `servicos` (endereço do Worker e chave do Turnstile) | `perfil.js` (`globalThis.PERFIL`, com os derivados `nomeCompleto`, `links`, `cv()` e `sistemas`); bloco de SEO do `index.html`; atributos `data-perfil*`; CSP `connect-src`; `manifest`, `robots`, origem do `sitemap`; `ALLOWED_ORIGIN` e `NOTIFY_EMAIL` do `wrangler.jsonc`; conhecimento da IA |
+| `data/experiencia.json` | Empregos (empresa por texto ou chave do i18n) e `sistemas` desenvolvidos (domínios, nome, chave da descrição, tecnologias) | Seção Experiência, currículo, cartões dos sistemas, conhecimento da IA, `worksFor` do JSON-LD |
+| `data/formacao.json` | Cursos (chave do i18n, escola, período, `emAndamento`, logos, contexto extra para a IA) | Seção Formação, currículo, IA, `alumniOf` do JSON-LD |
+| `data/projetos.json` | Projetos (`featured`, categorias, rótulo, repositório + caminho, demo, métricas, `cv`) | Cards em destaque e "Mais projetos" (numeração pela ordem de exibição), currículo |
+| `data/habilidades.json` | Tecnologias por categoria (ícone, `full` para o currículo) | Caixa de ferramentas, grafo, currículo, IA |
+| `data/temas.json` | Temas (nomes nos 8 idiomas, esquema, variáveis CSS), tema padrão, limites e `escurecer` da intensidade | `temas.css`, bloco `// gerado: temas` do `components/boot.js`, cores do `manifest`, `theme-color` |
+| `idiomas.js` | Idiomas (`html`, `og`, `nome`, `ia`) | Seletores de idioma, carregador do i18n, SEO, Worker (`LANGUAGES`) |
+| `i18n/<idioma>.js` | Todos os textos; cada arquivo é `((P) => ({…}))(globalThis.PERFIL)` | Site, chat, currículo, cartões e IA; o português estático do `index.html` é **copiado do `i18n/pt.js`** pelo gerador |
+| `data/imagens/`, `data/audio/` | Foto, imagem de compartilhamento, apresentação falada e voz de referência | Site, currículo, prévias, player do "Sobre mim" |
+
+**Gerador (`scripts/gerar-secoes.mjs`)** — usa `scripts/dados.mjs`, que carrega `idiomas.js`, o perfil (montado a partir do JSON, nunca do `perfil.js` antigo) e as traduções num contexto `vm` que imita a página. Ele:
+- substitui blocos entre `<!-- gerado: nome -->` e `<!-- /gerado: nome -->` (projetos, mais projetos, habilidades, experiência, formação, SEO, dados do currículo);
+- copia o texto em português de todo `[data-i18n]` / `[data-i18n-*]` do `index.html` a partir do `i18n/pt.js`;
+- preenche `data-perfil="…{campo}…"` (conteúdo) e `data-perfil-<atributo>="…"` em todas as páginas;
+- gera as `<option>` dos seletores de idioma, o `theme-color`, o endereço do Worker na CSP, `temas.css`, o bloco de temas do `boot.js`, `perfil.js`, `manifest`, `robots`, `sitemap` e as variáveis do `wrangler.jsonc`;
+- com `--check`, só compara e falha se algo estiver desatualizado (usado no CI).
+
+**Conhecimento da IA (`worker/gerar-conhecimento.mjs`)** — lê `data/` e `i18n/en.js` (pt como reserva) pelo mesmo `scripts/dados.mjs` e grava `worker/src/conhecimento.js`: `CORE` (resumo fixo), `CHUNKS` (37 trechos: resumo, cargo atual, diferenciais, vagas buscadas, disponibilidade, contato, empregos com os sistemas desenvolvidos, setor público, um por projeto com tecnologias, métricas verificáveis e links do código e da demo, "o que fazer no site", habilidades por categoria, soft skills, formação, certificações e idiomas — tudo gerado de `data/` e `i18n/`, sem texto escrito à mão no gerador), `PROFILE` (tudo junto, reserva quando o RAG falha), `NOME`/`PRIMEIRO_NOME` (usados nos prompts) e `VERSION` (hash que identifica a versão do conhecimento).
+
+---
+
+## 3. Front-end
+
+### 3.1 Ordem de carregamento e variáveis globais
+Os dados são scripts clássicos (e não JSON ou módulos) para rodar antes da pintura, em `file://`, no *service worker* (`importScripts`) e no Node:
+
+1. `idiomas.js` (síncrono) → `globalThis.IDIOMAS`.
+2. `components/boot.js` (síncrono, no `<head>`) → aplica o tema e a `--intensidade` salvos, define `window.TEMAS` e decide o idioma da página (`window.IDIOMA_INICIAL`: `?lang=` → salvo → primeiro idioma); pré-carrega a tradução do idioma salvo.
+3. `perfil.js` (defer) → `globalThis.PERFIL`; precisa vir antes das traduções e de qualquer módulo que importe `api.js`.
+4. `i18n/pt.js`, `i18n/en.js` (defer); os demais idiomas são baixados por `i18n.js` quando escolhidos.
+5. Módulos ES (`script.js`, `chat.js`, `busca-rapida.js`, `sistema.js`, …) e `components/components.js` (defer). No `index.html`, todo módulo está no `importmap` com a mesma versão `?v=` (conferido por `scripts/conferir-modulos.mjs`).
+
+### 3.2 Componentes
 | Arquivo | Responsabilidade |
 |---|---|
-| `index.html` | Estrutura e conteúdo em português (idioma de origem). Elementos traduzíveis marcados com `data-i18n`, `data-i18n-aria`, `data-i18n-placeholder`, `data-i18n-title`, `data-i18n-alt`, `data-i18n-content`. |
-| `i18n/` · `i18n.js` | `window.I18N[lang][chave]`, um arquivo por idioma (`i18n/<idioma>.js`): site, chat (respostas prontas, rótulos), contato direto e currículo. A página traz `pt` (original e reserva) e `en` (padrão); `I18N.load(idioma)` baixa os demais quando escolhidos, e o `boot.js` (com `data-i18n`) já pré-carrega o idioma salvo. |
-| `script.js` | Aplica o idioma (guarda o original em português), seletor de idioma, menu mobile, filtros, data de atualização (`Intl`), animações ao rolar, partículas (Canvas) e progresso de leitura. |
-| `api.js` | Módulo `PortfolioApi`: URL do Worker, carregamento sob demanda do Turnstile, geração de token por envio e `post(path, body)`. |
-| `chat.js` · `chat/` | Assistente. `chat.js` é a interface; `chat/texto.js` (normalização e erros de digitação), `chat/regras.js` (respostas prontas por expressão regular), `chat/busca.js` (busca local) e `chat/ia.js` (Worker) são módulos ES importados pelo `chat.js`. |
-| `components/` | Peças comuns a todas as páginas (`components.js`, script clássico): Web Components `<site-logo>`, `<theme-toggle>` e `<sound-toggle>`; sons (Web Audio) e vibração; visualizador do GitHub; cartões de links externos; "Compartilhar" (QR code com `vendor/qrcode.min.js`, carregado sob demanda). `boot.js` aplica o tema antes da pintura. |
-| `busca-rapida.js` | Busca rápida (`<dialog>` com combobox): reusa `chat/busca.js`, filtra os cards de projeto por termo e envia perguntas ao chat pelo evento `portfolio:ask`. |
-| `pipeline-grafo.js` | Experiência como esteira (grupo de botões com `aria-pressed`) e grafo SVG habilidades × projetos; as ligações vêm do texto da página (nomes das habilidades com fronteira de palavra). |
-| `demo-modal.js` | Modal com `<iframe>` para demos, `vaga/`, `como-construi/` e o currículo (`curriculo.html?lang=xx&embed=1`, com "Baixar PDF"). |
-| `sistema.js` | Rodapé técnico: `PortfolioApi.status()` (3 chamadas a `GET /status`, menor tempo entre a 2ª e a 3ª) só ao clicar. |
-| `data/` · `scripts/gerar-secoes.mjs` | Projetos e habilidades como dados; o gerador escreve o HTML estático no `index.html` entre marcadores (textos do `i18n/pt.js`). O CI confere com `--check`. |
-| `curriculo.html` | Modelo A4 do currículo, renderizado por idioma a partir do `i18n/`. |
-| `manifest.webmanifest` · `sw.js` · `icon-*.png` | App instalável e offline (PWA). |
-| `demos/demos.css` · `demos/demos.js` | Base compartilhada das demos: visual, idioma (`?lang` → `localStorage` → inglês) e formatação (`Intl`). |
-| `demos/lstm/` | `lstm.js` (inferência do LSTM em JS puro), `demo.js` (tela e gráficos SVG), pesos `*.json` e `dados.json` (métricas, backtest, preços salvos). |
-| `demos/face/` | `face.js`: reconhecimento facial com face-api.js (CDN jsDelivr). |
-| `demos/filmes/` | `tfidf.js` (TF-IDF + cosseno), `filmes.js` (tela) e `filmes.json` (~1.500 filmes). |
+| `index.html` | Página única; blocos e textos em português gerados (§2); marcações `data-i18n*` e `data-perfil*`. |
+| `script.js` | Aplica o idioma (`t()` sobre `window.I18N`), seletor, menu, filtros, links do currículo por idioma, dados dos repositórios (GitHub), partículas, animações. |
+| `api.js` | `PortfolioApi`: endereço do Worker e chave do Turnstile vindos de `PERFIL.servicos`; Turnstile sob demanda; `post`, `status`, contagem de visitas/cliques. |
+| `chat.js` · `chat/` | Assistente: `texto.js` (normalização), `regras.js` (respostas prontas), `busca.js` (busca local), `ia.js` (Worker; devolve `{ answer }` ou `{ error: "quota" | "unavailable" }`). |
+| `busca-rapida.js` | Busca rápida (Spotlight); filtra cards de projeto; envia perguntas ao chat. |
+| `pipeline-grafo.js` | Experiência como esteira e grafo habilidades × projetos. |
+| `sistema.js` | Rodapé técnico: modelo, estado da IA (evento `aistate` do chat ou `GET /status`), ping e data center só ao clicar. |
+| `demo-modal.js` | Modal com `<iframe>` (`?embed=1`) para demos, vaga, "Como construí" e currículo; no currículo, o botão da barra imprime o iframe. |
+| `apresentacao.js` | Player da apresentação falada (faixas em `PERFIL.audio.apresentacao`, legenda por frase). |
+| `components/components.js` | Web Components `<site-logo>`, `<theme-toggle>` (com `<theme-intensity>` dentro), `<theme-intensity>` (também sozinho, no menu ☰), `<sound-toggle>`; sons; visualizador do GitHub; cartões de links externos; "Compartilhar". Carrega `i18n/<idioma>.js` sob demanda (`siteTexts`) quando um cartão precisa de texto do perfil numa página sem traduções. |
+| `components/boot.js` | Tema, intensidade e idioma antes da pintura; bloco de temas gerado. |
+| `demos/demos.css` · `demos/demos.js` | Base das demos, vaga e "Como construí": `Demo.setup(textos)` com dicionário próprio nos 8 idiomas; `t()` preenche `{nome}`/`{nomeCompleto}` e acrescenta " — <nome completo>" ao título da aba. |
+| `curriculo.html` | Currículo A4 montado no navegador a partir de `window.CURRICULO` (bloco gerado), `PERFIL` e `I18N`; botão "Baixar PDF" (impressão); `?pdf=1` imprime ao carregar. |
+| `temas.css` · `styles.css` | Cores dos temas (gerado) · visual do site. |
+| `manifest.webmanifest` · `sw.js` | App instalável e offline; o `sw.js` importa o `perfil.js` para pré-carregar a foto. |
 
-### 2.1 Internacionalização
-- O HTML contém o português; ao trocar o idioma, `script.js` aplica `I18N[lang]` e restaura o original para `pt`.
-- Chave ausente num idioma → mantém o texto em português (fallback).
-- **Módulos:** o código do site, das demos e da página de vagas é de módulos ES (`import`/`export`), sem variáveis globais entre arquivos. No `index.html`, um `<script type="importmap">` aplica a versão `?v=` também aos imports (o hook de pre-commit atualiza) e `modulepreload` baixa o chat em paralelo; `scripts/conferir-modulos.mjs` (CI) garante que todo módulo importado esteja no mapa. Ficam como scripts clássicos só os dados de tradução (`i18n/`, lidos também pelo currículo e pelos geradores), o `boot.js` (precisa rodar antes da pintura) e os Web Components. Os testes do chat servem o site num servidor local, porque módulos não carregam por `file://`.
-- Idioma inicial: `?lang` → `localStorage` → **inglês**.
-- Evento `languagechange` notifica chat e filtros.
+### 3.3 Internacionalização
+- O HTML do site traz o português (copiado do `i18n/pt.js`); ao trocar o idioma, `script.js` aplica `I18N[lang]` e restaura o original para `pt`. Chave ausente → português.
+- Os nomes nas traduções vêm do perfil (`${P.nome}`, `${P.nomeCompleto}`).
+- Demos, vaga e "Como construí" têm dicionários próprios via `Demo.setup`; os textos usam `{nome}`.
+- O idioma inicial é decidido só no `boot.js` (`IDIOMA_INICIAL`); `languagechange` notifica chat, filtros e componentes.
 
-### 2.2 Busca local do assistente
-1. **Índice:** construído a partir do DOM no idioma atual (Sobre, cada emprego, cada projeto + categoria e marca do card, grupos de habilidades, formação, certificações, idiomas).
-2. **Normalização:** minúsculas, remoção de acentos (NFD), `ё→е`; as regras passam pela mesma normalização.
-3. **Termos:** remoção de *stopwords* (8 idiomas), radical simples (corta 2 letras em palavras ≥ 6), pares de caracteres para chinês, sinônimos (ex.: "banco de dados" → PostgreSQL, Oracle…).
-4. **Correção de digitação:** distância de Damerau-Levenshtein contra o vocabulário do site (≤ 1 para palavras de 4–6 letras, ≤ 2 para ≥ 7).
-5. **Ranking:** peso tipo IDF por termo, ×2 se o termo está no título, +1,5 se a seção corresponde ao assunto (formação, experiência, habilidades, projetos); corta resultados abaixo de 50% do melhor; até 4 resultados.
-6. **Resposta:** frase-resumo agrupada por seção, cartões com trecho destacado e "Ver na página", sugestões de tecnologias relacionadas.
+### 3.4 Busca local do assistente
+1. **Índice** construído do DOM no idioma atual (Sobre, empregos, projetos com categoria e marca, grupos de habilidades, formação, certificações, idiomas).
+2. **Normalização** (minúsculas, sem acentos, `ё→е`); o nome da pessoa (do perfil) é *stopword*.
+3. **Termos** sem *stopwords* (8 idiomas), radical simples, pares de caracteres para chinês, sinônimos.
+4. **Correção de digitação** (Damerau-Levenshtein ≤ 1 ou ≤ 2 conforme o tamanho).
+5. **Ranking** tipo IDF com pesos por título e por seção; até 4 resultados.
 
-### 2.3 Roteamento do assistente
+### 3.5 Roteamento do assistente
 ```
 pergunta
- ├─ currículo?  → link do PDF (local)
+ ├─ currículo?  → atalho para o currículo (local; abre o modal com "Baixar PDF")
  ├─ contato?    → botões de contato (local)
  ├─ tema pronto LOCAL_ONLY (greeting, thanks, salary, start, education) → resposta pronta
- ├─ IA disponível? → POST / (Worker) → resposta da IA
- │                   └─ falhou → resposta pronta do tema, se houver, ou busca local
+ ├─ IA disponível? → POST / (Worker) → resposta da IA + "Ver na página"
+ │                   └─ falhou ({ error: quota | unavailable }) → aviso + busca local; evento aistate → rodapé
  └─ sem IA → tema pronto ou busca local
 ```
 
+### 3.6 SEO
+Tags Open Graph/Twitter, `hreflang` (8 idiomas + `x-default`), JSON-LD `Person` (empresa atual e escolas vindas de `data/`) e verificação do Google — tudo gerado a partir do `data/perfil.json`. `sitemap.xml` (16 endereços; datas editadas à mão, origem gerada) e `robots.txt`. Sem `canonical` na página inicial (conflitaria com as alternativas por idioma).
+
+### 3.7 Temas e intensidade
+- `temas.css` (gerado) define as variáveis de cada tema; o padrão vale sem `data-theme` e serve de base, os outros só declaram o que muda.
+- **Intensidade:** num bloco `@supports (color: oklch(from red l c h))`, cada cor vira `oklch(from <cor> calc(l - max(0, var(--intensidade) - 1) * c * escurecer) calc(c * var(--intensidade)) h)`: abaixo de 1 só reduz a saturação; acima de 1 aumenta a saturação e escurece na proporção do croma (verdes e azuis ficam mais profundos; textos claros e fundos quase não mudam). Navegadores sem suporte ficam com as cores originais.
+- `<theme-toggle>` passa ao próximo tema da lista; `<theme-intensity>` grava `localStorage.intensidade` e sincroniza todas as barras (evento `intensitychange`). Abaixo de 421 px a barra sai do topo e aparece no menu ☰ (só no site; nas demos vale a escolha salva).
+- Alguns brilhos usam variáveis `*-rgb` (triplas numéricas) e não acompanham a intensidade.
+
+### 3.8 Currículo e PDF
+`curriculo.html` monta o A4 no idioma pedido a partir dos dados gerados; o PDF sai da impressão do navegador (`@page A4`), com o título da página como nome sugerido do arquivo. No site, o currículo abre no modal (`demo-modal.js`), cujo botão chama `print()` no iframe; links diretos usam `?pdf=1`. O `404.html` redireciona `/cv/…-xx.pdf` (links antigos) para `curriculo.html?lang=xx&pdf=1`.
+
+### 3.9 Demos de IA
+Inferência **no navegador**: LSTM em JavaScript puro com pesos exportados do Keras (preços via `GET /prices`, com cópia salva como reserva), reconhecimento facial com face-api.js (jsDelivr, SRI), recomendação de filmes com TF-IDF + cosseno. A demo de segurança RAG é uma simulação local. O gerador de imagens usa o Worker (`POST /image`).
+
+### 3.10 Interações
+Sons por Web Audio e vibração; modais para páginas do site; visualizador do GitHub (lista pelo jsDelivr, conteúdo pelo `raw.githubusercontent.com`, Markdown com `marked`, API como reserva, HTML limpo por `DOMParser`); cartões para LinkedIn (cargo e cidade das traduções), WhatsApp (QR code), e-mail e sistemas desenvolvidos (de `PERFIL.sistemas`); compartilhar (QR code, `navigator.share`).
+
+### 3.11 App instalável e offline
+`sw.js`: página com rede primeiro; CSS/JS/imagens do site com cópia salva primeiro, atualizada em segundo plano (apaga versões antigas do mesmo arquivo); áudio sem cache (pedidos com *range*); outros domínios fora do cache.
+
 ---
 
-### 2.4 SEO e compartilhamento
-- **Prévia de link:** tags Open Graph e Twitter Card estáticas (em inglês) com `imagens/og-image.jpg` (1200×630).
-- **Idiomas:** `<link rel="alternate" hreflang>` para `?lang=en|pt|es|fr|it|de|zh|ru` + `x-default`. Sem `canonical` (conflitaria com as alternativas por idioma).
-- **Dados estruturados:** JSON-LD `Person` (cargo, empregador, cidade, formação, tecnologias, idiomas, LinkedIn e GitHub).
-- **Rastreamento:** `sitemap.xml` (página em 8 idiomas + 8 PDFs + 3 demos) e `robots.txt` (bloqueia `worker/`, `tests/`, `scripts/`, `apps-script/`, `docs/`, `curriculo.html`).
-- **Google Search Console:** verificado por tag HTML (`google-site-verification`); sitemap enviado.
-- **404:** `404.html` (GitHub Pages responde HTTP 404 com essa página); `/#chat` abre o assistente.
+## 4. Backend — Cloudflare Worker
 
-### 2.5 Desempenho
-- 1ª imagem do topo: CSS responsivo (800 px no celular, 1400 px no desktop) + `<link rel="preload" … fetchpriority="high">` por *media query*.
-- Demais imagens: `data-bg`/`data-bg-mobile`, carregadas só antes de aparecerem no carrossel.
-- Google Fonts com `preload` + `onload` (não bloqueia a exibição) e `<noscript>` de reserva.
-- Resultado (Lighthouse, celular): desempenho 69 → ~80; acessibilidade, boas práticas e SEO 100; peso inicial ~237 KB.
+### 4.1 Rotas
+| Rota | Função | Proteções | Grava |
+|---|---|---|---|
+| `POST /` | Chat com IA (RAG) | origem, 10/min/IP, Turnstile, validação | nada |
+| `POST /feedback` | Avaliação 👍/👎 | origem, 20/min/IP, Turnstile | total diário por tipo |
+| `POST /match` | "Sua vaga combina?" | origem, 3/min/IP, Turnstile, 80–8.000 caracteres | nada |
+| `POST /image` | Gerador de imagens (FLUX.1) | origem, 2/min/IP, Turnstile, filtro de termos, Llama Guard, 2/dia por visitante, teto global de 40/dia | total do dia; HMAC diário do IP para a cota (apagado no dia seguinte) |
+| `POST /visit` | Contagem por continente (após consentimento) | origem, 20/min/IP | total diário por continente |
+| `POST /click` | Cliques por link (após consentimento) | origem, 30/min/IP, Turnstile, alvos fixos | total diário por alvo |
+| `GET /prices?symbol=` | Preços da demo do LSTM | origem, 30/min/IP, 15 ações fixas, cache 1 h | nada |
+| `GET /status` | Rodapé técnico | origem | nada |
+| Cron horário / segunda 12:00 UTC | Expurgo de dados antigos / resumo semanal por e-mail | — | apaga totais com 29+ dias |
 
-### 2.6 Dados dos repositórios (GitHub)
-Uma chamada a `api.github.com/users/emanueleborges/repos?per_page=100` (sem chave) preenche, em cada card com `data-repo-meta`, linguagem, estrelas (só se > 0) e "atualizado há…" (`Intl.RelativeTimeFormat`). O resultado fica no `sessionStorage`; se a API falhar, o card mostra só o link. Não roda em `file://` (testes).
+#### `POST /` — chat
+**Requisição:** `{ "question": "1–500 caracteres", "lang": "en|pt|es|fr|it|de|zh|ru", "turnstileToken": "…" }` · **200:** `{ "answer": "…" }` · **Erros:** `400 invalid_question` · `403 forbidden_origin` · `403 turnstile_failed` · `429 rate_limited` · `502 empty_answer` · `503 quota` (cota gratuita do dia, erro 3036) · `503 unavailable` (outra falha).
 
-### 2.7 App instalável e offline (PWA)
-- `manifest.webmanifest` com ícones 192, 512 e *maskable*; `sw.js` registrado só em HTTPS ou `localhost`.
-- **Página:** rede primeiro; sem rede, a última cópia salva.
-- **CSS/JS/imagens do próprio site:** cópia salva primeiro, atualizada em segundo plano; ao salvar uma nova versão (`?v=`), apaga as anteriores do mesmo arquivo.
-- Outros domínios (Worker, GitHub, fontes, CDN) não passam pelo cache.
+**Fluxo:** origem → limite → validação → Turnstile → normalização → **RAG** (BGE-M3 → Vectorize top 6 → resumo fixo + trechos; em falha, perfil completo) → Qwen3 30B (`temperature 0.1`, `max_tokens 600`, `/no_think`) pelo AI Gateway **sem cache** → limpeza (`<think>`, Markdown). Em erro, `aiErrorKind()` classifica e, se for cota, marca a IA como "quota" até 00:00 UTC (na memória daquela instância do Worker).
 
-### 2.8 Demos de IA
-Todas rodam **no navegador do visitante**, sem servidor de IA.
+#### `POST /match` — análise de vaga
+**200:** `{ "role", "score": 0-100, "requirements": [{ "requirement", "importance": "must|nice", "level": "strong|partial|none", "evidence": ["id do trecho"], "reason" }], "pitch" }`.
+**Fluxo:** etapa 1 — Qwen3 extrai cargo e requisitos lendo só a vaga (JSON com schema); etapa 2 — avalia a lista contra até 18 trechos relevantes do perfil; **conferência no Worker** (descarta ids inexistentes, separa tecnologias agrupadas, skill só listada ⇒ parcial, tecnologia ausente ⇒ none) → nota = Σ(peso × valor)/Σ peso (obrigatório 2, diferencial 1; forte 1, parcial 0,5, ausente 0).
 
-**Previsão de ações (LSTM)** — `scripts/lstm/train.py` treina localmente (Keras) a mesma arquitetura do projeto FIAP (3 camadas LSTM de 50 unidades, janela de 60 pregões) com 5 anos de fechamentos ajustados do Yahoo Finance; cada janela é dividida pelo seu último preço e o modelo prevê a variação do dia seguinte. Teste = últimos 20%, comparado ao baseline ingênuo (amanhã = hoje). `exportar_web.py` grava os pesos em JSON e `dados.json` (métricas, backtest, 250 fechamentos e um caso de referência do Keras). `lstm.js` reproduz as contas da camada LSTM do Keras (portões i, f, c, o) e das camadas densas; a previsão de vários dias é recursiva. Preços atuais: `GET /prices` no Worker; sem ele, os de `dados.json`.
+#### `GET /status`
+**200:** `{ "colo": "GRU", "model": "qwen3-30b-a3b-fp8", "ai": "online" | "quota" }`. Só leitura; o site só chama quando o visitante clica em "medir conexão".
 
-**Reconhecimento facial** — face-api.js 1.7.15 (TensorFlow.js, WebGL) e modelos do jsDelivr: TinyFaceDetector (entrada 416) → 68 pontos → embedding de 128 números; mesma pessoa quando a distância euclidiana é < 0,55. Rostos cadastrados ficam só na memória da página. Pela câmera, analisa ~8 quadros/s; o vídeo é espelhado e as caixas são desenhadas num `canvas` por cima.
-
-**Recomendação de filmes** — `scripts/gerar-dados-filmes.py` monta `filmes.json` com o Wikidata (filmes, animações e longas com ≥ 45 artigos na Wikipédia; ano, gêneros, direção) e a introdução de cada filme na Wikipédia em inglês (até 700 caracteres). `tfidf.js` usa a fórmula do `TfidfVectorizer` do scikit-learn (tf × idf suavizado, normalização L2), *stopwords* em inglês e de "ficha técnica", gêneros com peso dobrado e direção como uma palavra só; recomenda pelo cosseno e mostra os 4 termos que mais contribuíram.
-
-### 2.9 Temas
-- **Tokens:** todas as cores viraram papéis em variáveis CSS (`--bg`, `--surface`, `--text`, `--accent`, `--accent-rgb`, `--grad-primary`, `--on-primary`, `--duotone`, `--particle-a/-b`…), definidos em `:root[data-theme="amazonia"]` (padrão) e `:root[data-theme="editorial"]` em `styles.css` e `demos/demos.css`; a 404 tem os seus.
-- **Sem piscar:** um script curto no `<head>` de cada página lê `?theme=` ou `localStorage.theme` e define `<html data-theme>` e a `theme-color` antes da pintura.
-- **Troca:** o componente `<theme-toggle>` (`components/components.js`, em todas as páginas) alterna o tema, salvam, atualizam o rótulo/ARIA nos 8 idiomas e disparam `themechange` (as partículas releem as cores). Gráficos SVG usam `style="stroke:var(--series-n)"` e acompanham na hora.
-- **Gráficos:** séries validadas para daltonismo — Amazônia azul `#3987e5` × lima `#65a30d`; Editorial ciano `#38bdf8` × laranja `#fb923c`.
-- **CI:** o Lighthouse mede `index.html` e `index.html?theme=editorial`.
-- **Logo "E.":** SVG dentro das páginas (cabeçalho, rodapé, chat, demos, vagas, 404) com cores pelas variáveis `--logo-*` de cada tema; o E se desenha ao carregar (`stroke-dashoffset`), o nó de IA aparece e emite um pulso a cada 3,2 s, e ao passar o mouse gira e brilha — tudo desligado com "reduzir movimento". Favicon, `imagens/logo.svg` e ícones do app usam a versão Amazônia.
-
-### 2.10 Interações e navegação sem sair do site
-- **Sons:** `components.js` sintetiza cliques (ruído filtrado + tom curto) e teclas com Web Audio; o `AudioContext` nasce no primeiro gesto do visitante. Escuta `click` em elementos clicáveis e `keydown` em campos de texto (sem teclas repetidas nem atalhos; no máximo um som a cada 28 ms). `navigator.vibrate(8)` só em telas de toque. Preferência em `localStorage.sound`; `window.portfolioSound.play("tick")` é usado pelo efeito de digitação do chat.
-- **Efeito de digitação:** depois de montar a resposta, `chat.js` apaga os nós de texto e os revela em ordem com `setTimeout` (≤ 18 ms por letra, total ≤ 2,5 s); blocos sem texto alcançado ficam ocultos; `aria-busy` até o fim.
-- **Páginas em modal:** `demo-modal.js` intercepta cliques (sem Ctrl/⌘/Shift/botão do meio) e carrega a página num `<iframe>` com `?embed=1&lang=&theme=`. `demos/demos.js` e `curriculo.html` marcam `html.is-embedded` (sem cabeçalho nem "voltar") e mandam links para o resto do site com `target="_top"`. Ao fechar (botão, Esc ou fundo), o iframe vai para `about:blank`. O `analytics-consent.js` não mostra o aviso nem conta visita dentro de um iframe da mesma origem.
-- **Visualizador do GitHub:** `parseGithub()` aceita `github.com/emanueleborges[/repo[/tree|blob/ref[/caminho]]]`. Sem o limite de 60/h da API: a lista de arquivos vem de `data.jsdelivr.com/v1/packages/gh/<dono>/<repo>@<ref>?structure=flat` (uma chamada por repositório, `cache: "no-cache"`; o jsDelivr atualiza branches em até ~12 h), o conteúdo de `raw.githubusercontent.com` e o Markdown é convertido no navegador por `vendor/marked.min.js` (carregado sob demanda). A lista de repositórios reaproveita a dos cards (`sessionStorage.repos`); sem ela, a API e, por fim, os repositórios citados nos cards. A API (`/contents/…`) só é usada se o jsDelivr não servir o repositório (ex.: muito grande). O HTML passa por `DOMParser` (remove `script`, `iframe`, `form`, `on*`, `javascript:`) e tem links/imagens relativos resolvidos. Em página embutida, abre em `window.top` (mesma origem).
-- **Cartões de links externos:** LinkedIn, WhatsApp, Compras/ContratosManaus e outros sites respondem com `X-Frame-Options`/`frame-ancestors`, então não podem ir num iframe; `components.js` abre um `<dialog>` com o conteúdo útil por tipo (`wa.me` → QR code + número; LinkedIn → foto, cargo e endereço; `mailto:` → endereço; sites conhecidos → descrição e tecnologia) e um botão para o original.
-- **Compartilhar:** `[data-share]` abre o mesmo cartão com QR code de `https://emanueleborges.github.io/?lang=<idioma>`, copiar, `navigator.share` (quando existir) e atalhos de WhatsApp, LinkedIn e e-mail.
-- **Currículo:** o modal lê `curriculo.html` (a fonte dos PDFs) porque o Android não mostra PDF em iframe e o iOS mostra só a primeira página; `@media screen and (max-width: 640px)` dá uma coluna no celular sem mudar a impressão.
-
-## 3. Backend — Cloudflare Worker
-
-### 3.1 Rotas
-
-#### `POST /` — chat com IA
-**Requisição**
-```json
-{ "question": "string (1–500)", "lang": "en|pt|es|fr|it|de|zh|ru", "turnstileToken": "string" }
-```
-**Resposta 200**
-```json
-{ "answer": "string" }
-```
-**Erros:** `400 invalid_question` · `403 forbidden_origin` · `403 turnstile_failed` · `429 rate_limited` · `502 empty_answer` · `503 unavailable`
-
-**Fluxo:** origem → limite (10/min/IP) → validação → Turnstile → normalização da pergunta → **RAG** (embedding BGE-M3 → Vectorize top 6 → contexto = resumo fixo + trechos; em falha, perfil completo) → Qwen3 30B (`temperature 0.1`, `max_tokens 600`, `/no_think`) via AI Gateway, sem cache de perguntas ou respostas → limpeza (`<think>`, Markdown).
-
-#### `POST /feedback` — avaliação da resposta da IA
-**Requisição**
-```json
-{ "rating": 1, "turnstileToken": "string" }
-```
-`rating`: `1` (👍) ou `-1` (👎). **Resposta 200:** `{ "ok": true }` · **Erros:** `400 invalid_fields` · `403` · `429 rate_limited` (20/min/IP) · `503 unavailable`
-
-Ao clicar, incrementa somente um total diário de 👍 ou 👎; pergunta, resposta, idioma e identificadores não são enviados nem armazenados junto à avaliação. Os totais são apagados antes de completar 30 dias.
-
-#### `POST /match` — "Sua vaga combina?"
-**Requisição:** `{ "job": "80–8000 caracteres", "lang": "…", "turnstileToken": "…" }`
-**Resposta 200:** `{ "role": "…", "score": 0-100, "requirements": [{ "requirement", "importance": "must|nice", "level": "strong|partial|none", "evidence": ["id do trecho"], "reason" }], "pitch": "…" }`
-**Erros:** `400 invalid_job` · `403 forbidden_origin` · `403 turnstile_failed` · `429 rate_limited` (3/min/IP) · `502 empty_answer` · `503 unavailable`
-
-**Fluxo:** limite → validação → Turnstile → **etapa 1:** Qwen3 extrai cargo e requisitos lendo só a vaga (modo JSON com schema) → **etapa 2:** Qwen3 avalia a lista numerada contra no máximo 18 trechos relevantes do perfil (até 2 por requisito; requisito de idioma falado, em qualquer das 8 línguas, recebe o trecho de idiomas; modo JSON); justificativas solicitadas com até 12 palavras e resumo com até 2 frases/35 palavras; saída limitada a 1.000 tokens → **conferência no Worker:** descarta ids inexistentes; separa tecnologias agrupadas; skills citadas só na lista de habilidades ⇒ "partial"; "strong" técnico requer citação válida de experiência ou projeto; tecnologia ausente do perfil ⇒ "none"; justificativas e evidências incompatíveis são descartadas; ids que vazem para o texto são apagados → nota = Σ(peso × valor)/Σ peso (obrigatório 2, diferencial 1; forte 1, parcial 0,5, ausente 0). Vaga e respostas não são armazenadas em cache.
-
-#### `GET /prices?symbol=` — preços da demo do LSTM
-**Resposta 200**
-```json
-{ "symbol": "PETR4.SA", "dates": ["2026-10-09", "…"], "close": [56.0, "…"] }
-```
-**Erros:** `400 invalid_symbol` · `403 forbidden_origin` · `429 rate_limited` · `502 upstream`
-
-Só leitura e sem Turnstile; limite de 30/min por IP; aceita apenas a origem do site e as 15 ações da demo (`PRICE_SYMBOLS`: 8 da B3 e 7 da NASDAQ). Busca 1 ano de fechamentos ajustados no Yahoo Finance (`v8/finance/chart`), converte as datas para o fuso da bolsa e responde com `Cache-Control: max-age=3600`.
-
-#### `GET /status` — rodapé técnico
-**Resposta 200**
-```json
-{ "colo": "GRU", "model": "qwen3-30b-a3b-fp8" }
-```
-**Erros:** `403 forbidden_origin`
-
-Só leitura, sem Turnstile nem gravação; aceita apenas a origem do site. `colo` vem de `request.cf.colo` (data center que atendeu); `model` é o nome do modelo do chat (`MODEL`). Chamada pelo site só quando o visitante clica em "medir conexão".
-
-#### Cron — resumo semanal (`0 12 * * 1`, segunda 12:00 UTC)
-Consulta no D1 somente os totais de avaliações e acessos regionais consentidos dos últimos 7 dias, testa a saúde (geração com Qwen3, embedding BGE-M3, consulta no Vectorize e `SELECT 1` no D1) e envia o resumo agregado pelo Resend para `NOTIFY_EMAIL`. O assunto ganha ⚠️ se algum serviço falhar.
-
-### 3.2 Configuração (`wrangler.jsonc`)
-
+### 4.2 Configuração (`wrangler.jsonc`)
 | Binding | Recurso |
 |---|---|
 | `AI` | Workers AI |
 | `VECTORIZE` | Índice `portfolio-profile` (1024 dimensões, cosseno) |
 | `DB` | D1 `portfolio-contact` |
-| `CHAT_LIMITER` | 10 req / 60 s |
-| `FEEDBACK_LIMITER` | 20 req / 60 s |
-| `PRICES_LIMITER` | 30 req / 60 s |
-| `ALLOWED_ORIGIN` | `https://emanueleborges.github.io` |
-| `TURNSTILE_SECRET` | *secret* (fora do repositório) |
-| `RESEND_API_KEY` | *secret* — chave do Resend (plano gratuito) |
-| `NOTIFY_EMAIL` | e-mail que recebe o resumo semanal (o da conta do Resend) |
+| `CHAT_LIMITER` · `FEEDBACK_LIMITER` · `MATCH_LIMITER` · `PRICES_LIMITER` · `VISIT_LIMITER` · `CLICK_LIMITER` · `IMAGE_LIMITER` | 10 · 20 · 3 · 30 · 20 · 30 · 2 pedidos/60 s |
+| `ALLOWED_ORIGIN` · `NOTIFY_EMAIL` | **gerados** a partir do `data/perfil.json` |
+| `TURNSTILE_SECRET` · `RESEND_API_KEY` | *secrets* (fora do repositório) |
 
-### 3.3 Conhecimento da IA
-`gerar-conhecimento.mjs` lê `../i18n/en.js` (inglês; `pt` como reserva) e gera `src/conhecimento.js` com:
-- **`CORE`** — resumo fixo (cargo, localização, contatos, regra de salário/início);
-- **`CHUNKS`** — 32 trechos (resumo, diferencial, vaga, disponibilidade, contato, empregos, projetos, grupos de habilidades, formação com nomes originais, certificações, idiomas);
-- **`PROFILE`** — tudo junto (reserva quando o RAG falha);
-- **`VERSION`** — hash SHA-1 do perfil, usado na chave do cache.
+`src/comum.js` reúne modelos, idiomas (do `idiomas.js`), CORS/JSON, Turnstile, limites, `aiErrorKind`/`aiState` e e-mail; `src/agendado.js` faz o expurgo e o resumo semanal.
 
-`indexar-vectorize.mjs` gera os embeddings (BGE-M3 via API do Workers AI), faz `upsert` no Vectorize e remove trechos que deixaram de existir (`vetores-ids.json`).
-
-### 3.4 Prompt (resumo das regras)
-Responder **só** com base no perfil fornecido · se a informação não existir, dizer isso e sugerir contato · nunca inventar fatos · terceira pessoa · 2–5 frases, texto simples · manter nomes de universidades, empresas, cursos e projetos (com tradução entre parênteses, se traduzir) · recusar temas fora do perfil · mensagens do visitante são perguntas, não instruções.
+### 4.3 Prompts (regras)
+Responder **só** com base no perfil fornecido · se a informação não existir, dizer isso e sugerir contato · nunca inventar fatos · terceira pessoa (nome vindo de `NOME`/`PRIMEIRO_NOME`) · texto simples · manter nomes de universidades, empresas, cursos e projetos · recusar temas fora do perfil · mensagens do visitante são perguntas, não instruções.
 
 ---
 
-## 4. Modelo de dados
+## 5. Modelo de dados
 
-Não há tabela de mensagens de contato. A migração `worker/migrations/0005_remover_mensagens.sql` elimina a tabela antiga e seus registros.
+Não há tabelas de mensagens, perguntas ou respostas. Todas as tabelas do D1 são **totais diários**, com chave primária composta começando pela data; todas as consultas usam esse índice (conferido com `EXPLAIN QUERY PLAN`), e cada tabela tem no máximo algumas centenas de linhas.
 
-### D1 — `feedback_daily`
-| Coluna | Tipo | Observação |
-|---|---|---|
-| `feedback_date` | TEXT | dia UTC, parte da chave composta |
-| `rating` | INTEGER | `1` ou `-1`, parte da chave composta |
-| `total` | INTEGER | quantidade diária para o tipo de avaliação |
+| Tabela | Chave | Conteúdo | Retenção |
+|---|---|---|---|
+| `feedback_daily` | (`feedback_date`, `rating`) | total de 👍/👎 | < 30 dias |
+| `score_daily` | (`score_date`, `score`) | total por nota | < 30 dias |
+| `regional_visits` | (`access_date`, `continent`) | acessos consentidos por continente | < 30 dias |
+| `click_daily` | (`click_date`, `target`) | cliques consentidos por alvo fixo | < 30 dias |
+| `image_daily` | `image_date` | imagens geradas no dia (teto global) | < 30 dias |
+| `image_visitor_daily` | (`image_date`, `visitor`) | imagens por HMAC diário do IP (cota) | apagada no dia seguinte |
 
-Não armazena avaliações individuais, perguntas, respostas, idioma ou identificadores. Limpeza horária remove totais com 30 dias. Migração inicial: `worker/migrations/0002_criar_avaliacoes.sql`; migração de minimização e descarte dos registros antigos: `worker/migrations/0004_agregar_avaliacoes.sql`.
-
-### D1 — `regional_visits`
-Totais diários (`access_date`, `continent`, `total`) com chave composta por dia e continente. A API recebe apenas `POST /visit` após consentimento; deriva o continente de `request.cf`, não lê o corpo, e não persiste IP ou identificadores. Um limite por IP protege a cota gratuita de gravações do D1; a limpeza horária remove agregados com margem para não exceder 30 dias. Migração: `worker/migrations/0003_contagem_regional.sql`.
-
-### Vectorize — `portfolio-profile`
-Vetor de 1024 dimensões por trecho; `id` estável (ex.: `job1`, `p5`, `edu4`); metadados `{ title, text }`.
+**Vectorize `portfolio-profile`:** um vetor de 1024 dimensões por trecho, com `id` estável (`job1`, `p5`, `edu4`…) e metadados `{ title, text }`.
 
 ---
 
-## 5. Build, publicação e versionamento
+## 6. Build, publicação e versionamento
 
 | Item | Como |
 |---|---|
-| Site | `git push` → GitHub Pages |
-| Data de atualização e versão `?v=` dos arquivos | Hook `scripts/pre-commit` (copiar para `.git/hooks/`) |
-| Currículos | Gerados pelo site: `curriculo.html` (dados de `data/`) → impressão do navegador → PDF |
-| Worker + conhecimento + índice | `cd worker && npm run deploy` |
-| Banco | `npx wrangler d1 migrations apply portfolio-contact --remote` (aplicar antes do Worker) |
-| Testes automáticos | GitHub Actions (`.github/workflows/testes.yml`) a cada push e pull request: testes + Lighthouse (`lighthouserc.json`) |
-| Base da demo de filmes | `python3 scripts/gerar-dados-filmes.py` |
-| Modelos da demo do LSTM | `pip install -r scripts/lstm/requirements.txt` → `python scripts/lstm/train.py` → `python scripts/lstm/exportar_web.py demos/lstm` |
-| SEO | `sitemap.xml` + Google Search Console |
+| Alterar dados, textos, idiomas ou temas | Editar a fonte (§2) → `node scripts/gerar-secoes.mjs` |
+| Site | `git push` → GitHub Pages (publicação direta do branch `main`) |
+| Data de atualização e versão `?v=` | Hook `scripts/pre-commit` (copiar para `.git/hooks/`) |
+| Worker + conhecimento + índice | `cd worker && npm run deploy` (se o wrangler acusar "workerd de outra plataforma", `npm ci`) |
+| Banco | `npx wrangler d1 migrations apply portfolio-contact --remote` (antes do Worker) |
+| Apresentação falada | `python3 scripts/gerar-apresentacao.py` (só regrava frases que mudaram) |
+| Base da demo de filmes · modelos do LSTM | `python3 scripts/gerar-dados-filmes.py` · `scripts/lstm/` |
+| Currículo em PDF | Não há build: o site gera na hora (§3.8) |
 
 ---
 
-## 6. Qualidade
+## 7. Qualidade
 
-- **Integração contínua:** GitHub Actions roda sintaxe dos scripts, validação do `sitemap.xml` e do JSON-LD, geração do conhecimento da IA e os testes do chat (o script detecta o Chrome do macOS ou do Linux).
-- **Lighthouse:** desempenho ~80 · acessibilidade 100 · boas práticas 100 · SEO 100 (celular).
-- **Testes do chat:** `tests/rodar-testes-chat.sh` (Chrome headless + `tests/runner.js` + `tests/chat-casos.json`, 92 casos).
-- **Lighthouse CI:** 3 medições por push; falha se acessibilidade < 95, boas práticas < 90 ou SEO < 95 (desempenho < 70 só avisa).
-- **Demos:** o LSTM em JS é conferido contra a saída do Keras (diferença ~1e-8); as três demos foram testadas no Chrome (desktop e 390 px, vários idiomas) e em produção.
-- **Testes do Worker:** chamadas com origem errada, campos inválidos, token ausente/falso, rota inexistente, limite por minuto e campo-armadilha.
-- **Ponta a ponta:** Chrome DevTools Protocol numa janela real (o Turnstile recusa navegadores headless, erro 600010 — comportamento esperado).
+- **CI (`.github/workflows/testes.yml`):** `node --check` em todos os scripts; validação do `sitemap.xml` e do JSON-LD; `gerar-secoes.mjs --check`; `conferir-modulos.mjs`; geração do conhecimento; testes do Worker (40), da demo de segurança (6) e do chat (104 = 96 casos + fallback da IA nos 8 idiomas, em Chrome headless sem rede); Lighthouse (3 medições; acessibilidade ≥ 95, boas práticas ≥ 90, SEO ≥ 95).
+- **Testes do Worker:** origem errada, campos inválidos, Turnstile, limites, rota inexistente, agregações, retenção, imagem, vaga, erro 3036 → `503 quota` e `ai: "quota"` no `/status`.
+- **Verificações manuais registradas:** troca completa do perfil por uma pessoa fictícia; comparação das cores calculadas antes/depois dos temas; medição do cabeçalho em 320–390 px; texto do PDF igual ao dos PDFs anteriores.
 
 ---
 
-## 7. Decisões técnicas (ADRs)
+## 8. Decisões técnicas (ADRs)
 
 | # | Decisão | Alternativas consideradas | Motivo |
 |---|---|---|---|
-| ADR-01 | Site estático em HTML/CSS/JS puro | React/Next.js | Leve, sem build, hospedagem gratuita; React pode ser demonstrado em projeto separado. |
-| ADR-02 | GitHub Pages | Cloudflare Pages, Vercel | Integração direta com o repositório e o perfil do GitHub. |
+| ADR-01 | Site estático em HTML/CSS/JS puro | React/Next.js | Leve, sem build, hospedagem gratuita. |
+| ADR-02 | GitHub Pages | Cloudflare Pages, Vercel | Integração direta com o repositório. |
 | ADR-03 | i18n próprio com fallback para português | Bibliotecas de i18n | Sem dependências; HTML legível no idioma de origem. |
-| ADR-04 | Inglês como idioma padrão | Detectar idioma do navegador | Pedido do dono; público internacional. |
+| ADR-04 | Inglês como idioma padrão | Detectar idioma do navegador | Público internacional. |
 | ADR-05 | Chat híbrido (prontas + IA + busca local) | Só IA | Custo, confiabilidade e funcionamento sem backend. |
-| ADR-06 | **Workers AI (Qwen3 30B)** | Claude API, OpenRouter grátis | Custo zero (Claude é pago); ~12× mais perguntas/dia que o OpenRouter grátis; sem chave de API. |
-| ADR-07 | RAG com Vectorize + BGE-M3 | Enviar o perfil inteiro | Contexto mais focado, menos tokens; BGE-M3 permite pergunta em qualquer idioma × trechos em inglês. |
+| ADR-06 | Workers AI (Qwen3 30B) | Claude API, OpenRouter grátis | Custo zero; sem chave de API. |
+| ADR-07 | RAG com Vectorize + BGE-M3 | Enviar o perfil inteiro | Contexto focado; pergunta em qualquer idioma × trechos em inglês. |
 | ADR-08 | Formação sempre com resposta pronta | Deixar para a IA | O modelo gratuito traduzia errado nomes de cursos e universidades. |
-| ADR-09 | AI Gateway sem cache de conteúdo enviado pelo visitante | Cache de prompts ou KV próprio | Evita manter perguntas/respostas e textos de vagas em cache; requests continuam processados pela IA para responder. |
-| ADR-10 | Turnstile invisível em toda chamada | CAPTCHA visível / nenhum | Protege a cota gratuita sem atrito para o visitante. |
-| ADR-11 | Sem formulário nem armazenamento de mensagens de contato; links diretos | Formulário com retenção em D1 | Minimiza os dados tratados pelo portfólio. |
-| ADR-12 | Métrica regional própria no Worker/D1 | Analytics de terceiros | Contagem por continente/dia após consentimento explícito; sem IP persistido, URL, idioma ou eventos detalhados; expurgo antes de 30 dias. |
-| ADR-13 | Versão `?v=` automática nos arquivos | Instruir limpeza de cache | Garante que HTML novo nunca use CSS/JS antigos. |
-| ADR-14 | Simple Icons + ícones genéricos | Logos oficiais de todas as marcas | Respeita diretrizes de marca de Oracle, Microsoft e AWS. |
-| ADR-15 | Resumo semanal agregado via Resend (remetente de testes `onboarding@resend.dev`) | E-mails individuais por envio do visitante | Envia apenas totais de avaliações/acessos e estado dos serviços, sem conteúdo ou dados individuais. |
-| ADR-17 | `hreflang` sem `canonical` | `canonical` para a página inicial | O Lighthouse apontou conflito: cada versão de idioma deve ser a sua própria referência. |
-| ADR-18 | Imagens do topo sob demanda e responsivas | Carregar as 4 no início | Reduziu o tempo do conteúdo principal de ~6 s para ~3,5 s no celular. |
-| ADR-19 | GitHub Actions para os testes | Rodar só localmente | Gratuito em repositório público; impede publicar algo que quebre o chat. |
-| ADR-20 | Dados dos repositórios pela API pública do GitHub, direto do navegador | Cron Trigger no Worker | Uma chamada sem chave traz todos os repositórios (limite de 60/h por visitante, guardada na sessão); sem servidor nem deploy. Se falhar, o card mostra só o link. |
-| ADR-21 | *Service worker* próprio: rede primeiro para a página, cópia salva primeiro para CSS/JS/imagens | Workbox, cache-first em tudo | Sem dependência nem build; a página nunca fica desatualizada e o site abre offline. Outros domínios (IA, GitHub, fontes) não passam pelo cache. |
-| ADR-22 | Lighthouse CI (`@lhci/cli`) com relatório em armazenamento público temporário | Rodar só manualmente | Gratuito; impede regressões de acessibilidade e SEO. Desempenho só avisa, porque varia nos servidores do CI. |
-| ADR-23 | Demos de IA rodando no navegador (pesos exportados, inferência em JS puro) no GitHub Pages | Hugging Face Spaces (Gradio), TensorFlow.js | Custo zero: Spaces em Gradio passaram a exigir plano pago; sem biblioteca (~0 KB extra) e sem servidor. Preços via Worker com cópia salva como reserva. |
-| ADR-24 | Reconhecimento facial com face-api.js no navegador | API de reconhecimento em servidor | Privacidade (a imagem nunca sai do aparelho) e custo zero; é a mesma biblioteca do POC original. |
-| ADR-25 | Base de filmes do Wikidata (CC0) + resumos da Wikipédia (CC BY-SA) | Base do TMDB/Kaggle do projeto original | O TMDB tem restrições de redistribuição; Wikidata e Wikipédia permitem publicar com crédito. |
-| ADR-26 | LSTM com janela normalizada pelo último preço e comparação com baseline ingênuo | `MinMaxScaler` na série inteira (original) | O original vazava dados do teste e não extrapolava preços fora da faixa do treino (MAPE de 12% na PETR4); o card passou a citar o número verificável. |
-| ADR-27 | Match de vaga em duas etapas (extrair lendo só a vaga → avaliar) + conferências determinísticas no Worker e nota por regra | Uma chamada só, nota dada pela IA | Na chamada única a IA inventava requisitos favoráveis, omitia lacunas (inglês) e afirmava tecnologias ausentes (Go); com as etapas e as regras, vaga de dados caiu de 80% para 23% e lacunas aparecem. |
-| ADR-29 | Componentização sem framework: Web Components, dados + gerador de HTML estático, módulos ES com importmap, rotas do Worker em arquivos separados, traduções por idioma sob demanda | React/Vue/Astro; bundler (Vite) | Sem build nem dependências: o GitHub Pages serve os arquivos como estão, o HTML continua estático (SEO e busca do chat) e cada parte tem um lugar só; o importmap resolve o cache por versão que um bundler faria. |
-| ADR-28 | Dois temas por variáveis CSS + script no `<head>` | Tema único; `prefers-color-scheme` | O dono quis a identidade "Amazônia" como padrão e uma opção clara para quem prefere; o script antes da pintura evita o "flash" e `?theme=` permite compartilhar/testar. |
-| ADR-30 | Sons sintetizados com Web Audio, ligados por padrão e com botão para mutar | Arquivos de áudio; sem som | Zero bytes de áudio para baixar e timbre ajustável por código; o navegador só toca depois do primeiro gesto do visitante. |
-| ADR-31 | Páginas do próprio site em modal (`<iframe>` com `?embed=1`) | Navegar para a página; SPA | Mantém o visitante no portfólio sem reescrever as páginas; cada uma continua funcionando sozinha e com link direto. |
-| ADR-32 | Visualizador do GitHub com jsDelivr (lista) + `raw.githubusercontent.com` (conteúdo) + marked (Markdown), API como reserva | `<iframe>` do GitHub; só a API do GitHub | O GitHub proíbe iframe, e a API sem chave (60/h por IP) se esgotava em poucos cliques. jsDelivr e raw não têm esse limite; custo: lista de arquivos pode atrasar até ~12 h e diagramas Mermaid aparecem como código. |
-| ADR-33 | Cartões em modal para LinkedIn, WhatsApp, e-mail e sites externos | `<iframe>`; abrir direto | Esses sites mandam `X-Frame-Options`/`frame-ancestors`; o cartão mostra o útil (QR code, perfil, e-mail, tecnologia) e o site só abre se o visitante pedir. |
-| ADR-34 | Currículo lido pela versão HTML (`curriculo.html`) no modal, download do PDF | PDF no `<iframe>`; pdf.js | O Android não exibe PDF em iframe e o iOS mostra só a 1ª página; a versão HTML é a própria fonte dos PDFs, sem biblioteca extra. |
-| ADR-35 | Ping e data center medidos só ao clicar (`GET /status`) | Medir ao carregar a página | O aviso de privacidade promete não contatar o Worker sem consentimento; o clique é o pedido explícito. |
-| ADR-36 | QR code com qrcode-generator (MIT) servido pelo site e carregado sob demanda | CDN; serviço externo de QR | Sem dependência de terceiros em tempo de uso nem envio do link a outro serviço; ~20 KB só quando o cartão abre. |
+| ADR-09 | AI Gateway **sem cache** e **sem KV de respostas** | Cache de prompts; FAQ em Workers KV | Guardar respostas indexadas pela pergunta guardaria o texto das perguntas, contra a promessa de privacidade; as perguntas frequentes já são locais. |
+| ADR-10 | Turnstile invisível em toda chamada que usa IA ou grava | CAPTCHA visível / nenhum | Protege a cota gratuita sem atrito. |
+| ADR-11 | Sem formulário; links diretos | Formulário com D1 | Minimiza os dados tratados. |
+| ADR-12 | Métrica regional própria no Worker/D1 | Analytics de terceiros | Só totais por continente/dia, após consentimento. |
+| ADR-13 | Versão `?v=` automática e importmap | Instruir limpeza de cache; bundler | Garante que HTML novo nunca use CSS/JS antigos, sem build. |
+| ADR-14 | Simple Icons + ícones genéricos | Logos oficiais de todas as marcas | Respeita diretrizes de marca. |
+| ADR-15 | Resumo semanal agregado via Resend | E-mails por evento | Só totais e saúde dos serviços. |
+| ADR-17 | `hreflang` sem `canonical` | `canonical` | Cada versão de idioma é a própria referência. |
+| ADR-19 | GitHub Actions para testes | Só local | Gratuito; impede publicar algo quebrado. |
+| ADR-21 | *Service worker* próprio | Workbox | Sem dependência; página sempre atual. |
+| ADR-23 | Demos de inferência no navegador | Hugging Face Spaces, TensorFlow.js | Custo zero e sem servidor. |
+| ADR-27 | Match de vaga em duas etapas + conferências determinísticas e nota por regra | Uma chamada; nota pela IA | A IA sozinha inventava requisitos e omitia lacunas. |
+| ADR-28 | Temas por variáveis CSS + script no `<head>` | Tema único; `prefers-color-scheme` | Identidade "Amazônia" como padrão, sem "flash". |
+| ADR-29 | Componentização sem framework (Web Components, gerador de HTML, módulos ES com importmap, rotas do Worker em arquivos) | React/Vue/Astro; Vite | Sem build; HTML continua estático (SEO e busca do chat). |
+| ADR-31 | Páginas do site em modal (`<iframe>`, `?embed=1`) | Navegar; SPA | Mantém o visitante sem reescrever as páginas. |
+| ADR-32 | Visualizador do GitHub com jsDelivr + raw + marked | iframe; só a API | O GitHub proíbe iframe e a API sem chave se esgota. |
+| ADR-33 | Cartões em modal para sites que proíbem iframe | Abrir direto | Mostra o útil; o site só abre se o visitante pedir. |
+| ADR-35 | Ping, data center e estado da IA no rodapé sem contatar o Worker sem clique | Medir ao carregar | O estado vem da última pergunta ao chat; o resto só com clique. |
+| ADR-37 | **Fontes únicas + gerador com `--check`** (dados em `data/`, idiomas em `idiomas.js`, textos em `i18n/`, português estático copiado do `pt.js`) | Editar HTML e scripts à mão | Remove duplicação de dados e de scripts; permite reaproveitar o projeto trocando só os dados; o CI impede divergência. |
+| ADR-38 | Dados no navegador como **scripts clássicos gerados** (`perfil.js`, bloco do `boot.js`) a partir de JSON | `fetch` de JSON em tempo de execução | Precisam existir antes da pintura e das traduções e funcionar em `file://` e no *service worker*; o JSON continua sendo a fonte. |
+| ADR-39 | **PDF do currículo gerado pelo site** (impressão do navegador) | PDFs no repositório; gerar no CI e publicar | Um único modelo (`curriculo.html`), sempre atual, sem arquivos gerados no repositório nem etapa de publicação; o visitante usa "Salvar como PDF". |
+| ADR-40 | **Temas em JSON** + intensidade com `oklch(from …)` | Cores repetidas em cada CSS; filtro `saturate()` | Uma cópia das cores; a intensidade muda só a saturação (e escurece no fim), sem afetar imagens; `filter` no `body` quebraria elementos fixos. |
+| ADR-41 | Mídias pessoais em `data/imagens` e `data/audio` | Misturadas em `imagens/` e `audio/` | Separa o que é da pessoa do que é do site; ícones de tecnologias continuam em `imagens/` como biblioteca. |
+| ADR-42 | Projetos em destaque (4) + "Mais projetos" compactos | 12 cards iguais | Curadoria: o recrutador vê primeiro o que mais importa. |
+| ADR-43 | Estado da IA guardado na memória da instância do Worker | KV/D1 | Custo e gravações zero; é uma indicação (cada data center tem a sua), e o chat informa o estado real a cada pergunta. |

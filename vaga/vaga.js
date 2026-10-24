@@ -400,8 +400,8 @@ function evidenceLink(id) {
   let section = "sobre";
   let label = sec.about;
   if (JOB_ORG[id]) [section, label] = ["experiencia", `${sec.experience}: ${JOB_ORG[id]}`];
-  else if (id === "years") [section, label] = ["experiencia", sec.experience];
-  else if (/^p\d$/.test(id)) [section, label] = ["projetos", `${sec.projects}: ${PROJECT_NAMES[id] ?? siteText(`${id}.title`)}`];
+  else if (id === "years" || id === "current" || id === "public-sector") [section, label] = ["experiencia", sec.experience];
+  else if (/^p\d+$/.test(id)) [section, label] = ["projetos", `${sec.projects}: ${PROJECT_NAMES[id] ?? siteText(`${id}.title`)}`];
   else if (id === "portfolio") [section, label] = ["projetos", `${sec.projects}: ${siteText("p10.title")}`];
   else if (id.startsWith("skills-")) {
     const cat = { "skills-backend": "skills.tab.backend", "skills-frontend": "skills.tab.frontend", "skills-ai": "skills.tab.ia", "skills-data": "skills.tab.dados", "skills-devops": "skills.tab.devops", "skills-practices": "skills.tab.praticas" }[id];

@@ -99,6 +99,7 @@ window.I18N.en = ((P) => ({
   "p10.m2": "automated tests",
   "p10.m3": "monthly cost",
   "p11.title": "RAG Security Lab",
+  "p11.type": "RAG · PROMPT INJECTION · LLM SECURITY",
   "p11.desc": "A local interactive demo of prompt injection in questions and retrieved documents: compare a vulnerable flow with a guarded one and learn layered defenses. No AI inference or user-text uploads; it uses only a fake secret.",
   "p11.m1": "scenarios to try",
   "p11.m2": "bytes sent to a server",
