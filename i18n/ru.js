@@ -286,5 +286,7 @@ window.I18N.ru = ((P) => ({
   "share.footer": "ПОДЕЛИТЬСЯ ⇪",
   "search.actShare": "Поделиться портфолио (QR-код и ссылка)",
   "demo.download": "СКАЧАТЬ PDF ↓",
-  "demo.cvTitle": "Резюме"
+  "demo.cvTitle": "Резюме",
+  "sistema.compras": `Портал закупок и тендеров мэрии Манауса, разработанный ${P.nome} в SEMEF.`,
+  "sistema.contratos": `Система управления контрактами мэрии Манауса, разработанная ${P.nome} в SEMEF / SEMAD.`
 }))(globalThis.PERFIL);

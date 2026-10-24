@@ -1,5 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
+import "../../perfil.js"; // globalThis.PERFIL (endereço do Worker), como na página
 import { PortfolioApi } from "../../api.js";
 import { handleVisit } from "../src/rotas/visitas.js";
 
@@ -81,7 +82,7 @@ test("client submits no URL, referrer, credentials, or body to the visit endpoin
     globalThis.fetch = originalFetch;
   }
 
-  assert.equal(captured[0], "https://emanuel-portfolio-chat.emanuel-portfolio-chat.workers.dev/visit");
+  assert.equal(captured[0], `${globalThis.PERFIL.servicos.worker}/visit`);
   assert.deepEqual(captured[1], {
     method: "POST",
     credentials: "omit",

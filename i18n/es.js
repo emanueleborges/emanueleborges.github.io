@@ -269,5 +269,7 @@ window.I18N.es = ((P) => ({
   "share.footer": "COMPARTIR ⇪",
   "search.actShare": "Compartir portafolio (código QR y enlace)",
   "demo.download": "DESCARGAR PDF ↓",
-  "demo.cvTitle": "Currículum"
+  "demo.cvTitle": "Currículum",
+  "sistema.compras": `Portal de compras y licitaciones del Ayuntamiento de Manaos, desarrollado por ${P.nome} en la SEMEF.`,
+  "sistema.contratos": `Sistema de gestión de contratos del Ayuntamiento de Manaos, desarrollado por ${P.nome} en la SEMEF / SEMAD.`
 }))(globalThis.PERFIL);

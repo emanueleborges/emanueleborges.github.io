@@ -1,7 +1,7 @@
 // Lê, no Node, os dados que o navegador recebe como scripts clássicos: idiomas.js (globalThis.IDIOMAS),
 // o perfil (data/perfil.json → perfil.js, globalThis.PERFIL) e as traduções i18n/<idioma>.js (window.I18N,
 // que usam o PERFIL). O perfil vem sempre do JSON; o perfil.js é só a cópia que o navegador carrega.
-// Fonte única para os geradores (scripts/gerar-secoes.mjs, worker/gerar-conhecimento.mjs, gerar-curriculos.sh).
+// Fonte única para os geradores (scripts/gerar-secoes.mjs, worker/gerar-conhecimento.mjs).
 import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -10,11 +10,17 @@ import vm from "node:vm";
 export const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 export const read = (file) => readFileSync(join(ROOT, file), "utf8");
 
-// perfil.js: script clássico com os dados de data/perfil.json e os campos derivados deles.
+// perfil.js: script clássico com os dados de data/perfil.json, os campos derivados deles e os sites
+// desenvolvidos (data/experiencia.json).
 // O navegador (páginas e service worker) precisa de um script, não de JSON: ele roda antes das
 // traduções e funciona também em file:// (currículo em PDF). Gravado por scripts/gerar-secoes.mjs.
 export function perfilScript() {
   const { _doc, ...dados } = JSON.parse(read("data/perfil.json"));
+  // Sites desenvolvidos nas experiências (data/experiencia.json): domínio → nome, chave da descrição, tecnologias.
+  const sistemas = {};
+  for (const job of JSON.parse(read("data/experiencia.json")).jobs) {
+    for (const { hosts, ...sistema } of job.sistemas ?? []) for (const host of hosts) sistemas[host] = sistema;
+  }
   return `// Gerado por scripts/gerar-secoes.mjs a partir de data/perfil.json — não edite aqui.
 // Script clássico (globalThis.PERFIL): roda no navegador, no service worker e nos scripts Node.
 (() => {
@@ -28,7 +34,10 @@ export function perfilScript() {
     github: \`https://github.com/\${perfil.github}\`,
     linkedin: \`https://www.linkedin.com/in/\${perfil.linkedin}\`,
   };
-  perfil.cv = (lang) => \`\${perfil.curriculo}-\${lang}.pdf\`;
+  // Currículo: página montada com os dados; o PDF é gerado nela, pela impressão do navegador.
+  perfil.cv = (lang) => \`curriculo.html?lang=\${lang}\`;
+  // Sites desenvolvidos (data/experiencia.json): domínio → { nome, key, stack }.
+  perfil.sistemas = ${JSON.stringify(sistemas, null, 2).replace(/\n/g, "\n  ")};
 
   globalThis.PERFIL = perfil;
 })();

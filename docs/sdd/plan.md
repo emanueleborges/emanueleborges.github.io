@@ -266,7 +266,7 @@ Vetor de 1024 dimensões por trecho; `id` estável (ex.: `job1`, `p5`, `edu4`); 
 |---|---|
 | Site | `git push` → GitHub Pages |
 | Data de atualização e versão `?v=` dos arquivos | Hook `scripts/pre-commit` (copiar para `.git/hooks/`) |
-| Currículos | `./gerar-curriculos.sh` (Chrome headless → `cv/*.pdf`) |
+| Currículos | Gerados pelo site: `curriculo.html` (dados de `data/`) → impressão do navegador → PDF |
 | Worker + conhecimento + índice | `cd worker && npm run deploy` |
 | Banco | `npx wrangler d1 migrations apply portfolio-contact --remote` (aplicar antes do Worker) |
 | Testes automáticos | GitHub Actions (`.github/workflows/testes.yml`) a cada push e pull request: testes + Lighthouse (`lighthouserc.json`) |

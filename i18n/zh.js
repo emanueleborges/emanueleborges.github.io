@@ -286,5 +286,7 @@ window.I18N.zh = ((P) => ({
   "share.footer": "分享 ⇪",
   "search.actShare": "分享作品集（二维码和链接）",
   "demo.download": "下载 PDF ↓",
-  "demo.cvTitle": "简历"
+  "demo.cvTitle": "简历",
+  "sistema.compras": `马瑙斯市政府采购与招标门户，由 ${P.nome} 在 SEMEF 开发。`,
+  "sistema.contratos": `马瑙斯市政府合同管理系统，由 ${P.nome} 在 SEMEF / SEMAD 开发。`
 }))(globalThis.PERFIL);

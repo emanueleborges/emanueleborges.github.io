@@ -281,5 +281,7 @@ window.I18N.en = ((P) => ({
   "share.footer": "SHARE ⇪",
   "search.actShare": "Share portfolio (QR code and link)",
   "demo.download": "DOWNLOAD PDF ↓",
-  "demo.cvTitle": "Résumé"
+  "demo.cvTitle": "Résumé",
+  "sistema.compras": `Procurement and public bidding portal of the Manaus City Hall, developed by ${P.nome} at SEMEF.`,
+  "sistema.contratos": `Contract management system of the Manaus City Hall, developed by ${P.nome} at SEMEF / SEMAD.`
 }))(globalThis.PERFIL);

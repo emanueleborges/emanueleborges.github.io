@@ -1,7 +1,7 @@
 // Componentes da interface (Web Components nativos, sem framework e sem build), usados no site,
 // nas demos, na página de vagas e na 404:
 //   <site-logo size="34">   logo "E." animado, nas cores do tema
-//   <theme-toggle>          botão que alterna os temas Amazônia (padrão) e Editorial
+//   <theme-toggle>          botão que passa ao próximo tema (data/temas.json)
 //   <sound-toggle>          liga/desliga os cliques sonoros e a vibração da interface (padrão: ligado)
 //   links do GitHub         abrem num visualizador em modal (pastas, README e código) em vez de sair do site
 //   outros links externos   (LinkedIn, WhatsApp, e-mail, sites) abrem um cartão em modal; o site só abre se pedido
@@ -28,19 +28,22 @@
 
   /* ---------- <theme-toggle> ---------- */
 
-  const THEMES = ["amazonia", "editorial"];
-  const THEME_COLORS = { amazonia: "#050f14", editorial: "#0b0f19" };
+  // Temas, nomes e cores: data/temas.json (bloco gerado no boot.js → window.TEMAS). O botão passa ao próximo da lista.
+  const { TEMAS } = window;
+  const THEMES = Object.keys(TEMAS.temas);
   const LABELS = {
-    en: ["Amazon", "Editorial", "Theme: {current}. Switch to {next}"],
-    pt: ["Amazônia", "Editorial", "Tema: {current}. Mudar para {next}"],
-    es: ["Amazonia", "Editorial", "Tema: {current}. Cambiar a {next}"],
-    fr: ["Amazonie", "Éditorial", "Thème : {current}. Passer à {next}"],
-    it: ["Amazzonia", "Editoriale", "Tema: {current}. Passa a {next}"],
-    de: ["Amazonien", "Editorial", "Design: {current}. Zu {next} wechseln"],
-    zh: ["亚马逊", "编辑风", "主题：{current}。切换到{next}"],
-    ru: ["Амазония", "Редакционный", "Тема: {current}. Переключить на {next}"],
+    en: "Theme: {current}. Switch to {next}",
+    pt: "Tema: {current}. Mudar para {next}",
+    es: "Tema: {current}. Cambiar a {next}",
+    fr: "Thème : {current}. Passer à {next}",
+    it: "Tema: {current}. Passa a {next}",
+    de: "Design: {current}. Zu {next} wechseln",
+    zh: "主题：{current}。切换到{next}",
+    ru: "Тема: {current}. Переключить на {next}",
   };
-  const currentTheme = () => (document.documentElement.dataset.theme === "editorial" ? "editorial" : "amazonia");
+  const currentTheme = () => (TEMAS.temas[document.documentElement.dataset.theme] ? document.documentElement.dataset.theme : TEMAS.padrao);
+  const nextTheme = () => THEMES[(THEMES.indexOf(currentTheme()) + 1) % THEMES.length];
+  const themeName = (id) => TEMAS.temas[id].nome[pageLang()] ?? TEMAS.temas[id].nome.en;
   const pageLang = () => (document.documentElement.lang || "en").slice(0, 2);
 
   class ThemeToggle extends HTMLElement {
@@ -62,18 +65,15 @@
     }
 
     update() {
-      const [amazonia, editorial, label] = LABELS[pageLang()] ?? LABELS.en;
-      const names = { amazonia, editorial };
-      const theme = currentTheme();
-      const next = THEMES.find((name) => name !== theme);
-      this.querySelector(".theme-name").textContent = names[theme];
-      this.button.setAttribute("aria-label", label.replace("{current}", names[theme]).replace("{next}", names[next]));
+      const label = LABELS[pageLang()] ?? LABELS.en;
+      this.querySelector(".theme-name").textContent = themeName(currentTheme());
+      this.button.setAttribute("aria-label", label.replace("{current}", themeName(currentTheme())).replace("{next}", themeName(nextTheme())));
     }
 
     toggle() {
-      const next = THEMES.find((name) => name !== currentTheme());
+      const next = nextTheme();
       document.documentElement.dataset.theme = next;
-      document.querySelector('meta[name="theme-color"]')?.setAttribute("content", THEME_COLORS[next]);
+      document.querySelector('meta[name="theme-color"]')?.setAttribute("content", TEMAS.temas[next].fundo);
       try {
         localStorage.setItem("theme", next);
       } catch {
@@ -666,14 +666,14 @@
   // e-mail para copiar, descrição do sistema — e o site externo só abre se o visitante pedir.
   const SITE_ROOT = new URL("..", document.currentScript?.src ?? location.href).href;
   const LINK_LABELS = {
-    en: { close: "Close", copy: "Copy", copied: "Copied!", note: "This site can't be shown inside the portfolio — open it whenever you like.", whatsTitle: "Chat on WhatsApp", scan: "Point your phone's camera at the code", openWhats: "Open chat ↗", linkedinTitle: "LinkedIn profile", openLinkedin: "Open on LinkedIn ↗", mailTitle: "Email", openMail: "Write an email ↗", siteTitle: "External site", openSite: "Open site ↗", stack: "Stack", compras: `Procurement and public bidding portal of the Manaus City Hall, developed by ${PERFIL.nome} at SEMEF.`, contratos: `Contract management system of the Manaus City Hall, developed by ${PERFIL.nome} at SEMEF / SEMAD.`, shareKind: "Share", shareTitle: "Share this portfolio", shareScan: "Point a phone camera at the code to open the portfolio", shareNow: "Share ↗" },
-    pt: { close: "Fechar", copy: "Copiar", copied: "Copiado!", note: "Este site não pode ser exibido dentro do portfólio — abra quando quiser.", whatsTitle: "Conversar no WhatsApp", scan: "Aponte a câmera do celular para o código", openWhats: "Abrir conversa ↗", linkedinTitle: "Perfil no LinkedIn", openLinkedin: "Abrir no LinkedIn ↗", mailTitle: "E-mail", openMail: "Escrever e-mail ↗", siteTitle: "Site externo", openSite: "Abrir site ↗", stack: "Tecnologias", compras: `Portal de compras e licitações da Prefeitura de Manaus, desenvolvido por ${PERFIL.nome} na SEMEF.`, contratos: `Sistema de gestão de contratos da Prefeitura de Manaus, desenvolvido por ${PERFIL.nome} na SEMEF / SEMAD.`, shareKind: "Compartilhar", shareTitle: "Compartilhe este portfólio", shareScan: "Aponte a câmera do celular para abrir o portfólio", shareNow: "Compartilhar ↗" },
-    es: { close: "Cerrar", copy: "Copiar", copied: "¡Copiado!", note: "Este sitio no puede mostrarse dentro del portafolio — ábrelo cuando quieras.", whatsTitle: "Hablar por WhatsApp", scan: "Apunta la cámara del móvil al código", openWhats: "Abrir chat ↗", linkedinTitle: "Perfil de LinkedIn", openLinkedin: "Abrir en LinkedIn ↗", mailTitle: "Correo", openMail: "Escribir correo ↗", siteTitle: "Sitio externo", openSite: "Abrir sitio ↗", stack: "Tecnologías", compras: `Portal de compras y licitaciones del Ayuntamiento de Manaos, desarrollado por ${PERFIL.nome} en la SEMEF.`, contratos: `Sistema de gestión de contratos del Ayuntamiento de Manaos, desarrollado por ${PERFIL.nome} en la SEMEF / SEMAD.`, shareKind: "Compartir", shareTitle: "Comparte este portafolio", shareScan: "Apunta la cámara del móvil al código para abrir el portafolio", shareNow: "Compartir ↗" },
-    fr: { close: "Fermer", copy: "Copier", copied: "Copié !", note: "Ce site ne peut pas s’afficher dans le portfolio — ouvrez-le quand vous voulez.", whatsTitle: "Discuter sur WhatsApp", scan: "Pointez l’appareil photo du téléphone vers le code", openWhats: "Ouvrir la discussion ↗", linkedinTitle: "Profil LinkedIn", openLinkedin: "Ouvrir sur LinkedIn ↗", mailTitle: "E-mail", openMail: "Écrire un e-mail ↗", siteTitle: "Site externe", openSite: "Ouvrir le site ↗", stack: "Technologies", compras: `Portail d’achats et d’appels d’offres de la mairie de Manaus, développé par ${PERFIL.nome} à la SEMEF.`, contratos: `Système de gestion des contrats de la mairie de Manaus, développé par ${PERFIL.nome} à la SEMEF / SEMAD.`, shareKind: "Partager", shareTitle: "Partagez ce portfolio", shareScan: "Pointez l’appareil photo d’un téléphone vers le code pour ouvrir le portfolio", shareNow: "Partager ↗" },
-    it: { close: "Chiudi", copy: "Copia", copied: "Copiato!", note: "Questo sito non può essere mostrato nel portfolio — aprilo quando vuoi.", whatsTitle: "Scrivi su WhatsApp", scan: "Inquadra il codice con la fotocamera del telefono", openWhats: "Apri chat ↗", linkedinTitle: "Profilo LinkedIn", openLinkedin: "Apri su LinkedIn ↗", mailTitle: "E-mail", openMail: "Scrivi un’e-mail ↗", siteTitle: "Sito esterno", openSite: "Apri sito ↗", stack: "Tecnologie", compras: `Portale acquisti e gare del Comune di Manaus, sviluppato da ${PERFIL.nome} alla SEMEF.`, contratos: `Sistema di gestione dei contratti del Comune di Manaus, sviluppato da ${PERFIL.nome} alla SEMEF / SEMAD.`, shareKind: "Condividi", shareTitle: "Condividi questo portfolio", shareScan: "Inquadra il codice con la fotocamera del telefono per aprire il portfolio", shareNow: "Condividi ↗" },
-    de: { close: "Schließen", copy: "Kopieren", copied: "Kopiert!", note: "Diese Website kann nicht im Portfolio angezeigt werden — öffnen Sie sie, wann Sie möchten.", whatsTitle: "Auf WhatsApp schreiben", scan: "Richten Sie die Handykamera auf den Code", openWhats: "Chat öffnen ↗", linkedinTitle: "LinkedIn-Profil", openLinkedin: "Auf LinkedIn öffnen ↗", mailTitle: "E-Mail", openMail: "E-Mail schreiben ↗", siteTitle: "Externe Website", openSite: "Website öffnen ↗", stack: "Technologien", compras: `Einkaufs- und Ausschreibungsportal der Stadt Manaus, von ${PERFIL.nome} bei der SEMEF entwickelt.`, contratos: `Vertragsverwaltung der Stadt Manaus, von ${PERFIL.nome} bei SEMEF / SEMAD entwickelt.`, shareKind: "Teilen", shareTitle: "Dieses Portfolio teilen", shareScan: "Richten Sie eine Handykamera auf den Code, um das Portfolio zu öffnen", shareNow: "Teilen ↗" },
-    zh: { close: "关闭", copy: "复制", copied: "已复制！", note: "该网站无法在作品集中显示——需要时再打开即可。", whatsTitle: "通过 WhatsApp 联系", scan: "用手机相机扫描二维码", openWhats: "打开聊天 ↗", linkedinTitle: "领英主页", openLinkedin: "在领英打开 ↗", mailTitle: "电子邮件", openMail: "写邮件 ↗", siteTitle: "外部网站", openSite: "打开网站 ↗", stack: "技术", compras: `马瑙斯市政府采购与招标门户，由 ${PERFIL.nome} 在 SEMEF 开发。`, contratos: `马瑙斯市政府合同管理系统，由 ${PERFIL.nome} 在 SEMEF / SEMAD 开发。`, shareKind: "分享", shareTitle: "分享这个作品集", shareScan: "用手机相机扫描二维码即可打开作品集", shareNow: "分享 ↗" },
-    ru: { close: "Закрыть", copy: "Копировать", copied: "Скопировано!", note: "Этот сайт нельзя показать внутри портфолио — откройте, когда захотите.", whatsTitle: "Написать в WhatsApp", scan: "Наведите камеру телефона на код", openWhats: "Открыть чат ↗", linkedinTitle: "Профиль LinkedIn", openLinkedin: "Открыть в LinkedIn ↗", mailTitle: "Эл. почта", openMail: "Написать письмо ↗", siteTitle: "Внешний сайт", openSite: "Открыть сайт ↗", stack: "Технологии", compras: `Портал закупок и тендеров мэрии Манауса, разработанный ${PERFIL.nome} в SEMEF.`, contratos: `Система управления контрактами мэрии Манауса, разработанная ${PERFIL.nome} в SEMEF / SEMAD.`, shareKind: "Поделиться", shareTitle: "Поделитесь этим портфолио", shareScan: "Наведите камеру телефона на код, чтобы открыть портфолио", shareNow: "Поделиться ↗" },
+    en: { close: "Close", copy: "Copy", copied: "Copied!", note: "This site can't be shown inside the portfolio — open it whenever you like.", whatsTitle: "Chat on WhatsApp", scan: "Point your phone's camera at the code", openWhats: "Open chat ↗", linkedinTitle: "LinkedIn profile", openLinkedin: "Open on LinkedIn ↗", mailTitle: "Email", openMail: "Write an email ↗", siteTitle: "External site", openSite: "Open site ↗", stack: "Stack", shareKind: "Share", shareTitle: "Share this portfolio", shareScan: "Point a phone camera at the code to open the portfolio", shareNow: "Share ↗" },
+    pt: { close: "Fechar", copy: "Copiar", copied: "Copiado!", note: "Este site não pode ser exibido dentro do portfólio — abra quando quiser.", whatsTitle: "Conversar no WhatsApp", scan: "Aponte a câmera do celular para o código", openWhats: "Abrir conversa ↗", linkedinTitle: "Perfil no LinkedIn", openLinkedin: "Abrir no LinkedIn ↗", mailTitle: "E-mail", openMail: "Escrever e-mail ↗", siteTitle: "Site externo", openSite: "Abrir site ↗", stack: "Tecnologias", shareKind: "Compartilhar", shareTitle: "Compartilhe este portfólio", shareScan: "Aponte a câmera do celular para abrir o portfólio", shareNow: "Compartilhar ↗" },
+    es: { close: "Cerrar", copy: "Copiar", copied: "¡Copiado!", note: "Este sitio no puede mostrarse dentro del portafolio — ábrelo cuando quieras.", whatsTitle: "Hablar por WhatsApp", scan: "Apunta la cámara del móvil al código", openWhats: "Abrir chat ↗", linkedinTitle: "Perfil de LinkedIn", openLinkedin: "Abrir en LinkedIn ↗", mailTitle: "Correo", openMail: "Escribir correo ↗", siteTitle: "Sitio externo", openSite: "Abrir sitio ↗", stack: "Tecnologías", shareKind: "Compartir", shareTitle: "Comparte este portafolio", shareScan: "Apunta la cámara del móvil al código para abrir el portafolio", shareNow: "Compartir ↗" },
+    fr: { close: "Fermer", copy: "Copier", copied: "Copié !", note: "Ce site ne peut pas s’afficher dans le portfolio — ouvrez-le quand vous voulez.", whatsTitle: "Discuter sur WhatsApp", scan: "Pointez l’appareil photo du téléphone vers le code", openWhats: "Ouvrir la discussion ↗", linkedinTitle: "Profil LinkedIn", openLinkedin: "Ouvrir sur LinkedIn ↗", mailTitle: "E-mail", openMail: "Écrire un e-mail ↗", siteTitle: "Site externe", openSite: "Ouvrir le site ↗", stack: "Technologies", shareKind: "Partager", shareTitle: "Partagez ce portfolio", shareScan: "Pointez l’appareil photo d’un téléphone vers le code pour ouvrir le portfolio", shareNow: "Partager ↗" },
+    it: { close: "Chiudi", copy: "Copia", copied: "Copiato!", note: "Questo sito non può essere mostrato nel portfolio — aprilo quando vuoi.", whatsTitle: "Scrivi su WhatsApp", scan: "Inquadra il codice con la fotocamera del telefono", openWhats: "Apri chat ↗", linkedinTitle: "Profilo LinkedIn", openLinkedin: "Apri su LinkedIn ↗", mailTitle: "E-mail", openMail: "Scrivi un’e-mail ↗", siteTitle: "Sito esterno", openSite: "Apri sito ↗", stack: "Tecnologie", shareKind: "Condividi", shareTitle: "Condividi questo portfolio", shareScan: "Inquadra il codice con la fotocamera del telefono per aprire il portfolio", shareNow: "Condividi ↗" },
+    de: { close: "Schließen", copy: "Kopieren", copied: "Kopiert!", note: "Diese Website kann nicht im Portfolio angezeigt werden — öffnen Sie sie, wann Sie möchten.", whatsTitle: "Auf WhatsApp schreiben", scan: "Richten Sie die Handykamera auf den Code", openWhats: "Chat öffnen ↗", linkedinTitle: "LinkedIn-Profil", openLinkedin: "Auf LinkedIn öffnen ↗", mailTitle: "E-Mail", openMail: "E-Mail schreiben ↗", siteTitle: "Externe Website", openSite: "Website öffnen ↗", stack: "Technologien", shareKind: "Teilen", shareTitle: "Dieses Portfolio teilen", shareScan: "Richten Sie eine Handykamera auf den Code, um das Portfolio zu öffnen", shareNow: "Teilen ↗" },
+    zh: { close: "关闭", copy: "复制", copied: "已复制！", note: "该网站无法在作品集中显示——需要时再打开即可。", whatsTitle: "通过 WhatsApp 联系", scan: "用手机相机扫描二维码", openWhats: "打开聊天 ↗", linkedinTitle: "领英主页", openLinkedin: "在领英打开 ↗", mailTitle: "电子邮件", openMail: "写邮件 ↗", siteTitle: "外部网站", openSite: "打开网站 ↗", stack: "技术", shareKind: "分享", shareTitle: "分享这个作品集", shareScan: "用手机相机扫描二维码即可打开作品集", shareNow: "分享 ↗" },
+    ru: { close: "Закрыть", copy: "Копировать", copied: "Скопировано!", note: "Этот сайт нельзя показать внутри портфолио — откройте, когда захотите.", whatsTitle: "Написать в WhatsApp", scan: "Наведите камеру телефона на код", openWhats: "Открыть чат ↗", linkedinTitle: "Профиль LinkedIn", openLinkedin: "Открыть в LinkedIn ↗", mailTitle: "Эл. почта", openMail: "Написать письмо ↗", siteTitle: "Внешний сайт", openSite: "Открыть сайт ↗", stack: "Технологии", shareKind: "Поделиться", shareTitle: "Поделитесь этим портфолио", shareScan: "Наведите камеру телефона на код, чтобы открыть портфолио", shareNow: "Поделиться ↗" },
   };
   const linkText = () => LINK_LABELS[pageLang()] ?? LINK_LABELS.en;
 
@@ -695,11 +695,8 @@
     return siteTextFiles[lang];
   };
   const plainText = (html = "") => html.replace(/<[^>]+>/g, "").replace(/&amp;/g, "&").trim();
-  const KNOWN_SITES = {
-    "compras.manaus.am.gov.br": { name: "ComprasManaus", key: "compras", stack: "ASP Classic · ASP.NET Web Forms · VB.NET · jQuery · Bootstrap · Highcharts" },
-    "contratos.manaus.am.gov.br": { name: "ContratosManaus", key: "contratos", stack: "PHP · jQuery · Bootstrap · Chart.js · Select2" },
-    "sistemaspmm.manaus.am.gov.br": { name: "ContratosManaus", key: "contratos", stack: "PHP · jQuery · Bootstrap · Chart.js · Select2" },
-  };
+  // Sites desenvolvidos (data/experiencia.json → perfil.js): domínio → { nome, key (descrição no i18n/), stack }.
+  const KNOWN_SITES = PERFIL.sistemas;
 
   // Tipo do link: whatsapp | linkedin | email | site; null = deixa o navegador seguir.
   const linkKind = (link) => {
@@ -835,9 +832,13 @@
       const known = KNOWN_SITES[url.hostname];
       linkDialog.querySelector(".link-card-kind").textContent = text.siteTitle;
       action.textContent = text.openSite;
-      const title = known?.name ?? (label.replace(/[↗→]/g, "").trim() || url.hostname.replace(/^www\./, ""));
+      const title = known?.nome ?? (label.replace(/[↗→]/g, "").trim() || url.hostname.replace(/^www\./, ""));
       body.append(el("h2", null, title));
-      if (known) body.append(el("p", null, text[known.key]), el("p", "link-card-stack", known.stack));
+      if (known) {
+        const about = el("p");
+        siteTexts(pageLang()).then((site) => (about.textContent = plainText(site[known.key])));
+        body.append(about, el("p", "link-card-stack", known.stack));
+      }
       body.append(copyRow(url.href.replace(/^https?:\/\//, "").replace(/\/$/, "")), el("p", "link-card-note", text.note), action);
     }
     linkDialog.querySelector(".link-card-kind").id = "";

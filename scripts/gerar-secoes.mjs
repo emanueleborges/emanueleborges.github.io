@@ -3,7 +3,8 @@
 //     SEO do <head> (data/perfil.json) e os textos em português de todo [data-i18n] (i18n/pt.js);
 //   - todas as páginas: atributos data-perfil="{campo}" (conteúdo) e data-perfil-<atributo>="{campo}";
 //   - perfil.js (cópia de data/perfil.json para o navegador) e as variáveis do worker/wrangler.jsonc;
-//   - manifest.webmanifest, robots.txt e sitemap.xml (nome e endereço do site, do perfil).
+//   - manifest.webmanifest, robots.txt e sitemap.xml (nome e endereço do site, do perfil);
+//   - temas (data/temas.json): temas.css, o bloco de temas do components/boot.js e as cores do navegador.
 // O HTML continua estático (bom para SEO, funciona sem JavaScript e a busca do chat lê a página).
 //
 // Uso:  node scripts/gerar-secoes.mjs           → atualiza os arquivos
@@ -215,6 +216,47 @@ function langOptions(html) {
   );
 }
 
+/* ---------- Temas (data/temas.json) ---------- */
+
+const temas = JSON.parse(read("data/temas.json"));
+if (!temas.temas[temas.padrao]) throw new Error(`Tema padrão "${temas.padrao}" não existe em data/temas.json`);
+const fundoPadrao = temas.temas[temas.padrao].cores["--bg"];
+
+// Variáveis CSS de cada tema. O padrão vale também sem data-theme e serve de base: os outros
+// temas só precisam declarar o que muda.
+function temasCss() {
+  const ordem = [temas.padrao, ...Object.keys(temas.temas).filter((id) => id !== temas.padrao)];
+  const blocos = ordem.map((id) => {
+    const tema = temas.temas[id];
+    const seletor = id === temas.padrao ? `:root, :root[data-theme="${id}"]` : `:root[data-theme="${id}"]`;
+    const linhas = Object.entries(tema.cores).map(([nome, valor]) => `  ${nome}: ${valor};`);
+    return `${seletor} {\n  color-scheme: ${tema.esquema};\n${linhas.join("\n")}\n}`;
+  });
+  return `/* Gerado por scripts/gerar-secoes.mjs a partir de data/temas.json — não edite aqui. */\n${blocos.join("\n\n")}\n`;
+}
+
+// No boot.js (roda antes da pintura): lista de temas, padrão, nome no seletor e cor da barra do navegador.
+function bootTemas(js) {
+  const dados = {
+    padrao: temas.padrao,
+    temas: Object.fromEntries(Object.entries(temas.temas).map(([id, tema]) => [id, { nome: tema.nome, fundo: tema.cores["--bg"] }])),
+  };
+  const start = "  // gerado: temas (não edite aqui: data/temas.json + node scripts/gerar-secoes.mjs)\n";
+  const end = "  // /gerado: temas\n";
+  const i = js.indexOf(start);
+  const j = js.indexOf(end);
+  if (i < 0 || j < i) throw new Error("Marcadores do bloco de temas não encontrados no components/boot.js");
+  return `${js.slice(0, i + start.length)}  var TEMAS = (window.TEMAS = ${JSON.stringify(dados)});\n${js.slice(j)}`;
+}
+
+// <meta name="theme-color"> estático (antes do boot.js trocar pelo tema salvo): o do tema padrão.
+// CSP de cada página: o endereço do Worker (data/perfil.json → servicos.worker) em connect-src.
+const workerOrigin = new URL(perfil.servicos.worker).origin;
+const themeColor = (html) =>
+  html
+    .replace(/(<meta name="theme-color" content=")[^"]*/, (_, before) => before + fundoPadrao)
+    .replace(/(<meta http-equiv="Content-Security-Policy" content="[^"]*connect-src[^";]*?)https:\/\/[\w.-]+\.workers\.dev/, (_, before) => before + workerOrigin);
+
 /* ---------- Arquivos gerados ---------- */
 
 const files = new Map();
@@ -236,29 +278,37 @@ index = replaceBlock(index, "seo", seoHead(), "data/perfil.json");
 // Números do hero que dependem dos dados: total de projetos e de demos de IA (páginas em demos/).
 const counts = { projects: projects.length, demos: projects.filter((p) => p.demo?.href.startsWith("demos/")).length };
 index = index.replace(/(data-count="(\w+)">)\d+/g, (all, start, name) => (name in counts ? `${start}${counts[name]}` : all));
-files.set("index.html", langOptions(applyPerfil(syncPt(index), "index.html")));
+files.set("index.html", themeColor(langOptions(applyPerfil(syncPt(index), "index.html"))));
 
 const demoPages = readdirSync(join(ROOT, "demos"), { withFileTypes: true })
   .filter((entry) => entry.isDirectory())
   .map((entry) => `demos/${entry.name}/index.html`);
-files.set("curriculo.html", langOptions(applyPerfil(replaceBlock(read("curriculo.html"), "dados", cvData()), "curriculo.html")));
+files.set("curriculo.html", themeColor(langOptions(applyPerfil(replaceBlock(read("curriculo.html"), "dados", cvData()), "curriculo.html"))));
 for (const file of ["404.html", "vaga/index.html", "como-construi/index.html", ...demoPages]) {
-  files.set(file, langOptions(applyPerfil(read(file), file)));
+  files.set(file, themeColor(langOptions(applyPerfil(read(file), file))));
 }
 
 const manifest = JSON.parse(read("manifest.webmanifest"));
-Object.assign(manifest, { name: `${perfil.nomeCompleto} — Portfolio`, short_name: perfil.nomeCompleto, description: plain(i18n.en["meta.description"]) });
+Object.assign(manifest, {
+  name: `${perfil.nomeCompleto} — Portfolio`,
+  short_name: perfil.nomeCompleto,
+  description: plain(i18n.en["meta.description"]),
+  background_color: fundoPadrao,
+  theme_color: fundoPadrao,
+});
+files.set("temas.css", temasCss());
+files.set("components/boot.js", bootTemas(read("components/boot.js")));
 files.set("manifest.webmanifest", `${JSON.stringify(manifest, null, 2)}\n`);
 files.set("robots.txt", read("robots.txt").replace(/^# .*/, `# Portfólio de ${perfil.nomeCompleto}`).replace(/^Sitemap: .*/m, `Sitemap: ${abs("sitemap.xml")}`));
-// sitemap.xml: as páginas e datas continuam editadas à mão; o endereço do site e os PDFs do currículo vêm do perfil.
-const cvPdf = new RegExp(`<loc>[^<]*-(${LANGS.join("|")})\\.pdf</loc>`, "g");
-files.set("sitemap.xml", read("sitemap.xml").replace(/(<loc>|href=")https?:\/\/[^/"<\s]+\//g, (_, before) => before + perfil.site).replace(cvPdf, (_, lang) => `<loc>${abs(perfil.cv(lang))}</loc>`));
+// sitemap.xml: as páginas e datas continuam editadas à mão; o endereço do site vem do perfil.
+files.set("sitemap.xml", read("sitemap.xml").replace(/(<loc>|href=")https?:\/\/[^/"<\s]+\//g, (_, before) => before + perfil.site));
 // Logo e favicon: nome acessível do SVG.
 for (const file of ["imagens/logo.svg", "imagens/favicon.svg"]) {
   files.set(file, read(file).replace(/(<svg\b[^>]*\saria-label=")[^"]*/, (_, before) => before + escape(perfil.nomeCompleto)));
 }
 
-const outdated = [...files].filter(([file, content]) => read(file) !== content).map(([file]) => file);
+const exists = (file) => { try { read(file); return true; } catch { return false; } };
+const outdated = [...files].filter(([file, content]) => !exists(file) || read(file) !== content).map(([file]) => file);
 const summary = `${projects.length} projetos, ${skills.length} habilidades, ${jobs.length} experiências, ${courses.length} cursos, ${files.size} arquivos`;
 if (process.argv.includes("--check")) {
   if (outdated.length) {

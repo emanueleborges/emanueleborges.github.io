@@ -286,5 +286,7 @@ window.I18N.it = ((P) => ({
   "share.footer": "CONDIVIDI ⇪",
   "search.actShare": "Condividi il portfolio (QR code e link)",
   "demo.download": "SCARICA PDF ↓",
-  "demo.cvTitle": "Curriculum"
+  "demo.cvTitle": "Curriculum",
+  "sistema.compras": `Portale acquisti e gare del Comune di Manaus, sviluppato da ${P.nome} alla SEMEF.`,
+  "sistema.contratos": `Sistema di gestione dei contratti del Comune di Manaus, sviluppato da ${P.nome} alla SEMEF / SEMAD.`
 }))(globalThis.PERFIL);

@@ -156,11 +156,10 @@ function initChat() {
   const linkButton = (label, href) => {
     const a = el("a", "chat-link", label);
     a.href = href;
-    if (!href.startsWith("cv/")) {
+    // O currículo abre no modal do portfólio (demo-modal.js), onde o PDF é gerado; o resto, em nova aba.
+    if (!href.startsWith("curriculo.html")) {
       a.target = "_blank";
       a.rel = "noopener";
-    } else {
-      a.setAttribute("download", "");
     }
     return a;
   };

@@ -1,24 +1,29 @@
-// Roda no <head>, antes da pintura (script síncrono): aplica o tema — ?theme= ou o salvo, padrão
-// "amazonia" — e prepara o idioma pedido/salvo para pré-carregar sua tradução.
+// Roda no <head>, antes da pintura (script síncrono): aplica o tema — ?theme= ou o salvo, senão o
+// padrão de data/temas.json — e decide o idioma da página (window.IDIOMA_INICIAL), pré-carregando a tradução.
 // Com data-i18n, já começa a baixar o arquivo do idioma salvo/pedido (pt e en vêm na própria página).
 (function () {
+  // gerado: temas (não edite aqui: data/temas.json + node scripts/gerar-secoes.mjs)
+  var TEMAS = (window.TEMAS = {"padrao":"amazonia","temas":{"amazonia":{"nome":{"en":"Amazon","pt":"Amazônia","es":"Amazonia","fr":"Amazonie","it":"Amazzonia","de":"Amazonien","zh":"亚马逊","ru":"Амазония"},"fundo":"#050f14"},"editorial":{"nome":{"en":"Editorial","pt":"Editorial","es":"Editorial","fr":"Éditorial","it":"Editoriale","de":"Editorial","zh":"编辑风","ru":"Редакционный"},"fundo":"#0b0f19"}}});
+  // /gerado: temas
   var boot = document.currentScript;
-  var theme;
-  try {
-    theme = new URLSearchParams(location.search).get("theme") || localStorage.getItem("theme");
-  } catch (e) {
-    /* navegação privada */
-  }
-  theme = theme === "editorial" ? "editorial" : "amazonia";
-  if (boot && boot.hasAttribute("data-i18n")) {
-    var lang;
+  var params = new URLSearchParams(location.search);
+  // ?theme= / ?lang= na URL, senão a última escolha salva, senão o padrão (data/temas.json, idiomas.js).
+  var stored = function (key) {
     try {
-      lang = new URLSearchParams(location.search).get("lang") || localStorage.getItem("lang");
+      return localStorage.getItem(key);
     } catch (e) {
-      /* navegação privada */
+      return null; // navegação privada
     }
+  };
+  var theme = TEMAS.temas[params.get("theme")] ? params.get("theme") : stored("theme");
+  theme = TEMAS.temas[theme] ? theme : TEMAS.padrao;
+  var idiomas = window.IDIOMAS;
+  var lang = idiomas[params.get("lang")] ? params.get("lang") : stored("lang");
+  lang = idiomas[lang] ? lang : Object.keys(idiomas)[0];
+  window.IDIOMA_INICIAL = lang; // idioma da página: script.js, demos/demos.js
+  if (boot && boot.hasAttribute("data-i18n")) {
     // pt e en já vêm na página; os outros idiomas do site (idiomas.js) são pré-carregados.
-    if (window.IDIOMAS && window.IDIOMAS[lang] && lang !== "pt" && lang !== "en") {
+    if (lang !== "pt" && lang !== "en") {
       var preload = document.createElement("link");
       preload.rel = "preload";
       preload.as = "script";
@@ -28,5 +33,5 @@
   }
   document.documentElement.dataset.theme = theme;
   var meta = document.querySelector('meta[name="theme-color"]');
-  if (meta) meta.content = theme === "editorial" ? "#0b0f19" : "#050f14";
+  if (meta) meta.content = TEMAS.temas[theme].fundo;
 })();

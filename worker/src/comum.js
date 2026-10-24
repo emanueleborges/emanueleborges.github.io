@@ -60,7 +60,7 @@ export const emailEnabled = (env) => Boolean(env.RESEND_API_KEY && env.NOTIFY_EM
 export async function sendEmail(env, { subject, html, text, replyTo }) {
   const response = await fetch("https://api.resend.com/emails", {
     method: "POST",
-    headers: { Authorization: `Bearer ${env.RESEND_API_KEY}`, "Content-Type": "application/json", "User-Agent": "emanuel-portfolio-chat" },
+    headers: { Authorization: `Bearer ${env.RESEND_API_KEY}`, "Content-Type": "application/json", "User-Agent": "portfolio-chat" },
     body: JSON.stringify({ from: "Portfólio <onboarding@resend.dev>", to: [env.NOTIFY_EMAIL], reply_to: replyTo, subject, text, html }),
   });
   if (!response.ok) console.error(`Resend respondeu ${response.status}: ${await response.text()}`);

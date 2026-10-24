@@ -49,7 +49,7 @@ Site estático, sem framework, com backend *serverless* no Cloudflare para o cha
 | **Compartilhar** | Ícone no cabeçalho de todas as páginas (no menu ☰ em telas muito estreitas), cartão no contato, botão no rodapé e ação na busca rápida: **QR code** do portfólio no idioma atual, link para copiar, compartilhamento nativo do aparelho e atalhos para WhatsApp, LinkedIn e e-mail. |
 | **Rodapé técnico** | Linha estilo terminal com o modelo de IA do chat; ao clicar em "medir conexão", mostra o ping até o Worker e o data center da Cloudflare que atendeu (`GET /status`). Sem clique, nada é enviado. |
 | **Assistente com IA** | Híbrido: **respostas prontas** locais para perguntas frequentes, **IA generativa com RAG** para o resto e **busca local** como reserva. As respostas aparecem com **efeito de digitação** (até ~2,5 s; clicar completa). Respostas da IA podem ser avaliadas com 👍/👎. Veja [Arquitetura](#arquitetura). |
-| **Currículo em PDF** | Um PDF por idioma, gerado da mesma fonte de textos do site. O botão abre o currículo **num modal para leitura** (a versão HTML da qual o PDF é gerado, legível também no celular) com **"Baixar PDF"** na barra. |
+| **Currículo em PDF** | Gerado pelo próprio site, na hora, a partir de `data/` e `i18n/` (sem arquivos PDF no repositório). O botão abre o currículo **num modal para leitura** (legível também no celular) e **"Baixar PDF"** abre a impressão do navegador já no layout A4 → "Salvar como PDF". Links antigos `/cv/…pdf` são redirecionados. |
 | **Contatos diretos** | E-mail, WhatsApp, LinkedIn e GitHub, cada um com seu cartão em modal; sem formulário nem armazenamento de mensagens pelo portfólio. |
 | **SEO** | Prévia de link (Open Graph/Twitter), `hreflang` para os 8 idiomas, dados estruturados de `Person` (JSON-LD), `sitemap.xml` e `robots.txt`; verificado no Google Search Console. |
 | **Estatísticas** | Contagem opcional, somente após consentimento explícito. O Worker da Cloudflare usa o IP da conexão para estimar o continente e grava no D1 apenas totais diários: acessos por continente e cliques por link (LinkedIn, GitHub, currículo, código e demos dos projetos…); não grava IP, URL, idioma ou identificadores. Os agregados são removidos antes de completar 30 dias. A escolha fica salva no navegador; para alterá-la depois, limpe os dados salvos deste site nas configurações do navegador. |
@@ -115,7 +115,7 @@ O conhecimento da IA é **gerado das próprias traduções do site** (`i18n/`): 
 
 **E-mail:** Resend (resumo semanal agregado)
 
-**Ferramentas:** Git + GitHub · GitHub Pages · GitHub Actions · GitHub CLI · Chrome headless (PDFs e testes) · Lighthouse e Lighthouse CI · Node.js · Python · Shell
+**Ferramentas:** Git + GitHub · GitHub Pages · GitHub Actions · GitHub CLI · Chrome headless (testes) · Lighthouse e Lighthouse CI · Node.js · Python · Shell
 
 **Recursos externos:** Google Fonts (Manrope, DM Mono) · Simple Icons (CC0) · Unsplash · API pública do GitHub · Yahoo Finance · Wikidata e Wikipédia · jsDelivr
 
@@ -127,6 +127,7 @@ O conhecimento da IA é **gerado das próprias traduções do site** (`i18n/`): 
 .
 ├── idiomas.js              # Idiomas do site (fonte única): seletor, traduções, SEO, currículo, geradores e IA
 ├── perfil.js               # Gerado de data/perfil.json para o navegador (não edite)
+├── temas.css               # Cores dos temas, gerado de data/temas.json (não edite)
 ├── index.html              # Página única do portfólio (SEO, Open Graph, JSON-LD)
 ├── 404.html                # "Página não encontrada" personalizada
 ├── manifest.webmanifest · sw.js · icon-*.png  # App instalável e offline (PWA)
@@ -157,9 +158,9 @@ O conhecimento da IA é **gerado das próprias traduções do site** (`i18n/`): 
 ├── chat/                   # Lógica do assistente: texto.js (normalização), regras.js (respostas prontas),
 │                           #   busca.js (busca local na página), ia.js (Worker e avaliações)
 ├── components/             # Web Components e peças comuns a todas as páginas (components.js): <site-logo>, <theme-toggle>, <sound-toggle>, sons/vibração, visualizador do GitHub, cartões de links externos e "Compartilhar"; boot.js (tema antes da pintura); vendor/qrcode.min.js (QR code, MIT)
-├── data/                   # Fonte única: perfil.json (dados pessoais), experiência, formação, projetos e habilidades → site, PDFs e IA
-├── curriculo.html          # Modelo do currículo (A4) usado para gerar os PDFs
-├── gerar-curriculos.sh     # Gera os 8 PDFs com Chrome headless (na publicação; não ficam no repositório)
+├── data/                   # Fonte única: perfil.json (dados pessoais, endereço do Worker), temas.json (cores e nomes dos temas),
+│                           #   experiência (com os sites desenvolvidos), formação, projetos e habilidades → site, currículo e IA
+├── curriculo.html          # Currículo (A4) montado com data/ e i18n/; gera o PDF pela impressão do navegador (?pdf=1 abre direto)
 ├── sitemap.xml · robots.txt
 ├── imagens/                # Todas as imagens: foto, favicons, ícones do app, og-image, logo; logos/ (instituições e habilidades)
 ├── tests/                  # Testes automáticos do chat (96 casos, 8 idiomas)
@@ -215,7 +216,7 @@ npm run dev          # gera o conhecimento e roda o Worker localmente
 
 ## Publicação
 
-**Site:** cada `git push` na `main` roda o workflow `Publicar` (`.github/workflows/publicar.yml`): ele confere as páginas geradas, gera os 8 PDFs do currículo a partir de `data/` e `i18n/` e publica tudo no GitHub Pages em 2–3 minutos. Os PDFs não ficam no repositório. Requer *Settings → Pages → Source: GitHub Actions*.
+**Site:** cada `git push` na `main` publica no GitHub Pages em 1–2 minutos (e roda os testes no GitHub Actions).
 
 **Worker:**
 
@@ -245,8 +246,8 @@ Quando houver uma migração D1 pendente, aplique-a **antes** de publicar o Work
 | Quero… | Faça |
 |---|---|
 | Mudar um texto do site | Edite `i18n/pt.js` (português) e `i18n/<idioma>.js` (demais idiomas) e rode `node scripts/gerar-secoes.mjs` (copia o português para o `index.html`); depois rode `npm run deploy` em `worker/` para a IA aprender. |
+| Mudar as cores de um tema, o tema padrão ou criar um tema | Edite só o `data/temas.json` e rode `node scripts/gerar-secoes.mjs`. |
 | Trocar dados pessoais (nome, contatos, links, foto, SEO) | Edite só o `data/perfil.json` e rode `node scripts/gerar-secoes.mjs`; depois `npm run deploy` em `worker/`. |
-| Atualizar os currículos em PDF | Automático a cada push. Para ver localmente: `./gerar-curriculos.sh` (grava em `_site/`) |
 | Ver as avaliações 👍/👎 do chat | `cd worker && ./ver-avaliacoes.sh` |
 | **Ver o painel de estatísticas** (totais diários de avaliações e visitas) | `cd worker && npm run painel` — veja [Painel de estatísticas](#painel-de-estatísticas) |
 | Ver uso da IA e métricas do Gateway | Painel do Cloudflare → **AI → AI Gateway → default** |

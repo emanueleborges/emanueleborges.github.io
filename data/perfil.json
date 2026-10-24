@@ -1,5 +1,5 @@
 {
-  "_doc": "Dados pessoais do portfólio — fonte única. Troque estes dados e rode node scripts/gerar-secoes.mjs: ele gera o perfil.js (lido pelas páginas, traduções, chat, currículo, demos e service worker), o HTML estático, SEO, sitemap, robots, manifest e as variáveis do worker/wrangler.jsonc; depois rode npm run deploy em worker/. curriculo: prefixo dos PDFs (<curriculo>-<idioma>.pdf). compartilhamento e SEO em inglês (idioma padrão). Empresa atual e escolas vêm de experiencia.json e formacao.json.",
+  "_doc": "Dados pessoais do portfólio — fonte única. Troque estes dados e rode node scripts/gerar-secoes.mjs: ele gera o perfil.js (lido pelas páginas, traduções, chat, currículo, demos e service worker), o HTML estático, SEO, sitemap, robots, manifest e as variáveis do worker/wrangler.jsonc; depois rode npm run deploy em worker/. compartilhamento e SEO em inglês (idioma padrão). Empresa atual e escolas vêm de experiencia.json e formacao.json. servicos: endereço do seu Worker na Cloudflare (chat, contato, vagas, imagens, cotações) e a chave pública do Turnstile do seu domínio.",
   "nome": "Emanuel",
   "sobrenome": "Borges",
   "nomeCivil": "Emanuel Melo Borges",
@@ -9,7 +9,6 @@
   "linkedin": "borgesemmanuell",
   "site": "https://emanueleborges.github.io/",
   "foto": "imagens/emanuel-borges.jpg",
-  "curriculo": "cv/curriculo-emanuel-borges",
   "googleVerificacao": "4hxCxYtZIODldYdYJvIOxejABtc2_GRdp5L6Ug72eEE",
   "cargo": "Senior Full Stack Developer",
   "titulo": "Senior Full Stack Developer · AI & NLP",
@@ -50,5 +49,9 @@
     "pt-BR",
     "es",
     "en"
-  ]
+  ],
+  "servicos": {
+    "worker": "https://emanuel-portfolio-chat.emanuel-portfolio-chat.workers.dev",
+    "turnstile": "0x4AAAAAAFSypCNI4YX6-cMF"
+  }
 }

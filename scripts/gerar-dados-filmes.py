@@ -7,14 +7,18 @@ Uso: python3 scripts/gerar-dados-filmes.py   (só biblioteca padrão; leva ~2 mi
 """
 
 import json
+import json
 import re
 import time
 import urllib.parse
 import urllib.request
 from pathlib import Path
 
-OUT = Path(__file__).resolve().parent.parent / "demos" / "filmes" / "filmes.json"
-HEADERS = {"User-Agent": "EmanuelBorgesPortfolio/1.0 (https://emanueleborges.github.io; demo de recomendação)"}
+ROOT = Path(__file__).resolve().parent.parent
+OUT = ROOT / "demos" / "filmes" / "filmes.json"
+# Identifica o portfólio para a Wikidata/Wikipédia (endereço do site: data/perfil.json).
+SITE = json.loads((ROOT / "data" / "perfil.json").read_text(encoding="utf-8"))["site"].rstrip("/")
+HEADERS = {"User-Agent": f"PortfolioDemo/1.0 ({SITE}; demo de recomendação)"}
 MIN_SITELINKS = 45
 MAX_CHARS = 700
 

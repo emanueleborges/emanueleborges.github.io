@@ -1,31 +1,5 @@
-/* Visual compartilhado das páginas de demo (demos/*) e da página de vagas, com os dois temas do
-   portfólio: "amazonia" (padrão) e "editorial" (escuro, azul). O tema vem de <html data-theme> (script no <head>). */
-:root, :root[data-theme="amazonia"] {
-  color-scheme: dark;
-  --logo-bg1: #0f2e33; --logo-bg2: #050d08; --logo-edge1: #bef264; --logo-edge2: #38bdf8; --logo-letter1: #ffffff; --logo-letter2: #e4fbb5; --logo-letter3: #86efac; --logo-node1: #f7fee7; --logo-node2: #a3e635; --logo-node3: #0ea5e9; --logo-ring: #a3e635;
-  --bg: #050f14; --surface: #0a1a1e; --surface-2: rgba(12, 30, 36, .62); --stage: #040c10;
-  --text: #eef5f5; --muted: #9bb2b4; --line: rgba(186, 230, 240, .13); --line-strong: rgba(186, 230, 240, .24); --grid: rgba(186, 230, 240, .08);
-  --accent: #a3e635; --accent-rgb: 163, 230, 53; --accent-2: #38bdf8; --accent-2-rgb: 56, 189, 248; --accent-text: #bef264; --kicker: #86efac;
-  --on-primary: #04130a; --grad-primary: linear-gradient(115deg, #84cc16 0%, #22c55e 40%, #0ea5e9 100%);
-  --grad-text: linear-gradient(100deg, #d9f99d, #6ee7b7 45%, #7dd3fc);
-  --glow-1: #15803d; --glow-2: #0369a1;
-  --series-1: #3987e5; --series-2: #65a30d;
-  --ok: #86efac; --warn: #fcd34d; --warn-bg: rgba(250, 204, 21, .06); --warn-line: rgba(250, 204, 21, .3); --warn-text: #fde68a;
-  --swatch: linear-gradient(135deg, #a3e635 50%, #38bdf8 50%);
-}
-:root[data-theme="editorial"] {
-  color-scheme: dark;
-  --logo-bg1: #1e293b; --logo-bg2: #0b0f19; --logo-edge1: #7dd3fc; --logo-edge2: #38bdf8; --logo-letter1: #ffffff; --logo-letter2: #e0f2fe; --logo-letter3: #7dd3fc; --logo-node1: #f0f9ff; --logo-node2: #38bdf8; --logo-node3: #0ea5e9; --logo-ring: #38bdf8;
-  --bg: #0b0f19; --surface: #1e293b; --surface-2: rgba(30, 41, 59, .62); --stage: #070a12;
-  --text: #e2e8f0; --muted: #94a3b8; --line: rgba(148, 163, 184, .14); --line-strong: rgba(148, 163, 184, .26); --grid: rgba(148, 163, 184, .08);
-  --accent: #38bdf8; --accent-rgb: 56, 189, 248; --accent-2: #22d3ee; --accent-2-rgb: 34, 211, 238; --accent-text: #7dd3fc; --kicker: #7dd3fc;
-  --on-primary: #0b0f19; --grad-primary: linear-gradient(115deg, #7dd3fc 0%, #38bdf8 50%, #0ea5e9 100%);
-  --grad-text: linear-gradient(100deg, #e0f2fe, #7dd3fc 50%, #38bdf8);
-  --glow-1: #1e3a5f; --glow-2: #0369a1;
-  --series-1: #38bdf8; --series-2: #fb923c;
-  --ok: #5eead4; --warn: #fcd34d; --warn-bg: rgba(250, 204, 21, .06); --warn-line: rgba(250, 204, 21, .3); --warn-text: #fde68a;
-  --swatch: linear-gradient(135deg, #1e293b 50%, #38bdf8 50%);
-}
+/* Visual compartilhado das páginas de demo (demos/*), da página de vagas e do "como construí". Cores dos
+   temas: data/temas.json → temas.css (carregado antes deste arquivo); o tema vem de <html data-theme>. */
 * { box-sizing: border-box; }
 body { margin: 0; background: var(--bg); color: var(--text); font-family: Manrope, sans-serif; line-height: 1.6; overflow-x: clip; -webkit-font-smoothing: antialiased; }
 a { color: inherit; }
@@ -39,7 +13,7 @@ header { display: flex; align-items: center; justify-content: space-between; gap
 .brand:hover .brand-logo { transform: rotate(-8deg) scale(1.08); filter: drop-shadow(0 0 14px rgba(var(--accent-rgb),.55)); }
 select { appearance: none; padding: 8px 14px; border: 1px solid var(--line); border-radius: 999px; background: var(--surface-2); color: var(--text); font: 600 12px Manrope, sans-serif; cursor: pointer; }
 select:focus-visible, button:focus-visible, a:focus-visible, input:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 2px; }
-.kicker { margin: 48px 0 0; font: 500 12px "DM Mono", monospace; letter-spacing: .14em; color: var(--kicker); }
+.kicker { margin: 48px 0 0; font: 500 12px "DM Mono", monospace; letter-spacing: .14em; color: var(--kicker-alt); }
 h1 { margin: 10px 0 0; font-size: clamp(34px, 6vw, 56px); line-height: 1.05; letter-spacing: -.05em; }
 h1 span { background: var(--grad-text); -webkit-background-clip: text; background-clip: text; color: transparent; }
 .lead { max-width: 680px; color: var(--muted); font-size: 15px; }

@@ -22,18 +22,6 @@ export const Demo = (() => {
   let texts = {};
   let lang = "en";
 
-  const detectLang = () => {
-    const fromUrl = new URLSearchParams(location.search).get("lang");
-    if (htmlLang[fromUrl]) return fromUrl;
-    try {
-      const stored = localStorage.getItem("lang");
-      if (htmlLang[stored]) return stored;
-    } catch {
-      /* navegação privada */
-    }
-    return "en";
-  };
-
   const { nome, nomeCompleto } = globalThis.PERFIL;
   const t = (key, vars = {}) =>
     (texts[lang]?.[key] ?? texts.en[key] ?? key).replace(/\{(\w+)\}/g, (_, name) => ({ nome, nomeCompleto, ...vars })[name] ?? "");
@@ -51,7 +39,7 @@ export const Demo = (() => {
 
   const setup = (pageTexts, render) => {
     texts = pageTexts;
-    lang = detectLang();
+    lang = window.IDIOMA_INICIAL; // ?lang=, o salvo ou o padrão (components/boot.js)
     applyTexts();
     document.dispatchEvent(new CustomEvent("languagechange"));
     document.querySelector("[data-lang]")?.addEventListener("change", (event) => {

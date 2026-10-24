@@ -4,9 +4,10 @@
 // - Outros domínios (IA, GitHub, fontes, estatísticas) não passam por aqui.
 importScripts("perfil.js"); // dados pessoais: a foto vem de lá
 
-const CACHE = "portfolio-v8";
+const CACHE = "portfolio-v9";
 const PRECACHE = [
   "./",
+  "temas.css",
   "styles.css",
   "idiomas.js",
   "perfil.js",

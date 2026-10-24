@@ -290,5 +290,7 @@ window.I18N.pt = ((P) => ({
   "share.footer": "COMPARTILHAR ⇪",
   "search.actShare": "Compartilhar portfólio (QR code e link)",
   "demo.download": "BAIXAR PDF ↓",
-  "demo.cvTitle": "Currículo"
+  "demo.cvTitle": "Currículo",
+  "sistema.compras": `Portal de compras e licitações da Prefeitura de Manaus, desenvolvido por ${P.nome} na SEMEF.`,
+  "sistema.contratos": `Sistema de gestão de contratos da Prefeitura de Manaus, desenvolvido por ${P.nome} na SEMEF / SEMAD.`
 }))(globalThis.PERFIL);

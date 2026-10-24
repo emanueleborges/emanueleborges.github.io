@@ -3,7 +3,7 @@
 import { Demo } from "../demos.js";
 import { LSTM } from "./lstm.js";
 
-const PRICES_API = "https://emanuel-portfolio-chat.emanuel-portfolio-chat.workers.dev/prices";
+const PRICES_API = `${globalThis.PERFIL.servicos.worker}/prices`; // data/perfil.json
 const HISTORY_DAYS = 30;
 
 const T = {

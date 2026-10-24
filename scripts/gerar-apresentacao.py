@@ -1,4 +1,4 @@
-# Gera os áudios da apresentação falada do "Sobre mim" (botão ▶ na foto) com a voz do Emanuel,
+# Gera os áudios da apresentação falada do "Sobre mim" (botão ▶ na foto) com a voz da pessoa do portfólio,
 # clonada pelo Chatterbox Multilingual (modelo aberto, licença MIT) na demo gratuita do Hugging Face.
 # Os arquivos ficam em audio/apresentacao/ e são servidos pelo GitHub Pages: o visitante nunca chama
 # a IA, então o custo por acesso é zero.

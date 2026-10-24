@@ -1,4 +1,4 @@
-// Demos, páginas internas (vaga/, como-construi/) e o currículo em PDF abertos num modal, sem sair do portfólio: "Ver demo" (demos/<nome>/) carrega a página da demo
+// Demos, páginas internas (vaga/, como-construi/) e o currículo abertos num modal, sem sair do portfólio: "Ver demo" (demos/<nome>/) carrega a página da demo
 // num iframe com ?embed=1 (ela esconde o próprio cabeçalho — demos/demos.js), no idioma e tema atuais.
 // Ctrl/⌘/Shift+clique ou clique do meio continuam abrindo a página inteira; "nova aba" também.
 // Ao fechar, o iframe volta para about:blank (desliga a câmera da demo facial, por exemplo).
@@ -24,20 +24,21 @@ if (dialog?.showModal) {
     if (dialog.open) dialog.close();
   };
 
-  // Currículo em PDF: lê a versão HTML (curriculo.html, da qual o PDF é gerado — funciona também no
-  // celular, onde o navegador não mostra PDF dentro da página) e o botão da barra baixa o PDF.
-  const openPdf = (link) => {
+  // Currículo: curriculo.html, montado com os dados de data/. O PDF é gerado na hora pela própria página
+  // (impressão do navegador → "Salvar como PDF"), no botão da barra; sem arquivos PDF no site.
+  const openCv = (link) => {
     opener = link;
-    const pdf = new URL(link.getAttribute("href"), location.href);
-    const lang = pdf.pathname.match(/-([a-z]{2})\.pdf$/)?.[1] ?? currentLang;
-    const page = new URL("curriculo.html", location.href);
-    page.searchParams.set("lang", lang);
+    const page = new URL(link.getAttribute("href"), location.href);
+    page.searchParams.set("lang", page.searchParams.get("lang") ?? currentLang);
+    page.searchParams.delete("pdf");
+    const standalone = new URL(page);
+    standalone.searchParams.set("pdf", "1");
     page.searchParams.set("embed", "1");
-    newTab.href = pdf.href;
-    newTab.setAttribute("download", "");
+    newTab.href = standalone.href; // Ctrl/⌘+clique: abre a página avulsa já na impressão
+    newTab.dataset.print = "";
     newTab.removeAttribute("target");
     newTab.textContent = t("demo.download");
-    title.textContent = `~${pdf.pathname} · ${t("demo.cvTitle")}`;
+    title.textContent = `~${page.pathname} · ${t("demo.cvTitle")}`;
     frame.title = t("demo.cvTitle");
     dialog.classList.remove("is-loaded");
     frame.src = page.href;
@@ -47,12 +48,12 @@ if (dialog?.showModal) {
 
   const open = (link) => {
     opener = link;
-    newTab.removeAttribute("download");
+    delete newTab.dataset.print;
     newTab.target = "_blank";
     newTab.innerHTML = t("demo.newTab");
     const url = new URL(link.getAttribute("href"), location.href);
     url.searchParams.set("lang", currentLang);
-    url.searchParams.set("theme", document.documentElement.dataset.theme || "amazonia");
+    url.searchParams.set("theme", document.documentElement.dataset.theme || window.TEMAS.padrao);
     newTab.href = url.href;
     url.searchParams.set("embed", "1");
     const name = (link.closest(".project-card")?.querySelector("h3") ?? link).textContent.replace(/[↗→↘▶]/g, "").replace(/\s+/g, " ").trim();
@@ -68,7 +69,12 @@ if (dialog?.showModal) {
   dialog.addEventListener("cancel", cleanup); // Esc
   dialog.addEventListener("close", cleanup);
   dialog.querySelector("[data-demo-modal-close]").addEventListener("click", close);
-  newTab.addEventListener("click", () => newTab.hasAttribute("download") || close());
+  newTab.addEventListener("click", (event) => {
+    if (!("print" in newTab.dataset)) return close();
+    if (event.metaKey || event.ctrlKey || event.shiftKey) return;
+    event.preventDefault();
+    frame.contentWindow.print(); // imprime só o currículo do iframe (mesma origem)
+  });
   // Clique no fundo escurecido fecha.
   dialog.addEventListener("click", (event) => event.target === dialog && close());
   document.addEventListener("languagechange", () => dialog.querySelector("[data-demo-modal-close]").setAttribute("aria-label", t("demo.close")));
@@ -80,12 +86,12 @@ if (dialog?.showModal) {
     open(link);
   });
 
-  // Currículo (cv/*.pdf), em qualquer botão da página e na busca rápida.
+  // Currículo, em qualquer botão da página, no chat e na busca rápida.
   document.addEventListener("click", (event) => {
-    const link = event.target.closest?.("a[href$='.pdf']");
+    const link = event.target.closest?.("a[href^='curriculo.html']");
     if (!link || link.closest("[data-demo-modal]") || event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
     if (new URL(link.href).origin !== location.origin) return;
     event.preventDefault();
-    openPdf(link);
+    openCv(link);
   });
 }

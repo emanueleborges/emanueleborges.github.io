@@ -82,12 +82,20 @@
         .projects, .skills { grid-template-columns: 1fr; }
         .skills dt { margin-top: 6px; }
       }
-      /* Dentro do modal do portfólio (?embed=1). */
+      /* "Baixar PDF": a impressão do navegador gera o PDF ("Salvar como PDF") a partir desta mesma página. */
+      .cv-actions { max-width: 182mm; margin: 0 auto 12px; text-align: right; }
+      .cv-actions button { padding: 9px 16px; border: 0; border-radius: 999px; background: var(--accent); color: #fff; font: 700 9.5pt "Manrope", sans-serif; cursor: pointer; }
+      .cv-actions button:focus-visible { outline: 3px solid #d9ccff; outline-offset: 2px; }
+      @media print { .cv-actions { display: none; } }
+      @media screen and (max-width: 640px) { .cv-actions { margin: 0; padding: 12px 18px 0; } }
+      /* Dentro do modal do portfólio (?embed=1): o botão fica na barra do modal. */
+      .is-embedded .cv-actions { display: none; }
       .is-embedded body { padding: 20px 12px; }
       @media screen and (max-width: 640px) { .is-embedded body { padding: 0; } }
     </style>
   </head>
   <body>
+    <p class="cv-actions"><button type="button" data-print></button></p>
     <main id="cv"></main>
     <script>
       const P = window.PERFIL; // dados pessoais (perfil.js)
@@ -101,7 +109,15 @@
       const htmlLang = Object.fromEntries(Object.entries(globalThis.IDIOMAS).map(([code, idioma]) => [code, idioma.html])); // idiomas.js
 
       document.documentElement.lang = htmlLang[lang];
+      // O título vira o nome sugerido do arquivo ao salvar como PDF.
       document.title = plain("cv.pageTitle");
+
+      // PDF gerado pela própria página: o botão (ou ?pdf=1, usado pelos links "Baixar currículo") abre a
+      // impressão, já com o layout A4 (@page) — "Salvar como PDF" no computador e no celular.
+      const printButton = document.querySelector("[data-print]");
+      printButton.textContent = plain("demo.download");
+      printButton.addEventListener("click", () => print());
+      if (params.has("pdf")) addEventListener("load", () => document.fonts.ready.then(() => print()));
 
       // Experiência, projetos, habilidades e formação: data/ (bloco gerado acima, window.CURRICULO).
       const { jobs, projects, skills, education } = window.CURRICULO;

@@ -1,6 +1,6 @@
 /* ---------- Apresentação falada (botão ▶ na foto do "Sobre mim") ---------- */
 
-// Áudios gerados uma vez por scripts/gerar-apresentacao.py (voz do Emanuel clonada por IA) e servidos
+// Áudios gerados uma vez por scripts/gerar-apresentacao.py (voz da pessoa do portfólio, clonada por IA) e servidos
 // como arquivos estáticos: tocar não chama nenhuma IA. Fala um resumo do perfil, uma faixa por frase, com legenda.
 const BASE = new URL("audio/apresentacao/", document.baseURI);
 const button = document.querySelector("[data-voice]");

@@ -6,8 +6,6 @@ const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)
 // Os textos vêm de i18n/<idioma>.js (dados em window.I18N, também lidos pelo currículo e pelos geradores).
 const translations = window.I18N || {};
 const htmlLang = Object.fromEntries(Object.entries(globalThis.IDIOMAS).map(([code, idioma]) => [code, idioma.html])); // idiomas.js
-const supportedLangs = Object.keys(htmlLang);
-const defaultLang = "en";
 let currentLang = "pt";
 
 const t = (key, vars = {}) => {
@@ -29,14 +27,6 @@ const i18nTargets = [
   elements: [...document.querySelectorAll(`[${attr}]`)].map((el) => ({ el, original: read(el) })),
 }));
 
-const readStoredLang = () => {
-  try {
-    return localStorage.getItem("lang");
-  } catch {
-    return null;
-  }
-};
-
 const storeLang = (lang) => {
   try {
     localStorage.setItem("lang", lang);
@@ -45,13 +35,6 @@ const storeLang = (lang) => {
   }
 };
 
-const detectLang = () => {
-  const fromUrl = new URLSearchParams(location.search).get("lang");
-  if (supportedLangs.includes(fromUrl)) return fromUrl;
-  const stored = readStoredLang();
-  if (supportedLangs.includes(stored)) return stored;
-  return defaultLang;
-};
 
 // Idioma escolhido por último: se o visitante trocar de novo antes do download, vale o mais recente.
 let requestedLang = null;
@@ -219,7 +202,7 @@ const loadRepoData = async () => {
 document.addEventListener("languagechange", renderRepoMeta);
 if (location.protocol.startsWith("http")) loadRepoData().catch(() => {});
 
-applyLanguage(detectLang());
+applyLanguage(window.IDIOMA_INICIAL); // ?lang=, o salvo ou o padrão (components/boot.js)
 
 /* ---------- Guia rápido do portfólio ---------- */
 

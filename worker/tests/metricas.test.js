@@ -1,5 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
+import "../../perfil.js"; // globalThis.PERFIL (endereço do Worker), como na página
 import { PortfolioApi } from "../../api.js";
 import { handleClick, isClickTarget } from "../src/rotas/metricas.js";
 
@@ -102,7 +103,7 @@ test("client sends only the link target, without credentials or referrer", async
     globalThis.fetch = originalFetch;
   }
 
-  assert.equal(captured[0], "https://emanuel-portfolio-chat.emanuel-portfolio-chat.workers.dev/click");
+  assert.equal(captured[0], `${globalThis.PERFIL.servicos.worker}/click`);
   assert.deepEqual(captured[1], {
     method: "POST",
     headers: { "Content-Type": "text/plain" },

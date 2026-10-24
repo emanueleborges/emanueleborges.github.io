@@ -7,6 +7,3 @@ scripts/lstm/models/
 scripts/lstm/data/
 worker/painel.html
 
-# Gerados na publicação (gerar-curriculos.sh / .github/workflows/publicar.yml)
-_site/
-cv/
