@@ -117,6 +117,7 @@ Legenda: ✅ concluída · ⏳ pendente · 💡 ideia
 - ✅ **T100** Base de conhecimento da IA revista: informações desatualizadas corrigidas (formulário de contato, PDFs), projeto p11 incluído, trechos de cargo atual, setor público e "o que fazer no site", métricas verificáveis e links de código/demo por projeto, sistemas da Prefeitura; nada escrito à mão no gerador (37 trechos) — RF-05.4, RF-17
 - ✅ **T101** Workers Logs (só mensagens do Worker) e métricas técnicas no Analytics Engine (rota, resultado, tempo; RAG caindo para o perfil completo), com seção "IA e rotas" no painel — RNF-03, RNF-05
 - ✅ **T102** Currículo em PDF de verdade: `GET /cv` com Browser Run, cache no D1 (migração 0009) e a impressão como reserva; botões do modal, do currículo e da vaga apontam para `PERFIL.cvPdf` — RF-04
+- ✅ **T104** Pergunta por voz no chat: `chat/voz.js` + `POST /transcribe` (Whisper turbo), textos nos 8 idiomas, testes no Worker e teste de ponta a ponta (gravação real → Whisper) — RF-05.12
 
 ---
 
@@ -124,7 +125,7 @@ Legenda: ✅ concluída · ⏳ pendente · 💡 ideia
 
 | ID | Tarefa | Depende de | Requisito |
 |---|---|---|---|
-| ⏳ **T103** | Aplicar a migração `0009` no D1 remoto e publicar o Worker (PDF do currículo, logs e métricas); criar um token com *Account Analytics: Read* para o painel | Emanuel | RF-04, RNF-03 |
+| ⏳ **T103** | Ativar o Analytics Engine no painel da Cloudflare e publicar o Worker (PDF do currículo, voz, logs e métricas; a migração `0009` já está aplicada); criar um token com *Account Analytics: Read* para o painel | Emanuel | RF-04, RNF-03 |
 | ⏳ **T98** | Atualizar a prévia do link no LinkedIn (Post Inspector), pois a imagem de compartilhamento mudou de endereço | Emanuel | RF-09.1 |
 | ⏳ **T99** | Decidir se os logos das instituições vão para `data/imagens/logos/` (ícones de tecnologias ficam em `imagens/`) | Emanuel | RF-17 |
 | ⏳ **T33** | Números de impacto nas experiências (ex.: tempo de deploy, % de bugs) | Dados do Emanuel | RF-01 |

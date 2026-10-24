@@ -88,6 +88,7 @@ O site deve apresentar: topo (nome, cargo, resumo, localização, anos de experi
 - RF-05.9 O link `/#chat` abre o site com o assistente aberto.
 - RF-05.10 Respostas da IA podem ser avaliadas com 👍/👎; somente totais diários por tipo de avaliação são guardados por até 30 dias, sem pergunta, resposta, idioma ou identificadores.
 - RF-05.11 As respostas aparecem com efeito de digitação (ver RF-16.6).
+- RF-05.12 **Pergunta por voz:** o botão 🎤 grava a pergunta (até 20 s); o texto transcrito aparece no campo para o visitante revisar e enviar. Só aparece com a IA ligada e num navegador que grava áudio; se a permissão for negada, não houver fala ou a cota acabar, o chat avisa e o visitante digita. O áudio só serve para gerar o texto e não é guardado.
 
 ### RF-07 — Contatos diretos
 E-mail, WhatsApp, LinkedIn e GitHub visíveis na seção de contato e no assistente. Não há formulário; as mensagens não são enviadas nem armazenadas pelo site. Cada contato abre um cartão em modal (RF-16.3).

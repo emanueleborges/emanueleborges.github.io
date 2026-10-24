@@ -88,6 +88,7 @@ The site shows: hero (name, role, summary, location, years of experience), About
 - FR-05.9 The `/#chat` link opens the site with the assistant open.
 - FR-05.10 AI answers can be rated 👍/👎; only daily totals per rating type are kept for up to 30 days, with no question, answer, language or identifiers.
 - FR-05.11 Answers appear with a typing effect (see FR-16.6).
+- FR-05.12 **Voice question:** the 🎤 button records the question (up to 20 s); the transcribed text appears in the input for the visitor to review and send. Only shown with the AI on and in a browser that records audio; if permission is denied, there's no speech or the quota is over, the chat says so and the visitor types. The audio is only used to produce the text and is not stored.
 
 ### FR-07 — Direct contacts
 Email, WhatsApp, LinkedIn and GitHub in the contact section and the assistant. There is no form; messages are neither sent nor stored by the site. Each contact opens a modal card (FR-16.3).

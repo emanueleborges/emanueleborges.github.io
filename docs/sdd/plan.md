@@ -104,7 +104,7 @@ Os dados são scripts clássicos (e não JSON ou módulos) para rodar antes da p
 | `index.html` | Página única; blocos e textos em português gerados (§2); marcações `data-i18n*` e `data-perfil*`. |
 | `script.js` | Aplica o idioma (`t()` sobre `window.I18N`), seletor, menu, filtros, links do currículo por idioma, dados dos repositórios (GitHub), partículas, animações. |
 | `api.js` | `PortfolioApi`: endereço do Worker e chave do Turnstile vindos de `PERFIL.servicos`; Turnstile sob demanda; `post`, `status`, contagem de visitas/cliques. |
-| `chat.js` · `chat/` | Assistente: `texto.js` (normalização), `regras.js` (respostas prontas), `busca.js` (busca local), `ia.js` (Worker; devolve `{ answer }` ou `{ error: "quota" | "unavailable" }`). |
+| `chat.js` · `chat/` | Assistente: `texto.js` (normalização), `regras.js` (respostas prontas), `busca.js` (busca local), `ia.js` (Worker; devolve `{ answer }` ou `{ error: "quota" | "unavailable" }`; `transcribe()` para a voz), `voz.js` (gravação pelo microfone com MediaRecorder, até 20 s). |
 | `busca-rapida.js` | Busca rápida (Spotlight); filtra cards de projeto; envia perguntas ao chat. |
 | `pipeline-grafo.js` | Experiência como esteira e grafo habilidades × projetos. |
 | `sistema.js` | Rodapé técnico: modelo, estado da IA (evento `aistate` do chat ou `GET /status`), ping e data center só ao clicar. |
@@ -170,6 +170,7 @@ Sons por Web Audio e vibração; modais para páginas do site; visualizador do G
 | Rota | Função | Proteções | Grava |
 |---|---|---|---|
 | `POST /` | Chat com IA (RAG) | origem, 10/min/IP, Turnstile, validação | nada |
+| `POST /transcribe` | Pergunta falada → texto (Whisper turbo; idioma do site como dica) | origem, 6/min/IP, Turnstile, áudio ≤ 1,5 MB em base64 (WebM/Opus ou MP4/AAC) | nada |
 | `POST /feedback` | Avaliação 👍/👎 | origem, 20/min/IP, Turnstile | total diário por tipo |
 | `POST /match` | "Sua vaga combina?" | origem, 3/min/IP, Turnstile, 80–8.000 caracteres | nada |
 | `POST /image` | Gerador de imagens (FLUX.1) | origem, 2/min/IP, Turnstile, filtro de termos, Llama Guard, 2/dia por visitante, teto global de 40/dia | total do dia; HMAC diário do IP para a cota (apagado no dia seguinte) |
@@ -198,7 +199,7 @@ Sons por Web Audio e vibração; modais para páginas do site; visualizador do G
 | `AI` | Workers AI |
 | `VECTORIZE` | Índice `portfolio-profile` (1024 dimensões, cosseno) |
 | `DB` | D1 `portfolio-contact` |
-| `CHAT_LIMITER` · `FEEDBACK_LIMITER` · `MATCH_LIMITER` · `PRICES_LIMITER` · `VISIT_LIMITER` · `CLICK_LIMITER` · `IMAGE_LIMITER` | 10 · 20 · 3 · 30 · 20 · 30 · 2 pedidos/60 s |
+| `CHAT_LIMITER` · `FEEDBACK_LIMITER` · `MATCH_LIMITER` · `PRICES_LIMITER` · `VISIT_LIMITER` · `CLICK_LIMITER` · `IMAGE_LIMITER` | 10 · 20 · 3 · 30 · 20 · 30 · 2 pedidos/60 s; `CV_LIMITER` 5 e `TRANSCRIBE_LIMITER` 6 |
 | `ALLOWED_ORIGIN` · `NOTIFY_EMAIL` | **gerados** a partir do `data/perfil.json` |
 | `TURNSTILE_SECRET` · `RESEND_API_KEY` | *secrets* (fora do repositório) |
 | `METRICAS` | Workers Analytics Engine, dataset `portfolio_metricas`: uma métrica por resposta (rota, resultado, ms), registrada no roteador; lida pelo `npm run painel` (token com *Account Analytics: Read*) |
@@ -290,4 +291,5 @@ Não há tabelas de mensagens, perguntas ou respostas. Todas as tabelas do D1 s�
 | ADR-42 | Projetos em destaque (4) + "Mais projetos" compactos | 12 cards iguais | Curadoria: o recrutador vê primeiro o que mais importa. |
 | ADR-43 | Estado da IA guardado na memória da instância do Worker | KV/D1 | Custo e gravações zero; é uma indicação (cada data center tem a sua), e o chat informa o estado real a cada pergunta. |
 | ADR-45 | PDF do currículo pelo **Browser Run** com cache no D1 e a impressão do navegador como reserva | Só a impressão (ADR-39); PDFs no repositório; biblioteca de PDF em JS | Arquivo de verdade com um clique, a partir do mesmo modelo (`curriculo.html`); o cache por versão mantém o uso bem abaixo dos 10 min/dia grátis. As dependências de download do Chrome do puppeteer (com alerta no `npm audit`) não entram no Worker publicado. |
+| ADR-46 | Pergunta por voz com **Whisper no Worker** (texto revisado pelo visitante antes de enviar) | Web Speech API do navegador | Funciona em todos os navegadores e mantém a promessa de privacidade (só a Cloudflare processa, nada guardado); a Web Speech do Chrome envia o áudio ao Google e não existe no Firefox. Usa a mesma cota grátis do chat. |
 | ADR-44 | Workers Logs só com as mensagens do Worker + métricas técnicas no Analytics Engine, registradas num ponto só (roteador) | Logs completos dos pedidos; métricas no D1; analytics de terceiros | Visibilidade de erros, cota e tempo de resposta sem guardar dados do visitante; gratuito; sem gravações no D1. |

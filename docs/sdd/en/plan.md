@@ -104,7 +104,7 @@ Data are classic scripts (not JSON or modules) so they run before paint, in `fil
 | `index.html` | Single page; generated blocks and Portuguese text (§2); `data-i18n*` and `data-perfil*` markup. |
 | `script.js` | Applies the language (`t()` over `window.I18N`), selector, menu, filters, résumé links per language, repository data (GitHub), particles, animations. |
 | `api.js` | `PortfolioApi`: Worker URL and Turnstile key from `PERFIL.servicos`; Turnstile on demand; `post`, `status`, visit/click counting. |
-| `chat.js` · `chat/` | Assistant: `texto.js` (normalization), `regras.js` (ready-made answers), `busca.js` (local search), `ia.js` (Worker; returns `{ answer }` or `{ error: "quota" | "unavailable" }`). |
+| `chat.js` · `chat/` | Assistant: `texto.js` (normalization), `regras.js` (ready-made answers), `busca.js` (local search), `ia.js` (Worker; returns `{ answer }` or `{ error: "quota" | "unavailable" }`; `transcribe()` for voice), `voz.js` (microphone recording with MediaRecorder, up to 20 s). |
 | `busca-rapida.js` | Quick search (Spotlight); filters project cards; sends questions to the chat. |
 | `pipeline-grafo.js` | Experience pipeline and skills × projects graph. |
 | `sistema.js` | Technical footer: model, AI state (chat `aistate` event or `GET /status`), ping and data center only on click. |
@@ -170,6 +170,7 @@ Web Audio sounds and haptics; modals for site pages; GitHub viewer (listing from
 | Route | Purpose | Protections | Stores |
 |---|---|---|---|
 | `POST /` | AI chat (RAG) | origin, 10/min/IP, Turnstile, validation | nothing |
+| `POST /transcribe` | Spoken question → text (Whisper turbo; site language as hint) | origin, 6/min/IP, Turnstile, audio ≤ 1.5 MB base64 (WebM/Opus or MP4/AAC) | nothing |
 | `POST /feedback` | 👍/👎 rating | origin, 20/min/IP, Turnstile | daily total per type |
 | `POST /match` | "Does your role match?" | origin, 3/min/IP, Turnstile, 80–8,000 chars | nothing |
 | `POST /image` | Image generator (FLUX.1) | origin, 2/min/IP, Turnstile, term filter, Llama Guard, 2/day per visitor, global cap 40/day | day total; daily HMAC of the IP for the quota (deleted the next day) |
@@ -198,7 +199,7 @@ Web Audio sounds and haptics; modals for site pages; GitHub viewer (listing from
 | `AI` | Workers AI |
 | `VECTORIZE` | Index `portfolio-profile` (1024 dimensions, cosine) |
 | `DB` | D1 `portfolio-contact` |
-| `CHAT_LIMITER` · `FEEDBACK_LIMITER` · `MATCH_LIMITER` · `PRICES_LIMITER` · `VISIT_LIMITER` · `CLICK_LIMITER` · `IMAGE_LIMITER` | 10 · 20 · 3 · 30 · 20 · 30 · 2 requests/60 s |
+| `CHAT_LIMITER` · `FEEDBACK_LIMITER` · `MATCH_LIMITER` · `PRICES_LIMITER` · `VISIT_LIMITER` · `CLICK_LIMITER` · `IMAGE_LIMITER` | 10 · 20 · 3 · 30 · 20 · 30 · 2 requests/60 s; `CV_LIMITER` 5 and `TRANSCRIBE_LIMITER` 6 |
 | `ALLOWED_ORIGIN` · `NOTIFY_EMAIL` | **generated** from `data/perfil.json` |
 | `TURNSTILE_SECRET` · `RESEND_API_KEY` | secrets (outside the repo) |
 | `METRICAS` | Workers Analytics Engine, dataset `portfolio_metricas`: one metric per response (route, result, ms), recorded in the router; read by `npm run painel` (token with *Account Analytics: Read*) |
@@ -290,4 +291,5 @@ There are no tables for messages, questions or answers. Every D1 table holds **d
 | ADR-42 | Featured projects (4) + compact "More projects" | 12 equal cards | Curation: recruiters see what matters most first. |
 | ADR-43 | AI state kept in the Worker instance's memory | KV/D1 | No cost or writes; it is an indication (each data center has its own), and the chat reports the real state on each question. |
 | ADR-45 | Résumé PDF via **Browser Run** with a D1 cache and the browser's print as fallback | Print only (ADR-39); PDFs in the repo; JS PDF library | A real file in one click, from the same template (`curriculo.html`); the per-version cache keeps usage far below the free 10 min/day. Puppeteer's Chrome-download dependencies (flagged by `npm audit`) are not part of the deployed Worker. |
+| ADR-46 | Voice questions with **Whisper in the Worker** (text reviewed by the visitor before sending) | Browser Web Speech API | Works in every browser and keeps the privacy promise (only Cloudflare processes it, nothing stored); Chrome's Web Speech sends audio to Google and Firefox doesn't support it. Uses the same free quota as the chat. |
 | ADR-44 | Workers Logs with only the Worker's messages + technical metrics in Analytics Engine, recorded in one place (router) | Full request logs; metrics in D1; third-party analytics | Visibility into errors, quota and response time without storing visitor data; free; no D1 writes. |

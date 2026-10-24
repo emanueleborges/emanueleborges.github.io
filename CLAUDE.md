@@ -59,7 +59,7 @@ Data are classic scripts (not JSON/modules) so they run before paint, in `file:/
 
 ## Chat pipeline
 
-`chat.js` (UI) → `chat/regras.js` (ready-made intents; `LOCAL_ONLY` topics never call the AI) → `chat/ia.js` → Worker `POST /` (Turnstile → BGE-M3 embedding → Vectorize top 6 → Qwen3 with a fixed profile summary) → on any failure, `chat/busca.js` local TF-IDF-style search over the page. AI errors come back as `{ error: "quota" | "unavailable" }` (3036 = daily free quota); the chat shows a notice, answers locally and dispatches `aistate`, which `sistema.js` shows in the footer (`GET /status` also returns `ai`).
+`chat.js` (UI) → `chat/regras.js` (ready-made intents; `LOCAL_ONLY` topics never call the AI) → `chat/ia.js` → Worker `POST /` (Turnstile → BGE-M3 embedding → Vectorize top 6 → Qwen3 with a fixed profile summary) → on any failure, `chat/busca.js` local TF-IDF-style search over the page. Voice questions: `chat/voz.js` records with MediaRecorder (≤ 20 s) → `chat/ia.js` `transcribe()` → Worker `POST /transcribe` (Whisper turbo, site language as hint) → text goes into the input for the visitor to review. AI errors come back as `{ error: "quota" | "unavailable" }` (3036 = daily free quota); the chat shows a notice, answers locally and dispatches `aistate`, which `sistema.js` shows in the footer (`GET /status` also returns `ai`).
 
 ## Worker
 
