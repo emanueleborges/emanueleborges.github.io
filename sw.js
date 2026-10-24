@@ -4,7 +4,7 @@
 // - Outros domínios (IA, GitHub, fontes, estatísticas) não passam por aqui.
 importScripts("perfil.js"); // dados pessoais: a foto vem de lá
 
-const CACHE = "portfolio-v9";
+const CACHE = "portfolio-v10";
 const PRECACHE = [
   "./",
   "temas.css",
@@ -20,6 +20,7 @@ const PRECACHE = [
   "chat/regras.js",
   "chat/busca.js",
   "chat/ia.js",
+  "chat/voz.js",
   "chat.js",
   "busca-rapida.js",
   "sistema.js",

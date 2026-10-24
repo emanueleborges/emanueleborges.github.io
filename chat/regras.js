@@ -1,4 +1,4 @@
-// Assistente (2/4) — regras: sinônimos, assuntos, intenções e respostas prontas.
+// Assistente (2/5) — regras: sinônimos, assuntos, intenções e respostas prontas.
 // Os textos das respostas ficam no i18n/ (chat.faq.<chave>); aqui só o que dispara cada uma.
 
 import { fold, normalize } from "./texto.js";

@@ -83,6 +83,11 @@
       "name": "CV_LIMITER",
       "namespace_id": "1009",
       "simple": { "limit": 5, "period": 60 }
+    },
+    {
+      "name": "TRANSCRIBE_LIMITER",
+      "namespace_id": "1010",
+      "simple": { "limit": 6, "period": 60 }
     }
   ],
   // Retenção verificada a cada hora; resumo agregado semanal na segunda às 12:00 UTC.

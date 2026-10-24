@@ -4,6 +4,7 @@
 //   POST /match    → "Essa vaga combina?": requisitos da vaga × perfil, com evidências e nota
 //   POST /visit    → contagem agregada por continente, somente após consentimento
 //   POST /click    → total diário de cliques por link (LinkedIn, GitHub…), somente após consentimento
+//   POST /transcribe → pergunta falada no chat: áudio → texto (Whisper), sem guardar o áudio
 //   POST /image    → demo do gerador de imagens (FLUX.1 schnell), com moderação e teto diário
 //   GET  /prices   → preços das ações da demo do LSTM (Yahoo Finance)
 //   GET  /cv       → currículo em PDF (Browser Run, com cache no D1; sem ele, a versão de impressão)
@@ -20,6 +21,7 @@ import { handleVisit } from "./rotas/visitas.js";
 import { handleClick } from "./rotas/metricas.js";
 import { handleImage } from "./rotas/imagem.js";
 import { handleCv } from "./rotas/curriculo.js";
+import { handleTranscribe } from "./rotas/transcricao.js";
 import { purgeOldData, sendWeeklySummary } from "./agendado.js";
 
 // Rotas POST: caminho → função (payload, ip, env, origin, ctx, request).
@@ -29,6 +31,7 @@ const POST_ROUTES = {
   "/match": handleMatch,
   "/click": handleClick,
   "/image": handleImage,
+  "/transcribe": handleTranscribe,
   "/visit": (_payload, _ip, env, origin, _ctx, request) => handleVisit(request, env, origin),
 };
 

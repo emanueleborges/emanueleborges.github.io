@@ -1,4 +1,4 @@
-// Assistente (1/4) — texto: normalização, palavras e tolerância a erros de digitação.
+// Assistente (1/5) — texto: normalização, palavras e tolerância a erros de digitação.
 // Funções puras, sem acesso à página (só ao perfil.js, para o nome); usadas pelas regras, pela busca e pela interface.
 
 const normalize = (text) =>

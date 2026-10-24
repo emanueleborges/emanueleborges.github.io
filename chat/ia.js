@@ -1,4 +1,4 @@
-// Assistente (4/4) — IA: perguntas ao Worker e avaliações 👍/👎 agregadas.
+// Assistente (4/5) — IA: perguntas ao Worker e avaliações 👍/👎 agregadas.
 // Em qualquer falha devolve null/false, e a interface segue com a busca local.
 
 import { PortfolioApi as api } from "../api.js";
@@ -14,9 +14,15 @@ const ask = async (question, lang) => {
   return { error: data?.error === "quota" ? "quota" : "unavailable" };
 };
 
+// Pergunta falada → texto: { text } ou { error: "no_speech" | "quota" | "unavailable" | … }.
+const transcribe = async (audio, lang) => {
+  const { ok, data } = await api.post("/transcribe", { audio, lang });
+  return ok && data?.text ? { text: data.text } : { error: data?.error ?? "unavailable" };
+};
+
 // Registra apenas o total diário de avaliações positivas ou negativas.
 const rate = async ({ rating }) => (await api.post("/feedback", { rating })).ok;
 
 const prepare = () => (enabled ? api.loadTurnstile().catch(() => {}) : undefined);
 
-export { enabled, ask, rate, prepare };
+export { enabled, ask, transcribe, rate, prepare };

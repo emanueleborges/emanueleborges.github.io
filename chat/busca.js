@@ -1,4 +1,4 @@
-// Assistente (3/4) — busca local: indexa o conteúdo da página (no idioma atual) e ranqueia
+// Assistente (3/5) — busca local: indexa o conteúdo da página (no idioma atual) e ranqueia
 // os trechos por termos raros (estilo TF-IDF). Nada sai do navegador.
 
 import { normalize, stopwords, isCjk, stem, wordsOf, correctWord, matches } from "./texto.js";

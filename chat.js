@@ -1,11 +1,12 @@
 // Assistente do portfólio — interface: painel, mensagens, sugestões e a barra "Pergunte à minha IA".
 // A lógica fica em chat/: texto.js (normalização), regras.js (respostas prontas),
-// busca.js (busca local na página) e ia.js (Worker).
+// busca.js (busca local na página), ia.js (Worker) e voz.js (pergunta falada pelo microfone).
 import { currentLang, prefersReducedMotion, t } from "./script.js";
 import { normalize } from "./chat/texto.js";
 import { LOCAL_ONLY, intents, faqs, findFaq } from "./chat/regras.js";
 import { text, search } from "./chat/busca.js";
 import * as ai from "./chat/ia.js";
+import * as voz from "./chat/voz.js";
 
 const { PERFIL } = globalThis; // dados pessoais (perfil.js)
 
@@ -32,6 +33,7 @@ function initChat() {
       <div class="chat-suggestions" role="group"></div>
       <form class="chat-form">
         <input type="text" autocomplete="off" maxlength="200" />
+        <button type="button" class="chat-mic" data-chat-aria="micStart" aria-pressed="false" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 15a3.5 3.5 0 0 0 3.5-3.5v-6a3.5 3.5 0 1 0-7 0v6A3.5 3.5 0 0 0 12 15Zm6-3.5a1 1 0 1 0-2 0 4 4 0 0 1-8 0 1 1 0 1 0-2 0 6 6 0 0 0 5 5.92V20H8.5a1 1 0 1 0 0 2h7a1 1 0 1 0 0-2H13v-2.58a6 6 0 0 0 5-5.92Z"/></svg></button>
         <button type="submit" data-chat-aria="send">↑</button>
       </form>
       <p class="chat-note" data-chat="${ai.enabled ? "disclaimerAi" : "disclaimer"}"></p>
@@ -473,6 +475,7 @@ function initChat() {
       markHintSeen();
     }
     panel.hidden = !open;
+    if (!open) discardRecording();
     toggle.setAttribute("aria-expanded", String(open));
     root.classList.toggle("is-open", open);
     if (open) {
@@ -498,6 +501,66 @@ function initChat() {
       toggle.focus();
     }
   });
+  /* ---------- Pergunta falada (microfone → Worker → texto no campo) ---------- */
+
+  // Só com a IA ligada e um navegador que grava áudio. O texto transcrito vai para o campo,
+  // para o visitante revisar e enviar; o áudio só é usado para gerar o texto.
+  const mic = form.querySelector(".chat-mic");
+  let recording = null;
+  const setMic = (state) => {
+    mic.dataset.state = state;
+    mic.setAttribute("aria-pressed", String(state === "recording"));
+    mic.disabled = state === "busy";
+    mic.setAttribute("aria-label", tc({ idle: "micStart", recording: "micStop", busy: "micBusy" }[state]));
+    input.placeholder = state === "idle" ? tc("placeholder") : tc(state === "recording" ? "micListening" : "micBusy");
+  };
+  const micNotice = (key) => addMessage("bot", el("p", "chat-ai-fallback", tc(key)));
+  const finishRecording = async () => {
+    const current = recording;
+    recording = null;
+    if (!current) return;
+    setMic("busy");
+    try {
+      const audio = await voz.toBase64(await current.stop());
+      const { text, error } = await ai.transcribe(audio, currentLang);
+      if (text) {
+        input.value = text;
+        input.focus();
+      } else {
+        if (error === "quota") document.dispatchEvent(new CustomEvent("aistate", { detail: { state: "quota" } }));
+        micNotice({ no_speech: "micNoSpeech", quota: "micQuota" }[error] ?? "micFailed");
+      }
+    } catch {
+      micNotice("micFailed");
+    } finally {
+      setMic("idle");
+    }
+  };
+  // Fechar o chat descarta a gravação em andamento (nada é enviado).
+  function discardRecording() {
+    const current = recording;
+    recording = null;
+    if (!current) return;
+    current.stop();
+    setMic("idle");
+  }
+  if (ai.enabled && voz.supported()) {
+    mic.hidden = false;
+    setMic("idle");
+    mic.addEventListener("click", async () => {
+      if (recording) return finishRecording();
+      try {
+        recording = await voz.startRecording();
+        setMic("recording");
+        recording.done.then(() => recording && finishRecording()); // parou sozinho no limite de tempo
+      } catch (error) {
+        recording = null;
+        setMic("idle");
+        micNotice(error?.name === "NotAllowedError" ? "micDenied" : "micFailed");
+      }
+    });
+  }
+
   form.addEventListener("submit", (event) => {
     event.preventDefault();
     ask(input.value);
