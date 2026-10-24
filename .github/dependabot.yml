@@ -1,0 +1,26 @@
+# Atualizações automáticas: abre PRs semanais com as dependências do Worker e as versões das Actions.
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /worker
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: "deps(worker)"
+    groups:
+      # Atualizações menores e de correção juntas num PR só; versões maiores (ex.: wrangler) vêm separadas
+      menores:
+        update-types: [minor, patch]
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    commit-message:
+      prefix: "deps(actions)"
+    groups:
+      actions:
+        patterns: ["*"]

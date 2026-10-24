@@ -1,0 +1,49 @@
+# Toda segunda-feira (e sob demanda): procura links quebrados nas páginas e nos READMEs.
+# Se achar algum, abre (ou atualiza) uma issue com o relatório.
+name: Links quebrados
+
+on:
+  schedule:
+    - cron: "0 9 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  links:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Conferir links
+        id: lychee
+        uses: lycheeverse/lychee-action@v2
+        with:
+          fail: false
+          args: >-
+            --no-progress
+            --root-dir "${{ github.workspace }}"
+            --max-retries 3
+            --accept 200..=299,403,429
+            --exclude-path docs
+            --exclude '^https?://localhost'
+            --exclude 'workers\.dev'
+            --exclude 'linkedin\.com'
+            --exclude 'wa\.me'
+            --exclude 'api\.github\.com'
+            --exclude 'data\.jsdelivr\.com'
+            --exclude 'fonts\.(googleapis|gstatic)\.com'
+            --exclude 'challenges\.cloudflare\.com'
+            --exclude 'finance\.yahoo\.com'
+            '*.html' '*/index.html' 'demos/*/index.html' 'README*.md'
+
+      - name: Abrir issue com o relatório
+        if: steps.lychee.outputs.exit_code != 0
+        uses: peter-evans/create-issue-from-file@v5
+        with:
+          title: Links quebrados encontrados
+          content-filepath: ./lychee/out.md
+          labels: links
