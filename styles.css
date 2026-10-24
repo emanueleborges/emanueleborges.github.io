@@ -158,8 +158,9 @@ blockquote { margin: 32px 0 0; padding: 12px 0 12px 16px; border-left: 2px solid
 .section-topline { display: flex; justify-content: space-between; align-items: end; margin-bottom: 42px; }
 .section-aside { margin: 0 0 5px; font-size: 13px; }
 .projects-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 42px 24px; }
-.project-card { position: relative; overflow: hidden; min-width: 0; display: flex; flex-direction: column; padding: 58px 26px 26px; border: 1px solid var(--line); border-radius: 12px; background: radial-gradient(ellipse at 85% 0%, var(--card-glow), transparent 60%), var(--surface); transition: border-color .2s, transform .2s; }
-.project-card:hover { border-color: rgba(var(--accent-rgb),.35); transform: translateY(-2px); }
+.project-card { position: relative; overflow: hidden; min-width: 0; display: flex; flex-direction: column; padding: 58px 26px 26px; border: 1px solid var(--line); border-radius: 12px; background: radial-gradient(ellipse at 85% 0%, var(--card-glow), transparent 60%), var(--surface); transition: border-color .2s, transform .2s, box-shadow .3s; }
+/* Inclinação 3D seguindo o mouse (--rx/--ry vêm do script.js; ficam em 0 no toque e com "reduzir movimento"). */
+.project-card:hover { border-color: rgba(var(--accent-rgb),.35); transform: perspective(1000px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)) translateY(-3px); box-shadow: 0 18px 50px rgba(var(--accent-rgb),.12); }
 .project-featured { background: var(--featured-bg); }
 /* "Mais projetos": cards compactos (descrição em 2 linhas, sem métricas), três por linha; o título some se o filtro esconder todos. */
 .projects-more-title { margin: 56px 0 20px; color: var(--kicker); font-size: 12px; font-weight: 500; letter-spacing: .14em; }
@@ -448,12 +449,12 @@ html:has(dialog[open]) { overflow: hidden; }
 main, .footer { position: relative; z-index: 1; }
 
 /* Luz que segue o mouse */
-.project-card::after, .skill-chip::after { content: ""; position: absolute; inset: 0; border-radius: inherit; background: radial-gradient(360px circle at var(--mx, 50%) var(--my, 50%), rgba(var(--accent-rgb),.16), transparent 45%); opacity: 0; transition: opacity .3s; pointer-events: none; }
+.project-card::after, .skill-chip::after { content: ""; position: absolute; inset: 0; border-radius: inherit; background: radial-gradient(360px circle at var(--mx, 50%) var(--my, 50%), rgba(var(--accent-rgb),.24), transparent 45%); opacity: 0; transition: opacity .3s; pointer-events: none; }
 .project-card:hover::after, .skill-chip:hover::after { opacity: 1; }
 .skill-chip:hover { border-color: rgba(var(--accent-rgb),.35); transform: translateY(-2px); }
 
 /* Surgir ao rolar (classe adicionada pelo script.js) */
-.reveal { opacity: 0; translate: 0 28px; transition: opacity .7s ease, translate .7s cubic-bezier(.2,.7,.2,1), border-color .2s, transform .2s; transition-delay: var(--reveal-delay, 0ms), var(--reveal-delay, 0ms), 0s, 0s; }
+.reveal { opacity: 0; translate: 0 28px; transition: opacity .7s ease, translate .7s cubic-bezier(.2,.7,.2,1), border-color .2s, transform .2s, box-shadow .3s; transition-delay: var(--reveal-delay, 0ms), var(--reveal-delay, 0ms), 0s, 0s, 0s; }
 .reveal.is-visible { opacity: 1; translate: 0 0; }
 
 /* Assistente de busca (chat.js) */

@@ -493,15 +493,68 @@ if (!prefersReducedMotion && "IntersectionObserver" in window) {
   });
 }
 
-/* ---------- Luz que segue o mouse nos cards ---------- */
+/* ---------- Cards reagem ao mouse: luz que segue o cursor e leve inclinação 3D ---------- */
+
+// A inclinação só vale com mouse (no toque ela ficaria presa) e sem "reduzir movimento"; até 3° para cada lado.
+const INCLINACAO_MAX = 3;
+const inclinaCards = !prefersReducedMotion && matchMedia("(hover: hover) and (pointer: fine)").matches;
 
 document.querySelectorAll(".project-card, .skill-chip").forEach((card) => {
+  const inclina = inclinaCards && card.classList.contains("project-card");
   card.addEventListener("pointermove", (event) => {
     const rect = card.getBoundingClientRect();
-    card.style.setProperty("--mx", `${event.clientX - rect.left}px`);
-    card.style.setProperty("--my", `${event.clientY - rect.top}px`);
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
+    card.style.setProperty("--mx", `${x}px`);
+    card.style.setProperty("--my", `${y}px`);
+    if (!inclina) return;
+    card.style.setProperty("--ry", `${(x / rect.width - 0.5) * 2 * INCLINACAO_MAX}deg`);
+    card.style.setProperty("--rx", `${(0.5 - y / rect.height) * 2 * INCLINACAO_MAX}deg`);
   });
+  if (inclina) {
+    card.addEventListener("pointerleave", () => {
+      card.style.removeProperty("--rx");
+      card.style.removeProperty("--ry");
+    });
+  }
 });
+
+/* ---------- Números que contam do zero ao aparecer na tela ---------- */
+
+// Métricas do topo e dos projetos: "10+", "12", "Top 5%", "87%"… sobem até o valor em ~1,2 s. Textos que
+// vêm da tradução (faixas como "1,1–2,2%") e o zero ficam como estão.
+const NUMERO_CONTAVEL = /^(\D*?)(\d+)(\D*)$/;
+const DURACAO_CONTAGEM = 1200;
+
+if (!prefersReducedMotion && "IntersectionObserver" in window) {
+  const contar = (el) => {
+    const partes = el.textContent.trim().match(NUMERO_CONTAVEL);
+    if (!partes || partes[2] === "0") return;
+    const [final, antes, valor, depois] = partes;
+    el.style.minWidth = `${el.getBoundingClientRect().width}px`; // a largura não muda enquanto conta
+    const inicio = performance.now();
+    const passo = (agora) => {
+      const progresso = Math.min(1, (agora - inicio) / DURACAO_CONTAGEM);
+      const suave = 1 - (1 - progresso) ** 3; // desacelera no fim
+      el.textContent = progresso < 1 ? `${antes}${Math.round(Number(valor) * suave)}${depois}` : final;
+      if (progresso < 1) requestAnimationFrame(passo);
+    };
+    requestAnimationFrame(passo);
+  };
+  const observador = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        observador.unobserve(entry.target);
+        contar(entry.target);
+      });
+    },
+    { threshold: 0.6 },
+  );
+  document.querySelectorAll(".hero-stats strong, .project-metrics strong").forEach((el) => {
+    if (!el.hasAttribute("data-i18n")) observador.observe(el);
+  });
+}
 
 /* ---------- Rede de partículas no fundo ---------- */
 
