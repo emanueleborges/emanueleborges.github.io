@@ -8,6 +8,10 @@ const HISTORY_DAYS = 30;
 
 const T = {
   en: {
+    "caso.p": "Predict the next closing price of stocks and, above all, find out whether the prediction beats a simple guess.",
+    "caso.s": "A 3-layer LSTM with a 60-day window and adjusted prices, trained in Python/Keras; the weights run in plain JavaScript, with no server or library.",
+    "caso.r": "A mean error of 1.1–2.2% (MAPE) out of sample, about the same as repeating the last price. The demo shows that comparison instead of hiding it.",
+    "caso.m": "Predict returns instead of prices, show confidence intervals and compare with simpler models such as ARIMA before drawing conclusions.",
     groupB3: "Brazil (B3)",
     groupUS: "United States (NASDAQ)",
     "meta.title": "LSTM Stock Forecasting",
@@ -42,6 +46,10 @@ const T = {
     disclaimer: "⚠️ Technical demo — not investment advice.",
   },
   pt: {
+    "caso.p": "Prever o próximo fechamento de ações e, principalmente, descobrir se a previsão vale mais que um palpite simples.",
+    "caso.s": "LSTM de 3 camadas com janela de 60 pregões e preços ajustados, treinada em Python/Keras; os pesos rodam em JavaScript puro, sem servidor nem biblioteca.",
+    "caso.r": "Erro médio de 1,1–2,2% (MAPE) fora da amostra, praticamente igual ao de repetir o último preço. A demo mostra essa comparação em vez de escondê-la.",
+    "caso.m": "Prever retornos em vez de preços, mostrar intervalos de confiança e comparar com modelos mais simples, como ARIMA, antes de tirar conclusões.",
     groupB3: "Brasil (B3)",
     groupUS: "EUA (NASDAQ)",
     "meta.title": "Previsão de Ações com LSTM",
@@ -76,6 +84,10 @@ const T = {
     disclaimer: "⚠️ Demonstração técnica — não é recomendação de investimento.",
   },
   es: {
+    "caso.p": "Predecir el próximo cierre de acciones y, sobre todo, descubrir si la predicción vale más que una suposición simple.",
+    "caso.s": "LSTM de 3 capas con ventana de 60 sesiones y precios ajustados, entrenada en Python/Keras; los pesos se ejecutan en JavaScript puro, sin servidor ni biblioteca.",
+    "caso.r": "Error medio de 1,1–2,2% (MAPE) fuera de la muestra, prácticamente igual a repetir el último precio. La demo muestra esa comparación en lugar de ocultarla.",
+    "caso.m": "Predecir retornos en lugar de precios, mostrar intervalos de confianza y comparar con modelos más simples, como ARIMA, antes de sacar conclusiones.",
     groupB3: "Brasil (B3)",
     groupUS: "Estados Unidos (NASDAQ)",
     "meta.title": "Predicción de Acciones con LSTM",

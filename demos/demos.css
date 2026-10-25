@@ -84,3 +84,13 @@ theme-toggle:not(:defined) { width: 192px; height: 34px; }
 .is-embedded body > .shell > header, .is-embedded [data-t="back"] { display: none; }
 .is-embedded main { padding-top: 8px; }
 .is-embedded .glow { display: none; }
+
+/* Estudo de caso no fim das demos: problema → solução → resultado → o que eu mudaria. */
+.caso { margin: 44px 0 0; }
+.caso-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin: 16px 0 0; padding: 0; list-style: none; counter-reset: caso; }
+.caso-grid li { counter-increment: caso; padding: 16px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); }
+.caso-grid h3 { display: flex; align-items: center; gap: 10px; margin: 0 0 6px; font-size: 15px; }
+.caso-grid h3::before { content: counter(caso); display: grid; place-items: center; flex: none; width: 26px; height: 26px; border: 1.5px solid var(--accent); border-radius: 50%; color: var(--accent-text); font: 500 12px "DM Mono", monospace; }
+.caso-grid p { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.55; }
+.caso-grid li:nth-child(3) { border-color: rgba(var(--accent-rgb), .45); }
+@media (max-width: 640px) { .caso-grid { grid-template-columns: 1fr; } }
