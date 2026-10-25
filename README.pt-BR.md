@@ -33,6 +33,7 @@ Site estático, sem framework, com backend *serverless* no Cloudflare para o cha
 - [Custos](#custos)
 - [Especificação (SDD)](#especificação-sdd)
 - [Créditos](#créditos)
+- [Licença](#licença)
 
 ---
 
@@ -396,6 +397,10 @@ O projeto segue **Spec-Driven Development**: a especificação descreve o *quê*
 - Demo facial: [face-api.js](https://github.com/vladmandic/face-api) (MIT), de Vladimir Mandic.
 - Demo de filmes: dados do [Wikidata](https://www.wikidata.org) (CC0) e resumos da [Wikipédia](https://en.wikipedia.org) em inglês (CC BY-SA 4.0), encurtados.
 - Demo do LSTM: preços do [Yahoo Finance](https://finance.yahoo.com), usados só para demonstração.
+
+## Licença
+
+O código está sob a [Licença MIT](LICENSE). O conteúdo pessoal não: a foto, as gravações e a amostra de voz em `data/audio/` e os textos do currículo e do perfil pertencem ao autor e não podem ser reutilizados.
 
 ---
 

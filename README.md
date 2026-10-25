@@ -33,6 +33,7 @@ A framework-free static site with a Cloudflare serverless backend for the AI cha
 - [Costs](#costs)
 - [Specification (SDD)](#specification-sdd)
 - [Credits](#credits)
+- [License](#license)
 
 ---
 
@@ -396,6 +397,10 @@ The project follows **Spec-Driven Development**: the specification describes the
 - Face demo: [face-api.js](https://github.com/vladmandic/face-api) (MIT), by Vladimir Mandic.
 - Movie demo: data from [Wikidata](https://www.wikidata.org) (CC0) and shortened English [Wikipedia](https://en.wikipedia.org) summaries (CC BY-SA 4.0).
 - LSTM demo: prices from [Yahoo Finance](https://finance.yahoo.com), used for demonstration only.
+
+## License
+
+The code is under the [MIT License](LICENSE). Personal content is not: the photo, the voice recordings and voice sample in `data/audio/`, and the résumé and profile texts belong to the author and may not be reused.
 
 ---
 
