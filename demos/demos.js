@@ -37,8 +37,15 @@ export const Demo = (() => {
     if (select) select.value = lang;
   };
 
+  // Rótulos comuns a todas as páginas (a página pode sobrescrever): seção "Estudo de caso" das demos.
+  const COMUNS = {
+    en: { "caso.titulo": "Case study", "caso.lp": "Problem", "caso.ls": "Solution", "caso.lr": "Result", "caso.lm": "What I'd change" },
+    pt: { "caso.titulo": "Estudo de caso", "caso.lp": "Problema", "caso.ls": "Solução", "caso.lr": "Resultado", "caso.lm": "O que eu mudaria" },
+    es: { "caso.titulo": "Caso de estudio", "caso.lp": "Problema", "caso.ls": "Solución", "caso.lr": "Resultado", "caso.lm": "Qué cambiaría" },
+  };
+
   const setup = (pageTexts, render) => {
-    texts = pageTexts;
+    texts = Object.fromEntries(Object.entries(pageTexts).map(([code, page]) => [code, { ...COMUNS[code], ...page }]));
     lang = window.IDIOMA_INICIAL; // ?lang=, o salvo ou o padrão (components/boot.js)
     applyTexts();
     document.dispatchEvent(new CustomEvent("languagechange"));

@@ -69,8 +69,8 @@
       "answer:UTC−4"
     ],
     [
-      "is he open to international jobs?",
-      "answer:internationally"
+      "does he work remotely?",
+      "answer:100% remotely"
     ],
     [
       "what languages does he speak?",
@@ -79,14 +79,6 @@
     [
       "programming languages",
       "Backend"
-    ],
-    [
-      "salary expectations",
-      "answer:talk to Emanuel"
-    ],
-    [
-      "what kind of role is he looking for?",
-      "answer:He is looking for"
     ],
     [
       "hello",
@@ -103,10 +95,6 @@
     [
       "where does he currently work?",
       "answer:Since April 2023"
-    ],
-    [
-      "when can he start?",
-      "answer:start date"
     ],
     [
       "tech stack",
@@ -163,8 +151,8 @@
       "answer:Mais de 10 anos"
     ],
     [
-      "trabalha remoto? CLT ou PJ?",
-      "answer:CLT ou PJ"
+      "trabalha remoto?",
+      "answer:Trabalha 100% remoto"
     ],
     [
       "qual o fuso horário?",
@@ -175,20 +163,8 @@
       "answer:inglês básico (A2)"
     ],
     [
-      "pretensão salarial",
-      "answer:conversar direto"
-    ],
-    [
       "quais linguagens de programação?",
       "Backend"
-    ],
-    [
-      "Procura qual tipo de vaga ?",
-      "answer:Procura vagas de Desenvolvedor"
-    ],
-    [
-      "que vaga você procura?",
-      "answer:Procura vagas de Desenvolvedor"
     ],
     [
       "oi",
@@ -205,10 +181,6 @@
     [
       "onde trabalha atualmente?",
       "answer:Desde abril de 2023"
-    ],
-    [
-      "quando pode começar?",
-      "answer:data de início"
     ],
     [
       "principais tecnologias",
@@ -259,10 +231,6 @@
     [
       "proyectos con Kafka",
       "Financial Hub"
-    ],
-    [
-      "¿qué tipo de puesto busca?",
-      "answer:Busca vacantes"
     ],
     [
       "¿Por qué contratarlo?",

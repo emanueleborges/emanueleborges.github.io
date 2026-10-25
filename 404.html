@@ -15,6 +15,8 @@
       (function () {
         var old = location.pathname.match(/^\/cv\/.+-([a-z]{2})\.pdf$/);
         if (old) location.replace("/curriculo.html?lang=" + old[1] + "&pdf=1");
+        // A página de análise de vagas (/vaga/) foi retirada: quem tiver o link vai para o portfólio.
+        else if (/^\/vaga(\/|$)/.test(location.pathname)) location.replace("/");
       })();
     </script>
     <title data-perfil="Page not found — {nomeCompleto}">Page not found — Emanuel Borges</title>
@@ -38,13 +40,18 @@
       /* Logo "E." (SVG nas páginas): cores pelo tema; o E se desenha ao carregar, o nó de IA emite um pulso,
          e ao passar o mouse o logo gira e brilha. Sem efeitos com "reduzir movimento". */
       .logo { overflow: visible; }
-      .logo-ring { stroke: var(--logo-ring); stroke-opacity: .45; transform-origin: 49px 46.5px; animation: logo-pulse 3.2s ease-out 1.4s infinite; }
-      .logo-e { stroke-dasharray: 100; stroke-dashoffset: 0; animation: logo-draw 1.1s cubic-bezier(.65,0,.35,1) .15s both; }
-      .logo-node { transform-origin: 49px 46.5px; animation: logo-pop .5s cubic-bezier(.34,1.56,.64,1) 1.1s both; }
-      @keyframes logo-draw { from { stroke-dashoffset: 100; } }
-      @keyframes logo-pop { from { transform: scale(0); } }
+      .logo-fundo { opacity: 0; animation: logo-surgir .5s ease .55s forwards; }
+      .logo-borda, .logo-e { stroke-dasharray: 101; stroke-dashoffset: 101; opacity: 0; animation: logo-tracar .8s cubic-bezier(.65,0,.35,1) forwards; }
+      .logo-e1 { animation-duration: .55s; animation-delay: .6s; }
+      .logo-e2 { animation-duration: .25s; animation-delay: 1.1s; }
+      .logo-e3 { animation-duration: .3s; animation-delay: 1.3s; }
+      .logo-ring { stroke: var(--logo-ring); stroke-opacity: .45; transform-origin: 49px 46.5px; opacity: 0; animation: logo-surgir .3s ease 1.55s forwards, logo-pulse 3.2s ease-out 1.75s infinite; }
+      .logo-node { transform-origin: 49px 46.5px; transform: scale(0); animation: logo-pop .5s cubic-bezier(.34,1.56,.64,1) 1.55s forwards; }
+      @keyframes logo-surgir { to { opacity: 1; } }
+      @keyframes logo-tracar { from { opacity: 1; } to { stroke-dashoffset: 0; opacity: 1; } }
+      @keyframes logo-pop { from { transform: scale(0); } to { transform: scale(1); } }
       @keyframes logo-pulse { 0% { transform: scale(1); stroke-opacity: .55; } 70%, 100% { transform: scale(1.9); stroke-opacity: 0; } }
-      @media (prefers-reduced-motion: reduce) { .logo-ring, .logo-e, .logo-node { animation: none !important; } }
+      @media (prefers-reduced-motion: reduce) { .logo-ring, .logo-fundo, .logo-borda, .logo-e, .logo-node { animation: none !important; opacity: 1; stroke-dashoffset: 0; transform: none; } }
       .code { margin: 0; font: 500 13px "DM Mono", monospace; letter-spacing: .2em; color: var(--kicker-alt); }
       h1 { margin: 14px 0 0; font-size: clamp(38px, 8vw, 64px); line-height: 1.05; letter-spacing: -.05em; }
       h1 span { background: var(--grad-text); -webkit-background-clip: text; background-clip: text; color: transparent; }

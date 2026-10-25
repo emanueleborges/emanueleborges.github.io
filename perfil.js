@@ -21,8 +21,8 @@
     "titulo": "Senior Full Stack Developer · AI & NLP",
     "resumo": "Senior Full Stack Developer (Java/Kotlin, Node.js, React, React Native) with 10+ years of experience, specializing in applied AI (Machine Learning and NLP).",
     "compartilhamento": {
-      "descricao": "10+ years building systems with Java, Kotlin, Node.js, React and React Native — now applying Machine Learning and NLP. Portfolio in 3 languages with an AI assistant, live AI demos and a job-match tool for recruiters.",
-      "descricaoCurta": "Portfolio and résumé in 3 languages, an AI assistant, live AI demos and a tool that matches your job description to my profile.",
+      "descricao": "10+ years building systems with Java, Kotlin, Node.js, React and React Native — now applying Machine Learning and NLP. Portfolio in 3 languages with an AI assistant and live AI demos.",
+      "descricaoCurta": "Portfolio and résumé in 3 languages, an AI assistant and live AI demos.",
       "imagem": "data/imagens/og-image.jpg?v=20261011",
       "imagemAlt": "Senior Full Stack Developer, AI & NLP — AI made in the Amazon"
     },

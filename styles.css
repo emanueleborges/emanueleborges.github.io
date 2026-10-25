@@ -70,10 +70,7 @@ theme-toggle:not(:defined) { width: 192px; height: 34px; }
 .hero-image::before { background: var(--duotone); mix-blend-mode: color; }
 .hero-image::after { background: var(--duotone-shade); mix-blend-mode: multiply; }
 .hero-copy { position: relative; z-index: 2; width: 620px; padding-top: 56px; }
-.eyebrow, .section-kicker { color: var(--kicker); letter-spacing: .14em; font-size: 12px; }
-.eyebrow { display: flex; gap: 9px; align-items: center; margin: 0 0 31px; }
-.status-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--cyan); box-shadow: 0 0 12px var(--cyan); animation: status-pulse 2.4s ease-in-out infinite; }
-@keyframes status-pulse { 50% { box-shadow: 0 0 4px var(--cyan); opacity: .7; } }
+.section-kicker { color: var(--kicker); letter-spacing: .14em; font-size: 12px; }
 .intro { color: var(--kicker); font-size: 13px; letter-spacing: .2em; margin: 0 0 14px; }
 .hero h1 { margin: 0; font-size: clamp(62px, 8vw, 94px); line-height: .98; letter-spacing: -.09em; font-weight: 800; }
 .hero h1 span { color: var(--accent-text); background: var(--shimmer) 0 0 / 250% 100%; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; animation: shimmer 7s linear infinite; }
@@ -90,11 +87,6 @@ theme-toggle:not(:defined) { width: 192px; height: 34px; }
 .hero-ask { display: flex; align-items: center; gap: 10px; width: min(100%, 560px); margin-top: 18px; padding: 12px 16px; border: 1px solid transparent; border-radius: 16px; background: linear-gradient(var(--ask-bg), var(--ask-bg)) padding-box, var(--ask-border) border-box; color: var(--text); font: 500 14px var(--sans); text-align: left; cursor: pointer; box-shadow: var(--ask-shadow); transition: transform .2s, box-shadow .2s; }
 /* Escondida até o chat.js carregar, mas ocupando o espaço desde o início (evita deslocar o topo). */
 .hero-ask[hidden] { display: flex !important; visibility: hidden; }
-.hero-match { display: flex; align-items: center; gap: 10px; width: min(100%, 560px); margin-top: 10px; padding: 10px 16px; border: 1px dashed rgba(var(--accent-rgb),.45); border-radius: 14px; background: var(--surface-2); color: var(--text); font-size: 14px; transition: border-color .2s, transform .2s; }
-.hero-match strong { color: var(--cyan-soft); }
-.hero-match:hover { border-color: var(--cyan); transform: translateY(-1px); }
-.hero-match:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 3px; }
-.hero-match-go { margin-left: auto; color: var(--purple); }
 .hero-ask:hover { transform: translateY(-2px); box-shadow: 0 14px 46px rgba(var(--accent-2-rgb),.25); }
 .hero-ask:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 3px; }
 .hero-ask-icon { flex: none; font-size: 18px; }
@@ -588,7 +580,6 @@ main, .footer { position: relative; z-index: 1; }
   .hero-image { opacity: .75; }
   .hero-slide { background-position: 60% center; }
   .hero-copy { width: 100%; padding: 0; }
-  .eyebrow { margin-bottom: 20px; font-size: 10px; }
   .hero h1 { font-size: clamp(60px, 15vw, 82px); }
   .hero h2 { margin-top: 18px; font-size: 27px; }
   .hero-description { font-size: 14px; }
@@ -671,17 +662,22 @@ main, .footer { position: relative; z-index: 1; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .hero-slide, .bg-aurora span, .hero h1 span, .about-photo, .status-dot, .hero-ask-caret, .voice-bars i, .about-photo.is-speaking .photo-frame { animation: none !important; }
+  .hero-slide, .bg-aurora span, .hero h1 span, .about-photo, .hero-ask-caret, .voice-bars i, .about-photo.is-speaking .photo-frame { animation: none !important; }
   *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; }
 }
 
 /* Logo "E." (SVG nas páginas): cores pelo tema; o E se desenha ao carregar, o nó de IA emite um pulso,
    e ao passar o mouse o logo gira e brilha. Sem efeitos com "reduzir movimento". */
 .logo { overflow: visible; }
-.logo-ring { stroke: var(--logo-ring); stroke-opacity: .45; transform-origin: 49px 46.5px; animation: logo-pulse 3.2s ease-out 1.4s infinite; }
-.logo-e { stroke-dasharray: 100; stroke-dashoffset: 0; animation: logo-draw 1.1s cubic-bezier(.65,0,.35,1) .15s both; }
-.logo-node { transform-origin: 49px 46.5px; animation: logo-pop .5s cubic-bezier(.34,1.56,.64,1) 1.1s both; }
-@keyframes logo-draw { from { stroke-dashoffset: 100; } }
-@keyframes logo-pop { from { transform: scale(0); } }
+.logo-fundo { opacity: 0; animation: logo-surgir .5s ease .55s forwards; }
+.logo-borda, .logo-e { stroke-dasharray: 101; stroke-dashoffset: 101; opacity: 0; animation: logo-tracar .8s cubic-bezier(.65,0,.35,1) forwards; }
+.logo-e1 { animation-duration: .55s; animation-delay: .6s; }
+.logo-e2 { animation-duration: .25s; animation-delay: 1.1s; }
+.logo-e3 { animation-duration: .3s; animation-delay: 1.3s; }
+.logo-ring { stroke: var(--logo-ring); stroke-opacity: .45; transform-origin: 49px 46.5px; opacity: 0; animation: logo-surgir .3s ease 1.55s forwards, logo-pulse 3.2s ease-out 1.75s infinite; }
+.logo-node { transform-origin: 49px 46.5px; transform: scale(0); animation: logo-pop .5s cubic-bezier(.34,1.56,.64,1) 1.55s forwards; }
+@keyframes logo-surgir { to { opacity: 1; } }
+@keyframes logo-tracar { from { opacity: 1; } to { stroke-dashoffset: 0; opacity: 1; } }
+@keyframes logo-pop { from { transform: scale(0); } to { transform: scale(1); } }
 @keyframes logo-pulse { 0% { transform: scale(1); stroke-opacity: .55; } 70%, 100% { transform: scale(1.9); stroke-opacity: 0; } }
-@media (prefers-reduced-motion: reduce) { .logo-ring, .logo-e, .logo-node { animation: none !important; } }
+@media (prefers-reduced-motion: reduce) { .logo-ring, .logo-fundo, .logo-borda, .logo-e, .logo-node { animation: none !important; opacity: 1; stroke-dashoffset: 0; transform: none; } }

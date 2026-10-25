@@ -147,6 +147,7 @@
       "cv": {
         "stack": "Java 17 · Spring Boot · Kafka · Redis"
       },
+      "metrics": [{ "value": { "text": "81/s" }, "label": { "key": "p5.m1" } }, { "value": { "text": "126 ms" }, "label": { "key": "p5.m2" } }],
       "featured": true
     },
     {
@@ -306,7 +307,7 @@
         },
         {
           "value": {
-            "text": "70"
+            "text": "62"
           },
           "label": {
             "key": "p10.m2"

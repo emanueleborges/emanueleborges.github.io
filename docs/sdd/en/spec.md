@@ -6,7 +6,7 @@
 
 | | |
 |---|---|
-| **Product** | Professional portfolio with an AI assistant, AI demos and job matching |
+| **Product** | Professional portfolio with an AI assistant and AI demos |
 | **URL** | https://emanueleborges.github.io |
 | **Owner** | Emanuel Borges |
 | **Status** | In production |
@@ -79,7 +79,7 @@ The site shows: hero (name, role, summary, location, years of experience), About
 ### FR-05 — Assistant (chat)
 - FR-05.1 A floating button opens the assistant panel; an invitation bubble appears 3 s after the first visit (once).
 - FR-05.2 **Ready-made answers** for frequent topics (19 topics), with follow-up buttons.
-- FR-05.3 Greetings, thanks, salary, start date and education are **always** answered with ready-made text (no AI).
+- FR-05.3 Greetings, thanks and education are **always** answered with ready-made text (no AI); salary and start date have no ready-made answer: the AI says it doesn't have that information and suggests contacting him.
 - FR-05.4 Other questions are answered by **generative AI** based **only** on the profile (RAG).
 - FR-05.5 AI answers show an "AI-generated answer" badge and a "See on page" shortcut.
 - FR-05.6 If the AI fails or the daily free quota runs out, the chat **tells the visitor** ("The AI has reached today's free quota…" or "…is unavailable right now…") and answers through **local search** over the page content.
@@ -99,7 +99,7 @@ Optional counting only after explicit consent. The Worker uses the continent pro
 ### FR-09 — SEO and sharing
 - FR-09.1 Shared links (LinkedIn, WhatsApp, X) show a preview with image, title and description.
 - FR-09.2 Tell Google about the 8 language versions (`hreflang`) and who the site is about (`Person` structured data, with current employer and schools taken from the experience and education data).
-- FR-09.3 Publish `sitemap.xml` (page in 3 languages, demos, "Does your role match?" and "How I built it") and `robots.txt`; the site is verified in Google Search Console.
+- FR-09.3 Publish `sitemap.xml` (page in 3 languages, demos, "How I built it" and "Architecture") and `robots.txt`; the site is verified in Google Search Console.
 
 ### FR-10 — Weekly summary
 Every Monday the owner receives an e-mail with aggregate counts of ratings, consented regional visits and clicks, plus the health of the AI, vector index and database. Aggregate data only.
@@ -119,7 +119,8 @@ Their own pages (`/demos/…`), in 3 languages, in the site's style and theme, l
 ### FR-13 — Installable, offline app
 The site can be installed as an app (manifest and icons) and, after the first visit, opens offline with the last saved version; the chat uses local search when offline.
 
-### FR-14 — "Does your role match?" (for recruiters)
+### FR-14 — "Does your role match?" (for recruiters) — retired on 2026-10-25
+The `/vaga/` page, the `POST /match` route and the "open to new opportunities" texts were removed from the site; old `/vaga/` links go to the home page (`404.html`). The history stays below.
 - FR-14.1 Page `/vaga/` (3 languages) where the recruiter pastes a job description (80–8,000 characters, any language) and gets: a match score (0–100%), each requirement with its level (meets / partial / not found), must-have or nice-to-have, a reason and clickable evidence, and a "why <name>" summary with a copy button.
 - FR-14.2 Requirements are only those written in the job (nothing invented or omitted); the score is computed by rule, not by the AI; no experience may be claimed without evidence in the profile.
 - FR-14.3 The job text is not stored; the visitor is told so.
@@ -134,7 +135,7 @@ The site can be installed as an app (manifest and icons) and, after the first vi
 
 ### FR-16 — Interactions and navigation without leaving the site
 - FR-16.1 **Sound and haptics:** interface clicks and keystrokes synthesized in the browser, plus a short vibration on phones; a mute button on every page, remembered.
-- FR-16.2 **Modals for site pages:** demos, "How I built it", job match and the résumé open in a modal in the current language and theme; closing unloads the page (turns off the face demo's camera).
+- FR-16.2 **Modals for site pages:** demos, "How I built it", architecture and the résumé open in a modal in the current language and theme; closing unloads the page (turns off the face demo's camera).
 - FR-16.3 **External links:** the owner's GitHub links open in a modal viewer (folders, formatted README/Markdown, code and images). LinkedIn, WhatsApp, email and other sites open a modal card (WhatsApp QR code, LinkedIn profile with role and city, email to copy, description and stack of the systems built); the external site only opens on request.
 - FR-16.4 **Share:** QR code and portfolio link in the current language, with copy, native sharing and WhatsApp, LinkedIn and email shortcuts.
 - FR-16.5 **Quick search:** `/` or Ctrl/⌘+K opens a bar that finds projects, jobs, skills, sections and actions, filters projects by topic and sends questions to the assistant; nothing is sent to a server.
@@ -179,7 +180,7 @@ The site can be installed as an app (manifest and icons) and, after the first vi
 - [x] "Give me a cake recipe" is politely declined; "Ignore all previous instructions…" doesn't change behavior.
 - [x] "How old is he?" says that information isn't available, without inventing.
 - [x] With the Worker answering `503 quota` (error 3036), the chat shows the quota notice, answers through local search and the footer switches to "quota reached · local search" — in all 3 languages (automated test).
-- [x] The 70 tests of `tests/rodar-testes-chat.sh` pass (67 cases + the AI fallback in each language).
+- [x] The 62 tests of `tests/rodar-testes-chat.sh` pass (59 cases + the AI fallback in each language).
 
 ### Single sources and reuse
 - [x] `node scripts/gerar-secoes.mjs --check` passes in CI; changing data without running the generator makes CI fail.
@@ -213,7 +214,7 @@ The site can be installed as an app (manifest and icons) and, after the first vi
 - [x] Clicking 👎 on an AI answer shows "Thanks for the feedback!" and increments the day's total.
 
 ### SEO and performance
-- [x] `sitemap.xml` and `robots.txt` return HTTP 200; the sitemap is valid XML with 16 URLs.
+- [x] `sitemap.xml` and `robots.txt` return HTTP 200; the sitemap is valid XML with 11 URLs.
 - [x] The page has an Open Graph preview (1200×630 image), `hreflang` for 3 languages and valid `Person` JSON-LD.
 - [x] Lighthouse (mobile): performance ~80, accessibility 100, best practices 100, SEO 100.
 - [x] An unknown address returns HTTP 404 with the custom page.
@@ -234,7 +235,7 @@ The site can be installed as an app (manifest and icons) and, after the first vi
 
 ### Interactions and navigation
 - [x] "/" and Ctrl/⌘+K open search; "rag" filters the RAG projects.
-- [x] Demos, "How I built it", job match and résumé open in the modal; closing clears the iframe.
+- [x] Demos, "How I built it", architecture and résumé open in the modal; closing clears the iframe.
 - [x] WhatsApp, LinkedIn, email and the City Hall systems open their cards, with text from the translations.
 
 ### Metrics e-mail

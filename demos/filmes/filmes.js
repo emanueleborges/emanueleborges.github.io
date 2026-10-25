@@ -8,6 +8,10 @@ const QUERIES = ["space adventure with robots", "mafia family crime", "haunted h
 
 const T = {
   en: {
+    "caso.p": "Recommend similar movies in an explainable way, with no server and no other users' history.",
+    "caso.s": "TF-IDF (the same formula as scikit-learn) over plot, genres and director, plus cosine similarity, all computed in the browser.",
+    "caso.r": "About 1,500 movies indexed in under 50 ms, showing the terms that explain each recommendation.",
+    "caso.m": "Combine semantic embeddings with TF-IDF (hybrid search) to handle synonyms and accept searches in Portuguese.",
     "meta.title": "Movie Recommender with TF-IDF",
     "meta.description": "Content-based movie recommendations with TF-IDF and cosine similarity over 1,500 films, computed in your browser, with the terms that explain each match.",
     lang: "Language",
@@ -38,6 +42,10 @@ const T = {
     credits: "Data: <a href=\"https://www.wikidata.org\" target=\"_blank\" rel=\"noopener\">Wikidata</a> (CC0) and English <a href=\"https://en.wikipedia.org\" target=\"_blank\" rel=\"noopener\">Wikipedia</a> summaries (CC BY-SA 4.0), shortened. Each card links to its article.",
   },
   pt: {
+    "caso.p": "Recomendar filmes parecidos de um jeito explicável, sem servidor e sem histórico de outros usuários.",
+    "caso.s": "TF-IDF (mesma fórmula do scikit-learn) sobre resumo, gêneros e direção, e similaridade de cosseno, tudo calculado no navegador.",
+    "caso.r": "Cerca de 1.500 filmes indexados em menos de 50 ms, com os termos que explicam cada recomendação.",
+    "caso.m": "Somar embeddings semânticos ao TF-IDF (busca híbrida) para entender sinônimos e aceitar buscas em português.",
     "meta.title": "Recomendação de Filmes com TF-IDF",
     "meta.description": "Recomendação de filmes por conteúdo com TF-IDF e similaridade de cosseno sobre 1.500 filmes, calculada no seu navegador, mostrando os termos que explicam cada resultado.",
     lang: "Idioma",
@@ -68,6 +76,10 @@ const T = {
     credits: "Dados: <a href=\"https://www.wikidata.org\" target=\"_blank\" rel=\"noopener\">Wikidata</a> (CC0) e resumos da <a href=\"https://en.wikipedia.org\" target=\"_blank\" rel=\"noopener\">Wikipédia</a> em inglês (CC BY-SA 4.0), encurtados. Cada card leva ao artigo original.",
   },
   es: {
+    "caso.p": "Recomendar películas parecidas de forma explicable, sin servidor y sin historial de otros usuarios.",
+    "caso.s": "TF-IDF (la misma fórmula de scikit-learn) sobre sinopsis, géneros y dirección, y similitud de coseno, todo calculado en el navegador.",
+    "caso.r": "Unas 1.500 películas indexadas en menos de 50 ms, con los términos que explican cada recomendación.",
+    "caso.m": "Sumar embeddings semánticos al TF-IDF (búsqueda híbrida) para entender sinónimos y aceptar búsquedas en portugués.",
     "meta.title": "Recomendación de Películas con TF-IDF",
     "meta.description": "Recomendación de películas por contenido con TF-IDF y similitud de coseno sobre 1.500 películas, calculada en tu navegador, mostrando los términos que explican cada resultado.",
     lang: "Idioma",

@@ -12,6 +12,10 @@ const THRESHOLD = 0.55;
 
 const T = {
   en: {
+    "caso.p": "Recognize a person without sending their image to a server. In the original POC, face vectors went to a REST API backed by SQLite.",
+    "caso.s": "face-api.js on TensorFlow.js (WebGL) in the browser: TinyFaceDetector finds the face, 68 landmarks align it and a ResNet produces a 128-number embedding. Two faces match when the Euclidean distance is below 0.55.",
+    "caso.r": "Real-time recognition from the webcam, with 0 images uploaded and ~7 MB of models downloaded only when the camera or a photo is used.",
+    "caso.m": "face-api.js was archived in 2025: today I'd use a maintained library (MediaPipe), calibrate the 0.55 threshold on a labeled set and add liveness detection against photos.",
     idle: "The AI models (~7 MB) download only when you use the camera, a photo or the sample.",
     "meta.title": "Face Recognition in the Browser",
     "meta.description": "Real-time face recognition with face-api.js: detection, 128-dimension embeddings and matching, entirely in your browser — the camera never leaves your device.",
@@ -45,6 +49,10 @@ const T = {
     how: "<strong>How it works:</strong> TinyFaceDetector finds the faces; a 68-point landmark network aligns each one; a ResNet turns it into a 128-number embedding. Two faces belong to the same person when the Euclidean distance between their vectors is below 0.55. Everything runs with TensorFlow.js (WebGL) in your browser.",
   },
   pt: {
+    "caso.p": "Reconhecer uma pessoa sem enviar a imagem dela a um servidor. No POC original, os vetores dos rostos iam para uma API REST com SQLite.",
+    "caso.s": "face-api.js com TensorFlow.js (WebGL) no navegador: TinyFaceDetector encontra o rosto, 68 pontos o alinham e uma ResNet gera um embedding de 128 números. É a mesma pessoa quando a distância euclidiana fica abaixo de 0,55.",
+    "caso.r": "Reconhecimento em tempo real pela webcam, com 0 imagens enviadas e modelos de ~7 MB baixados só quando a câmera ou uma foto são usadas.",
+    "caso.m": "O face-api.js foi arquivado em 2025: hoje eu usaria uma biblioteca mantida (MediaPipe), calibraria o limiar de 0,55 com um conjunto rotulado e incluiria prova de vida contra fotos.",
     idle: "Os modelos de IA (~7 MB) só são baixados quando você usar a câmera, uma foto ou o exemplo.",
     "meta.title": "Reconhecimento Facial no Navegador",
     "meta.description": "Reconhecimento facial em tempo real com face-api.js: detecção, embeddings de 128 dimensões e comparação, tudo no seu navegador — a câmera nunca sai do seu aparelho.",
@@ -78,6 +86,10 @@ const T = {
     how: "<strong>Como funciona:</strong> o TinyFaceDetector encontra os rostos; uma rede de 68 pontos alinha cada um; uma ResNet gera um embedding de 128 números. Dois rostos são da mesma pessoa quando a distância euclidiana entre os vetores é menor que 0,55. Tudo roda com TensorFlow.js (WebGL) no seu navegador.",
   },
   es: {
+    "caso.p": "Reconocer a una persona sin enviar su imagen a un servidor. En el POC original, los vectores de los rostros iban a una API REST con SQLite.",
+    "caso.s": "face-api.js con TensorFlow.js (WebGL) en el navegador: TinyFaceDetector encuentra el rostro, 68 puntos lo alinean y una ResNet genera un embedding de 128 números. Es la misma persona cuando la distancia euclidiana queda por debajo de 0,55.",
+    "caso.r": "Reconocimiento en tiempo real por la webcam, con 0 imágenes enviadas y modelos de ~7 MB descargados solo cuando se usa la cámara o una foto.",
+    "caso.m": "face-api.js fue archivado en 2025: hoy usaría una biblioteca mantenida (MediaPipe), calibraría el umbral de 0,55 con un conjunto etiquetado e incluiría prueba de vida contra fotos.",
     idle: "Los modelos de IA (~7 MB) solo se descargan cuando uses la cámara, una foto o el ejemplo.",
     "meta.title": "Reconocimiento Facial en el Navegador",
     "meta.description": "Reconocimiento facial en tiempo real con face-api.js: detección, embeddings de 128 dimensiones y comparación, todo en tu navegador — la cámara nunca sale de tu dispositivo.",
