@@ -2,7 +2,7 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-Static portfolio site (GitHub Pages, no framework, no build step) plus a Cloudflare Worker (`worker/`) for the AI chat, job match, image demo and consented stats. Code, comments, commit messages and data keys are in **Portuguese**; keep that style. Specs live in `docs/sdd/` (pt) and `docs/sdd/en/`.
+Static portfolio site (GitHub Pages, no framework, no build step) plus a Cloudflare Worker (`worker/`) for the AI chat, image demo and consented stats. Code, comments, commit messages and data keys are in **Portuguese**; keep that style. Specs live in `docs/sdd/` (pt) and `docs/sdd/en/`.
 
 ## Commands
 
@@ -53,7 +53,7 @@ Data are classic scripts (not JSON/modules) so they run before paint, in `file:/
 ## Page families and their text systems
 
 - **Main site** (`index.html`, `script.js`): `t(key)` over `window.I18N`; `[data-i18n*]` attributes are translated in place.
-- **Demos, `vaga/`, `como-construi/`, `arquitetura/`**: each page passes its own 8-language dictionary to `Demo.setup()` (`demos/demos.js`), whose `t()` fills `{nome}`/`{nomeCompleto}` from the profile and appends ` — <full name>` to the tab title (don't repeat it in texts).
+- **Demos, `como-construi/`, `arquitetura/`**: each page passes its own 8-language dictionary to `Demo.setup()` (`demos/demos.js`), whose `t()` fills `{nome}`/`{nomeCompleto}` from the profile and appends ` — <full name>` to the tab title (don't repeat it in texts).
 - **Shared UI** (`components/components.js`, classic script, all pages): Web Components (`<site-logo>`, `<theme-toggle>` containing `<theme-intensity>`, `<sound-toggle>`), GitHub viewer, external-link cards, share dialog. Keeps small UI label tables and loads `i18n/<lang>.js` on demand (`siteTexts`) when a card needs profile text on pages without i18n.
 - **Résumé** (`curriculo.html`): built at runtime from `window.CURRICULO` + `PERFIL` + `I18N`; "Download PDF" links to `PERFIL.cvPdf(lang)` = Worker `GET /cv?lang=` (`src/rotas/curriculo.js`: Browser Run renders the published `curriculo.html` to A4, cached in D1 table `cv_pdf` per language + knowledge `VERSION`; on any failure it redirects to `curriculo.html?pdf=1`, which opens the browser's print dialog). There are no PDF files in the repo; old `/cv/*.pdf` links are redirected by `404.html`. Opened inside the main page via `demo-modal.js` (iframe, `?embed=1`).
 - **Architecture diagrams** (`arquitetura/`, `?p=financial|juridico|guardrail`): one tab per featured project, opened from the card's "Arquitetura" button (`arquitetura` field in `data/projetos.json`, `data-arq` → `demo-modal.js`); the portfolio's own diagram stays in `como-construi/`. Diagram, steps and card styles are shared in `components/diagrama.css`.
@@ -64,7 +64,7 @@ Data are classic scripts (not JSON/modules) so they run before paint, in `file:/
 
 ## Worker
 
-`worker/src/index.js` routes to `src/rotas/*` (chat, avaliacao, vaga, imagem, precos, visitas, metricas, status) and records one technical metric per response (route, result, ms → Analytics Engine `METRICAS`; unknown paths as `outra`); shared helpers in `src/comum.js` (models, CORS, Turnstile, rate limits, AI error kind, `registrarMetrica`); Workers Logs is on but only for the Worker's own `console` output (`invocation_logs: false`) — never log visitor text; cron in `src/agendado.js` (hourly retention purge, Monday summary e-mail). D1 stores only daily aggregate tables keyed by date (migrations in `worker/migrations/`). Tests import route handlers directly and mock `env`/`fetch`; tests that import the site's `api.js` must `import "../../perfil.js"` first.
+`worker/src/index.js` routes to `src/rotas/*` (chat, avaliacao, imagem, precos, visitas, metricas, status) and records one technical metric per response (route, result, ms → Analytics Engine `METRICAS`; unknown paths as `outra`); shared helpers in `src/comum.js` (models, CORS, Turnstile, rate limits, AI error kind, `registrarMetrica`); Workers Logs is on but only for the Worker's own `console` output (`invocation_logs: false`) — never log visitor text; cron in `src/agendado.js` (hourly retention purge, Monday summary e-mail). D1 stores only daily aggregate tables keyed by date (migrations in `worker/migrations/`). Tests import route handlers directly and mock `env`/`fetch`; tests that import the site's `api.js` must `import "../../perfil.js"` first.
 
 ## Project constraints
 

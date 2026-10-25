@@ -119,6 +119,7 @@ Legenda: ✅ concluída · ⏳ pendente · 💡 ideia
 - ✅ **T102** Currículo em PDF de verdade: `GET /cv` com Browser Run, cache no D1 (migração 0009) e a impressão como reserva; botões do modal, do currículo e da vaga apontam para `PERFIL.cvPdf` — RF-04
 - ✅ **T104** Pergunta por voz no chat: `chat/voz.js` + `POST /transcribe` (Whisper turbo), textos nos 8 idiomas, testes no Worker e teste de ponta a ponta (gravação real → Whisper) — RF-05.12
 - ✅ **T105** Idiomas reduzidos a inglês, português e espanhol (francês, italiano, alemão, chinês e russo removidos de `idiomas.js`, `i18n/`, demos, testes e documentação); `?lang=` antigo cai no inglês. As listas de sinônimos do chat continuam multilíngues — RF-02
+- ✅ **T106** Retirada a busca de emprego do site: selo "disponível para novos desafios", página `/vaga/` e `POST /match`, respostas prontas de tipo de vaga, pretensão e data de início, e a frase final da apresentação falada (`/vaga/` antigo → página inicial) — RF-14
 
 ---
 

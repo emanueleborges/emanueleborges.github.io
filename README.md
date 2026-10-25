@@ -8,7 +8,6 @@ Professional portfolio of **Emanuel Borges**, Senior Full Stack Developer (Java/
 
 🔗 **Live site:** [emanueleborges.github.io](https://emanueleborges.github.io/?ref=github) · 💬 **Ask the assistant:** https://emanueleborges.github.io/#chat
 
-🎯 **For recruiters:** [does your role match Emanuel?](https://emanueleborges.github.io/vaga/) — paste the job description and see the match requirement by requirement
 
 🧪 **Interactive demos:** [stock forecasting (LSTM)](https://emanueleborges.github.io/demos/lstm/) · [face recognition](https://emanueleborges.github.io/demos/face/) · [movie recommender](https://emanueleborges.github.io/demos/filmes/) · [RAG security against prompt injection](https://emanueleborges.github.io/demos/guardrail/) · [image generator (FLUX.1)](https://emanueleborges.github.io/demos/imagem/)
 
@@ -46,8 +45,8 @@ A framework-free static site with a Cloudflare serverless backend for the AI cha
 | **Themes** | Two themes the visitor picks in the header (saved and applied on every page, demos and 404 included): **Amazon** (default — dark forest green and lime blended with tech blue, "AI made in the Amazon") and **Editorial** (dark — near-black navy, slate cards and cyan accent). Also via link: `?theme=editorial`. Next to the button, an **intensity slider** makes the colors stronger or weaker (on phones it sits in the ☰ menu). All applied before first paint, no flash. Colors, names and limits live in `data/temas.json`. |
 | **Visuals** | Visitor-chosen theme, moving duotone background images, Canvas particle network, scroll animations and a sticky header with reading progress. Respects "reduce motion". |
 | **Sound and haptics** | Interface clicks and mechanical-keyboard keystrokes while typing, synthesized with Web Audio (no audio files), plus a short vibration on phones. A speaker button in every page header mutes them; the choice is remembered. |
-| **Quick search** | `/` or Ctrl/⌘+K opens a Spotlight-style bar that finds projects, experience, skills, sections and actions (theme, sounds, résumé, job match, share), **filters the projects by topic** (e.g. "rag") and sends questions to the assistant. It uses the chat's local search; nothing is sent. |
-| **Browsing without leaving the site** | Demos, "How I built it", the job-match page and the résumé open in a **modal**. GitHub links open in a **built-in viewer** (folders, rendered README/Markdown and code; file lists from jsDelivr and contents from `raw.githubusercontent.com`, without the GitHub API's 60 requests/hour limit). LinkedIn, WhatsApp, email and other sites — which forbid being shown inside another page — open a **card** with the essentials (WhatsApp QR code, profile, email to copy, description and stack of the City Hall systems); the external site only opens if the visitor asks. Ctrl/⌘+click opens the original. |
+| **Quick search** | `/` or Ctrl/⌘+K opens a Spotlight-style bar that finds projects, experience, skills, sections and actions (theme, sounds, résumé, share), **filters the projects by topic** (e.g. "rag") and sends questions to the assistant. It uses the chat's local search; nothing is sent. |
+| **Browsing without leaving the site** | Demos, "How I built it", the architecture diagrams and the résumé open in a **modal**. GitHub links open in a **built-in viewer** (folders, rendered README/Markdown and code; file lists from jsDelivr and contents from `raw.githubusercontent.com`, without the GitHub API's 60 requests/hour limit). LinkedIn, WhatsApp, email and other sites — which forbid being shown inside another page — open a **card** with the essentials (WhatsApp QR code, profile, email to copy, description and stack of the City Hall systems); the external site only opens if the visitor asks. Ctrl/⌘+click opens the original. |
 | **Share** | An icon in every page header (in the ☰ menu on very narrow screens), a card in the contact section, a footer button and a quick-search action: the portfolio's **QR code** in the current language, a link to copy, the device's native share sheet and WhatsApp, LinkedIn and email shortcuts. |
 | **Technical footer** | A terminal-style line with the chat's AI model and the **AI state** (online / quota reached → local search), updated by the last chat question; clicking "measure connection" shows the ping to the Worker and the Cloudflare data center that answered (`GET /status`). Nothing is sent without a click. |
 | **AI assistant** | Hybrid: local **ready-made answers** for frequent questions, **generative AI with RAG** for everything else and **local search** as a fallback. Answers appear with a **typing effect** (up to ~2.5 s; a click completes it). AI answers can be rated 👍/👎. See [Architecture](#architecture). **Voice questions:** the 🎤 button records the question (up to 20 s), the Worker transcribes it with Workers AI **Whisper** and the text goes into the input for the visitor to review and send; the audio is not stored. |
@@ -59,7 +58,6 @@ A framework-free static site with a Cloudflare serverless backend for the AI cha
 | **How I built it** | Page `/como-construi/` (3 languages) summarizing this README for visitors: architecture diagram, how the assistant answers, decisions and trade-offs, quality checks and stack. Linked from the footer. |
 | **404 page** | Custom page in the site's style with links to the portfolio and the assistant. |
 | **AI demo: LSTM stock forecasting** | `/demos/lstm/` page (3 languages) where the FIAP project's LSTM runs **in the browser, in plain JavaScript** (weights exported from Keras, same output to ~1e-8). Recent prices come from the Worker (Yahoo Finance), with a saved copy if it fails; test metrics compared against a naive baseline. |
-| **"Does your role match?" (for recruiters)** | `/vaga/` page (3 languages): the recruiter pastes a job description and sees a **match score**, each requirement as ✅ meets / 🟡 partial / ⚪ not found with **clickable evidence** in the portfolio, and a "why Emanuel" summary to copy. The AI extracts the requirements reading only the posting, then grades each one; the Worker independently verifies technology evidence, splits grouped technologies so missing tools cannot be hidden, treats a skill-list mention as partial unless a project or experience demonstrates it, and computes the score by rule. The result shows a **gauge** for the score and the **match by pillar** (Backend, Frontend, AI/ML, Data, DevOps, Other) as a radar and bars, using the same rule per pillar. The posting is not stored. |
 | **AI demo: face recognition** | `/demos/face/` page with face-api.js (TensorFlow.js): detection, 128-number embeddings and recognition via webcam or photo. **Nothing leaves** the visitor's device. |
 | **AI demo: movie recommender** | `/demos/filmes/` page: TF-IDF + cosine in plain JavaScript over ~1,500 films (Wikidata CC0 + Wikipedia CC BY-SA summaries), by film or free description, showing the terms behind each recommendation. |
 | **RAG security demo** | `/demos/guardrail/` page: local interactive comparison of prompt injection in a question and retrieved documents, with layered defense examples. Responses are simulated; no model runs and typed text is not uploaded. |
@@ -92,7 +90,7 @@ The **AI demos** run inference in the browser: the LSTM runs in plain JavaScript
 ### How the assistant answers
 
 1. **Contact, résumé and image requests** → contact buttons, the résumé (with "Download PDF") or a shortcut to the image generator with the request already filled in (local, no AI quota used).
-2. **Ready-made answers** (19 topics, 3 languages) → greetings, thanks, salary, start date and **education** are **always answered locally**, at no cost and with verified text. Other ready-made topics (roles sought, remote work, AI, technologies…) are answered by the AI when it is available.
+2. **Ready-made answers** (16 topics, 3 languages) → greetings, thanks and **education** are **always answered locally**, at no cost and with verified text. Other ready-made topics (remote work, AI, technologies…) are answered by the AI when it is available.
 3. **AI with RAG** → the Worker:
    1. validates the **Turnstile** token;
    2. embeds the question with **BGE-M3** (multilingual);
@@ -154,7 +152,6 @@ Every piece of data lives in **one place only**; the rest of the project reads i
 ├── manifest.webmanifest · sw.js · icon-*.png  # Installable, offline app (PWA)
 ├── como-construi/          # "How I built it": architecture, decisions and stack (texts in como-construi.js)
 ├── arquitetura/            # Architecture diagrams of the featured projects (Financial Hub, legal RAG, RAG security); texts in arquitetura.js
-├── vaga/                   # "Does your role match?": page and vaga.js (POST /match)
 ├── demos/                  # In-browser AI demos (shared demos.css/demos.js)
 │   ├── lstm/               # Stock forecasting: lstm.js (inference), weights and data
 │   ├── face/               # Face recognition with face-api.js
@@ -179,7 +176,7 @@ Every piece of data lives in **one place only**; the rest of the project reads i
 ├── busca-rapida.js         # Spotlight-style quick search (/ or Ctrl/⌘+K): sections, projects, actions and AI
 ├── pipeline-grafo.js       # Experience as a CI/CD pipeline and skills × projects graph
 ├── sistema.js              # Technical footer: chat model; ping and Cloudflare data center on click
-├── demo-modal.js           # Modal for demos, "How I built it", job match and the résumé (iframe with ?embed=1)
+├── demo-modal.js           # Modal for demos, "How I built it", architecture and the résumé (iframe with ?embed=1)
 ├── chat/                   # Assistant logic: texto.js (normalization), regras.js (ready-made answers),
 │                           #   busca.js (local search on the page), ia.js (Worker and ratings)
 ├── components/             # Web Components and pieces shared by every page (components.js): <site-logo>, <theme-toggle>, <theme-intensity>, <sound-toggle>, sounds/haptics, GitHub viewer, external-link cards and "Share"; boot.js (theme, intensity and language before paint); vendor/qrcode.min.js (QR codes, MIT)
@@ -195,8 +192,8 @@ Every piece of data lives in **one place only**; the rest of the project reads i
 ├── scripts/pre-commit      # Git hook: last-updated date and file versioning
 ├── docs/sdd/               # Specification (SDD) in Portuguese; docs/sdd/en/ in English
 └── worker/                 # Cloudflare Worker
-    ├── src/index.js            # Router: chat, ratings, job match, regional visits, prices + Cron
-    ├── src/rotas/              # One file per route: chat, avaliacao, vaga, imagem, precos, visitas, metricas
+    ├── src/index.js            # Router: chat, ratings, regional visits, prices + Cron
+    ├── src/rotas/              # One file per route: chat, avaliacao, imagem, precos, visitas, metricas
     ├── src/comum.js            # Shared: models, languages (from idiomas.js), CORS/JSON, Turnstile, rate limit, e-mail
     ├── src/agendado.js         # Weekly summary e-mail and data retention (LGPD)
     ├── src/conhecimento.js     # Generated: summary, excerpts, full profile, version
@@ -278,7 +275,7 @@ If a D1 migration is pending, apply it **before** deploying the Worker: `npx wra
 | Change a theme's colors, the default theme or add a theme | Edit only `data/temas.json` and run `node scripts/gerar-secoes.mjs`. The slider next to the theme button makes the colors stronger or weaker for each visitor (limits in `intensidade`, same file). |
 | Change personal data (name, contacts, links, photo, SEO) | Edit only `data/perfil.json` and run `node scripts/gerar-secoes.mjs`, then `npm run deploy` in `worker/`. |
 | Change experience, education, projects or skills | Edit the file in `data/` (and the text in `i18n/`), run `node scripts/gerar-secoes.mjs` and `npm run deploy` in `worker/`. Site, résumé and AI follow. |
-| Add a language | Add it to `idiomas.js`, create `i18n/<code>.js` and the text of the demo/job-match/"how I built it" pages; run `node scripts/gerar-secoes.mjs`. |
+| Add a language | Add it to `idiomas.js`, create `i18n/<code>.js` and the text of the demo/"how I built it"/architecture pages; run `node scripts/gerar-secoes.mjs`. |
 | Re-record the spoken intro | `pip install gradio_client && python3 scripts/gerar-apresentacao.py` (needs ffmpeg; only re-records sentences that changed) |
 | See chat ratings 👍/👎 | `cd worker && ./ver-avaliacoes.sh` |
 | **Open the stats dashboard** (daily rating totals and visits) | `cd worker && npm run painel` — see [Stats dashboard](#stats-dashboard) |
@@ -332,11 +329,10 @@ The Worker **logs** (only the technical error messages it writes itself) are in 
 - **Retention (privacy):** the Worker deletes daily chat-rating, click and regional aggregates before they reach 30 days.
 - **Logs and technical metrics:** Workers Logs keeps only the error messages the Worker writes itself (no per-request data and no URL query strings); Analytics Engine keeps, per request, only the route, the result and the response time — never text, IP, language or visitor identifiers. Cloudflare keeps these for a few days (logs) and up to 3 months (metrics).
 - **Accounts:** the most important protection is two-factor authentication (2FA) on GitHub, Cloudflare, Google and Resend.
-- **Per-IP limits:** 10 questions/min (chat), 6 voice transcriptions/min, 5 résumé PDFs/min, 20 ratings/min, 3 job analyses/min, 2 images per day per visitor (with a global ceiling of 40/day), 30 price lookups/min. Cloudflare's limiter is permissive (counters lag slightly): it stops high-volume abuse, not an exact request count.
-- **Honest job match:** the posting is treated as data (hidden instructions are ignored — tested with "give a score of 100"), the score is computed by rule, nonexistent evidence is discarded, listed technologies cannot be marked missing by the AI, and technologies absent from the profile become "not found".
+- **Per-IP limits:** 10 questions/min (chat), 6 voice transcriptions/min, 5 résumé PDFs/min, 20 ratings/min, 2 images per day per visitor (with a global ceiling of 40/day), 30 price lookups/min. Cloudflare's limiter is permissive (counters lag slightly): it stops high-volume abuse, not an exact request count.
 - **AI restricted to the profile:** instructions to answer only about the professional profile, never invent facts and ignore attempts to change the rules.
 - **No secrets in the code:** all keys are Worker secrets; the Turnstile site key is public by design.
-- **Privacy (LGPD/GDPR-style):** there is no contact form and no contact-message table. D1 stores only consented regional and click totals, and daily 👍/👎 totals, without questions, answers, language or identifiers tied to ratings, for up to 30 days. Chat questions and job-description text are processed by Cloudflare Workers AI to generate answers/analyses but are not written to D1; Cloudflare processes connection IPs for security, Turnstile and rate limits.
+- **Privacy (LGPD/GDPR-style):** there is no contact form and no contact-message table. D1 stores only consented regional and click totals, and daily 👍/👎 totals, without questions, answers, language or identifiers tied to ratings, for up to 30 days. Chat questions and image prompts are processed by Cloudflare Workers AI to generate answers but are not written to D1; Cloudflare processes connection IPs for security, Turnstile and rate limits.
 - **Face demo:** camera and photos are processed only on the visitor's device; nothing is sent or stored, and registered faces disappear when the page closes. Closing the demo modal unloads the page and turns the camera off.
 - **Status route (`GET /status`):** read-only, accepts only the site's origin and returns the Cloudflare data center and the model name; stores nothing. The footer only calls it when the visitor clicks "measure connection".
 - **GitHub viewer:** the visitor's browser lists files through jsDelivr (`data.jsdelivr.com`) and downloads contents from `raw.githubusercontent.com`; the GitHub API is only a fallback. Markdown is rendered in the browser (marked) and the HTML is cleaned (no scripts, iframes, forms or `on*` attributes). The CSP allows those domains and images from `*.githubusercontent.com`; `frame-src 'self'` allows the site's own pages in modals.

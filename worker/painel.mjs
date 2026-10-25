@@ -175,7 +175,7 @@ async function workerMetrics() {
 
 console.log("Buscando métricas técnicas no Analytics Engine…");
 const metrics = await workerMetrics();
-const routeNames = { "/": "Chat com IA", "/match": "Sua vaga combina?", "/image": "Gerador de imagens", "/feedback": "Avaliações", "/visit": "Visitas", "/click": "Cliques", "/prices": "Preços (LSTM)", "/status": "Rodapé técnico", outra: "Outros caminhos (robôs)" };
+const routeNames = { "/": "Chat com IA", "/image": "Gerador de imagens", "/feedback": "Avaliações", "/visit": "Visitas", "/click": "Cliques", "/prices": "Preços (LSTM)", "/status": "Rodapé técnico", outra: "Outros caminhos (robôs)" };
 const metricsHtml = (() => {
   if (metrics.error) {
     return `<p class="muted">Não foi possível ler as métricas (${escape(metrics.error)}). Crie um token em Cloudflare → Gerenciar conta → Tokens de API com a permissão <b>Account Analytics: Read</b> e rode <code>CLOUDFLARE_API_TOKEN=… npm run painel</code>. Logo depois do primeiro deploy com métricas, a tabela pode demorar alguns minutos para existir.</p>`;

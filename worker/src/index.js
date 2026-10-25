@@ -1,7 +1,6 @@
 // Cloudflare Worker do portfólio (tudo no plano gratuito do Cloudflare):
 //   POST /         → chat com IA (Workers AI), usando só o perfil da pessoa do portfólio (src/conhecimento.js)
 //   POST /feedback → total diário agregado de avaliações 👍/👎, sem texto associado
-//   POST /match    → "Essa vaga combina?": requisitos da vaga × perfil, com evidências e nota
 //   POST /visit    → contagem agregada por continente, somente após consentimento
 //   POST /click    → total diário de cliques por link (LinkedIn, GitHub…), somente após consentimento
 //   POST /transcribe → pergunta falada no chat: áudio → texto (Whisper), sem guardar o áudio
@@ -15,7 +14,6 @@
 import { MODEL, aiState, corsHeaders, json, registrarMetrica } from "./comum.js";
 import { handleChat } from "./rotas/chat.js";
 import { handleFeedback } from "./rotas/avaliacao.js";
-import { handleMatch } from "./rotas/vaga.js";
 import { handlePrices } from "./rotas/precos.js";
 import { handleVisit } from "./rotas/visitas.js";
 import { handleClick } from "./rotas/metricas.js";
@@ -28,7 +26,6 @@ import { purgeOldData, sendWeeklySummary } from "./agendado.js";
 const POST_ROUTES = {
   "/": handleChat,
   "/feedback": handleFeedback,
-  "/match": handleMatch,
   "/click": handleClick,
   "/image": handleImage,
   "/transcribe": handleTranscribe,

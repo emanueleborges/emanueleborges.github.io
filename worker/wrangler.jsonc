@@ -49,12 +49,6 @@
       "namespace_id": "1003",
       "simple": { "limit": 20, "period": 60 }
     },
-    // Até 3 análises de vaga ("Essa vaga combina?") por minuto por visitante (IP).
-    {
-      "name": "MATCH_LIMITER",
-      "namespace_id": "1005",
-      "simple": { "limit": 3, "period": 60 }
-    },
     // Até 30 consultas de preços (demo do LSTM) por minuto por visitante (IP).
     {
       "name": "PRICES_LIMITER",

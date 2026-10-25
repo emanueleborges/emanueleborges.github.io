@@ -27,7 +27,7 @@ flowchart TB
     CONH[worker/src/conhecimento.js]
   end
   subgraph Navegador
-    PAGES["index.html · demos/ · vaga/ · como-construi/ · curriculo.html · 404"]
+    PAGES["index.html · demos/ · como-construi/ · arquitetura/ · curriculo.html · 404"]
     SW[sw.js — offline]
   end
   subgraph CF["Cloudflare (plano gratuito)"]
@@ -48,7 +48,7 @@ flowchart TB
   I18N --> KNOW
   KNOW --> CONH
   PERFIL & TEMAS & HTML & MEDIA --> PAGES
-  PAGES -->|chat, vaga, imagem, avaliação, estatísticas| WORKER
+  PAGES -->|chat, imagem, avaliação, estatísticas| WORKER
   PAGES --> GH
   WORKER --> TURN
   WORKER --> WAI
@@ -83,7 +83,7 @@ flowchart TB
 - gera as `<option>` dos seletores de idioma, o `theme-color`, o endereço do Worker na CSP, `temas.css`, o bloco de temas do `boot.js`, `perfil.js`, `manifest`, `robots`, `sitemap` e as variáveis do `wrangler.jsonc`;
 - com `--check`, só compara e falha se algo estiver desatualizado (usado no CI).
 
-**Conhecimento da IA (`worker/gerar-conhecimento.mjs`)** — lê `data/` e `i18n/en.js` (pt como reserva) pelo mesmo `scripts/dados.mjs` e grava `worker/src/conhecimento.js`: `CORE` (resumo fixo), `CHUNKS` (37 trechos: resumo, cargo atual, diferenciais, vagas buscadas, disponibilidade, contato, empregos com os sistemas desenvolvidos, setor público, um por projeto com tecnologias, métricas verificáveis e links do código e da demo, "o que fazer no site", habilidades por categoria, soft skills, formação, certificações e idiomas — tudo gerado de `data/` e `i18n/`, sem texto escrito à mão no gerador), `PROFILE` (tudo junto, reserva quando o RAG falha), `NOME`/`PRIMEIRO_NOME` (usados nos prompts) e `VERSION` (hash que identifica a versão do conhecimento).
+**Conhecimento da IA (`worker/gerar-conhecimento.mjs`)** — lê `data/` e `i18n/en.js` (pt como reserva) pelo mesmo `scripts/dados.mjs` e grava `worker/src/conhecimento.js`: `CORE` (resumo fixo), `CHUNKS` (36 trechos: resumo, cargo atual, diferenciais, vagas buscadas, disponibilidade, contato, empregos com os sistemas desenvolvidos, setor público, um por projeto com tecnologias, métricas verificáveis e links do código e da demo, "o que fazer no site", habilidades por categoria, soft skills, formação, certificações e idiomas — tudo gerado de `data/` e `i18n/`, sem texto escrito à mão no gerador), `PROFILE` (tudo junto, reserva quando o RAG falha), `NOME`/`PRIMEIRO_NOME` (usados nos prompts) e `VERSION` (hash que identifica a versão do conhecimento).
 
 ---
 
@@ -108,11 +108,11 @@ Os dados são scripts clássicos (e não JSON ou módulos) para rodar antes da p
 | `busca-rapida.js` | Busca rápida (Spotlight); filtra cards de projeto; envia perguntas ao chat. |
 | `pipeline-grafo.js` | Experiência como esteira e grafo habilidades × projetos. |
 | `sistema.js` | Rodapé técnico: modelo, estado da IA (evento `aistate` do chat ou `GET /status`), ping e data center só ao clicar. |
-| `demo-modal.js` | Modal com `<iframe>` (`?embed=1`) para demos, vaga, "Como construí" e currículo; no currículo, o botão da barra imprime o iframe. |
+| `demo-modal.js` | Modal com `<iframe>` (`?embed=1`) para demos, "Como construí", arquitetura e currículo; no currículo, o botão da barra imprime o iframe. |
 | `apresentacao.js` | Player da apresentação falada (faixas em `PERFIL.audio.apresentacao`, legenda por frase). |
 | `components/components.js` | Web Components `<site-logo>`, `<theme-toggle>` (com `<theme-intensity>` dentro), `<theme-intensity>` (também sozinho, no menu ☰), `<sound-toggle>`; sons; visualizador do GitHub; cartões de links externos; "Compartilhar". Carrega `i18n/<idioma>.js` sob demanda (`siteTexts`) quando um cartão precisa de texto do perfil numa página sem traduções. |
 | `components/boot.js` | Tema, intensidade e idioma antes da pintura; bloco de temas gerado. |
-| `demos/demos.css` · `demos/demos.js` | Base das demos, vaga e "Como construí": `Demo.setup(textos)` com dicionário próprio nos 3 idiomas; `t()` preenche `{nome}`/`{nomeCompleto}` e acrescenta " — <nome completo>" ao título da aba. |
+| `demos/demos.css` · `demos/demos.js` | Base das demos, "Como construí" e arquitetura: `Demo.setup(textos)` com dicionário próprio nos 3 idiomas; `t()` preenche `{nome}`/`{nomeCompleto}` e acrescenta " — <nome completo>" ao título da aba. |
 | `curriculo.html` | Currículo A4 montado no navegador a partir de `window.CURRICULO` (bloco gerado), `PERFIL` e `I18N`; botão "Baixar PDF" (impressão); `?pdf=1` imprime ao carregar. |
 | `temas.css` · `styles.css` | Cores dos temas (gerado) · visual do site. |
 | `manifest.webmanifest` · `sw.js` | App instalável e offline; o `sw.js` importa o `perfil.js` para pré-carregar a foto. |
@@ -120,7 +120,7 @@ Os dados são scripts clássicos (e não JSON ou módulos) para rodar antes da p
 ### 3.3 Internacionalização
 - O HTML do site traz o português (copiado do `i18n/pt.js`); ao trocar o idioma, `script.js` aplica `I18N[lang]` e restaura o original para `pt`. Chave ausente → português.
 - Os nomes nas traduções vêm do perfil (`${P.nome}`, `${P.nomeCompleto}`).
-- Demos, vaga e "Como construí" têm dicionários próprios via `Demo.setup`; os textos usam `{nome}`.
+- Demos, "Como construí" e arquitetura têm dicionários próprios via `Demo.setup`; os textos usam `{nome}`.
 - O idioma inicial é decidido só no `boot.js` (`IDIOMA_INICIAL`); `languagechange` notifica chat, filtros e componentes.
 
 ### 3.4 Busca local do assistente
@@ -135,7 +135,7 @@ Os dados são scripts clássicos (e não JSON ou módulos) para rodar antes da p
 pergunta
  ├─ currículo?  → atalho para o currículo (local; abre o modal com "Baixar PDF")
  ├─ contato?    → botões de contato (local)
- ├─ tema pronto LOCAL_ONLY (greeting, thanks, salary, start, education) → resposta pronta
+ ├─ tema pronto LOCAL_ONLY (greeting, thanks, education) → resposta pronta
  ├─ IA disponível? → POST / (Worker) → resposta da IA + "Ver na página"
  │                   └─ falhou ({ error: quota | unavailable }) → aviso + busca local; evento aistate → rodapé
  └─ sem IA → tema pronto ou busca local
@@ -172,7 +172,6 @@ Sons por Web Audio e vibração; modais para páginas do site; visualizador do G
 | `POST /` | Chat com IA (RAG) | origem, 10/min/IP, Turnstile, validação | nada |
 | `POST /transcribe` | Pergunta falada → texto (Whisper turbo; idioma do site como dica) | origem, 6/min/IP, Turnstile, áudio ≤ 1,5 MB em base64 (WebM/Opus ou MP4/AAC) | nada |
 | `POST /feedback` | Avaliação 👍/👎 | origem, 20/min/IP, Turnstile | total diário por tipo |
-| `POST /match` | "Sua vaga combina?" | origem, 3/min/IP, Turnstile, 80–8.000 caracteres | nada |
 | `POST /image` | Gerador de imagens (FLUX.1) | origem, 2/min/IP, Turnstile, filtro de termos, Llama Guard, 2/dia por visitante, teto global de 40/dia | total do dia; HMAC diário do IP para a cota (apagado no dia seguinte) |
 | `POST /visit` | Contagem por continente (após consentimento) | origem, 20/min/IP | total diário por continente |
 | `POST /click` | Cliques por link (após consentimento) | origem, 30/min/IP, Turnstile, alvos fixos | total diário por alvo |
@@ -186,10 +185,6 @@ Sons por Web Audio e vibração; modais para páginas do site; visualizador do G
 
 **Fluxo:** origem → limite → validação → Turnstile → normalização → **RAG** (BGE-M3 → Vectorize top 6 → resumo fixo + trechos; em falha, perfil completo) → Qwen3 30B (`temperature 0.1`, `max_tokens 600`, `/no_think`) pelo AI Gateway **sem cache** → limpeza (`<think>`, Markdown). Em erro, `aiErrorKind()` classifica e, se for cota, marca a IA como "quota" até 00:00 UTC (na memória daquela instância do Worker).
 
-#### `POST /match` — análise de vaga
-**200:** `{ "role", "score": 0-100, "requirements": [{ "requirement", "importance": "must|nice", "level": "strong|partial|none", "evidence": ["id do trecho"], "reason" }], "pitch" }`.
-**Fluxo:** etapa 1 — Qwen3 extrai cargo e requisitos lendo só a vaga (JSON com schema); etapa 2 — avalia a lista contra até 18 trechos relevantes do perfil; **conferência no Worker** (descarta ids inexistentes, separa tecnologias agrupadas, skill só listada ⇒ parcial, tecnologia ausente ⇒ none) → nota = Σ(peso × valor)/Σ peso (obrigatório 2, diferencial 1; forte 1, parcial 0,5, ausente 0).
-
 #### `GET /status`
 **200:** `{ "colo": "GRU", "model": "qwen3-30b-a3b-fp8", "ai": "online" | "quota" }`. Só leitura; o site só chama quando o visitante clica em "medir conexão".
 
@@ -199,7 +194,7 @@ Sons por Web Audio e vibração; modais para páginas do site; visualizador do G
 | `AI` | Workers AI |
 | `VECTORIZE` | Índice `portfolio-profile` (1024 dimensões, cosseno) |
 | `DB` | D1 `portfolio-contact` |
-| `CHAT_LIMITER` · `FEEDBACK_LIMITER` · `MATCH_LIMITER` · `PRICES_LIMITER` · `VISIT_LIMITER` · `CLICK_LIMITER` · `IMAGE_LIMITER` | 10 · 20 · 3 · 30 · 20 · 30 · 2 pedidos/60 s; `CV_LIMITER` 5 e `TRANSCRIBE_LIMITER` 6 |
+| `CHAT_LIMITER` · `FEEDBACK_LIMITER` · `PRICES_LIMITER` · `VISIT_LIMITER` · `CLICK_LIMITER` · `IMAGE_LIMITER` | 10 · 20 · 30 · 20 · 30 · 2 pedidos/60 s; `CV_LIMITER` 5 e `TRANSCRIBE_LIMITER` 6 |
 | `ALLOWED_ORIGIN` · `NOTIFY_EMAIL` | **gerados** a partir do `data/perfil.json` |
 | `TURNSTILE_SECRET` · `RESEND_API_KEY` | *secrets* (fora do repositório) |
 | `METRICAS` | Workers Analytics Engine, dataset `portfolio_metricas`: uma métrica por resposta (rota, resultado, ms), registrada no roteador; lida pelo `npm run painel` (token com *Account Analytics: Read*) |
@@ -248,7 +243,7 @@ Não há tabelas de mensagens, perguntas ou respostas. Todas as tabelas do D1 s�
 ## 7. Qualidade
 
 - **CI (`.github/workflows/testes.yml`):** `node --check` em todos os scripts; validação do `sitemap.xml` e do JSON-LD; `gerar-secoes.mjs --check`; `conferir-modulos.mjs`; geração do conhecimento; testes do Worker (40), da demo de segurança (6) e do chat (104 = 96 casos + fallback da IA nos 3 idiomas, em Chrome headless sem rede); Lighthouse (3 medições; acessibilidade ≥ 95, boas práticas ≥ 90, SEO ≥ 95).
-- **Testes do Worker:** origem errada, campos inválidos, Turnstile, limites, rota inexistente, agregações, retenção, imagem, vaga, erro 3036 → `503 quota` e `ai: "quota"` no `/status`.
+- **Testes do Worker:** origem errada, campos inválidos, Turnstile, limites, rota inexistente, agregações, retenção, imagem, erro 3036 → `503 quota` e `ai: "quota"` no `/status`.
 - **Verificações manuais registradas:** troca completa do perfil por uma pessoa fictícia; comparação das cores calculadas antes/depois dos temas; medição do cabeçalho em 320–390 px; texto do PDF igual ao dos PDFs anteriores.
 
 ---
@@ -276,7 +271,7 @@ Não há tabelas de mensagens, perguntas ou respostas. Todas as tabelas do D1 s�
 | ADR-19 | GitHub Actions para testes | Só local | Gratuito; impede publicar algo quebrado. |
 | ADR-21 | *Service worker* próprio | Workbox | Sem dependência; página sempre atual. |
 | ADR-23 | Demos de inferência no navegador | Hugging Face Spaces, TensorFlow.js | Custo zero e sem servidor. |
-| ADR-27 | Match de vaga em duas etapas + conferências determinísticas e nota por regra | Uma chamada; nota pela IA | A IA sozinha inventava requisitos e omitia lacunas. |
+| ADR-27 | ~~Match de vaga em duas etapas + conferências determinísticas e nota por regra | Uma chamada; nota pela IA | A IA sozinha inventava requisitos e omitia lacunas.~~ Retirado em 25/10/2026, com a página `/vaga/`. |
 | ADR-28 | Temas por variáveis CSS + script no `<head>` | Tema único; `prefers-color-scheme` | Identidade "Amazônia" como padrão, sem "flash". |
 | ADR-29 | Componentização sem framework (Web Components, gerador de HTML, módulos ES com importmap, rotas do Worker em arquivos) | React/Vue/Astro; Vite | Sem build; HTML continua estático (SEO e busca do chat). |
 | ADR-31 | Páginas do site em modal (`<iframe>`, `?embed=1`) | Navegar; SPA | Mantém o visitante sem reescrever as páginas. |
