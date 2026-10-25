@@ -41,23 +41,4 @@
   if (forca >= TEMAS.intensidade.min && forca <= TEMAS.intensidade.max) document.documentElement.style.setProperty("--intensidade", forca);
   var meta = document.querySelector('meta[name="theme-color"]');
   if (meta) meta.content = TEMAS.temas[theme].fundo;
-  // Abertura do index.html no celular (.splash, styles.css): uma vez por visita; some quando a página
-  // termina de carregar, mas só depois de o logo acabar de se desenhar (o CSS a esconde sozinho em 8 s).
-  var sessao = function (valor) {
-    try {
-      return valor ? sessionStorage.setItem("splash", "1") : sessionStorage.getItem("splash");
-    } catch (e) {
-      return null; // navegação privada
-    }
-  };
-  if (sessao()) document.documentElement.classList.add("splash-visto");
-  else {
-    var inicio = Date.now();
-    addEventListener("load", function () {
-      setTimeout(function () {
-        document.documentElement.classList.add("splash-fim");
-        sessao(true);
-      }, Math.max(0, 2000 - (Date.now() - inicio)));
-    });
-  }
 })();
