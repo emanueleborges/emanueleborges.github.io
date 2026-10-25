@@ -127,6 +127,21 @@
       "icon": "imagens/logos/skills/huggingface.svg"
     },
     {
+      "name": "GitHub Copilot",
+      "category": "ia",
+      "icon": "imagens/logos/skills/githubcopilot.svg"
+    },
+    {
+      "name": "Cursor",
+      "category": "ia",
+      "icon": "imagens/logos/skills/code.svg"
+    },
+    {
+      "name": "Claude Code",
+      "category": "ia",
+      "icon": "imagens/logos/skills/claude.svg"
+    },
+    {
       "name": "PostgreSQL",
       "category": "dados",
       "icon": "imagens/logos/skills/postgresql.svg"

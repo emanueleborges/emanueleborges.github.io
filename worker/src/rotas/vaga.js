@@ -150,6 +150,10 @@ const requirementWords = (value) => [...new Set(normalizeText(value).match(/[\p{
 // Requisito de idioma falado (nome do idioma nas 8 línguas do site; na busca por palavras ele é stop word).
 const SPOKEN_LANGUAGE = /\b(ingles[ae]?|english|englisch|anglais|espanhol|spanish|espanol|spanisch|espagnol|spagnolo|portugues[ea]?|portuguese|portugiesisch|portugais|portoghese)\b|英语|英文|西班牙语|葡萄牙语|англи|испанск|португальск/u;
 const LANGUAGES_CHUNK = CHUNKS.find((chunk) => chunk.id === "languages");
+// Modelo de trabalho, fuso e contrato ("Remota", "Híbrido", "PJ"…): o trecho de disponibilidade está em inglês,
+// então a busca por palavras não acha "remota" em "remotely".
+const WORK_MODEL = /\b(remot[aoe]s?|remotely|remotamente|home ?office|anywhere|hibrid[oa]s?|hybrid|presencial|on-?site|teletrabajo|teletrabalho|teletravail|telelavoro|fernarbeit|time ?zone|fuso|zona horaria|clt|pj|contractor)\b|远程|居家|удален/u;
+const AVAILABILITY_CHUNK = CHUNKS.find((chunk) => chunk.id === "availability");
 
 // Limit each requirement to a small, directly relevant profile context instead of sending all 32 excerpts.
 export function relevantProfileChunks(requirements) {
@@ -160,6 +164,8 @@ export function relevantProfileChunks(requirements) {
     let candidates;
     if (SPOKEN_LANGUAGE.test(normalizeText(requirement.requirement))) {
       candidates = [LANGUAGES_CHUNK];
+    } else if (WORK_MODEL.test(normalizeText(requirement.requirement))) {
+      candidates = [AVAILABILITY_CHUNK];
     } else if (terms.length) {
       const matches = CHUNKS.filter((chunk) => terms.some((term) => termPattern(term).test(chunk.text)));
       const concrete = matches.filter((chunk) => /^(job|p)\d+$/.test(chunk.id));

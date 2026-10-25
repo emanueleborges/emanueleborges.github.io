@@ -82,6 +82,12 @@ test("spoken-language requirements in any site language get the languages excerp
   }
 });
 
+test("work-model requirements in any language get the availability excerpt", () => {
+  for (const requirement of ["Remota", "Trabalho 100% remoto", "Fully remote", "Teletrabajo", "Híbrido", "Contratação PJ", "远程工作", "Удалённая работа"]) {
+    assert.deepEqual(relevantProfileChunks([{ requirement, importance: "must" }]).map(({ id }) => id), ["availability"], requirement);
+  }
+});
+
 test("unrelated requirements do not send the full profile to the grading model", () => {
   assert.deepEqual(relevantProfileChunks([{ requirement: "work on Mars", importance: "must" }]), []);
 });
