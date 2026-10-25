@@ -142,6 +142,16 @@
       "icon": "imagens/logos/skills/claude.svg"
     },
     {
+      "name": "Gemini CLI",
+      "category": "ia",
+      "icon": "imagens/logos/skills/googlegemini.svg"
+    },
+    {
+      "name": "OpenAI Codex",
+      "category": "ia",
+      "icon": "imagens/logos/skills/openai.svg"
+    },
+    {
       "name": "PostgreSQL",
       "category": "dados",
       "icon": "imagens/logos/skills/postgresql.svg"
