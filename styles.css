@@ -685,3 +685,32 @@ main, .footer { position: relative; z-index: 1; }
 @keyframes logo-pop { from { transform: scale(0); } }
 @keyframes logo-pulse { 0% { transform: scale(1); stroke-opacity: .55; } 70%, 100% { transform: scale(1.9); stroke-opacity: 0; } }
 @media (prefers-reduced-motion: reduce) { .logo-ring, .logo-e, .logo-node { animation: none !important; } }
+
+/* Abertura no celular (index.html .splash, controle em components/boot.js): a borda se desenha, depois o "E",
+   o ponto aparece e o anel pulsa; a barra corre até a página carregar. Some com .splash-fim (ou sozinha em 8 s). */
+.splash { display: none; }
+@media (max-width: 760px) {
+  .splash { position: fixed; inset: 0; z-index: 2147483600; display: grid; place-content: center; justify-items: center; gap: 26px; background: var(--bg); animation: splash-sair .45s ease 8s forwards; }
+  .splash-visto .splash { display: none; }
+  .splash-fim .splash { animation: splash-sair .45s ease forwards; }
+}
+.splash-logo { overflow: visible; filter: drop-shadow(0 0 24px rgba(var(--accent-rgb), .35)); }
+.splash-fundo { opacity: 0; animation: splash-surgir .5s ease .55s forwards; }
+/* Traços: dasharray 101 evita a emenda visível no fim; opacity 0 esconde as pontas redondas antes da vez de cada traço. */
+.splash-borda, .splash-e { stroke-dasharray: 101; stroke-dashoffset: 101; opacity: 0; animation: splash-tracar .8s cubic-bezier(.65, 0, .35, 1) forwards; }
+.splash-e1 { animation-duration: .55s; animation-delay: .6s; }
+.splash-e2 { animation-duration: .25s; animation-delay: 1.1s; }
+.splash-e3 { animation-duration: .3s; animation-delay: 1.3s; }
+.splash-no { transform-origin: 49px 46.5px; transform: scale(0); animation: splash-pop .5s cubic-bezier(.34, 1.56, .64, 1) 1.55s forwards; }
+.splash-anel { stroke: var(--logo-ring); stroke-opacity: 0; transform-origin: 49px 46.5px; animation: logo-pulse 1.6s ease-out 1.75s infinite; }
+.splash-barra { position: relative; width: 120px; height: 3px; overflow: hidden; border-radius: 3px; background: rgba(var(--accent-rgb), .15); }
+.splash-barra::after { content: ""; position: absolute; inset: 0; width: 40%; border-radius: inherit; background: var(--accent); animation: splash-correr 1.1s ease-in-out infinite; }
+@keyframes splash-tracar { from { opacity: 1; } to { stroke-dashoffset: 0; opacity: 1; } }
+@keyframes splash-surgir { to { opacity: 1; } }
+@keyframes splash-pop { from { transform: scale(0); } to { transform: scale(1); } }
+@keyframes splash-correr { from { transform: translateX(-100%); } to { transform: translateX(250%); } }
+@keyframes splash-sair { to { opacity: 0; visibility: hidden; } }
+@media (prefers-reduced-motion: reduce) {
+  .splash-fundo, .splash-borda, .splash-e, .splash-no { animation: none; opacity: 1; stroke-dashoffset: 0; transform: none; }
+  .splash-anel, .splash-barra::after { animation: none; }
+}

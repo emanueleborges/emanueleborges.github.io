@@ -3,6 +3,10 @@ import { simulateRag } from "./core.js";
 
 const T = {
   en: {
+    "caso.p": "Safely show how a RAG system is attacked by prompt injection, including when the instruction is hidden in a retrieved document.",
+    "caso.s": "A 100% local simulation: question and document are normalized and checked against 9 patterns in 8 languages, and a vulnerable flow and a guarded one answer side by side.",
+    "caso.r": "3 ready-made scenarios, 0 bytes sent to a server and 6 automated tests running in CI.",
+    "caso.m": "Offer an optional mode with a real classifier (the Llama Guard I already use in the image generator) and add attacks that abuse agent tools.",
     "meta.title": "RAG Security Lab — Prompt Injection",
     "meta.description": "An interactive, local-only simulation showing how prompt injection can affect RAG systems and how defensive boundaries help.",
     lang: "Language",
@@ -54,6 +58,10 @@ const T = {
     "answer.normal": "The school-risk prediction model placed in the top 5% of a datathon.",
   },
   pt: {
+    "caso.p": "Mostrar com segurança como um RAG é atacado por prompt injection, inclusive quando a instrução vem escondida num documento recuperado.",
+    "caso.s": "Simulação 100% local: pergunta e documento são normalizados e conferidos com 9 padrões em 8 idiomas, e um fluxo vulnerável e outro protegido respondem lado a lado.",
+    "caso.r": "3 cenários prontos, 0 bytes enviados a servidor e 6 testes automatizados rodando no CI.",
+    "caso.m": "Oferecer um modo opcional com um classificador de verdade (o Llama Guard que já uso no gerador de imagens) e incluir ataques que usam ferramentas do agente.",
     "meta.title": "Laboratório de Segurança RAG — Prompt Injection",
     "meta.description": "Simulação interativa e local de prompt injection em sistemas RAG e de como limites defensivos ajudam.",
     lang: "Idioma",
@@ -105,6 +113,10 @@ const T = {
     "answer.normal": "O modelo de previsão de risco escolar ficou no top 5% de um datathon.",
   },
   es: {
+    "caso.p": "Mostrar con seguridad cómo se ataca un RAG con prompt injection, incluso cuando la instrucción viene oculta en un documento recuperado.",
+    "caso.s": "Simulación 100% local: la pregunta y el documento se normalizan y se comparan con 9 patrones en 8 idiomas, y un flujo vulnerable y otro protegido responden lado a lado.",
+    "caso.r": "3 escenarios listos, 0 bytes enviados a un servidor y 6 pruebas automáticas en el CI.",
+    "caso.m": "Ofrecer un modo opcional con un clasificador real (el Llama Guard que ya uso en el generador de imágenes) e incluir ataques que abusan de las herramientas del agente.",
     "meta.title": "Laboratorio de seguridad RAG — Prompt Injection",
     "meta.description": "Simulación interactiva y local de prompt injection en sistemas RAG y de cómo ayudan los límites defensivos.",
     lang: "Idioma",

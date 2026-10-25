@@ -9,6 +9,10 @@ const EXAMPLE_KEYS = ["ex1", "ex2", "ex3", "ex4"];
 
 const T = {
   en: {
+    "caso.p": "Offer AI image generation on a zero-cost portfolio, without abuse and without storing anything from the visitor.",
+    "caso.s": "Turnstile, translation to English with Qwen3, a term filter and Llama Guard 3 before FLUX.1 [schnell] on Workers AI, with 2 images per visitor and a global daily cap.",
+    "caso.r": "A 1024×1024 image in 4 diffusion steps, in 3 to 8 seconds; the server keeps only the day's count.",
+    "caso.m": "Moderate the generated image too, not just the text, and show visitors how much of the day's free quota is left.",
     "meta.title": "AI Image Generator — FLUX.1",
     "meta.description": "Type a description and generate an image with FLUX.1 [schnell] on Cloudflare Workers AI, with layered moderation and no storage.",
     lang: "Language",
@@ -55,6 +59,10 @@ const T = {
     limits: "<strong>About this demo:</strong> generated images can be inaccurate or strange, and moderation is not perfect. Don't use it for real people, logos or anything you wouldn't show in a job interview.",
   },
   pt: {
+    "caso.p": "Oferecer geração de imagens com IA num portfólio de custo zero, sem abuso e sem guardar nada do visitante.",
+    "caso.s": "Turnstile, tradução para inglês com Qwen3, filtro de termos e Llama Guard 3 antes do FLUX.1 [schnell] no Workers AI, com 2 imagens por visitante e um teto diário global.",
+    "caso.r": "Imagem 1024×1024 em 4 passos de difusão, em 3 a 8 segundos; o servidor guarda só a contagem do dia.",
+    "caso.m": "Moderar também a imagem gerada, não só o texto, e mostrar ao visitante quanto resta da cota gratuita do dia.",
     "meta.title": "Gerador de Imagens com IA — FLUX.1",
     "meta.description": "Escreva uma descrição e gere uma imagem com o FLUX.1 [schnell] no Cloudflare Workers AI, com moderação em camadas e sem armazenamento.",
     lang: "Idioma",
@@ -101,6 +109,10 @@ const T = {
     limits: "<strong>Sobre esta demo:</strong> as imagens geradas podem sair imprecisas ou estranhas, e a moderação não é perfeita. Não use para pessoas reais, marcas ou nada que você não mostraria numa entrevista de emprego.",
   },
   es: {
+    "caso.p": "Ofrecer generación de imágenes con IA en un portafolio de costo cero, sin abusos y sin guardar nada del visitante.",
+    "caso.s": "Turnstile, traducción al inglés con Qwen3, filtro de términos y Llama Guard 3 antes de FLUX.1 [schnell] en Workers AI, con 2 imágenes por visitante y un tope diario global.",
+    "caso.r": "Imagen de 1024×1024 en 4 pasos de difusión, en 3 a 8 segundos; el servidor guarda solo el conteo del día.",
+    "caso.m": "Moderar también la imagen generada, no solo el texto, y mostrar al visitante cuánto queda de la cuota gratuita del día.",
     "meta.title": "Generador de Imágenes con IA — FLUX.1",
     "meta.description": "Escribe una descripción y genera una imagen con FLUX.1 [schnell] en Cloudflare Workers AI, con moderación por capas y sin almacenamiento.",
     lang: "Idioma",

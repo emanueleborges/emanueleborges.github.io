@@ -75,6 +75,8 @@ window.I18N.es = ((P) => ({
   "p3.m2": "acciones en la demo en vivo",
   "p4.desc": "Aplicación de preguntas y respuestas con LangChain, ChromaDB y LLMs (Ollama/Deepseek), con ingesta de documentos, chat vía WebSocket y feedback continuo.",
   "p5.desc": "Arquitectura hexagonal con PostgreSQL (bloqueo pesimista), Redis (cache-aside), Kafka con DLQ y MongoDB, además de frontends en TypeScript con Angular 19 y Next.js 15.",
+  "p5.m1": "transferencias por segundo (8 en paralelo)",
+  "p5.m2": "latencia p95 en la prueba de carga",
   "p6.desc": "API de productos con caché en Redis, eventos en Kafka, rate limiting por ruta y documentación Swagger, sobre PostgreSQL.",
   "p7.desc": "Sistema de recomendación de películas basado en TF-IDF y similitud de coseno, con interfaz web responsiva y base de datos PostgreSQL.",
   "p7.m1v": "~1500",
