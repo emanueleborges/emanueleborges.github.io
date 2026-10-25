@@ -53,9 +53,10 @@ Data are classic scripts (not JSON/modules) so they run before paint, in `file:/
 ## Page families and their text systems
 
 - **Main site** (`index.html`, `script.js`): `t(key)` over `window.I18N`; `[data-i18n*]` attributes are translated in place.
-- **Demos, `vaga/`, `como-construi/`**: each page passes its own 8-language dictionary to `Demo.setup()` (`demos/demos.js`), whose `t()` fills `{nome}`/`{nomeCompleto}` from the profile and appends ` — <full name>` to the tab title (don't repeat it in texts).
+- **Demos, `vaga/`, `como-construi/`, `arquitetura/`**: each page passes its own 8-language dictionary to `Demo.setup()` (`demos/demos.js`), whose `t()` fills `{nome}`/`{nomeCompleto}` from the profile and appends ` — <full name>` to the tab title (don't repeat it in texts).
 - **Shared UI** (`components/components.js`, classic script, all pages): Web Components (`<site-logo>`, `<theme-toggle>` containing `<theme-intensity>`, `<sound-toggle>`), GitHub viewer, external-link cards, share dialog. Keeps small UI label tables and loads `i18n/<lang>.js` on demand (`siteTexts`) when a card needs profile text on pages without i18n.
 - **Résumé** (`curriculo.html`): built at runtime from `window.CURRICULO` + `PERFIL` + `I18N`; "Download PDF" links to `PERFIL.cvPdf(lang)` = Worker `GET /cv?lang=` (`src/rotas/curriculo.js`: Browser Run renders the published `curriculo.html` to A4, cached in D1 table `cv_pdf` per language + knowledge `VERSION`; on any failure it redirects to `curriculo.html?pdf=1`, which opens the browser's print dialog). There are no PDF files in the repo; old `/cv/*.pdf` links are redirected by `404.html`. Opened inside the main page via `demo-modal.js` (iframe, `?embed=1`).
+- **Architecture diagrams** (`arquitetura/`, `?p=financial|juridico|guardrail`): one tab per featured project, opened from the card's "Arquitetura" button (`arquitetura` field in `data/projetos.json`, `data-arq` → `demo-modal.js`); the portfolio's own diagram stays in `como-construi/`. Diagram, steps and card styles are shared in `components/diagrama.css`.
 
 ## Chat pipeline
 

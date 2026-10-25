@@ -1,0 +1,416 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://*.githubusercontent.com https://github.com; connect-src 'self' https://emanuel-portfolio-chat.emanuel-portfolio-chat.workers.dev https://api.github.com https://data.jsdelivr.com https://raw.githubusercontent.com; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <title data-t="meta.title">Project architecture</title>
+    <meta name="description" data-t-content="meta.description" content="Architecture diagrams of Emanuel Borges's featured projects: Financial Hub (Kafka, Redis, PostgreSQL), the RAG legal critic and the RAG Security Lab." data-perfil-content="Architecture diagrams of {nomeCompleto}'s featured projects: Financial Hub (Kafka, Redis, PostgreSQL), the RAG legal critic and the RAG Security Lab." />
+    <link rel="canonical" href="https://emanueleborges.github.io/arquitetura/" data-perfil-href="{site}arquitetura/" />
+    <meta name="theme-color" content="#050f14" />
+    <script src="../idiomas.js"></script>
+    <script src="../components/boot.js"></script>
+    <link rel="icon" href="/imagens/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/imagens/favicon-32.png" sizes="32x32" type="image/png" />
+    <link rel="apple-touch-icon" href="/imagens/apple-touch-icon.png" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="../temas.css" />
+    <link rel="stylesheet" href="../demos/demos.css" />
+    <link rel="stylesheet" href="../components/diagrama.css" />
+    <style>
+      .abas { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 28px; }
+      .abas [aria-selected="true"] { border-color: transparent; background: var(--grad-primary); color: var(--on-primary); }
+      .projeto > h2:first-child { margin-top: 32px; }
+      .projeto .links { margin-top: 12px; }
+    </style>
+    <script src="/perfil.js" defer></script>
+    <script type="module" src="arquitetura.js"></script>
+    <script type="module" src="../analytics-consent.js"></script>
+    <script src="../components/components.js" defer></script>
+  </head>
+  <body>
+    <div class="glow glow-1" aria-hidden="true"></div>
+    <div class="glow glow-2" aria-hidden="true"></div>
+    <div class="shell">
+      <header>
+        <a class="brand" href="/"><site-logo class="brand-logo" size="32"></site-logo><span data-perfil="{nomeCompleto}">Emanuel Borges</span></a>
+        <div class="header-tools">
+          <share-button></share-button>
+          <sound-toggle></sound-toggle>
+          <theme-toggle></theme-toggle>
+          <label><span class="visually-hidden" data-t="lang">Language</span>
+            <select data-lang>
+              <option value="en" lang="en">English</option>
+              <option value="pt" lang="pt-BR">Português</option>
+              <option value="es" lang="es">Español</option>
+            </select>
+          </label>
+        </div>
+      </header>
+
+      <main>
+        <p class="kicker" data-t="kicker"></p>
+        <h1 data-t="title"></h1>
+        <p class="lead" data-t="lead"></p>
+        <div class="links">
+          <a class="button" href="/#projetos" data-t="back"></a>
+        </div>
+
+        <!-- Um projeto por vez (?p=financial | juridico | guardrail); o deste portfólio fica em como-construi/. -->
+        <div class="abas" role="tablist" data-t-aria="tabsAria">
+          <button class="button" type="button" role="tab" id="aba-financial" aria-controls="financial" data-aba="financial" data-t="tab.financial"></button>
+          <button class="button" type="button" role="tab" id="aba-juridico" aria-controls="juridico" data-aba="juridico" data-t="tab.juridico"></button>
+          <button class="button" type="button" role="tab" id="aba-guardrail" aria-controls="guardrail" data-aba="guardrail" data-t="tab.guardrail"></button>
+          <a class="button" href="../como-construi/" data-t="tab.portfolio"></a>
+        </div>
+
+        <svg class="icones" aria-hidden="true">
+          <symbol id="i-tela" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8M12 17v4"/></symbol>
+          <symbol id="i-celular" viewBox="0 0 24 24"><rect x="7" y="2.5" width="10" height="19" rx="2.5"/><path d="M11 18.5h2"/></symbol>
+          <symbol id="i-pessoas" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><circle cx="17" cy="9" r="2.5"/><path d="M16 14.2c2.9-.4 5 1.9 5 4.8"/></symbol>
+          <symbol id="i-globo" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z"/></symbol>
+          <symbol id="i-escudo" viewBox="0 0 24 24"><path d="M12 3l7 3v6c0 4.5-3 7.8-7 9-4-1.2-7-4.5-7-9V6z"/><path d="M9 12l2 2 4-4"/></symbol>
+          <symbol id="i-medidor" viewBox="0 0 24 24"><path d="M4 17a8 8 0 1 1 16 0M12 17l4-5M4 17h2M18 17h2M12 9V7"/></symbol>
+          <symbol id="i-cadeado" viewBox="0 0 24 24"><rect x="5" y="10.5" width="14" height="10" rx="2"/><path d="M8 10.5v-3a4 4 0 0 1 8 0v3M12 14.5V17"/></symbol>
+          <symbol id="i-chave" viewBox="0 0 24 24"><circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M17 6l3 3M15 8l2 2"/></symbol>
+          <symbol id="i-chat" viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4zM8 9.5h8M8 12.5h5"/></symbol>
+          <symbol id="i-documento" viewBox="0 0 24 24"><path d="M6 3h8l4 4v14H6zM14 3v4h4M9 12h6M9 15.5h6"/></symbol>
+          <symbol id="i-barras" viewBox="0 0 24 24"><path d="M3 20h18M6 20v-6M12 20V5M18 20v-10"/></symbol>
+          <symbol id="i-chip" viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="2"/><rect x="9.5" y="9.5" width="5" height="5" rx="1"/><path d="M9 2v4M15 2v4M9 18v4M15 18v4M2 9h4M2 15h4M18 9h4M18 15h4"/></symbol>
+          <symbol id="i-vetores" viewBox="0 0 24 24"><circle cx="5" cy="6" r="2"/><circle cx="19" cy="5" r="2"/><circle cx="12" cy="13" r="2.4"/><circle cx="6" cy="19" r="2"/><circle cx="19" cy="18" r="2"/><path d="M6.7 7.2l3.6 4.2M17.4 6.3l-4 4.6M7.6 17.7l2.7-2.9M17.4 16.8l-3.4-2.4"/></symbol>
+          <symbol id="i-banco" viewBox="0 0 24 24"><ellipse cx="12" cy="5.5" rx="7.5" ry="2.8"/><path d="M4.5 5.5v13c0 1.5 3.4 2.8 7.5 2.8s7.5-1.3 7.5-2.8v-13M4.5 12c0 1.5 3.4 2.8 7.5 2.8s7.5-1.3 7.5-2.8"/></symbol>
+          <symbol id="i-raio" viewBox="0 0 24 24"><path d="M13 2L4 14h7l-1 8 9-12h-7z"/></symbol>
+          <symbol id="i-lupa" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4.3-4.3M8.5 11l1.8 1.8 3.2-3.4"/></symbol>
+          <symbol id="i-lista" viewBox="0 0 24 24"><path d="M8 6h13M8 12h13M8 18h13M4 6h.01M4 12h.01M4 18h.01"/></symbol>
+          <symbol id="i-email" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3.5 6.5l8.5 6.5 8.5-6.5"/></symbol>
+          <symbol id="i-codigo" viewBox="0 0 24 24"><path d="M8 8l-4 4 4 4M16 8l4 4-4 4M13.5 5l-3 14"/></symbol>
+          <symbol id="i-pacote" viewBox="0 0 24 24"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9zM4 7.5l8 4.5 8-4.5M12 12v9"/></symbol>
+          <symbol id="i-play" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M10 8.5l5.5 3.5-5.5 3.5z"/></symbol>
+          <symbol id="i-servidor" viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="7" rx="1.5"/><rect x="4" y="14" width="16" height="7" rx="1.5"/><path d="M8 6.5h.01M8 17.5h.01M12 10v4"/></symbol>
+          <symbol id="i-camadas" viewBox="0 0 24 24"><path d="M12 3l9 5-9 5-9-5zM3 13l9 5 9-5"/></symbol>
+          <symbol id="i-fila" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="5" rx="1"/><rect x="3" y="14" width="18" height="5" rx="1"/><path d="M8 5v5M13 5v5M8 14v5M13 14v5"/></symbol>
+          <symbol id="i-alerta" viewBox="0 0 24 24"><path d="M12 3l10 18H2zM12 10v5M12 18h.01"/></symbol>
+          <symbol id="i-balanca" viewBox="0 0 24 24"><path d="M12 3v18M7 21h10M5 7h14M5 7l-3 7a3 3 0 0 0 6 0zM19 7l-3 7a3 3 0 0 0 6 0z"/></symbol>
+          <symbol id="i-relogio" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></symbol>
+          <symbol id="i-nuvem" viewBox="0 0 24 24"><path d="M7 18h10a4 4 0 0 0 .5-8 6 6 0 0 0-11.5 1.5A3.5 3.5 0 0 0 7 18z"/></symbol>
+        </svg>
+
+        <!-- ===================== Financial Hub ===================== -->
+        <section class="projeto" id="financial" role="tabpanel" aria-labelledby="aba-financial">
+          <h2 data-t="f.title"></h2>
+          <p class="note" data-t="f.lead"></p>
+          <div class="links"><a class="button" href="https://github.com/emanueleborges/financial" data-perfil-href="{links.github}/financial" target="_blank" rel="noopener" data-t="code"></a></div>
+          <section class="panel">
+            <div class="arq" role="group" data-t-aria="f.aria">
+              <section class="camada k-ciano" aria-labelledby="f-clientes">
+                <div class="camada-titulo"><h3 id="f-clientes" data-t="f.clientes"></h3><p data-t="f.clientesSub"></p></div>
+                <ul class="itens">
+                  <li class="item"><span class="ico c-rosa"><svg aria-hidden="true"><use href="#i-tela" /></svg></span><strong>Angular 19</strong><small data-t="f.angularSub"></small></li>
+                  <li class="item"><span class="ico c-ciano"><svg aria-hidden="true"><use href="#i-tela" /></svg></span><strong>Next.js 15</strong><small data-t="f.nextSub"></small></li>
+                  <li class="item"><span class="ico c-violeta"><svg aria-hidden="true"><use href="#i-celular" /></svg></span><strong>Expo</strong><small data-t="f.expoSub"></small></li>
+                  <li class="item"><span class="ico c-verde"><svg aria-hidden="true"><use href="#i-codigo" /></svg></span><strong>Swagger · Postman</strong><small data-t="f.swaggerSub"></small></li>
+                </ul>
+              </section>
+              <div class="seta" aria-hidden="true"><span data-t="f.setaClientes"></span></div>
+              <div class="nuvem">
+                <p class="nuvem-rotulo" data-t="f.nuvem"></p>
+                <div class="nuvem-principal">
+                  <section class="camada k-violeta" aria-labelledby="f-entrada">
+                    <div class="camada-titulo"><h3 id="f-entrada" data-t="f.entrada"></h3><p data-t="f.entradaSub"></p></div>
+                    <ul class="itens">
+                      <li class="item"><span class="ico c-verde"><svg aria-hidden="true"><use href="#i-cadeado" /></svg></span><strong>Spring Security + JWT</strong><small data-t="f.jwtSub"></small></li>
+                      <li class="item"><span class="ico c-ambar"><svg aria-hidden="true"><use href="#i-chave" /></svg></span><strong>BCrypt</strong><small data-t="f.bcryptSub"></small></li>
+                      <li class="item"><span class="ico c-rosa"><svg aria-hidden="true"><use href="#i-medidor" /></svg></span><strong>Bucket4j</strong><small data-t="f.rateSub"></small></li>
+                      <li class="item"><span class="ico c-azul"><svg aria-hidden="true"><use href="#i-lista" /></svg></span><strong>Correlation ID</strong><small data-t="f.corrSub"></small></li>
+                    </ul>
+                  </section>
+                  <div class="seta" aria-hidden="true"><span data-t="f.setaEntrada"></span></div>
+                  <section class="camada k-verde" aria-labelledby="f-api">
+                    <div class="camada-titulo"><h3 id="f-api" data-t="f.api"></h3><p data-t="f.apiSub"></p></div>
+                    <div class="worker">
+                      <ul class="servicos servicos-4">
+                        <li class="servico" style="--c: var(--c-ciano)"><span class="ico c-ciano"><svg aria-hidden="true"><use href="#i-codigo" /></svg></span><strong data-t="f.hInterfaces"></strong><code>interfaces/</code><span data-t="f.hInterfaces1"></span><span data-t="f.hInterfaces2"></span></li>
+                        <li class="servico" style="--c: var(--c-verde)"><span class="ico c-verde"><svg aria-hidden="true"><use href="#i-camadas" /></svg></span><strong data-t="f.hApp"></strong><code>application/</code><span data-t="f.hApp1"></span><span data-t="f.hApp2"></span></li>
+                        <li class="servico" style="--c: var(--c-violeta)"><span class="ico c-violeta"><svg aria-hidden="true"><use href="#i-pacote" /></svg></span><strong data-t="f.hDominio"></strong><code>domain/</code><span data-t="f.hDominio1"></span><span data-t="f.hDominio2"></span></li>
+                        <li class="servico" style="--c: var(--c-azul)"><span class="ico c-azul"><svg aria-hidden="true"><use href="#i-servidor" /></svg></span><strong data-t="f.hInfra"></strong><code>infrastructure/</code><span data-t="f.hInfra1"></span><span data-t="f.hInfra2"></span></li>
+                      </ul>
+                      <div class="runtime">
+                        <div><span class="ico c-ambar"><svg aria-hidden="true"><use href="#i-raio" /></svg></span><p><strong>Java 17 · Spring Boot 3.2</strong><small data-t="f.runtimeSub"></small></p></div>
+                        <div><span class="ico c-ambar"><svg aria-hidden="true"><use href="#i-relogio" /></svg></span><p><strong>Flyway</strong><small data-t="f.flywaySub"></small></p></div>
+                      </div>
+                    </div>
+                  </section>
+                  <div class="seta" aria-hidden="true"><span data-t="f.setaApi"></span></div>
+                  <section class="camada k-azul" aria-labelledby="f-dados">
+                    <div class="camada-titulo"><h3 id="f-dados" data-t="f.dados"></h3><p data-t="f.dadosSub"></p></div>
+                    <ul class="itens">
+                      <li class="item"><span class="ico c-azul"><svg aria-hidden="true"><use href="#i-banco" /></svg></span><strong>PostgreSQL 16</strong><small data-t="f.pgSub"></small></li>
+                      <li class="item"><span class="ico c-rosa"><svg aria-hidden="true"><use href="#i-raio" /></svg></span><strong>Redis 7</strong><small data-t="f.redisSub"></small></li>
+                      <li class="item"><span class="ico c-verde"><svg aria-hidden="true"><use href="#i-banco" /></svg></span><strong>MongoDB 7</strong><small data-t="f.mongoSub"></small></li>
+                      <li class="item"><span class="ico c-ambar"><svg aria-hidden="true"><use href="#i-nuvem" /></svg></span><strong>S3 · LocalStack</strong><small data-t="f.s3Sub"></small></li>
+                    </ul>
+                  </section>
+                  <div class="seta-espaco" aria-hidden="true"></div>
+                  <section class="camada k-rosa" aria-labelledby="f-obs">
+                    <div class="camada-titulo"><h3 id="f-obs" data-t="f.obs"></h3><p data-t="f.obsSub"></p></div>
+                    <ul class="itens">
+                      <li class="item"><span class="ico c-ambar"><svg aria-hidden="true"><use href="#i-barras" /></svg></span><strong>Prometheus · Grafana</strong><small data-t="f.promSub"></small></li>
+                      <li class="item"><span class="ico c-ciano"><svg aria-hidden="true"><use href="#i-vetores" /></svg></span><strong>Zipkin</strong><small data-t="f.zipkinSub"></small></li>
+                      <li class="item"><span class="ico c-azul"><svg aria-hidden="true"><use href="#i-lista" /></svg></span><strong>Logback JSON</strong><small data-t="f.logsSub"></small></li>
+                      <li class="item"><span class="ico c-verde"><svg aria-hidden="true"><use href="#i-play" /></svg></span><strong>GitHub Actions</strong><small data-t="f.ciSub"></small></li>
+                      <li class="item"><span class="ico c-rosa"><svg aria-hidden="true"><use href="#i-lupa" /></svg></span><strong>SonarQube</strong><small data-t="f.sonarSub"></small></li>
+                      <li class="item"><span class="ico c-violeta"><svg aria-hidden="true"><use href="#i-pacote" /></svg></span><strong>Terraform · K8s</strong><small data-t="f.tfSub"></small></li>
+                    </ul>
+                  </section>
+                </div>
+                <aside class="lateral k-ambar" aria-labelledby="f-eventos">
+                  <div class="camada-titulo"><h3 id="f-eventos" data-t="f.eventos"></h3><p data-t="f.eventosSub"></p></div>
+                  <ul class="itens">
+                    <li class="item"><span class="ico c-ambar"><svg aria-hidden="true"><use href="#i-fila" /></svg></span><strong>Apache Kafka</strong><small data-t="f.kafkaSub"></small></li>
+                    <li class="item"><span class="ico c-verde"><svg aria-hidden="true"><use href="#i-pessoas" /></svg></span><strong>Consumers</strong><small data-t="f.consumersSub"></small></li>
+                    <li class="item"><span class="ico c-rosa"><svg aria-hidden="true"><use href="#i-email" /></svg></span><strong>notification-service</strong><small data-t="f.notifSub"></small></li>
+                  </ul>
+                </aside>
+              </div>
+            </div>
+          </section>
+
+          <h2 data-t="f.kTitle"></h2>
+          <p class="note" data-t="f.kLead"></p>
+          <section class="panel">
+            <div class="arq kafka" role="group" data-t-aria="f.kAria">
+              <div class="kf-caixa kf-produtor k-verde">
+                <h3 data-t="f.kProdutor"></h3>
+                <span class="ico c-verde"><svg aria-hidden="true"><use href="#i-servidor" /></svg></span>
+                <code>TransferService</code>
+                <small data-t="f.kProdutorSub"></small>
+                <span class="kf-chave" data-t="f.kChave"></span>
+              </div>
+              <div class="kf-seta" aria-hidden="true"><span data-t="f.kPublica"></span></div>
+              <div class="kf-caixa cluster k-violeta">
+                <p class="nuvem-rotulo" data-t="f.kCluster"></p>
+                <div class="topico c-ciano"><div><code>transaction.created</code><small data-t="f.kParticoes"></small></div><ol class="particoes"><li>P0</li><li>P1</li><li>P2</li></ol></div>
+                <div class="topico c-verde"><div><code>transaction.completed</code><small data-t="f.kParticoes"></small></div><ol class="particoes"><li>P0</li><li>P1</li><li>P2</li></ol></div>
+                <div class="topico c-rosa"><div><code>transaction.failed</code><small data-t="f.kParticoes"></small></div><ol class="particoes"><li>P0</li><li>P1</li><li>P2</li></ol></div>
+                <div class="topico c-ambar"><div><code>transaction.dlq</code><small data-t="f.kDlq"></small></div><ol class="particoes particoes-uma"><li>P0</li></ol></div>
+              </div>
+              <div class="kf-seta" aria-hidden="true"><span data-t="f.kConsome"></span></div>
+              <div class="kf-caixa k-azul">
+                <h3 data-t="f.kGrupos"></h3>
+                <ul class="grupos">
+                  <li class="grupo" style="--c: var(--c-verde)"><span class="ico c-verde"><svg aria-hidden="true"><use href="#i-raio" /></svg></span><code>balance-update-group</code><small data-t="f.gSaldo"></small></li>
+                  <li class="grupo" style="--c: var(--c-rosa)"><span class="ico c-rosa"><svg aria-hidden="true"><use href="#i-email" /></svg></span><code>notification-group</code><small data-t="f.gNotif"></small></li>
+                  <li class="grupo" style="--c: var(--c-ciano)"><span class="ico c-ciano"><svg aria-hidden="true"><use href="#i-barras" /></svg></span><code>daily-report-group</code><small data-t="f.gRelatorio"></small></li>
+                  <li class="grupo" style="--c: var(--c-ambar)"><span class="ico c-ambar"><svg aria-hidden="true"><use href="#i-documento" /></svg></span><code>python-daily-report</code><small data-t="f.gPython"></small></li>
+                </ul>
+              </div>
+            </div>
+          </section>
+          <p class="note" data-t="f.kNota"></p>
+
+          <h2 data-t="conceitosTitle"></h2>
+          <div class="cards conceitos">
+            <article><h3 data-t="f.c1Title"></h3><p data-t="f.c1Text"></p></article>
+            <article><h3 data-t="f.c2Title"></h3><p data-t="f.c2Text"></p></article>
+            <article><h3 data-t="f.c3Title"></h3><p data-t="f.c3Text"></p></article>
+            <article><h3 data-t="f.c4Title"></h3><p data-t="f.c4Text"></p></article>
+            <article><h3 data-t="f.c5Title"></h3><p data-t="f.c5Text"></p></article>
+            <article><h3 data-t="f.c6Title"></h3><p data-t="f.c6Text"></p></article>
+            <article><h3 data-t="f.c7Title"></h3><p data-t="f.c7Text"></p></article>
+            <article><h3 data-t="f.c8Title"></h3><p data-t="f.c8Text"></p></article>
+          </div>
+
+          <h2 data-t="f.fluxoTitle"></h2>
+          <ol class="steps">
+            <li><div><h3 data-t="f.p1Title"></h3><p data-t="f.p1Text"></p></div></li>
+            <li><div><h3 data-t="f.p2Title"></h3><p data-t="f.p2Text"></p></div></li>
+            <li><div><h3 data-t="f.p3Title"></h3><p data-t="f.p3Text"></p></div></li>
+            <li class="main"><div><h3 data-t="f.p4Title"></h3><p data-t="f.p4Text"></p></div></li>
+            <li><div><h3 data-t="f.p5Title"></h3><p data-t="f.p5Text"></p></div></li>
+            <li><div><h3 data-t="f.p6Title"></h3><p data-t="f.p6Text"></p></div></li>
+          </ol>
+        </section>
+
+        <!-- ===================== Crítico Jurídico (TCC UFG) ===================== -->
+        <section class="projeto" id="juridico" role="tabpanel" aria-labelledby="aba-juridico" hidden>
+          <h2 data-t="j.title"></h2>
+          <p class="note" data-t="j.lead"></p>
+          <div class="links"><a class="button" href="https://github.com/emanueleborges/tcc-ufg" data-perfil-href="{links.github}/tcc-ufg" target="_blank" rel="noopener" data-t="code"></a></div>
+          <section class="panel">
+            <div class="arq" role="group" data-t-aria="j.aria">
+              <section class="camada k-ciano" aria-labelledby="j-interfaces">
+                <div class="camada-titulo"><h3 id="j-interfaces" data-t="j.interfaces"></h3><p data-t="j.interfacesSub"></p></div>
+                <ul class="itens">
+                  <li class="item"><span class="ico c-ciano"><svg aria-hidden="true"><use href="#i-chat" /></svg></span><strong>React 19 · Vite</strong><small data-t="j.reactSub"></small></li>
+                  <li class="item"><span class="ico c-rosa"><svg aria-hidden="true"><use href="#i-tela" /></svg></span><strong>Streamlit</strong><small data-t="j.streamlitSub"></small></li>
+                  <li class="item"><span class="ico c-verde"><svg aria-hidden="true"><use href="#i-codigo" /></svg></span><strong>CLI</strong><small class="mono">ui · api · index · scrape</small></li>
+                  <li class="item"><span class="ico c-azul"><svg aria-hidden="true"><use href="#i-pessoas" /></svg></span><strong data-t="j.advogados"></strong><small data-t="j.advogadosSub"></small></li>
+                </ul>
+              </section>
+              <div class="seta" aria-hidden="true"><span data-t="j.setaInterfaces"></span></div>
+              <div class="nuvem">
+                <p class="nuvem-rotulo" data-t="j.nuvem"></p>
+                <div class="nuvem-principal">
+                  <section class="camada k-verde" aria-labelledby="j-api">
+                    <div class="camada-titulo"><h3 id="j-api" data-t="j.api"></h3><p data-t="j.apiSub"></p></div>
+                    <div class="worker">
+                      <ul class="servicos">
+                        <li class="servico" style="--c: var(--c-verde)"><span class="ico c-verde"><svg aria-hidden="true"><use href="#i-chat" /></svg></span><strong data-t="j.sChat"></strong><code>POST /v1/chat/completions</code><span data-t="j.sChat1"></span><span data-t="j.sChat2"></span></li>
+                        <li class="servico" style="--c: var(--c-ciano)"><span class="ico c-ciano"><svg aria-hidden="true"><use href="#i-documento" /></svg></span><strong data-t="j.sUpload"></strong><code>POST /v1/uploads</code><span data-t="j.sUpload1"></span><span data-t="j.sUpload2"></span></li>
+                        <li class="servico" style="--c: var(--c-violeta)"><span class="ico c-violeta"><svg aria-hidden="true"><use href="#i-vetores" /></svg></span><strong data-t="j.sIndice"></strong><code>POST /v1/index/rebuild</code><span data-t="j.sIndice1"></span><span data-t="j.sIndice2"></span></li>
+                        <li class="servico" style="--c: var(--c-ambar)"><span class="ico c-ambar"><svg aria-hidden="true"><use href="#i-globo" /></svg></span><strong data-t="j.sCorpus"></strong><code>POST /v1/scrape</code><span data-t="j.sCorpus1"></span><span data-t="j.sCorpus2"></span></li>
+                        <li class="servico" style="--c: var(--c-rosa)"><span class="ico c-rosa"><svg aria-hidden="true"><use href="#i-balanca" /></svg></span><strong data-t="j.sValid"></strong><code>POST /v1/validations</code><span data-t="j.sValid1"></span><span data-t="j.sValid2"></span></li>
+                      </ul>
+                      <div class="runtime">
+                        <div><span class="ico c-ambar"><svg aria-hidden="true"><use href="#i-camadas" /></svg></span><p><strong>Ports &amp; adapters</strong><small data-t="j.portsSub"></small></p></div>
+                        <div><span class="ico c-ambar"><svg aria-hidden="true"><use href="#i-pacote" /></svg></span><p><strong>AppContainer</strong><small data-t="j.containerSub"></small></p></div>
+                      </div>
+                    </div>
+                  </section>
+                  <div class="seta" aria-hidden="true"><span data-t="j.setaApi"></span></div>
+                  <section class="camada k-violeta" aria-labelledby="j-orq">
+                    <div class="camada-titulo"><h3 id="j-orq" data-t="j.orq"></h3><p data-t="j.orqSub"></p></div>
+                    <ul class="itens">
+                      <li class="item"><span class="ico c-rosa"><svg aria-hidden="true"><use href="#i-balanca" /></svg></span><strong data-t="j.iPeticao"></strong><small class="mono">ANALYZE_PETITION</small></li>
+                      <li class="item"><span class="ico c-ambar"><svg aria-hidden="true"><use href="#i-globo" /></svg></span><strong data-t="j.iInternet"></strong><small class="mono">ASK_INTERNET</small></li>
+                      <li class="item"><span class="ico c-violeta"><svg aria-hidden="true"><use href="#i-vetores" /></svg></span><strong>RAG</strong><small class="mono">ASK_RAG</small></li>
+                      <li class="item"><span class="ico c-verde"><svg aria-hidden="true"><use href="#i-chat" /></svg></span><strong data-t="j.iGeral"></strong><small class="mono">ASK_OLLAMA</small></li>
+                    </ul>
+                  </section>
+                  <div class="seta" aria-hidden="true"><span data-t="j.setaOrq"></span></div>
+                  <section class="camada k-azul" aria-labelledby="j-dados">
+                    <div class="camada-titulo"><h3 id="j-dados" data-t="j.dados"></h3><p data-t="j.dadosSub"></p></div>
+                    <ul class="itens">
+                      <li class="item"><span class="ico c-verde"><svg aria-hidden="true"><use href="#i-chip" /></svg></span><strong>Ollama</strong><small data-t="j.ollamaSub"></small></li>
+                      <li class="item"><span class="ico c-violeta"><svg aria-hidden="true"><use href="#i-vetores" /></svg></span><strong>ChromaDB</strong><small data-t="j.chromaSub"></small></li>
+                      <li class="item"><span class="ico c-ciano"><svg aria-hidden="true"><use href="#i-raio" /></svg></span><strong>E5 multilingual</strong><small data-t="j.e5Sub"></small></li>
+                      <li class="item"><span class="ico c-azul"><svg aria-hidden="true"><use href="#i-banco" /></svg></span><strong>SQLite</strong><small data-t="j.sqliteSub"></small></li>
+                      <li class="item"><span class="ico c-ambar"><svg aria-hidden="true"><use href="#i-documento" /></svg></span><strong>PDF · OCR</strong><small class="mono">pypdf · PyMuPDF · RapidOCR · ReportLab</small></li>
+                    </ul>
+                  </section>
+                </div>
+                <aside class="lateral k-ambar" aria-labelledby="j-corpus">
+                  <div class="camada-titulo"><h3 id="j-corpus" data-t="j.corpus"></h3><p data-t="j.corpusSub"></p></div>
+                  <ul class="itens">
+                    <li class="item"><span class="ico c-ambar"><svg aria-hidden="true"><use href="#i-globo" /></svg></span><strong>Scraping</strong><small data-t="j.scrapingSub"></small></li>
+                    <li class="item"><span class="ico c-rosa"><svg aria-hidden="true"><use href="#i-pacote" /></svg></span><strong>Hugging Face</strong><small data-t="j.hfSub"></small></li>
+                    <li class="item"><span class="ico c-verde"><svg aria-hidden="true"><use href="#i-lista" /></svg></span><strong data-t="j.classif"></strong><small data-t="j.classifSub"></small></li>
+                  </ul>
+                </aside>
+              </div>
+              <p class="selo"><span aria-hidden="true">✓</span> <span data-t="j.selo"></span></p>
+            </div>
+          </section>
+
+          <h2 data-t="conceitosTitle"></h2>
+          <div class="cards conceitos">
+            <article><h3 data-t="j.c1Title"></h3><p data-t="j.c1Text"></p></article>
+            <article><h3 data-t="j.c2Title"></h3><p data-t="j.c2Text"></p></article>
+            <article><h3 data-t="j.c3Title"></h3><p data-t="j.c3Text"></p></article>
+            <article><h3 data-t="j.c4Title"></h3><p data-t="j.c4Text"></p></article>
+            <article><h3 data-t="j.c5Title"></h3><p data-t="j.c5Text"></p></article>
+            <article><h3 data-t="j.c6Title"></h3><p data-t="j.c6Text"></p></article>
+            <article><h3 data-t="j.c7Title"></h3><p data-t="j.c7Text"></p></article>
+            <article><h3 data-t="j.c8Title"></h3><p data-t="j.c8Text"></p></article>
+          </div>
+
+          <h2 data-t="j.fluxoTitle"></h2>
+          <ol class="steps">
+            <li><div><h3 data-t="j.p1Title"></h3><p data-t="j.p1Text"></p></div></li>
+            <li><div><h3 data-t="j.p2Title"></h3><p data-t="j.p2Text"></p></div></li>
+            <li><div><h3 data-t="j.p3Title"></h3><p data-t="j.p3Text"></p></div></li>
+            <li class="main"><div><h3 data-t="j.p4Title"></h3><p data-t="j.p4Text"></p></div></li>
+            <li><div><h3 data-t="j.p5Title"></h3><p data-t="j.p5Text"></p></div></li>
+            <li><div><h3 data-t="j.p6Title"></h3><p data-t="j.p6Text"></p></div></li>
+          </ol>
+        </section>
+
+        <!-- ===================== Laboratório de Segurança RAG ===================== -->
+        <section class="projeto" id="guardrail" role="tabpanel" aria-labelledby="aba-guardrail" hidden>
+          <h2 data-t="g.title"></h2>
+          <p class="note" data-t="g.lead"></p>
+          <div class="links">
+            <a class="button primary" href="../demos/guardrail/" data-t="g.demo"></a>
+            <a class="button" href="https://github.com/emanueleborges/emanueleborges.github.io/tree/main/demos/guardrail" data-perfil-href="{links.github}/{github}.github.io/tree/main/demos/guardrail" target="_blank" rel="noopener" data-t="code"></a>
+          </div>
+          <section class="panel">
+            <div class="arq" role="group" data-t-aria="g.aria">
+              <section class="camada k-ciano" aria-labelledby="g-visitante">
+                <div class="camada-titulo"><h3 id="g-visitante" data-t="g.visitante"></h3><p data-t="g.visitanteSub"></p></div>
+                <ul class="itens">
+                  <li class="item"><span class="ico c-ciano"><svg aria-hidden="true"><use href="#i-lista" /></svg></span><strong data-t="g.cenarios"></strong><small data-t="g.cenariosSub"></small></li>
+                  <li class="item"><span class="ico c-verde"><svg aria-hidden="true"><use href="#i-chat" /></svg></span><strong data-t="g.pergunta"></strong><small data-t="g.perguntaSub"></small></li>
+                  <li class="item"><span class="ico c-rosa"><svg aria-hidden="true"><use href="#i-documento" /></svg></span><strong data-t="g.documento"></strong><small data-t="g.documentoSub"></small></li>
+                </ul>
+              </section>
+              <div class="seta" aria-hidden="true"><span data-t="g.setaVisitante"></span></div>
+              <div class="nuvem">
+                <p class="nuvem-rotulo" data-t="g.nuvem"></p>
+                <div class="nuvem-principal">
+                  <section class="camada k-violeta" aria-labelledby="g-entradas">
+                    <div class="camada-titulo"><h3 id="g-entradas" data-t="g.entradas"></h3><p data-t="g.entradasSub"></p></div>
+                    <ul class="itens">
+                      <li class="item"><span class="ico c-azul"><svg aria-hidden="true"><use href="#i-camadas" /></svg></span><strong data-t="g.normal"></strong><small data-t="g.normalSub"></small></li>
+                      <li class="item"><span class="ico c-ambar"><svg aria-hidden="true"><use href="#i-lupa" /></svg></span><strong data-t="g.detector"></strong><small data-t="g.detectorSub"></small></li>
+                    </ul>
+                  </section>
+                  <div class="seta" aria-hidden="true"><span data-t="g.setaEntradas"></span></div>
+                  <section class="camada k-verde" aria-labelledby="g-fluxos">
+                    <div class="camada-titulo"><h3 id="g-fluxos" data-t="g.fluxos"></h3><p class="mono">simulateRag()</p></div>
+                    <div class="worker">
+                      <ul class="servicos">
+                        <li class="servico" style="--c: var(--c-rosa)"><span class="ico c-rosa"><svg aria-hidden="true"><use href="#i-alerta" /></svg></span><strong data-t="g.vulneravel"></strong><code>vulnerableResponse</code><span data-t="g.vulneravel1"></span><span data-t="g.vulneravel2"></span></li>
+                        <li class="servico" style="--c: var(--c-verde)"><span class="ico c-verde"><svg aria-hidden="true"><use href="#i-escudo" /></svg></span><strong data-t="g.protegido"></strong><code>defendedResponse</code><span data-t="g.protegido1"></span><span data-t="g.protegido2"></span></li>
+                      </ul>
+                    </div>
+                  </section>
+                  <div class="seta" aria-hidden="true"><span data-t="g.setaFluxos"></span></div>
+                  <section class="camada k-azul" aria-labelledby="g-saida">
+                    <div class="camada-titulo"><h3 id="g-saida" data-t="g.saida"></h3><p data-t="g.saidaSub"></p></div>
+                    <ul class="itens">
+                      <li class="item"><span class="ico c-violeta"><svg aria-hidden="true"><use href="#i-balanca" /></svg></span><strong data-t="g.comparacao"></strong><small data-t="g.comparacaoSub"></small></li>
+                      <li class="item"><span class="ico c-ciano"><svg aria-hidden="true"><use href="#i-lista" /></svg></span><strong data-t="g.trilha"></strong><small data-t="g.trilhaSub"></small></li>
+                      <li class="item"><span class="ico c-verde"><svg aria-hidden="true"><use href="#i-escudo" /></svg></span><strong data-t="g.defesas"></strong><small data-t="g.defesasSub"></small></li>
+                    </ul>
+                  </section>
+                </div>
+                <aside class="lateral k-ambar" aria-labelledby="g-garantias">
+                  <div class="camada-titulo"><h3 id="g-garantias" data-t="g.garantias"></h3><p data-t="g.garantiasSub"></p></div>
+                  <ul class="itens">
+                    <li class="item"><span class="ico c-verde"><svg aria-hidden="true"><use href="#i-cadeado" /></svg></span><strong data-t="g.zeroBytes"></strong><small data-t="g.zeroBytesSub"></small></li>
+                    <li class="item"><span class="ico c-ambar"><svg aria-hidden="true"><use href="#i-chave" /></svg></span><strong data-t="g.segredo"></strong><small class="mono">DEMO-ONLY-SECRET-42</small></li>
+                    <li class="item"><span class="ico c-ciano"><svg aria-hidden="true"><use href="#i-play" /></svg></span><strong data-t="g.testes"></strong><small class="mono">node --test</small></li>
+                  </ul>
+                </aside>
+              </div>
+              <p class="selo"><span aria-hidden="true">✓</span> <span data-t="g.selo"></span></p>
+            </div>
+          </section>
+
+          <h2 data-t="conceitosTitle"></h2>
+          <div class="cards conceitos">
+            <article><h3 data-t="g.c1Title"></h3><p data-t="g.c1Text"></p></article>
+            <article><h3 data-t="g.c2Title"></h3><p data-t="g.c2Text"></p></article>
+            <article><h3 data-t="g.c3Title"></h3><p data-t="g.c3Text"></p></article>
+            <article><h3 data-t="g.c4Title"></h3><p data-t="g.c4Text"></p></article>
+            <article><h3 data-t="g.c5Title"></h3><p data-t="g.c5Text"></p></article>
+            <article><h3 data-t="g.c6Title"></h3><p data-t="g.c6Text"></p></article>
+          </div>
+
+          <h2 data-t="g.fluxoTitle"></h2>
+          <ol class="steps">
+            <li><div><h3 data-t="g.p1Title"></h3><p data-t="g.p1Text"></p></div></li>
+            <li><div><h3 data-t="g.p2Title"></h3><p data-t="g.p2Text"></p></div></li>
+            <li class="main"><div><h3 data-t="g.p3Title"></h3><p data-t="g.p3Text"></p></div></li>
+            <li><div><h3 data-t="g.p4Title"></h3><p data-t="g.p4Text"></p></div></li>
+            <li><div><h3 data-t="g.p5Title"></h3><p data-t="g.p5Text"></p></div></li>
+          </ol>
+        </section>
+      </main>
+    </div>
+  </body>
+</html>

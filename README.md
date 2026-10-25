@@ -33,6 +33,7 @@ A framework-free static site with a Cloudflare serverless backend for the AI cha
 - [Costs](#costs)
 - [Specification (SDD)](#specification-sdd)
 - [Credits](#credits)
+- [License](#license)
 
 ---
 
@@ -152,6 +153,7 @@ Every piece of data lives in **one place only**; the rest of the project reads i
 ├── 404.html                # Custom "page not found"
 ├── manifest.webmanifest · sw.js · icon-*.png  # Installable, offline app (PWA)
 ├── como-construi/          # "How I built it": architecture, decisions and stack (texts in como-construi.js)
+├── arquitetura/            # Architecture diagrams of the featured projects (Financial Hub, legal RAG, RAG security); texts in arquitetura.js
 ├── vaga/                   # "Does your role match?": page and vaga.js (POST /match)
 ├── demos/                  # In-browser AI demos (shared demos.css/demos.js)
 │   ├── lstm/               # Stock forecasting: lstm.js (inference), weights and data
@@ -395,6 +397,10 @@ The project follows **Spec-Driven Development**: the specification describes the
 - Face demo: [face-api.js](https://github.com/vladmandic/face-api) (MIT), by Vladimir Mandic.
 - Movie demo: data from [Wikidata](https://www.wikidata.org) (CC0) and shortened English [Wikipedia](https://en.wikipedia.org) summaries (CC BY-SA 4.0).
 - LSTM demo: prices from [Yahoo Finance](https://finance.yahoo.com), used for demonstration only.
+
+## License
+
+The code is under the [MIT License](LICENSE). Personal content is not: the photo, the voice recordings and voice sample in `data/audio/`, and the résumé and profile texts belong to the author and may not be reused.
 
 ---
 
