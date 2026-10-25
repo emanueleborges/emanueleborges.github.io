@@ -112,6 +112,7 @@ window.I18N.en = ((P) => ({
   "proj.moreTitle": "MORE PROJECTS",
   "proj.code": "View code",
   "proj.demo": "Live demo",
+  "proj.arch": "Architecture",
   "proj.updated": "updated {when}",
   "skills.kicker": "// 04. TOOLBOX",
   "skills.title": "Tools to<br /><span class=\"gradient-text\">make it real.</span>",

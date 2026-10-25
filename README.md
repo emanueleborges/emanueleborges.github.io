@@ -152,6 +152,7 @@ Every piece of data lives in **one place only**; the rest of the project reads i
 ├── 404.html                # Custom "page not found"
 ├── manifest.webmanifest · sw.js · icon-*.png  # Installable, offline app (PWA)
 ├── como-construi/          # "How I built it": architecture, decisions and stack (texts in como-construi.js)
+├── arquitetura/            # Architecture diagrams of the featured projects (Financial Hub, legal RAG, RAG security); texts in arquitetura.js
 ├── vaga/                   # "Does your role match?": page and vaga.js (POST /match)
 ├── demos/                  # In-browser AI demos (shared demos.css/demos.js)
 │   ├── lstm/               # Stock forecasting: lstm.js (inference), weights and data

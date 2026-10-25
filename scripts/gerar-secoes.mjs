@@ -33,10 +33,13 @@ function projectCard(p, position) {
   const demo = p.demo
     ? `<a class="project-link project-demo" href="${escape(p.demo.href)}"${p.demo.openChat ? " data-open-chat" : ""} data-demo="${escape(p.demo.name)}"><span data-i18n="proj.demo">${ptText("proj.demo")}</span> <span aria-hidden="true">▶</span></a>`
     : "";
+  const arch = p.arquitetura
+    ? `<a class="project-link" href="${escape(p.arquitetura)}" data-arq><span data-i18n="proj.arch">${ptText("proj.arch")}</span> <span aria-hidden="true">◇</span></a>`
+    : "";
   const metrics = p.metrics?.length
     ? `            <ul class="project-metrics">${p.metrics.map((m) => { const value = field(m.value); const label = field(m.label); return `<li><strong class="mono"${value.attr}>${value.html}</strong><span${label.attr}>${label.html}</span></li>`; }).join("")}</ul>`
     : "";
-  const actions = demo ? `<span class="project-actions">${demo}${code}</span>` : code;
+  const actions = demo || arch ? `<span class="project-actions">${demo}${arch}${code}</span>` : code;
   return [
     `          <article data-category="${p.categories.join(" ")}" class="project-card${p.featured ? " project-featured" : ""}">`,
     `            <span class="art-number mono">${String(position + 1).padStart(2, "0")} / ${escape(p.label)}</span>`,
@@ -312,7 +315,7 @@ const demoPages = readdirSync(join(ROOT, "demos"), { withFileTypes: true })
   .filter((entry) => entry.isDirectory())
   .map((entry) => `demos/${entry.name}/index.html`);
 files.set("curriculo.html", themeColor(langOptions(applyPerfil(replaceBlock(read("curriculo.html"), "dados", cvData()), "curriculo.html"))));
-for (const file of ["404.html", "vaga/index.html", "como-construi/index.html", ...demoPages]) {
+for (const file of ["404.html", "vaga/index.html", "como-construi/index.html", "arquitetura/index.html", ...demoPages]) {
   files.set(file, themeColor(langOptions(applyPerfil(read(file), file))));
 }
 

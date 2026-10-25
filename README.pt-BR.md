@@ -152,6 +152,7 @@ Cada informação existe em **um lugar só**; o resto do projeto lê dali ou é 
 ├── 404.html                # "Página não encontrada" personalizada
 ├── manifest.webmanifest · sw.js · icon-*.png  # App instalável e offline (PWA)
 ├── como-construi/          # "Como construí": arquitetura, decisões e tecnologias (textos em como-construi.js)
+├── arquitetura/            # Diagramas de arquitetura dos projetos em destaque (Financial Hub, RAG jurídico, segurança RAG); textos em arquitetura.js
 ├── vaga/                   # "Sua vaga combina?": página e vaga.js (POST /match)
 ├── demos/                  # Demos de IA no navegador (demos.css/demos.js compartilhados)
 │   ├── lstm/               # Previsão de ações: lstm.js (inferência), pesos e dados

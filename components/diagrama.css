@@ -1,0 +1,121 @@
+/* Diagrama de arquitetura em camadas, passos numerados e cards: compartilhado por como-construi/ e arquitetura/.
+   Usa as variáveis de tema de temas.css e demos/demos.css. */
+/* Diagrama de arquitetura em camadas: visitantes → (nuvem: borda → serviços → dados → transversais | APIs) → selo.
+   Cada ícone tem uma cor (--c); setas tracejadas mostram o fluxo dos pedidos e param com "reduzir movimento". */
+.icones { position: absolute; width: 0; height: 0; overflow: hidden; }
+.arq { --c-verde: var(--accent); --c-ciano: #22d3ee; --c-violeta: #a78bfa; --c-ambar: #fbbf24; --c-rosa: #f472b6; --c-azul: #60a5fa; display: grid; }
+.c-verde { --c: var(--c-verde); } .c-ciano { --c: var(--c-ciano); } .c-violeta { --c: var(--c-violeta); }
+.c-ambar { --c: var(--c-ambar); } .c-rosa { --c: var(--c-rosa); } .c-azul { --c: var(--c-azul); }
+.camada, .lateral { display: grid; grid-template-columns: 128px minmax(0, 1fr); gap: 12px 14px; align-items: center; padding: 16px; border: 1px solid var(--line-strong); border-radius: 14px; background: rgba(var(--accent-rgb), .035); }
+/* Uma cor por camada (--k), como nos diagramas de nuvem: fundo e borda levemente tingidos. */
+.k-ciano { --k: var(--c-ciano); } .k-violeta { --k: var(--c-violeta); } .k-verde { --k: var(--c-verde); }
+.k-azul { --k: var(--c-azul); } .k-rosa { --k: var(--c-rosa); } .k-ambar { --k: var(--c-ambar); }
+.camada[class*="k-"], .lateral[class*="k-"] { border-color: color-mix(in srgb, var(--k) 38%, transparent); background: linear-gradient(135deg, color-mix(in srgb, var(--k) 11%, transparent), color-mix(in srgb, var(--k) 4%, transparent)); }
+.camada-titulo h3 { display: flex; align-items: center; gap: 8px; }
+.camada-titulo h3::before { content: ""; flex: none; width: 4px; height: 16px; border-radius: 2px; background: var(--k, var(--accent)); }
+.camada-titulo h3 { margin: 0; font-size: 14px; letter-spacing: -.01em; }
+.camada-titulo p { margin: 3px 0 0; color: var(--muted); font-size: 12px; line-height: 1.35; }
+.itens { display: grid; grid-template-columns: repeat(auto-fit, minmax(94px, 1fr)); gap: 12px 8px; margin: 0; padding: 0; list-style: none; }
+.item { display: grid; justify-items: center; align-content: start; gap: 5px; text-align: center; }
+.item strong, .servico strong, .runtime strong { font-size: 12.5px; line-height: 1.25; }
+.item small, .runtime small { color: var(--muted); font-size: 11px; line-height: 1.35; }
+.item small.mono { font-size: 10px; }
+.ico { display: grid; place-items: center; flex: none; width: 42px; height: 42px; border-radius: 11px; background: linear-gradient(145deg, color-mix(in srgb, var(--c) 100%, white 18%), var(--c)); color: #07121a; box-shadow: 0 6px 18px color-mix(in srgb, var(--c) 28%, transparent), inset 0 1px 0 rgba(255,255,255,.35); }
+.ico svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; }
+
+.seta, .seta-espaco { position: relative; height: 34px; }
+.seta::before { content: ""; position: absolute; left: 50%; top: 9px; bottom: 9px; width: 2px; margin-left: -1px; background: repeating-linear-gradient(var(--accent) 0 5px, transparent 5px 9px); background-size: 2px 9px; animation: fluxo .9s linear infinite; }
+.seta::after { content: ""; position: absolute; left: 50%; bottom: 2px; margin-left: -5px; border: 5px solid transparent; border-top: 7px solid var(--accent); border-bottom: 0; }
+.seta span { position: absolute; top: 50%; left: calc(50% + 12px); translate: 0 -50%; color: var(--muted); font: 500 10px "DM Mono", monospace; letter-spacing: .04em; white-space: nowrap; }
+.seta span::before { content: ""; position: absolute; top: -26%; left: -17px; border: 5px solid transparent; border-bottom: 7px solid var(--accent); border-top: 0; translate: 0 -100%; }
+@keyframes fluxo { to { background-position: 0 9px; } }
+
+.nuvem { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) 150px; gap: 0 14px; padding: 34px 14px 14px; border: 1px dashed rgba(var(--accent-rgb), .45); border-radius: 18px; background: rgba(var(--accent-rgb), .02); }
+.nuvem-rotulo { position: absolute; top: 10px; left: 16px; margin: 0; color: var(--kicker); font: 500 10.5px "DM Mono", monospace; letter-spacing: .12em; text-transform: uppercase; }
+.nuvem-principal { display: grid; min-width: 0; }
+.lateral { position: relative; grid-template-columns: 1fr; align-content: start; align-items: start; }
+.lateral .itens { grid-template-columns: 1fr; gap: 16px; }
+.lateral::before { content: ""; position: absolute; top: 50%; right: 100%; width: 14px; border-top: 2px dashed var(--k); }
+.lateral::after { content: ""; position: absolute; top: 50%; right: calc(100% + 8px); margin-top: -4px; border: 5px solid transparent; border-right: 7px solid var(--k); border-left: 0; }
+
+.worker { display: grid; gap: 10px; padding: 10px; border: 1px dashed rgba(var(--accent-rgb), .4); border-radius: 12px; }
+.servicos { display: grid; grid-template-columns: repeat(auto-fit, minmax(128px, 1fr)); gap: 8px; margin: 0; padding: 0; list-style: none; }
+.servico { display: grid; justify-items: center; align-content: start; gap: 4px; padding: 12px 8px; border: 1px solid color-mix(in srgb, var(--c) 35%, transparent); border-radius: 12px; background: var(--surface); text-align: center; transition: transform .2s, border-color .2s; }
+.servico:hover { transform: translateY(-2px); border-color: color-mix(in srgb, var(--c) 70%, transparent); }
+.servico code { margin-bottom: 2px; color: var(--accent-text); font: 500 10px "DM Mono", monospace; }
+.servico > span:not(.ico) { color: var(--muted); font-size: 11px; line-height: 1.35; }
+.servico > span:not(.ico)::before { content: "· "; color: var(--c); font-weight: 800; }
+.runtime { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 10px 20px; padding: 10px 14px; border: 1px solid color-mix(in srgb, var(--c-ambar) 45%, transparent); border-radius: 10px; background: color-mix(in srgb, var(--c-ambar) 8%, transparent); }
+.runtime > div { display: flex; align-items: center; gap: 10px; }
+.runtime p { display: grid; gap: 2px; margin: 0; }
+
+.selo { justify-self: center; display: flex; align-items: center; gap: 10px; margin: 16px 0 0; padding: 8px 18px; border: 1px solid var(--line-strong); border-radius: 999px; background: var(--surface); font-size: 13px; text-align: center; }
+.selo > span:first-child { display: grid; place-items: center; flex: none; width: 22px; height: 22px; border-radius: 50%; background: var(--accent); color: var(--on-primary); font-size: 12px; font-weight: 800; }
+@media (prefers-reduced-motion: reduce) { .seta::before { animation: none; } .servico, .servico:hover { transition: none; transform: none; } }
+@media (max-width: 760px) {
+  .camada, .lateral { grid-template-columns: 1fr; padding: 14px 12px; }
+  .nuvem { grid-template-columns: 1fr; padding: 32px 10px 10px; }
+  .lateral { margin-top: 26px; }
+  .lateral .itens { grid-template-columns: repeat(auto-fit, minmax(96px, 1fr)); }
+  .lateral::before { top: auto; bottom: 100%; right: auto; left: 50%; width: 0; height: 26px; border-top: 0; border-left: 2px dashed var(--k); }
+  .lateral::after { top: auto; bottom: calc(100% + 18px); right: auto; left: 50%; margin: 0 0 0 -5px; border: 5px solid transparent; border-bottom: 7px solid var(--k); border-top: 0; }
+  .itens { grid-template-columns: repeat(auto-fit, minmax(92px, 1fr)); }
+  .servicos { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .selo { border-radius: 14px; }
+  .seta { height: 40px; }
+  .seta span { max-width: calc(50% - 20px); white-space: normal; line-height: 1.25; }
+}
+.steps { display: grid; gap: 10px; margin: 18px 0 0; padding: 0; list-style: none; counter-reset: step; }
+.steps li { display: grid; grid-template-columns: 36px 1fr; gap: 12px; padding: 14px 16px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); counter-increment: step; }
+.steps li::before { content: counter(step); display: grid; place-items: center; width: 32px; height: 32px; border-radius: 50%; background: rgba(var(--accent-rgb), .14); color: var(--accent-text); font: 500 14px "DM Mono", monospace; }
+.steps li.main { border-color: rgba(var(--accent-rgb), .4); }
+.steps p { margin: 0; color: var(--muted); font-size: 14px; }
+
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; margin-top: 18px; }
+.cards article { padding: 16px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); }
+.cards p { margin: 0; color: var(--muted); font-size: 14px; }
+
+/* Eventos no estilo de um cluster Kafka: producer → tópicos com partições → consumer groups (arquitetura/). */
+.kafka { display: grid; grid-template-columns: minmax(0, .8fr) 44px minmax(0, 1.6fr) 44px minmax(0, 1.3fr); align-items: center; }
+.kf-caixa { display: grid; gap: 10px; padding: 14px 12px; border: 1px solid color-mix(in srgb, var(--k) 38%, transparent); border-radius: 14px; background: linear-gradient(135deg, color-mix(in srgb, var(--k) 11%, transparent), color-mix(in srgb, var(--k) 4%, transparent)); }
+.kf-caixa > h3 { display: flex; align-items: center; gap: 8px; margin: 0; font-size: 14px; }
+.kf-caixa > h3::before { content: ""; flex: none; width: 4px; height: 16px; border-radius: 2px; background: var(--k); }
+.kf-produtor { justify-items: center; text-align: center; }
+.kf-produtor code, .grupo code, .topico code { font: 500 11px "DM Mono", monospace; color: var(--text); overflow-wrap: anywhere; }
+.kf-produtor small, .grupo small { color: var(--muted); font-size: 11px; line-height: 1.35; }
+.kf-chave { padding: 3px 9px; border: 1px dashed color-mix(in srgb, var(--k) 60%, transparent); border-radius: 999px; font: 500 10px "DM Mono", monospace; color: var(--muted); }
+.kf-seta { position: relative; align-self: stretch; }
+.kf-seta::before { content: ""; position: absolute; top: 50%; left: 6px; right: 10px; height: 2px; margin-top: -1px; background: repeating-linear-gradient(90deg, var(--accent) 0 5px, transparent 5px 9px); background-size: 9px 2px; animation: fluxo-h .9s linear infinite; }
+.kf-seta::after { content: ""; position: absolute; top: 50%; right: 3px; margin-top: -5px; border: 5px solid transparent; border-left: 7px solid var(--accent); border-right: 0; }
+.kf-seta span { position: absolute; bottom: calc(50% + 8px); left: 50%; translate: -50% 0; color: var(--muted); font: 500 10px "DM Mono", monospace; white-space: nowrap; }
+@keyframes fluxo-h { to { background-position: 9px 0; } }
+.cluster { position: relative; padding-top: 34px; border-style: dashed; }
+.cluster > .nuvem-rotulo { top: 12px; left: 14px; }
+.topico { display: grid; gap: 6px; padding: 9px 10px; border: 1px solid color-mix(in srgb, var(--c) 40%, transparent); border-left: 4px solid var(--c); border-radius: 10px; background: var(--surface); }
+.topico div { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 2px 8px; }
+.topico small { color: var(--muted); font-size: 10.5px; }
+.particoes { display: flex; gap: 5px; margin: 0; padding: 0; list-style: none; }
+.particoes li { flex: 1 1 0; min-width: 0; padding: 5px 0; border: 1px solid color-mix(in srgb, var(--c) 55%, transparent); border-radius: 6px; background: color-mix(in srgb, var(--c) 14%, transparent); font: 500 11px "DM Mono", monospace; text-align: center; }
+.particoes-uma { max-width: 33%; }
+.grupos { display: grid; gap: 8px; margin: 0; padding: 0; list-style: none; }
+.grupo { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 2px 10px; align-items: center; padding: 9px 10px; border: 1px solid color-mix(in srgb, var(--c) 35%, transparent); border-radius: 10px; background: var(--surface); }
+.grupo .ico { grid-row: span 2; width: 34px; height: 34px; border-radius: 9px; }
+.grupo .ico svg { width: 18px; height: 18px; }
+@media (prefers-reduced-motion: reduce) { .kf-seta::before { animation: none; } }
+@media (max-width: 760px) {
+  .kafka { grid-template-columns: 1fr; }
+  .kf-seta { height: 40px; }
+  .kf-seta::before { top: 6px; bottom: 10px; left: 50%; right: auto; width: 2px; height: auto; margin: 0 0 0 -1px; background: repeating-linear-gradient(var(--accent) 0 5px, transparent 5px 9px); background-size: 2px 9px; animation-name: fluxo; }
+  .kf-seta::after { top: auto; bottom: 2px; right: auto; left: 50%; margin: 0 0 0 -5px; border: 5px solid transparent; border-top: 7px solid var(--accent); border-bottom: 0; }
+  .kf-seta span { bottom: auto; top: 50%; left: calc(50% + 12px); translate: 0 -50%; }
+}
+
+/* Quatro serviços de mesmo peso (camadas da arquitetura hexagonal) numa linha só; dois por linha no celular. */
+.servicos-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+@media (max-width: 760px) { .servicos-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+/* Conceitos numerados, como num infográfico: o número vem do contador, na cor da camada. */
+.conceitos { counter-reset: conceito; }
+.conceitos article { counter-increment: conceito; }
+.conceitos h3 { display: flex; align-items: center; gap: 10px; margin: 0 0 6px; font-size: 15px; }
+.conceitos h3::before { content: counter(conceito); display: grid; place-items: center; flex: none; width: 26px; height: 26px; border: 1.5px solid var(--accent); border-radius: 50%; color: var(--accent-text); font: 500 12px "DM Mono", monospace; }

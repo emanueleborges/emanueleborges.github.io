@@ -104,6 +104,7 @@ window.I18N.pt = ((P) => ({
   "proj.moreTitle": "MAIS PROJETOS",
   "proj.code": "Ver código",
   "proj.demo": "Ver demo",
+  "proj.arch": "Arquitetura",
   "proj.updated": "atualizado {when}",
   "skills.kicker": "// 04. CAIXA DE FERRAMENTAS",
   "skills.title": "Ferramentas para<br /><span class=\"gradient-text\">tirar do papel.</span>",
