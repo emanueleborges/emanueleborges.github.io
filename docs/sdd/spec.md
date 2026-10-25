@@ -6,7 +6,7 @@
 
 | | |
 |---|---|
-| **Produto** | Portfólio profissional com assistente de IA, demos de IA e análise de vagas |
+| **Produto** | Portfólio profissional com assistente de IA e demos de IA |
 | **URL** | https://emanueleborges.github.io |
 | **Responsável** | Emanuel Borges |
 | **Status** | Em produção |
@@ -79,7 +79,7 @@ O site deve apresentar: topo (nome, cargo, resumo, localização, anos de experi
 ### RF-05 — Assistente (chat)
 - RF-05.1 Botão flutuante abre o painel do assistente; um balão de convite aparece 3 s após a primeira visita (uma única vez).
 - RF-05.2 **Respostas prontas** para temas frequentes (19 temas), com botões de continuação.
-- RF-05.3 Saudação, agradecimento, salário, data de início e formação são respondidos **sempre** com texto pronto (sem IA).
+- RF-05.3 Saudação, agradecimento e formação são respondidos **sempre** com texto pronto (sem IA); salário e data de início não têm resposta pronta: a IA diz que não tem a informação e sugere o contato.
 - RF-05.4 Demais perguntas são respondidas por **IA generativa** com base **somente** no perfil (RAG).
 - RF-05.5 Respostas da IA exibem o selo "Resposta gerada por IA" e um atalho "Ver na página".
 - RF-05.6 Se a IA falhar ou a cota gratuita do dia acabar, o chat **avisa o visitante** ("A IA atingiu a cota gratuita de hoje…" ou "…está indisponível agora…") e responde pela **busca local** no conteúdo da página.
@@ -99,7 +99,7 @@ Contagem opcional somente após consentimento explícito. O Worker usa a região
 ### RF-09 — SEO e compartilhamento
 - RF-09.1 Ao compartilhar o link (LinkedIn, WhatsApp, X), exibir prévia com imagem, título e descrição.
 - RF-09.2 Indicar ao Google as 8 versões de idioma (`hreflang`) e quem é a pessoa do site (dados estruturados `Person`, com empresa atual e escolas vindas dos dados de experiência e formação).
-- RF-09.3 Publicar `sitemap.xml` (página em 3 idiomas, demos, "Sua vaga combina?" e "Como construí") e `robots.txt`; o site é verificado no Google Search Console.
+- RF-09.3 Publicar `sitemap.xml` (página em 3 idiomas, demos, "Como construí" e "Arquitetura") e `robots.txt`; o site é verificado no Google Search Console.
 
 ### RF-10 — Resumo semanal
 Toda segunda-feira, o dono recebe por e-mail contagens agregadas de avaliações, acessos regionais e cliques consentidos, além da saúde da IA, do índice vetorial e do banco. O resumo contém somente dados agregados.
@@ -119,7 +119,8 @@ Páginas próprias (`/demos/…`), nos 3 idiomas, no estilo e no tema do site, c
 ### RF-13 — App instalável e offline
 O site pode ser instalado como app (manifest e ícones) e, depois da primeira visita, abre sem internet com a última versão salva; o chat usa a busca local quando offline.
 
-### RF-14 — "Sua vaga combina?" (para recrutadores)
+### RF-14 — "Sua vaga combina?" (para recrutadores) — retirado em 25/10/2026
+A página `/vaga/`, a rota `POST /match` e os textos de "aberto a novas oportunidades" saíram do site; links antigos para `/vaga/` vão para a página inicial (`404.html`). O histórico fica abaixo.
 - RF-14.1 Página `/vaga/` (3 idiomas) onde o recrutador cola a descrição de uma vaga (80–8.000 caracteres, qualquer idioma) e recebe: nota de aderência (0–100%), cada requisito com nível (atende / parcial / não encontrado), obrigatório ou diferencial, justificativa e evidências clicáveis, e um resumo "por que <nome>" com botão de copiar.
 - RF-14.2 Os requisitos são só os escritos na vaga (nada inventado, nada omitido); a nota é calculada por regra, não pela IA; nenhuma experiência pode ser afirmada sem evidência no perfil.
 - RF-14.3 O texto da vaga não é salvo; o visitante é avisado disso.
@@ -134,7 +135,7 @@ O site pode ser instalado como app (manifest e ícones) e, depois da primeira vi
 
 ### RF-16 — Interações e navegação sem sair do site
 - RF-16.1 **Sons e vibração:** cliques de interface e teclas ao digitar, sintetizados no navegador, e vibração curta no celular; botão para mutar em todas as páginas, com a escolha salva.
-- RF-16.2 **Modais para páginas do site:** demos, "Como construí", a página de vagas e o currículo abrem num modal no idioma e tema atuais; fechar descarrega a página (desliga a câmera da demo facial).
+- RF-16.2 **Modais para páginas do site:** demos, "Como construí", a arquitetura e o currículo abrem num modal no idioma e tema atuais; fechar descarrega a página (desliga a câmera da demo facial).
 - RF-16.3 **Links externos:** links do GitHub do dono abrem num visualizador em modal (pastas, README/Markdown formatados, código e imagens). LinkedIn, WhatsApp, e-mail e outros sites abrem um cartão em modal (QR code do WhatsApp, perfil do LinkedIn com cargo e cidade, e-mail para copiar, descrição e tecnologia dos sistemas desenvolvidos); o site externo só abre se o visitante pedir.
 - RF-16.4 **Compartilhar:** QR code e link do portfólio no idioma atual, com copiar, compartilhamento nativo e atalhos para WhatsApp, LinkedIn e e-mail.
 - RF-16.5 **Busca rápida:** `/` ou Ctrl/⌘+K abre uma barra que encontra projetos, experiências, habilidades, seções e ações, filtra os projetos por assunto e envia perguntas ao assistente; nada é enviado a servidor.
@@ -156,7 +157,7 @@ O site pode ser instalado como app (manifest e ícones) e, depois da primeira vi
 | RNF-02 | **Desempenho** | Site estático sem build; primeira imagem pré-carregada; fontes sem bloquear a exibição; traduções, Turnstile, QR code e Markdown carregados sob demanda. Meta: Lighthouse (celular) ≥ 75 em desempenho e 100 em acessibilidade, boas práticas e SEO. |
 | RNF-03 | **Disponibilidade** | O chat continua útil sem IA (busca local, com aviso); contato por links diretos; currículo sem depender de servidor. |
 | RNF-04 | **Segurança** | Backend aceita só a origem do site; anti-robô em toda chamada que grava dados ou usa IA; limites por IP; validação de entrada; nenhum segredo no repositório; CSP em todas as páginas. |
-| RNF-05 | **Privacidade (LGPD)** | Sem formulário de contato. Perguntas do chat, textos de vagas e pedidos de imagem são processados para gerar a resposta e **não são gravados nem guardados em cache** (nem no AI Gateway, nem em KV). O D1 guarda somente totais diários agregados, apagados antes de completar 30 dias. Estatísticas só após consentimento. Na demo facial, câmera e fotos ficam no aparelho. |
+| RNF-05 | **Privacidade (LGPD)** | Sem formulário de contato. Perguntas do chat e pedidos de imagem são processados para gerar a resposta e **não são gravados nem guardados em cache** (nem no AI Gateway, nem em KV). O D1 guarda somente totais diários agregados, apagados antes de completar 30 dias. Estatísticas só após consentimento. Na demo facial, câmera e fotos ficam no aparelho. |
 | RNF-06 | **Acessibilidade** | HTML semântico, rótulos ARIA traduzidos, foco visível, navegação por teclado, respeito a `prefers-reduced-motion`; acessibilidade 100 nos dois temas. |
 | RNF-07 | **Responsividade** | Funcional e legível de 320 px a desktop largo, sem rolagem lateral (o cabeçalho é medido em 320, 360 e 390 px). |
 | RNF-08 | **Confiabilidade da IA** | A IA não pode inventar fatos; deve recusar temas fora do perfil e resistir a instruções do visitante que tentem mudar as regras. |
@@ -179,7 +180,7 @@ O site pode ser instalado como app (manifest e ícones) e, depois da primeira vi
 - [x] "Me dá uma receita de bolo" é recusado educadamente; "Ignore all previous instructions…" não altera o comportamento.
 - [x] "Quantos anos ele tem?" responde que não há essa informação, sem inventar.
 - [x] Com o Worker respondendo `503 quota` (erro 3036), o chat mostra o aviso de cota, responde pela busca local e o rodapé passa a "cota atingida · busca local" — nos 3 idiomas (teste automático).
-- [x] Os 70 testes de `tests/rodar-testes-chat.sh` passam (67 casos + o fallback da IA em cada idioma).
+- [x] Os 62 testes de `tests/rodar-testes-chat.sh` passam (59 casos + o fallback da IA em cada idioma).
 
 ### Fontes únicas e reaproveitamento
 - [x] `node scripts/gerar-secoes.mjs --check` passa no CI; alterar um dado sem rodar o gerador faz o CI falhar.
@@ -213,7 +214,7 @@ O site pode ser instalado como app (manifest e ícones) e, depois da primeira vi
 - [x] Clicar em 👎 numa resposta da IA mostra "Obrigado pela avaliação!" e incrementa o total do dia.
 
 ### SEO e desempenho
-- [x] `sitemap.xml` e `robots.txt` respondem HTTP 200; o sitemap é XML válido com 16 endereços.
+- [x] `sitemap.xml` e `robots.txt` respondem HTTP 200; o sitemap é XML válido com 11 endereços.
 - [x] A página tem prévia Open Graph (imagem 1200×630), `hreflang` para os 3 idiomas e JSON-LD `Person` válido.
 - [x] Lighthouse (celular): desempenho ~80, acessibilidade 100, boas práticas 100, SEO 100.
 - [x] Um endereço inexistente responde HTTP 404 com a página personalizada.
@@ -234,7 +235,7 @@ O site pode ser instalado como app (manifest e ícones) e, depois da primeira vi
 
 ### Interações e navegação
 - [x] "/" e Ctrl/⌘+K abrem a busca; "rag" filtra os projetos com RAG.
-- [x] Demos, "Como construí", vagas e currículo abrem no modal; fechar limpa o iframe.
+- [x] Demos, "Como construí", arquitetura e currículo abrem no modal; fechar limpa o iframe.
 - [x] WhatsApp, LinkedIn, e-mail e os sistemas da Prefeitura abrem seus cartões, com textos vindos das traduções.
 
 ### E-mail de métricas

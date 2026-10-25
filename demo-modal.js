@@ -1,4 +1,4 @@
-// Demos, páginas internas (vaga/, como-construi/, arquitetura/) e o currículo abertos num modal, sem sair do portfólio: "Ver demo" (demos/<nome>/) carrega a página da demo
+// Demos, páginas internas (como-construi/, arquitetura/) e o currículo abertos num modal, sem sair do portfólio: "Ver demo" (demos/<nome>/) carrega a página da demo
 // num iframe com ?embed=1 (ela esconde o próprio cabeçalho — demos/demos.js), no idioma e tema atuais.
 // Ctrl/⌘/Shift+clique ou clique do meio continuam abrindo a página inteira; "nova aba" também.
 // Ao fechar, o iframe volta para about:blank (desliga a câmera da demo facial, por exemplo).
@@ -74,7 +74,7 @@ if (dialog?.showModal) {
   document.addEventListener("languagechange", () => dialog.querySelector("[data-demo-modal-close]").setAttribute("aria-label", t("demo.close")));
 
   document.addEventListener("click", (event) => {
-    const link = event.target.closest?.("a[data-demo][href^='demos/'], a[href='vaga/'], a[href='como-construi/'], a[data-arq]");
+    const link = event.target.closest?.("a[data-demo][href^='demos/'], a[href='como-construi/'], a[data-arq]");
     if (!link || event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
     event.preventDefault();
     open(link);

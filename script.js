@@ -321,7 +321,7 @@ const guideSteps = [
   { demo: "filmes", key: "guide.demoFilmes" },
   { demo: "face", key: "guide.demoFace" },
   { demo: "guardrail", key: "guide.demoGuardrail" },
-  { target: ".chat-toggle, [data-hero-ask]:not([hidden]), .hero-match", key: "guide.step4" },
+  { target: ".chat-toggle, [data-hero-ask]:not([hidden])", key: "guide.step4" },
   { target: "#contato .contact-inner h2", key: "guide.step5" },
 ];
 let guideIndex = 0;

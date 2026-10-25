@@ -315,7 +315,7 @@ const demoPages = readdirSync(join(ROOT, "demos"), { withFileTypes: true })
   .filter((entry) => entry.isDirectory())
   .map((entry) => `demos/${entry.name}/index.html`);
 files.set("curriculo.html", themeColor(langOptions(applyPerfil(replaceBlock(read("curriculo.html"), "dados", cvData()), "curriculo.html"))));
-for (const file of ["404.html", "vaga/index.html", "como-construi/index.html", "arquitetura/index.html", ...demoPages]) {
+for (const file of ["404.html", "como-construi/index.html", "arquitetura/index.html", ...demoPages]) {
   files.set(file, themeColor(langOptions(applyPerfil(read(file), file))));
 }
 

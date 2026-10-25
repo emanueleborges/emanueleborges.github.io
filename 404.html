@@ -15,6 +15,8 @@
       (function () {
         var old = location.pathname.match(/^\/cv\/.+-([a-z]{2})\.pdf$/);
         if (old) location.replace("/curriculo.html?lang=" + old[1] + "&pdf=1");
+        // A página de análise de vagas (/vaga/) foi retirada: quem tiver o link vai para o portfólio.
+        else if (/^\/vaga(\/|$)/.test(location.pathname)) location.replace("/");
       })();
     </script>
     <title data-perfil="Page not found — {nomeCompleto}">Page not found — Emanuel Borges</title>

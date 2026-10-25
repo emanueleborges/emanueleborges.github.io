@@ -119,6 +119,7 @@ Legend: ✅ done · ⏳ pending · 💡 idea
 - ✅ **T102** Real PDF résumé: `GET /cv` with Browser Run, D1 cache (migration 0009) and printing as fallback; modal, résumé and job-match buttons point to `PERFIL.cvPdf` — FR-04
 - ✅ **T104** Voice questions in the chat: `chat/voz.js` + `POST /transcribe` (Whisper turbo), texts in 8 languages, Worker tests and an end-to-end test (real recording → Whisper) — FR-05.12
 - ✅ **T105** Languages reduced to English, Portuguese and Spanish (French, Italian, German, Chinese and Russian removed from `idiomas.js`, `i18n/`, demos, tests and docs); old `?lang=` links fall back to English. The chat's synonym lists stay multilingual — FR-02
+- ✅ **T106** Job-search content removed from the site: "open to new challenges" badge, `/vaga/` page and `POST /match`, ready-made answers on roles sought, salary and start date, and the last sentence of the spoken presentation (old `/vaga/` → home page) — FR-14
 
 ---
 

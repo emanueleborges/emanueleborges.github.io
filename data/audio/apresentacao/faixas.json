@@ -19,11 +19,6 @@
       "text": "The assistant that answers your questions on this portfolio was built by me, in three languages and at zero cost.",
       "file": "en/3.mp3",
       "voice": "emanuel"
-    },
-    {
-      "text": "This spoken presentation is an example of my professional profile, and I'm open to new opportunities, so let's talk.",
-      "file": "en/4.mp3",
-      "voice": "emanuel"
     }
   ],
   "pt": [
@@ -45,11 +40,6 @@
     {
       "text": "O assistente que responde às suas perguntas neste portfólio fui eu que construí, em três idiomas e com custo zero.",
       "file": "pt/3.mp3",
-      "voice": "emanuel"
-    },
-    {
-      "text": "Esta apresentação falada é um exemplo do meu perfil profissional, e estou aberto a novas oportunidades, então vamos conversar.",
-      "file": "pt/4.mp3",
       "voice": "emanuel"
     }
   ]

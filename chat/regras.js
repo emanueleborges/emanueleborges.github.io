@@ -8,7 +8,7 @@ const nome = normalize(globalThis.PERFIL.nome).replace(/[.*+?^${}()|[\]\\]/g, "\
 
 // Estes temas sempre usam a resposta pronta local (rápida, sem custo e controlada).
 // "education" usa resposta conferida: o modelo gratuito às vezes traduz errado nomes de cursos e universidades.
-const LOCAL_ONLY = new Set(["greeting", "thanks", "salary", "start", "education"]);
+const LOCAL_ONLY = new Set(["greeting", "thanks", "education"]);
 
 /* ---------- Sinônimos: expressões que viram termos existentes no site ---------- */
 
@@ -58,7 +58,7 @@ const faqs = [
   {
     key: "greeting",
     pattern: /^\s*(oi+|ola|opa|hello|hi|hey|hola|bonjour|salut|ciao|buongiorno|buenas|bom dia|boa tarde|boa noite|good (morning|afternoon|evening)|buenos dias|hallo|guten (tag|morgen|abend)|moin|servus|你好|您好|привет|здравствуйте|добрый день)[\s!.,?！。]*$/,
-    related: ["about", "seeking", "ai", "stack"],
+    related: ["about", "work", "ai", "stack"],
   },
   {
     key: "thanks",
@@ -66,31 +66,15 @@ const faqs = [
     contacts: true,
   },
   {
-    key: "salary",
-    pattern: /gehalt|vergutung|lohn|salari|salary|sueldo|remunera|pretens|quanto (cobra|ganha)|how much|cuanto cobra|tarif|hourly|薪|工资|зарплат|оплат/,
-    contacts: true,
-  },
-  {
-    key: "start",
-    pattern: /wann .*(anfangen|starten|beginnen)|eintrittsdatum|kundigungsfrist|quando (ele )?(pode )?(comecar|iniciar)|data de inicio|start date|notice period|aviso previo|when can (he|you) start|cuando puede (empezar|comenzar)|preavis|quand .*commencer|quando (puo|potrebbe) iniziare|preavviso|何时.*入职|什么时候.*(开始|入职)|когда .*(начать|выйти)/,
-    contacts: true,
-  },
-  {
-    key: "seeking",
-    pattern: /(welche|was fur eine|art von) stelle|sucht er|stellensuche|jobsuche|tipo de vaga|qual vaga|que vaga|quais vagas|vaga (que|de) (procura|busca)|procura (qual|que|vaga|emprego|trabalho|oportunidade|posi)|busca (vaga|vacante|empleo|trabajo|puesto)|tipo de (puesto|vacante|empleo|trabajo|cargo)|looking for|seeking|what (kind of |type of )?(roles?|jobs?|positions?)|open to (roles|positions|jobs)|quel (type de )?poste|cherche (un )?(poste|emploi)|che tipo di (lavoro|posizione|ruolo)|cerca (lavoro|posizion)|寻找|什么职位|求职|ищет|какую (работу|вакансию|должность)|ваканс/,
-    contacts: true,
-    related: ["work", "differential", "stack"],
-  },
-  {
     key: "differential",
     pattern: /warum .*(einstellen|ihn)|starken|vorteil|alleinstellung|diferencia|por que contrat|porque contrat|why (should (we|i) )?hire|why him|strength|ponto forte|pontos fortes|fortaleza|point fort|pourquoi (le |l.)?(embaucher|recruter)|punti di forza|perche (assumer|sceglier)|优势|为什么.*(选择|雇|招)|сильн\w* сторон|почему (он|его|нанять)|преимуществ/,
-    related: ["ai", "soft", "seeking"],
+    related: ["ai", "soft", "work"],
   },
   {
     key: "work",
     pattern: /zeitzone|festanstellung|freiberuf|ausland|vertrag|remot|home ?office|presencial|hibrid|hybrid|on-?site|fuso|timezone|time zone|zona horaria|fuseau|fuso orario|\butc\b|\bgmt\b|onde mora|where .*(live|based|located)|donde vive|ou habite|dove vive|internaciona|internationa|exterior|abroad|estero|etranger|relocat|\bvisa\b|\bclt\b|\bpj\b|contrat|freelanc|autonom|disponib|availab|远程|时区|国际|合同|удален|пояс|междунар|контракт|релокац/,
     contacts: true,
-    related: ["seeking", "years"],
+    related: ["years", "stack"],
   },
   {
     key: "education",
@@ -126,7 +110,7 @@ const faqs = [
     key: "ai",
     pattern: /(experien|erfahrung|esperienz|trabalha|arbeitet|works?|sabe|kennt|know|conhec|conoce|connait|conosce)\w*\s.{0,20}\b(ia|ai|ki|kunstliche intelligenz|inteligencia artificial|artificial intelligence|machine learning|nlp|llm)\b|опыт.{0,8}(ии|ai|машинн)|ai.{0,6}经验|人工智能.{0,4}经验/,
     target: ".project-card",
-    related: ["differential", "stack", "seeking"],
+    related: ["differential", "stack", "work"],
   },
   {
     key: "mobile",
@@ -162,7 +146,7 @@ const faqs = [
     key: "about",
     pattern: new RegExp(String.raw`wer ist (er|${nome})|erzahl.* uber (ihn|${nome})|uber ihn|quem e (voce|ele|o ${nome}|${nome})|(fale|conte|fala) (mais )?sobre (ele|voce|o ${nome}|${nome})|resumo (dele|profissional)|who is (he|${nome})|tell me about (him|${nome}|yourself)|about (him|${nome})|quien es|hablame (de|sobre) (el|${nome})|qui est|parlez-moi (de lui|d.${nome})|chi e|parlami (di lui|di ${nome})|他是谁|是谁|介绍一下|кто (он|такой)|расскажи о (нем|себе|${nome})`),
     target: "#sobre",
-    related: ["seeking", "differential", "ai"],
+    related: ["work", "differential", "ai"],
   },
 ];
 

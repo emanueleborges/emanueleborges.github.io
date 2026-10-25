@@ -3,7 +3,7 @@
 // as mesmas informações do portfólio, sem nada escrito à mão aqui:
 //   CORE    → resumo curto, enviado em toda pergunta
 //   CHUNKS  → trechos do perfil, indexados no Vectorize (RAG) por indexar-vectorize.mjs; os ids são
-//             estáveis (a análise de vagas e a página /vaga/ usam ids como "skills-backend" e "portfolio")
+//             estáveis (o Vectorize atualiza cada trecho pelo id)
 //   PROFILE → perfil completo, usado se a busca no Vectorize falhar
 // Rodado automaticamente por `npm run dev` e `npm run deploy`.
 import fs from "node:fs";
@@ -55,7 +55,7 @@ const projectChunk = (p) => {
   const code = `${P.links.github}/${preencher(p.repo)}${p.path ? `/${p.path}` : ""}`;
   const demo = !p.demo ? "" : p.demo.href.startsWith("#") ? " Live demo: the chat on this portfolio." : ` Live demo: ${site(p.demo.href)}.`;
   return {
-    // O card do assistente (p10) é o próprio portfólio: id "portfolio", usado pela análise de vagas.
+    // O card do assistente (p10) é o próprio portfólio: id "portfolio".
     id: p.id === "p10" ? "portfolio" : p.id,
     title: `Project: ${title}${p.featured ? " (featured)" : ""}`,
     text: `${title}${p.ia ? ` — ${p.ia}` : ""}${stack ? ` (${stack})` : ""}: ${get(p.desc.key)}${results ? ` Verifiable results: ${results}.` : ""} Code: ${code}.${demo}`,
@@ -90,21 +90,20 @@ const country = new Intl.DisplayNames(["en"], { type: "region" }).of(P.endereco.
 const location = `${P.endereco.cidade}, ${P.endereco.estado}, ${country} (${P.endereco.fuso})`;
 const contacts = `${P.email} · WhatsApp ${P.telefone} · ${semProtocolo(P.links.linkedin)} · ${semProtocolo(P.links.github)} · ${semProtocolo(P.site)}`;
 
-const CORE = `${P.nomeCompleto}: ${P.resumo} Based in ${location}; currently at ${jobs[0].company}. Contact: ${contacts}. Salary and start date are not public — visitors should contact him directly.`;
+const CORE = `${P.nomeCompleto}: ${P.resumo} Based in ${location}; currently at ${jobs[0].company}. Contact: ${contacts}.`;
 
 const demos = projects.filter((p) => p.demo && !p.demo.href.startsWith("#")).map((p) => `${projectTitle(p)} (${site(p.demo.href)})`);
 const siteChunk = {
   id: "site",
   title: "What visitors can do on this portfolio",
-  text: `The portfolio (${site()}) is available in ${Object.keys(IDIOMAS).length} languages. Visitors can ask this AI assistant, download the résumé as a PDF in any of those languages ("Download résumé" button), paste a job description at ${site("vaga/")} to see requirement by requirement how ${P.nome}'s profile matches it, try live AI demos — ${demos.join(", ")} —, read how the site was built at ${site("como-construi/")}, and get in touch by e-mail, WhatsApp or LinkedIn.`,
+  text: `The portfolio (${site()}) is available in ${Object.keys(IDIOMAS).length} languages. Visitors can ask this AI assistant, download the résumé as a PDF in any of those languages ("Download résumé" button), try live AI demos — ${demos.join(", ")} —, read how the site was built at ${site("como-construi/")}, and get in touch by e-mail, WhatsApp or LinkedIn.`,
 };
 
 const CHUNKS = [
   { id: "summary", title: "Professional summary", text: `${get("about.lead")} ${get("about.body")}` },
   { id: "current", title: "Current role", text: get("chat.faq.current") },
   { id: "differential", title: "Strengths and why hire him", text: get("chat.faq.differential") },
-  { id: "seeking", title: "Roles he is looking for", text: get("chat.faq.seeking") },
-  { id: "availability", title: "Availability, remote work, contract and location", text: `${get("chat.faq.work")} Location: ${location}. Salary and start date are not public; contact ${P.nome} directly.` },
+  { id: "availability", title: "Remote work and location", text: `${get("chat.faq.work")} Location: ${location}.` },
   { id: "contact", title: "Contact", text: `E-mail: ${P.email}. WhatsApp: ${P.telefone} (${P.links.whatsapp}). LinkedIn: ${P.links.linkedin}. GitHub: ${P.links.github}. Portfolio: ${site()} (no contact form; direct links only).` },
   ...jobs.map(({ company, ...job }) => job),
   { id: "years", title: "Years of experience and career timeline", text: get("chat.faq.years") },

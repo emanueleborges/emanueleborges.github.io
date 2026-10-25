@@ -27,7 +27,7 @@ flowchart TB
     CONH[worker/src/conhecimento.js]
   end
   subgraph Browser
-    PAGES["index.html · demos/ · vaga/ · como-construi/ · curriculo.html · 404"]
+    PAGES["index.html · demos/ · como-construi/ · arquitetura/ · curriculo.html · 404"]
     SW[sw.js — offline]
   end
   subgraph CF["Cloudflare (free plan)"]
@@ -48,7 +48,7 @@ flowchart TB
   I18N --> KNOW
   KNOW --> CONH
   PERFIL & TEMAS & HTML & MEDIA --> PAGES
-  PAGES -->|chat, job match, image, rating, stats| WORKER
+  PAGES -->|chat, image, rating, stats| WORKER
   PAGES --> GH
   WORKER --> TURN
   WORKER --> WAI
@@ -108,11 +108,11 @@ Data are classic scripts (not JSON or modules) so they run before paint, in `fil
 | `busca-rapida.js` | Quick search (Spotlight); filters project cards; sends questions to the chat. |
 | `pipeline-grafo.js` | Experience pipeline and skills × projects graph. |
 | `sistema.js` | Technical footer: model, AI state (chat `aistate` event or `GET /status`), ping and data center only on click. |
-| `demo-modal.js` | `<iframe>` modal (`?embed=1`) for demos, job match, "How I built it" and the résumé; for the résumé the bar button prints the iframe. |
+| `demo-modal.js` | `<iframe>` modal (`?embed=1`) for demos, "How I built it", architecture and the résumé; for the résumé the bar button prints the iframe. |
 | `apresentacao.js` | Spoken-intro player (tracks in `PERFIL.audio.apresentacao`, captions per sentence). |
 | `components/components.js` | Web Components `<site-logo>`, `<theme-toggle>` (with `<theme-intensity>` inside), `<theme-intensity>` (also standalone, in the ☰ menu), `<sound-toggle>`; sounds; GitHub viewer; external-link cards; "Share". Loads `i18n/<lang>.js` on demand (`siteTexts`) when a card needs profile text on a page without translations. |
 | `components/boot.js` | Theme, intensity and language before paint; generated theme block. |
-| `demos/demos.css` · `demos/demos.js` | Base for demos, job match and "How I built it": `Demo.setup(texts)` with its own 8-language dictionary; `t()` fills `{nome}`/`{nomeCompleto}` and appends " — <full name>" to the tab title. |
+| `demos/demos.css` · `demos/demos.js` | Base for demos, "How I built it" and architecture: `Demo.setup(texts)` with its own 8-language dictionary; `t()` fills `{nome}`/`{nomeCompleto}` and appends " — <full name>" to the tab title. |
 | `curriculo.html` | A4 résumé built in the browser from `window.CURRICULO` (generated block), `PERFIL` and `I18N`; "Download PDF" button (print); `?pdf=1` prints on load. |
 | `temas.css` · `styles.css` | Theme colors (generated) · site styling. |
 | `manifest.webmanifest` · `sw.js` | Installable, offline app; `sw.js` imports `perfil.js` to precache the photo. |
@@ -120,7 +120,7 @@ Data are classic scripts (not JSON or modules) so they run before paint, in `fil
 ### 3.3 Internationalization
 - The site's HTML holds the Portuguese (copied from `i18n/pt.js`); on language change `script.js` applies `I18N[lang]` and restores the original for `pt`. Missing key → Portuguese.
 - Names in translations come from the profile (`${P.nome}`, `${P.nomeCompleto}`).
-- Demos, job match and "How I built it" have their own dictionaries through `Demo.setup`; texts use `{nome}`.
+- Demos, "How I built it" and architecture have their own dictionaries through `Demo.setup`; texts use `{nome}`.
 - The initial language is decided only in `boot.js` (`IDIOMA_INICIAL`); `languagechange` notifies chat, filters and components.
 
 ### 3.4 Assistant local search
@@ -135,7 +135,7 @@ Data are classic scripts (not JSON or modules) so they run before paint, in `fil
 question
  ├─ résumé?   → shortcut to the résumé (local; opens the modal with "Download PDF")
  ├─ contact?  → contact buttons (local)
- ├─ LOCAL_ONLY ready-made topic (greeting, thanks, salary, start, education) → ready-made answer
+ ├─ LOCAL_ONLY ready-made topic (greeting, thanks, education) → ready-made answer
  ├─ AI available? → POST / (Worker) → AI answer + "See on page"
  │                  └─ failed ({ error: quota | unavailable }) → notice + local search; aistate event → footer
  └─ no AI → ready-made topic or local search
@@ -172,7 +172,6 @@ Web Audio sounds and haptics; modals for site pages; GitHub viewer (listing from
 | `POST /` | AI chat (RAG) | origin, 10/min/IP, Turnstile, validation | nothing |
 | `POST /transcribe` | Spoken question → text (Whisper turbo; site language as hint) | origin, 6/min/IP, Turnstile, audio ≤ 1.5 MB base64 (WebM/Opus or MP4/AAC) | nothing |
 | `POST /feedback` | 👍/👎 rating | origin, 20/min/IP, Turnstile | daily total per type |
-| `POST /match` | "Does your role match?" | origin, 3/min/IP, Turnstile, 80–8,000 chars | nothing |
 | `POST /image` | Image generator (FLUX.1) | origin, 2/min/IP, Turnstile, term filter, Llama Guard, 2/day per visitor, global cap 40/day | day total; daily HMAC of the IP for the quota (deleted the next day) |
 | `POST /visit` | Count per continent (after consent) | origin, 20/min/IP | daily total per continent |
 | `POST /click` | Clicks per link (after consent) | origin, 30/min/IP, Turnstile, fixed targets | daily total per target |
@@ -186,10 +185,6 @@ Web Audio sounds and haptics; modals for site pages; GitHub viewer (listing from
 
 **Flow:** origin → limit → validation → Turnstile → normalization → **RAG** (BGE-M3 → Vectorize top 6 → fixed summary + excerpts; on failure, full profile) → Qwen3 30B (`temperature 0.1`, `max_tokens 600`, `/no_think`) through AI Gateway **without cache** → cleanup (`<think>`, Markdown). On error, `aiErrorKind()` classifies it and, for quota, marks the AI as "quota" until 00:00 UTC (in that Worker instance's memory).
 
-#### `POST /match` — job match
-**200:** `{ "role", "score": 0-100, "requirements": [{ "requirement", "importance": "must|nice", "level": "strong|partial|none", "evidence": ["excerpt id"], "reason" }], "pitch" }`.
-**Flow:** step 1 — Qwen3 extracts the role and requirements reading only the job (JSON schema); step 2 — grades the list against up to 18 relevant profile excerpts; **Worker checks** (drops unknown ids, splits bundled technologies, skill only listed ⇒ partial, technology absent ⇒ none) → score = Σ(weight × value)/Σ weight (must 2, nice 1; strong 1, partial 0.5, none 0).
-
 #### `GET /status`
 **200:** `{ "colo": "GRU", "model": "qwen3-30b-a3b-fp8", "ai": "online" | "quota" }`. Read-only; the site only calls it when the visitor clicks "measure connection".
 
@@ -199,7 +194,7 @@ Web Audio sounds and haptics; modals for site pages; GitHub viewer (listing from
 | `AI` | Workers AI |
 | `VECTORIZE` | Index `portfolio-profile` (1024 dimensions, cosine) |
 | `DB` | D1 `portfolio-contact` |
-| `CHAT_LIMITER` · `FEEDBACK_LIMITER` · `MATCH_LIMITER` · `PRICES_LIMITER` · `VISIT_LIMITER` · `CLICK_LIMITER` · `IMAGE_LIMITER` | 10 · 20 · 3 · 30 · 20 · 30 · 2 requests/60 s; `CV_LIMITER` 5 and `TRANSCRIBE_LIMITER` 6 |
+| `CHAT_LIMITER` · `FEEDBACK_LIMITER` · `PRICES_LIMITER` · `VISIT_LIMITER` · `CLICK_LIMITER` · `IMAGE_LIMITER` | 10 · 20 · 30 · 20 · 30 · 2 requests/60 s; `CV_LIMITER` 5 and `TRANSCRIBE_LIMITER` 6 |
 | `ALLOWED_ORIGIN` · `NOTIFY_EMAIL` | **generated** from `data/perfil.json` |
 | `TURNSTILE_SECRET` · `RESEND_API_KEY` | secrets (outside the repo) |
 | `METRICAS` | Workers Analytics Engine, dataset `portfolio_metricas`: one metric per response (route, result, ms), recorded in the router; read by `npm run painel` (token with *Account Analytics: Read*) |
@@ -248,7 +243,7 @@ There are no tables for messages, questions or answers. Every D1 table holds **d
 ## 7. Quality
 
 - **CI (`.github/workflows/testes.yml`):** `node --check` on every script; `sitemap.xml` and JSON-LD validation; `gerar-secoes.mjs --check`; `conferir-modulos.mjs`; knowledge build; Worker tests (40), security-demo tests (6) and chat tests (104 = 96 cases + AI fallback in 3 languages, headless Chrome with no network); Lighthouse (3 runs; accessibility ≥ 95, best practices ≥ 90, SEO ≥ 95).
-- **Worker tests:** wrong origin, invalid fields, Turnstile, limits, unknown route, aggregation, retention, image, job match, error 3036 → `503 quota` and `ai: "quota"` on `/status`.
+- **Worker tests:** wrong origin, invalid fields, Turnstile, limits, unknown route, aggregation, retention, image, error 3036 → `503 quota` and `ai: "quota"` on `/status`.
 - **Recorded manual checks:** full profile swap with a fictitious person; computed colors before/after the theme move; header measured at 320–390 px; PDF text identical to the previous PDFs.
 
 ---
@@ -276,7 +271,7 @@ There are no tables for messages, questions or answers. Every D1 table holds **d
 | ADR-19 | GitHub Actions for tests | Local only | Free; prevents shipping something broken. |
 | ADR-21 | Own service worker | Workbox | No dependency; page always fresh. |
 | ADR-23 | Inference demos in the browser | Hugging Face Spaces, TensorFlow.js | Zero cost, no server. |
-| ADR-27 | Two-step job match + deterministic checks and rule-based score | One call; AI score | The AI alone invented requirements and hid gaps. |
+| ADR-27 | ~~Two-step job match + deterministic checks and rule-based score | One call; AI score | The AI alone invented requirements and hid gaps.~~ Retired on 2026-10-25, with the `/vaga/` page. |
 | ADR-28 | Themes via CSS variables + `<head>` script | Single theme; `prefers-color-scheme` | "Amazon" identity as default, no flash. |
 | ADR-29 | Componentization without a framework (Web Components, HTML generator, ES modules with import map, one file per Worker route) | React/Vue/Astro; Vite | No build; HTML stays static (SEO and chat search). |
 | ADR-31 | Site pages in a modal (`<iframe>`, `?embed=1`) | Navigate; SPA | Keeps the visitor without rewriting pages. |
