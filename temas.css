@@ -83,7 +83,7 @@
 
 :root[data-theme="editorial"] {
   color-scheme: dark;
-  --logo-bg1: #1e293b;
+  --logo-bg1: #003274;
   --logo-bg2: #0b0f19;
   --logo-edge1: #7dd3fc;
   --logo-edge2: #38bdf8;
@@ -98,12 +98,12 @@
   --text: #e2e8f0;
   --muted: #94a3b8;
   --line: rgba(148, 163, 184, .14);
-  --glow-1: #1e3a5f;
+  --glow-1: #003274;
   --glow-2: #0369a1;
   --kicker: #a5b4c8;
   --grad-text: linear-gradient(100deg, #e0f2fe 0%, #7dd3fc 50%, #38bdf8 100%);
-  --grad-primary: linear-gradient(115deg, #7dd3fc 0%, #38bdf8 50%, #0ea5e9 100%);
-  --on-primary: #0b0f19;
+  --grad-primary: linear-gradient(115deg, #003274 0%, #005bb5 70%, #0068b8 100%);
+  --on-primary: #ffffff;
   --quiet-bg: rgba(30, 41, 59, .62);
   --quiet-line: rgba(148, 163, 184, .26);
   --focus: #7dd3fc;
@@ -136,14 +136,14 @@
   --glow-rgb: 56, 189, 248;
   --shimmer: linear-gradient(100deg, #7dd3fc 15%, #f0f9ff 32%, #38bdf8 50%, #22d3ee 66%, #7dd3fc 85%);
   --card-glow: rgba(56, 189, 248, .12);
-  --featured-bg: radial-gradient(ellipse at 75% 0%, #1e3a5f, #172033 45%, var(--surface) 80%);
-  --duotone: linear-gradient(120deg, #0b0f19 0%, #1e293b 50%, #0369a1 85%, #38bdf8 100%);
+  --featured-bg: radial-gradient(ellipse at 75% 0%, #003274, #172033 45%, var(--surface) 80%);
+  --duotone: linear-gradient(120deg, #003274 0%, #1e293b 50%, #0369a1 85%, #38bdf8 100%);
   --duotone-shade: radial-gradient(ellipse at 70% 40%, rgba(56, 189, 248, .12), transparent 60%), linear-gradient(120deg, rgba(11, 15, 25, .55), rgba(30, 41, 59, .25));
   --hero-filter: grayscale(1) contrast(1.2) brightness(.8);
   --ask-bg: rgba(15, 23, 42, .9);
   --ask-border: linear-gradient(115deg, #7dd3fc, #38bdf8 50%, #0ea5e9);
   --ask-shadow: 0 10px 40px rgba(56, 189, 248, .18);
-  --aurora-1: #1e293b;
+  --aurora-1: #003274;
   --aurora-2: #0369a1;
   --aurora-3: #0e7490;
   --aurora-opacity: .3;
@@ -227,7 +227,7 @@
   }
 
   :root[data-theme="editorial"] {
-    --logo-bg1: oklch(from #1e293b calc(l - max(0, var(--intensidade) - 1) * c * 0.8) calc(c * var(--intensidade)) h);
+    --logo-bg1: oklch(from #003274 calc(l - max(0, var(--intensidade) - 1) * c * 0.8) calc(c * var(--intensidade)) h);
     --logo-bg2: oklch(from #0b0f19 calc(l - max(0, var(--intensidade) - 1) * c * 0.8) calc(c * var(--intensidade)) h);
     --logo-edge1: oklch(from #7dd3fc calc(l - max(0, var(--intensidade) - 1) * c * 0.8) calc(c * var(--intensidade)) h);
     --logo-edge2: oklch(from #38bdf8 calc(l - max(0, var(--intensidade) - 1) * c * 0.8) calc(c * var(--intensidade)) h);
@@ -242,12 +242,12 @@
     --text: oklch(from #e2e8f0 calc(l - max(0, var(--intensidade) - 1) * c * 0.8) calc(c * var(--intensidade)) h);
     --muted: oklch(from #94a3b8 calc(l - max(0, var(--intensidade) - 1) * c * 0.8) calc(c * var(--intensidade)) h);
     --line: oklch(from rgba(148, 163, 184, .14) calc(l - max(0, var(--intensidade) - 1) * c * 0.8) calc(c * var(--intensidade)) h);
-    --glow-1: oklch(from #1e3a5f calc(l - max(0, var(--intensidade) - 1) * c * 0.8) calc(c * var(--intensidade)) h);
+    --glow-1: oklch(from #003274 calc(l - max(0, var(--intensidade) - 1) * c * 0.8) calc(c * var(--intensidade)) h);
     --glow-2: oklch(from #0369a1 calc(l - max(0, var(--intensidade) - 1) * c * 0.8) calc(c * var(--intensidade)) h);
     --kicker: oklch(from #a5b4c8 calc(l - max(0, var(--intensidade) - 1) * c * 0.8) calc(c * var(--intensidade)) h);
     --grad-text: linear-gradient(100deg, oklch(from #e0f2fe calc(l - max(0, var(--intensidade) - 1) * c * 0.8) calc(c * var(--intensidade)) h) 0%, oklch(from #7dd3fc calc(l - max(0, var(--intensidade) - 1) * c * 0.8) calc(c * var(--intensidade)) h) 50%, oklch(from #38bdf8 calc(l - max(0, var(--intensidade) - 1) * c * 0.8) calc(c * var(--intensidade)) h) 100%);
-    --grad-primary: linear-gradient(115deg, oklch(from #7dd3fc calc(l - max(0, var(--intensidade) - 1) * c * 0.8) calc(c * var(--intensidade)) h) 0%, oklch(from #38bdf8 calc(l - max(0, var(--intensidade) - 1) * c * 0.8) calc(c * var(--intensidade)) h) 50%, oklch(from #0ea5e9 calc(l - max(0, var(--intensidade) - 1) * c * 0.8) calc(c * var(--intensidade)) h) 100%);
-    --on-primary: oklch(from #0b0f19 calc(l - max(0, var(--intensidade) - 1) * c * 0.8) calc(c * var(--intensidade)) h);
+    --grad-primary: linear-gradient(115deg, oklch(from #003274 calc(l - max(0, var(--intensidade) - 1) * c * 0.8) calc(c * var(--intensidade)) h) 0%, oklch(from #005bb5 calc(l - max(0, var(--intensidade) - 1) * c * 0.8) calc(c * var(--intensidade)) h) 70%, oklch(from #0068b8 calc(l - max(0, var(--intensidade) - 1) * c * 0.8) calc(c * var(--intensidade)) h) 100%);
+    --on-primary: oklch(from #ffffff calc(l - max(0, var(--intensidade) - 1) * c * 0.8) calc(c * var(--intensidade)) h);
     --quiet-bg: oklch(from rgba(30, 41, 59, .62) calc(l - max(0, var(--intensidade) - 1) * c * 0.8) calc(c * var(--intensidade)) h);
     --quiet-line: oklch(from rgba(148, 163, 184, .26) calc(l - max(0, var(--intensidade) - 1) * c * 0.8) calc(c * var(--intensidade)) h);
     --focus: oklch(from #7dd3fc calc(l - max(0, var(--intensidade) - 1) * c * 0.8) calc(c * var(--intensidade)) h);
@@ -276,13 +276,13 @@
     --cyan-soft: oklch(from #a5f3fc calc(l - max(0, var(--intensidade) - 1) * c * 0.8) calc(c * var(--intensidade)) h);
     --shimmer: linear-gradient(100deg, oklch(from #7dd3fc calc(l - max(0, var(--intensidade) - 1) * c * 0.8) calc(c * var(--intensidade)) h) 15%, oklch(from #f0f9ff calc(l - max(0, var(--intensidade) - 1) * c * 0.8) calc(c * var(--intensidade)) h) 32%, oklch(from #38bdf8 calc(l - max(0, var(--intensidade) - 1) * c * 0.8) calc(c * var(--intensidade)) h) 50%, oklch(from #22d3ee calc(l - max(0, var(--intensidade) - 1) * c * 0.8) calc(c * var(--intensidade)) h) 66%, oklch(from #7dd3fc calc(l - max(0, var(--intensidade) - 1) * c * 0.8) calc(c * var(--intensidade)) h) 85%);
     --card-glow: oklch(from rgba(56, 189, 248, .12) calc(l - max(0, var(--intensidade) - 1) * c * 0.8) calc(c * var(--intensidade)) h);
-    --featured-bg: radial-gradient(ellipse at 75% 0%, oklch(from #1e3a5f calc(l - max(0, var(--intensidade) - 1) * c * 0.8) calc(c * var(--intensidade)) h), oklch(from #172033 calc(l - max(0, var(--intensidade) - 1) * c * 0.8) calc(c * var(--intensidade)) h) 45%, var(--surface) 80%);
-    --duotone: linear-gradient(120deg, oklch(from #0b0f19 calc(l - max(0, var(--intensidade) - 1) * c * 0.8) calc(c * var(--intensidade)) h) 0%, oklch(from #1e293b calc(l - max(0, var(--intensidade) - 1) * c * 0.8) calc(c * var(--intensidade)) h) 50%, oklch(from #0369a1 calc(l - max(0, var(--intensidade) - 1) * c * 0.8) calc(c * var(--intensidade)) h) 85%, oklch(from #38bdf8 calc(l - max(0, var(--intensidade) - 1) * c * 0.8) calc(c * var(--intensidade)) h) 100%);
+    --featured-bg: radial-gradient(ellipse at 75% 0%, oklch(from #003274 calc(l - max(0, var(--intensidade) - 1) * c * 0.8) calc(c * var(--intensidade)) h), oklch(from #172033 calc(l - max(0, var(--intensidade) - 1) * c * 0.8) calc(c * var(--intensidade)) h) 45%, var(--surface) 80%);
+    --duotone: linear-gradient(120deg, oklch(from #003274 calc(l - max(0, var(--intensidade) - 1) * c * 0.8) calc(c * var(--intensidade)) h) 0%, oklch(from #1e293b calc(l - max(0, var(--intensidade) - 1) * c * 0.8) calc(c * var(--intensidade)) h) 50%, oklch(from #0369a1 calc(l - max(0, var(--intensidade) - 1) * c * 0.8) calc(c * var(--intensidade)) h) 85%, oklch(from #38bdf8 calc(l - max(0, var(--intensidade) - 1) * c * 0.8) calc(c * var(--intensidade)) h) 100%);
     --duotone-shade: radial-gradient(ellipse at 70% 40%, oklch(from rgba(56, 189, 248, .12) calc(l - max(0, var(--intensidade) - 1) * c * 0.8) calc(c * var(--intensidade)) h), transparent 60%), linear-gradient(120deg, oklch(from rgba(11, 15, 25, .55) calc(l - max(0, var(--intensidade) - 1) * c * 0.8) calc(c * var(--intensidade)) h), oklch(from rgba(30, 41, 59, .25) calc(l - max(0, var(--intensidade) - 1) * c * 0.8) calc(c * var(--intensidade)) h));
     --ask-bg: oklch(from rgba(15, 23, 42, .9) calc(l - max(0, var(--intensidade) - 1) * c * 0.8) calc(c * var(--intensidade)) h);
     --ask-border: linear-gradient(115deg, oklch(from #7dd3fc calc(l - max(0, var(--intensidade) - 1) * c * 0.8) calc(c * var(--intensidade)) h), oklch(from #38bdf8 calc(l - max(0, var(--intensidade) - 1) * c * 0.8) calc(c * var(--intensidade)) h) 50%, oklch(from #0ea5e9 calc(l - max(0, var(--intensidade) - 1) * c * 0.8) calc(c * var(--intensidade)) h));
     --ask-shadow: 0 10px 40px oklch(from rgba(56, 189, 248, .18) calc(l - max(0, var(--intensidade) - 1) * c * 0.8) calc(c * var(--intensidade)) h);
-    --aurora-1: oklch(from #1e293b calc(l - max(0, var(--intensidade) - 1) * c * 0.8) calc(c * var(--intensidade)) h);
+    --aurora-1: oklch(from #003274 calc(l - max(0, var(--intensidade) - 1) * c * 0.8) calc(c * var(--intensidade)) h);
     --aurora-2: oklch(from #0369a1 calc(l - max(0, var(--intensidade) - 1) * c * 0.8) calc(c * var(--intensidade)) h);
     --aurora-3: oklch(from #0e7490 calc(l - max(0, var(--intensidade) - 1) * c * 0.8) calc(c * var(--intensidade)) h);
     --skill-cat: oklch(from #7dd3fc calc(l - max(0, var(--intensidade) - 1) * c * 0.8) calc(c * var(--intensidade)) h);

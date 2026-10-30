@@ -64,7 +64,7 @@ Data are classic scripts (not JSON/modules) so they run before paint, in `file:/
 
 ## Worker
 
-`worker/src/index.js` routes to `src/rotas/*` (chat, avaliacao, imagem, precos, visitas, metricas, status) and records one technical metric per response (route, result, ms → Analytics Engine `METRICAS`; unknown paths as `outra`); shared helpers in `src/comum.js` (models, CORS, Turnstile, rate limits, AI error kind, `registrarMetrica`); Workers Logs is on but only for the Worker's own `console` output (`invocation_logs: false`) — never log visitor text; cron in `src/agendado.js` (hourly retention purge, Monday summary e-mail). D1 stores only daily aggregate tables keyed by date (migrations in `worker/migrations/`). Tests import route handlers directly and mock `env`/`fetch`; tests that import the site's `api.js` must `import "../../perfil.js"` first.
+`worker/src/index.js` routes to `src/rotas/*` (chat, avaliacao, imagem, precos, visitas, metricas, status) and records one technical metric per response (route, result, ms → Analytics Engine `METRICAS`; unknown paths as `outra`); shared helpers in `src/comum.js` (models, CORS, Turnstile, rate limits, AI error kind, `registrarMetrica`); Workers Logs are enabled only for the Worker's own `console` output (`invocation_logs: false`, `redact_query_string`) — never log visitor text; cron in `src/agendado.js` (hourly retention purge, Monday summary e-mail). D1 stores only daily aggregate tables keyed by date (migrations in `worker/migrations/`). Tests import route handlers directly and mock `env`/`fetch`; tests that import the site's `api.js` must `import "../../perfil.js"` first.
 
 ## Project constraints
 

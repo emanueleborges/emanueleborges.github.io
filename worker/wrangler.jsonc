@@ -4,8 +4,7 @@
   "main": "src/index.js",
   "compatibility_date": "2026-09-01",
   "compatibility_flags": ["nodejs_compat"],
-  // Logs (Workers Logs, grátis): só as mensagens que o próprio Worker escreve (erros técnicos, nunca o texto
-  // do visitante); sem os dados de cada pedido (invocation_logs) e sem a query string das URLs.
+  // Logs técnicos do próprio Worker, sem dados dos pedidos nem query strings.
   "observability": {
     "enabled": true,
     "redact_query_string": true,
