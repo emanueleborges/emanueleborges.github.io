@@ -11,7 +11,7 @@
     "panel": "node painel.mjs"
   },
   "devDependencies": {
-    "wrangler": "^4.152.0"
+    "wrangler": "^4.156.0"
   },
   "overrides": {
     "undici": "7.30.1",
