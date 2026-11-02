@@ -64,7 +64,7 @@ O site deve apresentar: topo (nome, cargo, resumo, localização, anos de experi
 ### RF-02 — Idiomas
 - RF-02.1 Disponível em **inglês (padrão)**, português e espanhol.
 - RF-02.2 O visitante troca o idioma por um seletor no cabeçalho; a escolha é lembrada e vale em todas as páginas.
-- RF-02.3 O idioma pode ser definido pelo link (`?lang=xx`).
+- RF-02.3 Cada idioma tem o seu endereço, com o HTML já traduzido (`/`, `/pt/`, `/es/`) e `hreflang` entre eles; links antigos com `?lang=xx` redirecionam para o endereço do idioma.
 - RF-02.4 Todo texto visível, atributos de acessibilidade, chat, cartões e currículo seguem o idioma escolhido.
 
 ### RF-03 — Filtros
@@ -171,7 +171,7 @@ A página `/vaga/`, a rota `POST /match` e os textos de "aberto a novas oportuni
 ### Idiomas
 - [x] Sem preferência salva, o site abre em inglês.
 - [x] Ao escolher "Español", todos os textos visíveis mudam para espanhol e a escolha persiste ao recarregar e nas demos.
-- [x] `?lang=es` abre o site em espanhol; um idioma fora da lista (ex.: `?lang=fr`) abre em inglês.
+- [x] `/es/` abre o site em espanhol, mesmo sem JavaScript; `?lang=es` redireciona para `/es/`; um idioma fora da lista (ex.: `?lang=fr`) abre em inglês.
 
 ### Assistente
 - [x] "where did he study?" retorna a formação com os nomes exatos (FUCAPI, UFG, FIAP, Descomplica).

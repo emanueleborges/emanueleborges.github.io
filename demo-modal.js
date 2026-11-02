@@ -74,7 +74,7 @@ if (dialog?.showModal) {
   document.addEventListener("languagechange", () => dialog.querySelector("[data-demo-modal-close]").setAttribute("aria-label", t("demo.close")));
 
   document.addEventListener("click", (event) => {
-    const link = event.target.closest?.("a[data-demo][href^='demos/'], a[href='como-construi/'], a[data-arq]");
+    const link = event.target.closest?.("a[data-demo][href*='demos/'], a[href$='como-construi/'], a[data-arq]");
     if (!link || event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
     event.preventDefault();
     open(link);
@@ -82,7 +82,7 @@ if (dialog?.showModal) {
 
   // Currículo, em qualquer botão da página, no chat e na busca rápida.
   document.addEventListener("click", (event) => {
-    const link = event.target.closest?.("a[href^='curriculo.html']");
+    const link = event.target.closest?.("a[href*='curriculo.html']");
     if (!link || link.closest("[data-demo-modal]") || event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
     if (new URL(link.href).origin !== location.origin) return;
     event.preventDefault();

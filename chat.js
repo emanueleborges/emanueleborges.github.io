@@ -159,7 +159,7 @@ function initChat() {
     const a = el("a", "chat-link", label);
     a.href = href;
     // O currículo abre no modal do portfólio (demo-modal.js), onde o PDF é gerado; o resto, em nova aba.
-    if (!href.startsWith("curriculo.html")) {
+    if (!href.includes("curriculo.html")) {
       a.target = "_blank";
       a.rel = "noopener";
     }
@@ -226,7 +226,7 @@ function initChat() {
     const prompt = imagePrompt(query);
     const box = el("div", "chat-links");
     const link = el("a", "chat-link", tc("imageOpen"));
-    link.href = `demos/imagem/${prompt ? `?prompt=${encodeURIComponent(prompt)}` : ""}`;
+    link.href = new URL(`demos/imagem/${prompt ? `?prompt=${encodeURIComponent(prompt)}` : ""}`, window.RAIZ).href;
     link.dataset.track = "chat-image";
     box.append(link);
     return [el("p", null, tc("image")), box];
@@ -240,7 +240,7 @@ function initChat() {
     if (isImageRequest(q)) return imageAnswer(query);
     if (intents.cv.test(q)) {
       const box = el("div", "chat-links");
-      box.append(linkButton(text(document.querySelector('[data-i18n="cv.download"]')).replace(/[↓]/g, "").trim(), PERFIL.cv(currentLang)));
+      box.append(linkButton(text(document.querySelector('[data-i18n="cv.download"]')).replace(/[↓]/g, "").trim(), new URL(PERFIL.cv(currentLang), window.RAIZ).href));
       return [el("p", null, tc("cv")), box];
     }
     const faq = findFaq(q);

@@ -6,26 +6,12 @@ const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)
 // Os textos vêm de i18n/<idioma>.js (dados em window.I18N, também lidos pelo currículo e pelos geradores).
 const translations = window.I18N || {};
 const htmlLang = Object.fromEntries(Object.entries(globalThis.IDIOMAS).map(([code, idioma]) => [code, idioma.html])); // idiomas.js
-let currentLang = "pt";
+const currentLang = window.IDIOMA_INICIAL; // a página já vem traduzida (components/boot.js decide)
 
 const t = (key, vars = {}) => {
   const text = translations[currentLang]?.[key] ?? translations.pt?.[key] ?? key;
   return text.replace(/\{(\w+)\}/g, (_, name) => vars[name] ?? "");
 };
-
-// Guarda o texto original (português, escrito no HTML) de cada elemento traduzível.
-const i18nTargets = [
-  ["data-i18n", (el) => el.innerHTML, (el, value) => (el.innerHTML = value)],
-  ["data-i18n-aria", (el) => el.getAttribute("aria-label"), (el, value) => el.setAttribute("aria-label", value)],
-  ["data-i18n-content", (el) => el.getAttribute("content"), (el, value) => el.setAttribute("content", value)],
-  ["data-i18n-alt", (el) => el.getAttribute("alt"), (el, value) => el.setAttribute("alt", value)],
-  ["data-i18n-placeholder", (el) => el.getAttribute("placeholder"), (el, value) => el.setAttribute("placeholder", value)],
-  ["data-i18n-title", (el) => el.getAttribute("title"), (el, value) => el.setAttribute("title", value)],
-].map(([attr, read, write]) => ({
-  attr,
-  write,
-  elements: [...document.querySelectorAll(`[${attr}]`)].map((el) => ({ el, original: read(el) })),
-}));
 
 const storeLang = (lang) => {
   try {
@@ -35,33 +21,11 @@ const storeLang = (lang) => {
   }
 };
 
-
-// Idioma escolhido por último: se o visitante trocar de novo antes do download, vale o mais recente.
-let requestedLang = null;
-
+// Só o que depende do idioma e não vem pronto no HTML gerado (scripts/gerar-secoes.mjs).
 const applyLanguage = (lang) => {
-  requestedLang = lang;
-  // Idioma ainda não baixado (só pt e en vêm na página): busca o arquivo e aplica quando chegar.
-  if (!translations[lang]) {
-    translations.load(lang).then((ok) => {
-      if (ok && requestedLang === lang) applyLanguage(lang);
-      else if (!ok) langSelect.value = currentLang;
-    });
-    return;
-  }
-  currentLang = lang;
-  document.documentElement.lang = htmlLang[lang];
-
-  i18nTargets.forEach(({ attr, write, elements }) => {
-    elements.forEach(({ el, original }) => {
-      const translated = lang === "pt" ? null : translations[lang]?.[el.getAttribute(attr)];
-      write(el, translated ?? original);
-    });
-  });
-
   langSelect.value = lang;
   document.querySelectorAll("[data-cv-link]").forEach((link) => {
-    link.href = PERFIL.cv(lang);
+    link.href = new URL(PERFIL.cv(lang), window.RAIZ).href;
   });
 
   updateMenuLabel();
@@ -69,10 +33,11 @@ const applyLanguage = (lang) => {
   document.dispatchEvent(new CustomEvent("languagechange"));
 };
 
+// Cada idioma tem o seu endereço (/, /pt/, /es/): trocar é ir para a outra página, na mesma seção.
 const langSelect = document.querySelector("[data-lang-select]");
 langSelect.addEventListener("change", () => {
   storeLang(langSelect.value);
-  applyLanguage(langSelect.value);
+  location.href = new URL(PERFIL.inicio(langSelect.value), window.RAIZ).href + location.hash;
 });
 
 /* O tema é aplicado por components/boot.js e trocado pelo componente <theme-toggle> (components/components.js). */
@@ -202,7 +167,7 @@ const loadRepoData = async () => {
 document.addEventListener("languagechange", renderRepoMeta);
 if (location.protocol.startsWith("http")) loadRepoData().catch(() => {});
 
-applyLanguage(window.IDIOMA_INICIAL); // ?lang=, o salvo ou o padrão (components/boot.js)
+applyLanguage(currentLang);
 
 /* ---------- Elementos flutuantes arrastáveis (botão do chat, guia rápido) ---------- */
 
@@ -663,8 +628,8 @@ if (!prefersReducedMotion) {
 /* ---------- App instalável e offline (service worker) ---------- */
 
 if ("serviceWorker" in navigator && (location.protocol === "https:" || location.hostname === "localhost")) {
-  addEventListener("load", () => navigator.serviceWorker.register("sw.js").catch(() => {}));
+  addEventListener("load", () => navigator.serviceWorker.register(new URL("sw.js", window.RAIZ)).catch(() => {}));
 }
 
-// Usado pelo assistente (chat.js) e pelo formulário (contact.js). currentLang acompanha a troca de idioma.
+// Usado pelo assistente (chat.js) e pelo formulário (contact.js).
 export { arrastavel, currentLang, prefersReducedMotion, t };

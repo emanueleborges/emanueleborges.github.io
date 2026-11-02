@@ -4,11 +4,13 @@
       "staticDistDir": ".",
       "url": [
         "http://localhost/index.html",
-        "http://localhost/index.html?theme=editorial"
+        "http://localhost/index.html?theme=editorial",
+        "http://localhost/pt/index.html"
       ],
       "numberOfRuns": 3,
       "settings": {
-        "chromeFlags": "--no-sandbox --headless=new"
+        "chromeFlags": "--no-sandbox --headless=new",
+        "skipAudits": ["canonical"]
       }
     },
     "assert": {

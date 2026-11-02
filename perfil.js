@@ -72,6 +72,8 @@
     github: `https://github.com/${perfil.github}`,
     linkedin: `https://www.linkedin.com/in/${perfil.linkedin}`,
   };
+  // Página inicial de cada idioma, relativa à raiz do site: o primeiro idioma (idiomas.js) fica na raiz; os outros, em <idioma>/.
+  perfil.inicio = (lang) => (lang === Object.keys(globalThis.IDIOMAS)[0] ? "" : `${lang}/`);
   // Currículo: página montada com os dados; o PDF é gerado nela, pela impressão do navegador.
   perfil.cv = (lang) => `curriculo.html?lang=${lang}`;
   // PDF para baixar: gerado pelo Worker (GET /cv, Browser Run); sem Worker, a versão de impressão do site.

@@ -6,4 +6,9 @@ shown=$(date +%d/%m/%Y)
 version=$(date +%Y%m%d%H%M%S)
 sed -i '' -E "s#<time id=\"updated\" datetime=\"[0-9-]+\">[^<]*</time>#<time id=\"updated\" datetime=\"$today\">$shown</time>#" index.html
 sed -i '' -E "s#(\.(css|js))\?v=[A-Za-z0-9]+\"#\1?v=$version\"#g" index.html
+# 3. Propaga para as páginas dos outros idiomas (pt/, es/), geradas a partir do index.html.
+node scripts/gerar-secoes.mjs >/dev/null || exit 1
 git add index.html
+for pagina in */index.html; do
+  [ -f "i18n/$(dirname "$pagina").js" ] && git add "$pagina"
+done

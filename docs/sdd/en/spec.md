@@ -64,7 +64,7 @@ The site shows: hero (name, role, summary, location, years of experience), About
 ### FR-02 — Languages
 - FR-02.1 Available in **English (default)**, Portuguese and Spanish.
 - FR-02.2 Visitors switch language with a header selector; the choice is remembered on every page.
-- FR-02.3 The language can be set by link (`?lang=xx`).
+- FR-02.3 Each language has its own URL, with translated HTML (`/`, `/pt/`, `/es/`) and `hreflang` between them; old `?lang=xx` links redirect to the language's URL.
 - FR-02.4 All visible text, accessibility attributes, chat, cards and résumé follow the chosen language.
 
 ### FR-03 — Filters
@@ -171,7 +171,7 @@ The `/vaga/` page, the `POST /match` route and the "open to new opportunities" t
 ### Languages
 - [x] With no saved preference, the site opens in English.
 - [x] Choosing "Español" switches all visible text to Spanish and the choice persists on reload and in the demos.
-- [x] `?lang=es` opens the site in Spanish; a language not on the list (e.g. `?lang=fr`) opens in English.
+- [x] `/es/` opens the site in Spanish, even without JavaScript; `?lang=es` redirects to `/es/`; a language not on the list (e.g. `?lang=fr`) opens in English.
 
 ### Assistant
 - [x] "where did he study?" returns education with exact names (FUCAPI, UFG, FIAP, Descomplica).

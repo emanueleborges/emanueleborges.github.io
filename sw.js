@@ -2,18 +2,19 @@
 // - Página: rede primeiro (sempre a versão mais nova); sem rede, a última cópia salva.
 // - CSS, JS e imagens do próprio site: cópia salva primeiro, atualizada em segundo plano.
 // - Outros domínios (IA, GitHub, fontes, estatísticas) não passam por aqui.
-importScripts("perfil.js"); // dados pessoais: a foto vem de lá
+importScripts("idiomas.js", "perfil.js"); // idiomas do site e dados pessoais (a foto vem de lá)
 
-const CACHE = "portfolio-v10";
+const CACHE = "portfolio-v11";
+const LANGS = Object.keys(IDIOMAS);
 const PRECACHE = [
   "./",
+  ...LANGS.slice(1).map((lang) => `${lang}/`),
   "temas.css",
   "styles.css",
   "idiomas.js",
   "perfil.js",
   "i18n.js",
-  "i18n/pt.js",
-  "i18n/en.js",
+  ...LANGS.map((lang) => `i18n/${lang}.js`),
   "script.js",
   "api.js",
   "chat/texto.js",

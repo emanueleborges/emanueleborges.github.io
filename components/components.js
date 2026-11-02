@@ -904,7 +904,7 @@
     const site = await siteTexts(lang);
     const shareText = [plainText(site["meta.title"]) || PERFIL.nomeCompleto, plainText(site["cv.role"])].filter(Boolean).join(" · ");
     if (!linkDialog) linkBuild();
-    const url = `${PERFIL.site}${lang !== "en" ? `?lang=${lang}` : ""}`;
+    const url = `${PERFIL.site}${PERFIL.inicio(lang)}`;
     const body = linkDialog.querySelector(".link-card-body");
     linkDialog.querySelector(".link-card-kind").textContent = text.shareKind;
     linkDialog.querySelector(".link-card-close").setAttribute("aria-label", text.close);

@@ -1,6 +1,7 @@
 // Gera, a partir das fontes únicas, as partes estáticas do site:
-//   - index.html: cards de projetos (data/projetos.json), caixa de ferramentas (data/habilidades.json),
-//     SEO do <head> (data/perfil.json) e os textos em português de todo [data-i18n] (i18n/pt.js);
+//   - index.html (primeiro idioma de idiomas.js) e <idioma>/index.html (os outros), já traduzidos: cards de
+//     projetos (data/projetos.json), caixa de ferramentas (data/habilidades.json), SEO do <head> (data/perfil.json)
+//     e os textos de todo [data-i18n] (i18n/<idioma>.js). O index.html da raiz é o modelo das outras páginas;
 //   - todas as páginas: atributos data-perfil="{campo}" (conteúdo) e data-perfil-<atributo>="{campo}";
 //   - perfil.js (cópia de data/perfil.json para o navegador) e as variáveis do worker/wrangler.jsonc;
 //   - manifest.webmanifest, robots.txt e sitemap.xml (nome e endereço do site, do perfil);
@@ -19,6 +20,8 @@ const ptText = (key) => {
   if (!(key in pt)) throw new Error(`Chave "${key}" não existe no i18n/pt.js`);
   return pt[key]; // já é HTML (ex.: "&amp;"), escrito por nós
 };
+// Texto de um idioma; chave ausente usa o português, como no navegador (script.js).
+const texto = (lang, key) => i18n[lang]?.[key] ?? ptText(key);
 const escape = (text) => String(text).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
 // Campo de texto do JSON: { key } busca no i18n/pt.js; { text } é escrito como está (escapado).
 const plain = (html) => html.replace(/<[^>]+>/g, "").replace(/&amp;/g, "&");
@@ -126,11 +129,15 @@ function setAttr(tag, name, value, where) {
 
 if (!perfil.site.endsWith("/")) throw new Error('perfil.site precisa terminar com "/"');
 const abs = (path) => new URL(path, perfil.site).href;
+const paginaInicial = (lang) => abs(perfil.inicio(lang));
 
-function seoHead() {
+function seoHead(lang) {
   const p = perfil;
   const share = p.compartilhamento;
-  const title = `${p.nomeCompleto} — ${p.titulo}`;
+  // A prévia de compartilhamento do perfil é em inglês (idioma padrão); os outros idiomas usam os textos do i18n.
+  const padrao = lang === LANGS[0];
+  const title = padrao ? `${p.nomeCompleto} — ${p.titulo}` : plain(texto(lang, "meta.title"));
+  const description = padrao ? share.descricao : plain(texto(lang, "meta.description"));
   const meta = (attr, name, content) => `    <meta ${attr}="${name}" content="${escape(content)}" />`;
   const person = {
     "@context": "https://schema.org",
@@ -151,25 +158,26 @@ function seoHead() {
   return [
     "    <!-- Verificação do Google Search Console -->",
     meta("name", "google-site-verification", p.googleVerificacao),
-    ...LANGS.map((lang) => `    <link rel="alternate" hreflang="${IDIOMAS[lang].html}" href="${abs(`?lang=${lang}`)}" />`),
+    `    <link rel="canonical" href="${paginaInicial(lang)}" />`,
+    ...LANGS.map((code) => `    <link rel="alternate" hreflang="${IDIOMAS[code].html}" href="${paginaInicial(code)}" />`),
     `    <link rel="alternate" hreflang="x-default" href="${p.site}" />`,
     "    <!-- Prévia ao compartilhar o link (LinkedIn, WhatsApp, X…) -->",
     meta("property", "og:type", "profile"),
     meta("property", "og:site_name", p.nomeCompleto),
     meta("property", "og:title", title),
-    meta("property", "og:description", share.descricao),
-    meta("property", "og:url", p.site),
+    meta("property", "og:description", description),
+    meta("property", "og:url", paginaInicial(lang)),
     meta("property", "og:image", abs(share.imagem)),
     meta("property", "og:image:width", "1200"),
     meta("property", "og:image:height", "630"),
-    meta("property", "og:image:alt", `${p.nomeCompleto} — ${share.imagemAlt}`),
-    meta("property", "og:locale", IDIOMAS[LANGS[0]].og),
-    ...LANGS.slice(1).map((lang) => meta("property", "og:locale:alternate", IDIOMAS[lang].og)),
+    meta("property", "og:image:alt", padrao ? `${p.nomeCompleto} — ${share.imagemAlt}` : title),
+    meta("property", "og:locale", IDIOMAS[lang].og),
+    ...LANGS.filter((code) => code !== lang).map((code) => meta("property", "og:locale:alternate", IDIOMAS[code].og)),
     meta("property", "profile:first_name", p.nome),
     meta("property", "profile:last_name", p.sobrenome),
     meta("name", "twitter:card", "summary_large_image"),
     meta("name", "twitter:title", title),
-    meta("name", "twitter:description", share.descricaoCurta),
+    meta("name", "twitter:description", padrao ? share.descricaoCurta : description),
     meta("name", "twitter:image", abs(share.imagem)),
     meta("name", "author", p.nomeCompleto),
     "    <!-- Dados estruturados: ajudam o Google a entender quem é a pessoa do site -->",
@@ -179,22 +187,33 @@ function seoHead() {
   ].join("\n");
 }
 
-/* ---------- Textos em português do index.html (i18n/pt.js) ---------- */
+/* ---------- Textos do index.html em cada idioma (i18n/<idioma>.js) ---------- */
 
-// O HTML estático em português é cópia do i18n/pt.js: [data-i18n] no conteúdo, [data-i18n-*] nos atributos.
+// O HTML estático é cópia do i18n/<idioma>.js: [data-i18n] no conteúdo, [data-i18n-*] nos atributos.
 const I18N_ATTRS = { content: "content", alt: "alt", aria: "aria-label", title: "title", placeholder: "placeholder" };
 
-function syncPt(html) {
+function syncTextos(html, lang) {
   html = html.replace(/<(\w+)\b([^>]*\sdata-i18n="([^"]+)"[^>]*)>([\s\S]*?)<\/\1>/g, (all, tag, attrs, key, inner) => {
     if (new RegExp(`<${tag}[\\s>]`).test(inner)) throw new Error(`[data-i18n="${key}"]: <${tag}> dentro de <${tag}> não é suportado`);
-    return `<${tag}${attrs}>${ptText(key)}</${tag}>`;
+    return `<${tag}${attrs}>${texto(lang, key)}</${tag}>`;
   });
   return html.replace(/<\w+\b[^>]*\sdata-i18n-(?:content|alt|aria|title|placeholder)="[^"]+"[^>]*>/g, (tag) => {
     for (const [, kind, key] of tag.matchAll(/\sdata-i18n-(\w+)="([^"]+)"/g)) {
-      if (I18N_ATTRS[kind]) tag = setAttr(tag, I18N_ATTRS[kind], ptText(key).replace(/"/g, "&quot;"), `[data-i18n-${kind}="${key}"]`);
+      if (I18N_ATTRS[kind]) tag = setAttr(tag, I18N_ATTRS[kind], texto(lang, key).replace(/"/g, "&quot;"), `[data-i18n-${kind}="${key}"]`);
     }
     return tag;
   });
+}
+
+// Página de um idioma numa subpasta: caminhos relativos (tags e importmap) sobem um nível, e a tradução
+// vem na própria página (pt e en já vêm no modelo).
+function paraSubpasta(html, lang) {
+  const comTraducao = ["pt", "en"].includes(lang)
+    ? html
+    : html.replace(/<script src="i18n\/en\.js(\?v=[^"]*)" defer><\/script>/, (tag, version) => `${tag}\n    <script src="i18n/${lang}.js${version}" defer></script>`);
+  return comTraducao
+    .replace(/(\s(?:href|src)=")(?![a-z][a-z0-9+.-]*:|\/|#)/gi, "$1../")
+    .replace(/<script type="importmap">[\s\S]*?<\/script>/, (map) => map.replaceAll('"./', '"../'));
 }
 
 /* ---------- Dados pessoais em qualquer página (data/perfil.json) ---------- */
@@ -284,6 +303,22 @@ const themeColor = (html) =>
     .replace(/(<meta name="theme-color" content=")[^"]*/, (_, before) => before + fundoPadrao)
     .replace(/(<meta http-equiv="Content-Security-Policy" content="[^"]*connect-src[^";]*?)https:\/\/[\w.-]+\.workers\.dev/, (_, before) => before + workerOrigin);
 
+/* ---------- sitemap.xml ---------- */
+
+// As demais páginas e as datas continuam editadas à mão; o endereço do site vem do perfil, e as páginas
+// iniciais (uma por idioma, com hreflang) são geradas.
+function sitemap() {
+  const xml = read("sitemap.xml").replace(/(<loc>|href=")https?:\/\/[^/"<\s]+\//g, (_, before) => before + perfil.site);
+  const blocos = xml.match(/ {2}<url>[\s\S]*?<\/url>\n/g);
+  const lastmod = xml.match(/<lastmod>([^<]+)/)[1];
+  const alternativas = [
+    ...LANGS.map((code) => `    <xhtml:link rel="alternate" hreflang="${IDIOMAS[code].html}" href="${paginaInicial(code)}" />`),
+    `    <xhtml:link rel="alternate" hreflang="x-default" href="${perfil.site}" />`,
+  ];
+  const iniciais = LANGS.map((lang) => ["  <url>", `    <loc>${paginaInicial(lang)}</loc>`, `    <lastmod>${lastmod}</lastmod>`, ...alternativas, "  </url>\n"].join("\n"));
+  return [xml.slice(0, xml.indexOf("  <url>")), ...iniciais, ...blocos.filter((bloco) => !bloco.includes("hreflang")), "</urlset>\n"].join("");
+}
+
 /* ---------- Arquivos gerados ---------- */
 
 const files = new Map();
@@ -305,11 +340,17 @@ index = replaceBlock(index, "projetos-mais", others.map((p, i) => projectCard(p,
 index = replaceBlock(index, "habilidades", skills.map(skillChip).join("\n"));
 index = replaceBlock(index, "experiencia", jobs.map(jobItem).join("\n"));
 index = replaceBlock(index, "formacao", courses.map(courseItem).join("\n"));
-index = replaceBlock(index, "seo", seoHead(), "data/perfil.json");
 // Números do hero que dependem dos dados: total de projetos e de demos de IA (páginas em demos/).
 const counts = { projects: projects.length, demos: projects.filter((p) => p.demo?.href.startsWith("demos/")).length };
 index = index.replace(/(data-count="(\w+)">)\d+/g, (all, start, name) => (name in counts ? `${start}${counts[name]}` : all));
-files.set("index.html", themeColor(langOptions(applyPerfil(syncPt(index), "index.html"))));
+// Uma página por idioma, já traduzida (robôs não precisam executar JavaScript): o primeiro na raiz, os outros em <idioma>/.
+const modelo = themeColor(langOptions(applyPerfil(index, "index.html")));
+for (const lang of LANGS) {
+  const pagina = syncTextos(replaceBlock(modelo, "seo", seoHead(lang), "data/perfil.json"), lang)
+    .replace(/<html\b[^>]*>/, `<html lang="${IDIOMAS[lang].html}" data-idioma="${lang}">`)
+    .replace(/curriculo\.html\?lang=\w+/g, `curriculo.html?lang=${lang}`);
+  files.set(`${perfil.inicio(lang)}index.html`, perfil.inicio(lang) ? paraSubpasta(pagina, lang) : pagina);
+}
 
 const demoPages = readdirSync(join(ROOT, "demos"), { withFileTypes: true })
   .filter((entry) => entry.isDirectory())
@@ -331,8 +372,7 @@ files.set("temas.css", temasCss());
 files.set("components/boot.js", bootTemas(read("components/boot.js")));
 files.set("manifest.webmanifest", `${JSON.stringify(manifest, null, 2)}\n`);
 files.set("robots.txt", read("robots.txt").replace(/^# .*/, `# Portfólio de ${perfil.nomeCompleto}`).replace(/^Sitemap: .*/m, `Sitemap: ${abs("sitemap.xml")}`));
-// sitemap.xml: as páginas e datas continuam editadas à mão; o endereço do site vem do perfil.
-files.set("sitemap.xml", read("sitemap.xml").replace(/(<loc>|href=")https?:\/\/[^/"<\s]+\//g, (_, before) => before + perfil.site));
+files.set("sitemap.xml", sitemap());
 // Logo e favicon: nome acessível do SVG.
 for (const file of ["imagens/logo.svg", "imagens/favicon.svg"]) {
   files.set(file, read(file).replace(/(<svg\b[^>]*\saria-label=")[^"]*/, (_, before) => before + escape(perfil.nomeCompleto)));
@@ -343,7 +383,7 @@ const outdated = [...files].filter(([file, content]) => !exists(file) || read(fi
 const summary = `${projects.length} projetos, ${skills.length} habilidades, ${jobs.length} experiências, ${courses.length} cursos, ${files.size} arquivos`;
 if (process.argv.includes("--check")) {
   if (outdated.length) {
-    console.error(`Desatualizado em relação a data/, idiomas.js ou i18n/pt.js: ${outdated.join(", ")}. Rode: node scripts/gerar-secoes.mjs`);
+    console.error(`Desatualizado em relação a data/, idiomas.js ou i18n/: ${outdated.join(", ")}. Rode: node scripts/gerar-secoes.mjs`);
     process.exit(1);
   }
   console.log(`Em dia: ${summary}`);

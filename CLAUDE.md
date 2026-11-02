@@ -20,7 +20,7 @@ cd worker && npm run dev                    # local Worker
 cd worker && npm run deploy                 # knowledge + wrangler deploy + Vectorize reindex (publishes!)
 ```
 
-Chat test cases are data in `tests/chat-casos.json` (`[question, expected]` per language; `answer:` prefix checks the ready-made answer text); `tests/runner.js` also runs an "AI out of quota" fallback check. CI (`.github/workflows/testes.yml`) runs `node --check` on all JS, the generator `--check`, module check, knowledge build, Worker tests, guardrail tests and the chat tests. Install the git hook with `cp scripts/pre-commit .git/hooks/pre-commit`: it stamps the footer date and bumps every `?v=` in `index.html` (and so the importmap) on commit.
+Chat test cases are data in `tests/chat-casos.json` (`[question, expected]` per language; `answer:` prefix checks the ready-made answer text); `tests/runner.js` also runs an "AI out of quota" fallback check. CI (`.github/workflows/testes.yml`) runs `node --check` on all JS, the generator `--check`, module check, knowledge build, Worker tests, guardrail tests and the chat tests. Install the git hook with `cp scripts/pre-commit .git/hooks/pre-commit`: it stamps the footer date, bumps every `?v=` in `index.html` (and so the importmap) and regenerates `<lang>/index.html` on commit. Re-copy it whenever `scripts/pre-commit` changes.
 
 If `wrangler` fails with "installed workerd on another platform", the workerd binary was deleted: run `npm ci` in `worker/`. Don't run `npm audit fix --force` there: it downgrades wrangler to an older, more vulnerable major; `worker/package.json` instead pins a patched `undici` through `overrides` (re-check it when upgrading wrangler).
 
@@ -31,10 +31,12 @@ Every piece of information lives in one place; `scripts/gerar-secoes.mjs` (via `
 | Source | Holds | Generated / consumed |
 |---|---|---|
 | `data/perfil.json` | name, contacts, links, site URL, photo/audio paths, SEO text, Worker URL + Turnstile key (`servicos`) | `perfil.js` (generated, `globalThis.PERFIL` with derived `nomeCompleto`, `links`, `cv()`, `sistemas`), SEO block in `index.html`, `data-perfil*` attributes on every page, CSP `connect-src`, `manifest.webmanifest`, `robots.txt`, `sitemap.xml` origin, `worker/wrangler.jsonc` vars |
-| `data/experiencia.json`, `formacao.json`, `projetos.json`, `habilidades.json` | jobs (+ sites built), courses, projects (`featured`, `cv`), skills | generated blocks in `index.html` (`<!-- gerado: … -->` … `<!-- /gerado: … -->`), `window.CURRICULO` block in `curriculo.html`, AI knowledge |
+| `data/experiencia.json`, `formacao.json`, `projetos.json`, `habilidades.json` | jobs (+ sites built), courses, projects (`featured`, `cv`), skills | generated blocks in `index.html` and `<lang>/index.html` (`<!-- gerado: … -->` … `<!-- /gerado: … -->`), `window.CURRICULO` block in `curriculo.html`, AI knowledge |
 | `data/temas.json` | themes (names per language, CSS vars, default, intensity-slider limits) | `temas.css` (incl. an `oklch(from …)` layer driven by `--intensidade`), the `// gerado: temas` block in `components/boot.js`, manifest colors, `<meta name="theme-color">` |
-| `idiomas.js` | site languages (`html`, `og`, `nome`, `ia`) | language `<select>`s on every page, hreflang/og:locale, i18n loader, Worker `LANGUAGES` |
-| `i18n/<lang>.js` | all site/chat/résumé text; each file is `((P) => ({…}))(globalThis.PERFIL)` so names come from the profile | the Portuguese static text of every `[data-i18n]` / `[data-i18n-*]` in `index.html` is **copied from `i18n/pt.js`** by the generator — edit `pt.js`, not the HTML |
+| `idiomas.js` | site languages (`html`, `og`, `nome`, `ia`) | language `<select>`s on every page, one home page per language, hreflang/og:locale, i18n loader, Worker `LANGUAGES` |
+| `i18n/<lang>.js` | all site/chat/résumé text; each file is `((P) => ({…}))(globalThis.PERFIL)` so names come from the profile | the static text of every `[data-i18n]` / `[data-i18n-*]` in each home page is **copied from `i18n/<lang>.js`** by the generator (missing key → `pt`) — edit `i18n/`, not the HTML |
+
+Home pages: the first language of `idiomas.js` is `index.html` (root); the others are `<lang>/index.html` (`pt/`, `es/`), fully generated from the root file, which is the template — edit markup in the root `index.html` only and rerun the generator. Relative `href`/`src` and the importmap get `../` there, so runtime code must build site paths with `window.RAIZ` (`new URL(path, window.RAIZ)`), never relative to the page.
 
 `data-perfil="…{campo}…"` fills an element's text and `data-perfil-<attr>="…"` fills an attribute, in any page listed in the generator. After changing `data/` or `i18n/`, also run `npm run deploy` in `worker/` so the AI knowledge (`worker/gerar-conhecimento.mjs` → `worker/src/conhecimento.js`, a generated file) and the Vectorize index follow.
 
@@ -43,16 +45,16 @@ Every piece of information lives in one place; `scripts/gerar-secoes.mjs` (via `
 Data are classic scripts (not JSON/modules) so they run before paint, in `file://`, in the service worker (`importScripts`) and in Node. Order matters on every page:
 
 1. `idiomas.js` (sync) → `globalThis.IDIOMAS`
-2. `components/boot.js` (sync, in `<head>`) → applies theme and saved `--intensidade`, sets `window.TEMAS` and `window.IDIOMA_INICIAL` (`?lang=` → saved → first language). Language detection lives only here.
+2. `components/boot.js` (sync, in `<head>`) → applies theme and saved `--intensidade`, sets `window.TEMAS`, `window.RAIZ` and `window.IDIOMA_INICIAL`. Home pages (`<html data-idioma>`): the URL decides; `?lang=` and, at the root, the saved language redirect to the right page. Other pages: `?lang=` → saved → first language. Language detection lives only here.
 3. `perfil.js` (defer) → `globalThis.PERFIL`; must come **before** `i18n/*.js` and before any module that imports `api.js` (it reads `PERFIL.servicos` at import time).
-4. `i18n/pt.js`, `i18n/en.js` (defer); other languages are fetched on demand by `i18n.js`.
+4. `i18n/pt.js`, `i18n/en.js` (defer), plus the page's own language in `<lang>/index.html`; elsewhere other languages are fetched on demand by `i18n.js`.
 5. ES modules (`script.js` exports `t`/`currentLang`; `chat.js`, `busca-rapida.js`, …) and `components/components.js` (defer).
 
 `index.html` ES modules must be listed in its `importmap` with the same `?v=` (checked by `conferir-modulos.mjs`). Each page has its own CSP `<meta>`; a new external domain must be added there.
 
 ## Page families and their text systems
 
-- **Main site** (`index.html`, `script.js`): `t(key)` over `window.I18N`; `[data-i18n*]` attributes are translated in place.
+- **Main site** (`index.html`, `<lang>/index.html`, `script.js`): static text comes translated in the HTML; `t(key)` over `window.I18N` covers dynamic text; the language `<select>` navigates to the other language's URL.
 - **Demos, `como-construi/`, `arquitetura/`**: each page passes its own 8-language dictionary to `Demo.setup()` (`demos/demos.js`), whose `t()` fills `{nome}`/`{nomeCompleto}` from the profile and appends ` — <full name>` to the tab title (don't repeat it in texts).
 - **Shared UI** (`components/components.js`, classic script, all pages): Web Components (`<site-logo>`, `<theme-toggle>` containing `<theme-intensity>`, `<sound-toggle>`), GitHub viewer, external-link cards, share dialog. Keeps small UI label tables and loads `i18n/<lang>.js` on demand (`siteTexts`) when a card needs profile text on pages without i18n.
 - **Résumé** (`curriculo.html`): built at runtime from `window.CURRICULO` + `PERFIL` + `I18N`; "Download PDF" links to `PERFIL.cvPdf(lang)` = Worker `GET /cv?lang=` (`src/rotas/curriculo.js`: Browser Run renders the published `curriculo.html` to A4, cached in D1 table `cv_pdf` per language + knowledge `VERSION`; on any failure it redirects to `curriculo.html?pdf=1`, which opens the browser's print dialog). There are no PDF files in the repo; old `/cv/*.pdf` links are redirected by `404.html`. Opened inside the main page via `demo-modal.js` (iframe, `?embed=1`).

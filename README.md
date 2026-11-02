@@ -40,7 +40,7 @@ A framework-free static site with a Cloudflare serverless backend for the AI cha
 
 | Area | What it does |
 |---|---|
-| **3 languages** | English (default), Portuguese and Spanish. Visitors pick one in the header; the choice is remembered and can come in the link (`?lang=pt`). |
+| **3 languages** | English (default), Portuguese and Spanish. Visitors pick one in the header; the choice is remembered, and each language has its own URL with translated HTML (`/`, `/pt/`, `/es/`). |
 | **Sections** | About (with photo), Experience (as a **CI/CD pipeline**: each job is a passed or running stage with a "log" of achievements and the most cited stack for the period), Projects (4 **featured**, in large cards with metrics, and 8 under "More projects", compact; 6 with a live demo; filters, a link to the code and language/stars/last update from the GitHub API), Skills (46 technologies as a **grid** — default — or an interactive skills × projects **graph**), Education (with institution logos) and Contact. |
 | **Themes** | Two themes the visitor picks in the header (saved and applied on every page, demos and 404 included): **Amazon** (default — dark forest green and lime blended with tech blue, "AI made in the Amazon") and **Editorial** (dark — near-black navy, slate cards and cyan accent). Also via link: `?theme=editorial`. Next to the button, an **intensity slider** makes the colors stronger or weaker (on phones it sits in the ☰ menu). All applied before first paint, no flash. Colors, names and limits live in `data/temas.json`. |
 | **Visuals** | Visitor-chosen theme, moving duotone background images, Canvas particle network, scroll animations and a sticky header with reading progress. Respects "reduce motion". |

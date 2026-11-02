@@ -1,6 +1,6 @@
 // Traduções do site e do currículo: um arquivo por idioma em i18n/<idioma>.js (window.I18N.<idioma>).
-// pt (texto original do HTML e reserva para chaves ausentes) e en (idioma padrão) vêm na página;
-// os outros idiomas só são baixados quando o visitante escolhe um: I18N.load("fr") → Promise<boolean>.
+// pt (reserva para chaves ausentes) e en (idioma padrão) vêm em toda página inicial, e a versão de outro idioma
+// traz também o seu; nas demais páginas, um idioma é baixado quando pedido: I18N.load("fr") → Promise<boolean>.
 (() => {
   const I18N = (window.I18N = window.I18N || {});
   const LANGS = Object.keys(window.IDIOMAS); // idiomas.js
