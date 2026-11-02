@@ -93,7 +93,7 @@ flowchart TB
 Os dados são scripts clássicos (e não JSON ou módulos) para rodar antes da pintura, em `file://`, no *service worker* (`importScripts`) e no Node:
 
 1. `idiomas.js` (síncrono) → `globalThis.IDIOMAS`.
-2. `components/boot.js` (síncrono, no `<head>`) → aplica o tema e a `--intensidade` salvos, define `window.TEMAS` e decide o idioma da página (`window.IDIOMA_INICIAL`: `?lang=` → salvo → primeiro idioma); pré-carrega a tradução do idioma salvo.
+2. `components/boot.js` (síncrono, no `<head>`) → aplica o tema e a `--intensidade` salvos, define `window.TEMAS` e `window.RAIZ` e decide o idioma da página (`window.IDIOMA_INICIAL`). Na página inicial, o endereço manda (`/`, `/pt/`, `/es/`), e `?lang=` ou o idioma salvo redirecionam; nas demais: `?lang=` → salvo → primeiro idioma.
 3. `perfil.js` (defer) → `globalThis.PERFIL`; precisa vir antes das traduções e de qualquer módulo que importe `api.js`.
 4. `i18n/pt.js`, `i18n/en.js` (defer); os demais idiomas são baixados por `i18n.js` quando escolhidos.
 5. Módulos ES (`script.js`, `chat.js`, `busca-rapida.js`, `sistema.js`, …) e `components/components.js` (defer). No `index.html`, todo módulo está no `importmap` com a mesma versão `?v=` (conferido por `scripts/conferir-modulos.mjs`).

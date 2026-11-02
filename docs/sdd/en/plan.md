@@ -93,7 +93,7 @@ flowchart TB
 Data are classic scripts (not JSON or modules) so they run before paint, in `file://`, in the service worker (`importScripts`) and in Node:
 
 1. `idiomas.js` (sync) → `globalThis.IDIOMAS`.
-2. `components/boot.js` (sync, in `<head>`) → applies the saved theme and `--intensidade`, sets `window.TEMAS` and decides the page language (`window.IDIOMA_INICIAL`: `?lang=` → saved → first language); preloads the saved language's translation.
+2. `components/boot.js` (sync, in `<head>`) → applies the saved theme and `--intensidade`, sets `window.TEMAS` and `window.RAIZ` and decides the page language (`window.IDIOMA_INICIAL`). On the home page the URL decides (`/`, `/pt/`, `/es/`), and `?lang=` or the saved language redirect; elsewhere: `?lang=` → saved → first language.
 3. `perfil.js` (defer) → `globalThis.PERFIL`; must come before the translations and any module importing `api.js`.
 4. `i18n/pt.js`, `i18n/en.js` (defer); other languages are downloaded by `i18n.js` when chosen.
 5. ES modules (`script.js`, `chat.js`, `busca-rapida.js`, `sistema.js`, …) and `components/components.js` (defer). In `index.html` every module is in the `importmap` with the same `?v=` (checked by `scripts/conferir-modulos.mjs`).

@@ -2,34 +2,26 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://emanueleborges.github.io/</loc>
-    <lastmod>2026-10-24</lastmod>
-    <xhtml:link rel="alternate" hreflang="en" href="https://emanueleborges.github.io/?lang=en" />
-    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://emanueleborges.github.io/?lang=pt" />
-    <xhtml:link rel="alternate" hreflang="es" href="https://emanueleborges.github.io/?lang=es" />
+    <lastmod>2026-11-02</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://emanueleborges.github.io/" />
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://emanueleborges.github.io/pt/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://emanueleborges.github.io/es/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://emanueleborges.github.io/" />
   </url>
   <url>
-    <loc>https://emanueleborges.github.io/?lang=en</loc>
-    <lastmod>2026-10-24</lastmod>
-    <xhtml:link rel="alternate" hreflang="en" href="https://emanueleborges.github.io/?lang=en" />
-    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://emanueleborges.github.io/?lang=pt" />
-    <xhtml:link rel="alternate" hreflang="es" href="https://emanueleborges.github.io/?lang=es" />
+    <loc>https://emanueleborges.github.io/pt/</loc>
+    <lastmod>2026-11-02</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://emanueleborges.github.io/" />
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://emanueleborges.github.io/pt/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://emanueleborges.github.io/es/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://emanueleborges.github.io/" />
   </url>
   <url>
-    <loc>https://emanueleborges.github.io/?lang=pt</loc>
-    <lastmod>2026-10-24</lastmod>
-    <xhtml:link rel="alternate" hreflang="en" href="https://emanueleborges.github.io/?lang=en" />
-    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://emanueleborges.github.io/?lang=pt" />
-    <xhtml:link rel="alternate" hreflang="es" href="https://emanueleborges.github.io/?lang=es" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://emanueleborges.github.io/" />
-  </url>
-  <url>
-    <loc>https://emanueleborges.github.io/?lang=es</loc>
-    <lastmod>2026-10-24</lastmod>
-    <xhtml:link rel="alternate" hreflang="en" href="https://emanueleborges.github.io/?lang=en" />
-    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://emanueleborges.github.io/?lang=pt" />
-    <xhtml:link rel="alternate" hreflang="es" href="https://emanueleborges.github.io/?lang=es" />
+    <loc>https://emanueleborges.github.io/es/</loc>
+    <lastmod>2026-11-02</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://emanueleborges.github.io/" />
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://emanueleborges.github.io/pt/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://emanueleborges.github.io/es/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://emanueleborges.github.io/" />
   </url>
   <url>

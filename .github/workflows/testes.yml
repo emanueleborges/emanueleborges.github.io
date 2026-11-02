@@ -41,7 +41,7 @@ jobs:
           print("JSON-LD válido:", data["name"])
           PY
 
-      - name: HTML, currículo, SEO, sitemap e manifest em dia com data/, idiomas.js e i18n/pt.js
+      - name: HTML, currículo, SEO, sitemap e manifest em dia com data/, idiomas.js e i18n/
         run: node scripts/gerar-secoes.mjs --check
 
       - name: Módulos ES do index.html todos no importmap

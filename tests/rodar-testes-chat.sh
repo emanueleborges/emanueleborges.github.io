@@ -18,6 +18,14 @@ cp -R index.html temas.css styles.css idiomas.js perfil.js script.js sistema.js 
 # Sem consentimento de analytics nos testes; injeta o executor dos testes.
 # (perl funciona igual no macOS e no Linux, ao contrário de `sed -i`)
 perl -0pi -e 's#</head>#<script src="runner.js" defer></script></head>#' "$TMP/index.html"
+# Páginas dos outros idiomas (pt/, es/): cada idioma é testado no seu endereço.
+for traducao in i18n/*.js; do
+  idioma=$(basename "$traducao" .js)
+  if [ -f "$idioma/index.html" ]; then
+    cp -R "$idioma" "$TMP"/
+    perl -0pi -e 's#</head>#<script src="../runner.js" defer></script></head>#' "$TMP/$idioma/index.html"
+  fi
+done
 python3 -I - "$TMP" "$CHROME" tests/chat-casos.json <<'PY'
 import functools, html, http.server, json, os, re, subprocess, sys, threading, urllib.parse
 tmp, chrome, cases_file = sys.argv[1:4]
@@ -30,7 +38,8 @@ threading.Thread(target=server.serve_forever, daemon=True).start()
 origin = f"http://127.0.0.1:{server.server_address[1]}"
 failed = total = 0
 for lang, items in cases.items():
-    url = f"{origin}/index.html?lang={lang}#" + urllib.parse.quote(json.dumps(items))
+    page = f"{lang}/index.html" if os.path.exists(f"{tmp}/{lang}/index.html") else f"index.html?lang={lang}"
+    url = f"{origin}/{page}#" + urllib.parse.quote(json.dumps(items))
     flags = ["--headless=new", "--disable-gpu", f"--user-data-dir={tmp}/profile", "--virtual-time-budget=3000"]
     if os.environ.get("CI"):
         flags.append("--no-sandbox")  # necessário nos servidores do GitHub Actions
