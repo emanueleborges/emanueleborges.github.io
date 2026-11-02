@@ -210,7 +210,7 @@ function syncTextos(html, lang) {
 function paraSubpasta(html, lang) {
   const comTraducao = ["pt", "en"].includes(lang)
     ? html
-    : html.replace(/( *)<script src="i18n\/en\.js(\?v=[^"]*)" defer><\/script>\n/, (tag, indent, version) => `${tag}${indent}<script src="i18n/${lang}.js${version}" defer></script>\n`);
+    : html.replace(/<script src="i18n\/en\.js(\?v=[^"]*)" defer><\/script>/, (tag, version) => `${tag}\n    <script src="i18n/${lang}.js${version}" defer></script>`);
   return comTraducao
     .replace(/(\s(?:href|src)=")(?![a-z][a-z0-9+.-]*:|\/|#)/gi, "$1../")
     .replace(/<script type="importmap">[\s\S]*?<\/script>/, (map) => map.replaceAll('"./', '"../'));

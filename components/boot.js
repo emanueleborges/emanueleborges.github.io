@@ -16,17 +16,18 @@
       return null; // navegação privada
     }
   };
-  // Só chaves próprias: "constructor" ou "__proto__" na URL não contam como tema ou idioma.
-  var tem = function (obj, key) {
-    return key != null && Object.prototype.hasOwnProperty.call(obj, key);
+  // A própria chave da lista, nunca o texto recebido: "constructor" ou "__proto__" na URL não contam como tema ou idioma.
+  var daLista = function (obj, key) {
+    return Object.keys(obj).filter(function (item) {
+      return item === key;
+    })[0];
   };
-  var theme = tem(TEMAS.temas, params.get("theme")) ? params.get("theme") : stored("theme");
-  theme = tem(TEMAS.temas, theme) ? theme : TEMAS.padrao;
+  var temaPedido = daLista(TEMAS.temas, params.get("theme"));
+  var theme = temaPedido || daLista(TEMAS.temas, stored("theme")) || TEMAS.padrao;
   var idiomas = window.IDIOMAS;
   var padrao = Object.keys(idiomas)[0];
-  var pedido = tem(idiomas, params.get("lang")) ? params.get("lang") : null;
-  var lang = pedido || stored("lang");
-  lang = tem(idiomas, lang) ? lang : padrao;
+  var pedido = daLista(idiomas, params.get("lang"));
+  var lang = pedido || daLista(idiomas, stored("lang")) || padrao;
   // Página inicial: o endereço manda. Visitar uma versão traduzida conta como escolha (as demos seguem o idioma salvo).
   var daPagina = document.documentElement.getAttribute("data-idioma");
   if (daPagina) {
@@ -39,9 +40,9 @@
       }
     }
     if (alvo !== daPagina) {
-      params.delete("lang");
-      var resto = params.toString();
-      location.replace(new URL(alvo === padrao ? "" : alvo + "/", raiz).href + (resto ? "?" + resto : "") + location.hash);
+      // Leva só o tema validado e a seção (a origem é sempre a do site).
+      var secao = location.hash.slice(1).replace(/[^\w-]/g, "");
+      location.replace(new URL(alvo === padrao ? "" : alvo + "/", raiz).href + (temaPedido ? "?theme=" + temaPedido : "") + (secao ? "#" + secao : ""));
     }
     lang = daPagina;
   }
