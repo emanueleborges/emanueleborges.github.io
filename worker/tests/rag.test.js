@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { TOP_K, buscaLexical, combinarTrechos } from "../src/rag.js";
+import { TOP_K, buscaLexical, combinarTrechos, termosRaros } from "../src/rag.js";
 
 const match = (id, score) => ({ id, score, metadata: { title: id, text: `texto de ${id}` } });
 const ids = (trechos) => trechos.map((trecho) => trecho.id);
@@ -34,6 +34,27 @@ test("a chunk found by both searches ranks first, and the context has at most TO
   const trechos = combinarTrechos(vetor, [{ id: "c", title: "c", text: "texto de c" }]);
   assert.equal(trechos.length, TOP_K);
   assert.equal(trechos[0].id, "c");
+});
+
+test("a vector match uses the deployed chunk text, not the copy stored in Vectorize", () => {
+  const [trecho] = combinarTrechos([{ id: "job2", score: 0.6, metadata: { title: "antigo", text: "texto antigo" } }], []);
+  assert.match(trecho.text, /Spring Boot/);
+});
+
+test("a question naming a rare profile term keeps only chunks with that term, plus the best vector match", () => {
+  const pergunta = "ele tem experiência com kafka";
+  const vetor = [match("differential", 0.49), match("p1", 0.48), match("skills-devops", 0.47)];
+  const trechos = ids(combinarTrechos(vetor, buscaLexical(pergunta), termosRaros(pergunta)));
+  assert.ok(trechos.includes("differential"));
+  assert.ok(!trechos.includes("p1"));
+  assert.ok(trechos.includes("skills-devops") && trechos.includes("p5"));
+});
+
+test("without rare terms the vector ranking is used as is", () => {
+  const pergunta = "por que contratá-lo";
+  assert.deepEqual(termosRaros(pergunta), []);
+  const trechos = ids(combinarTrechos([match("differential", 0.5), match("p1", 0.49)], buscaLexical(pergunta), termosRaros(pergunta)));
+  assert.deepEqual(trechos, ["differential", "p1"]);
 });
 
 test("matches without text are ignored", () => {

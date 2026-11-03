@@ -2,7 +2,7 @@
 // Com { stream: true } o texto chega aos poucos (text/plain); sem ele, a resposta inteira em JSON.
 import { CORE, NOME, PRIMEIRO_NOME, PROFILE } from "../conhecimento.js";
 import { EMBEDDING_MODEL, GATEWAY, MAX_QUESTION_LENGTH, LANGUAGES, MODEL, aiErrorKind, corsHeaders, isHuman, json, languageOf, rateLimited, registrarMetrica } from "../comum.js";
-import { CANDIDATOS, buscaLexical, combinarTrechos } from "../rag.js";
+import { CANDIDATOS, buscaLexical, combinarTrechos, termosRaros } from "../rag.js";
 
 const INSTRUCTIONS = `You are the assistant on ${NOME}'s portfolio website. Recruiters and visitors ask you about his professional profile.
 
@@ -31,7 +31,7 @@ async function profileContext(question, env) {
     inicio = Date.now();
     const { matches } = await env.VECTORIZE.query(vector, { topK: CANDIDATOS, returnMetadata: "all" });
     registrarEtapa(env, "vectorize", inicio);
-    const excerpts = combinarTrechos(matches ?? [], buscaLexical(question));
+    const excerpts = combinarTrechos(matches ?? [], buscaLexical(question), termosRaros(question));
     if (!excerpts.length) return PROFILE;
     return `${CORE}\n\n${excerpts.map((excerpt) => `## ${excerpt.title}\n${excerpt.text}`).join("\n\n")}`;
   } catch (error) {
@@ -132,7 +132,7 @@ export async function handleChat(payload, ip, env, origin) {
   const normalized = question.toLowerCase().replace(/\s+/g, " ").replace(/[\s?!.。？！]+$/u, "");
   // O lembrete fica junto da pergunta porque, só nas instruções, o modelo às vezes afirmava que a pessoa
   // não tem uma habilidade que o perfil apenas não cita.
-  const userText = `Visitor question: ${normalized}\n\nAnswer in ${LANGUAGES[lang]}. Reminder, for missing information only: say it isn't in the profile and suggest contacting ${PRIMEIRO_NOME}, never that he doesn't have it.`;
+  const userText = `Visitor question: ${normalized}\n\nAnswer in ${LANGUAGES[lang]}. When the profile answers it, include the relevant details (technologies, dates, results). When it doesn't, say it isn't in the profile and suggest contacting ${PRIMEIRO_NOME}, never that he doesn't have it.`;
 
   try {
     const context = await profileContext(normalized, env);

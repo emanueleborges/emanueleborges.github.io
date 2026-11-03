@@ -7,7 +7,7 @@
   { "lang": "pt", "q": "Quais certificações ele tem?", "trechos": ["certifications"], "proibido": "concluindo" },
   { "lang": "pt", "q": "Ele já trabalhou no setor público?", "trechos": ["public-sector"] },
   { "lang": "pt", "q": "Por que eu deveria contratá-lo?", "trechos": ["differential"] },
-  { "lang": "en", "q": "What is his experience with Java and Spring Boot?", "trechos": ["job1"], "proibido": "ICCT[^.]*Spring Boot" },
+  { "lang": "en", "q": "What is his experience with Java and Spring Boot?", "trechos": ["job1", "job2"], "proibido": "(City Hall|SEMEF)[^.]*Spring Boot|Spring Boot[^.]*(City Hall|SEMEF)|these technologies[^.]*City Hall" },
   { "lang": "en", "q": "What languages does he speak?", "trechos": ["languages"] },
   { "lang": "en", "q": "Tell me about the Financial Hub project and its performance numbers.", "trechos": ["p5"], "proibido": "concurrent users" },
   { "lang": "en", "q": "How many years of experience does he have?", "trechos": ["years"] },
