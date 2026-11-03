@@ -17,6 +17,7 @@ node --test worker/tests/chat.test.js       # a single test file (add --test-nam
 node --test demos/guardrail/core.test.js    # RAG security demo tests
 cd worker && npm run conhecimento           # regenerate worker/src/conhecimento.js (AI knowledge)
 cd worker && npm run dev                    # local Worker
+bash scripts/monitorar.sh                   # are the published site and Worker up? (also every 15 min in .github/workflows/monitor.yml)
 cd worker && npm run avaliar                # real-AI eval (latency, cost, expected passages, answer regressions; spends free quota, not in CI)
 cd worker && npm run deploy                 # knowledge + wrangler deploy + Vectorize reindex (publishes!)
 ```
