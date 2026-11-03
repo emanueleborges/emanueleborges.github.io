@@ -6,4 +6,5 @@ worker/.dev.vars
 scripts/lstm/models/
 scripts/lstm/data/
 worker/painel.html
+worker/avaliacao/resultado.json
 

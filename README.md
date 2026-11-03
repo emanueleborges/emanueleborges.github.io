@@ -94,9 +94,9 @@ The **AI demos** run inference in the browser: the LSTM runs in plain JavaScript
 3. **AI with RAG** → the Worker:
    1. validates the **Turnstile** token;
    2. embeds the question with **BGE-M3** (multilingual);
-   3. retrieves from **Vectorize** the 6 profile excerpts closest in meaning;
+   3. retrieves up to 6 profile excerpts, combining **Vectorize** (closest in meaning) with an exact-word search (names like "Kafka");
    4. sends **Qwen3 30B** a fixed profile summary + those excerpts, with rules to answer only about the profile and never invent facts;
-   5. sends the request through **AI Gateway** without caching visitor questions or answers.
+   5. sends the request through **AI Gateway** without caching or logging visitor questions or answers, and streams the answer as it is generated.
 4. **Local search** (fallback) → if the AI fails or the daily quota runs out (error 3036), the chat **tells the visitor** and searches the page content itself: TF-IDF-style ranking, typo tolerance (Damerau-Levenshtein), synonyms and Chinese handling.
 
 The AI knowledge is **generated from the same sources as the site** (`data/` and `i18n/`): when the site changes and the Worker is deployed, the AI and the vector index follow.

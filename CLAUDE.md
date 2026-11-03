@@ -17,6 +17,7 @@ node --test worker/tests/chat.test.js       # a single test file (add --test-nam
 node --test demos/guardrail/core.test.js    # RAG security demo tests
 cd worker && npm run conhecimento           # regenerate worker/src/conhecimento.js (AI knowledge)
 cd worker && npm run dev                    # local Worker
+cd worker && npm run avaliar                # real-AI eval (latency, cost, expected passages, answer regressions; spends free quota, not in CI)
 cd worker && npm run deploy                 # knowledge + wrangler deploy + Vectorize reindex (publishes!)
 ```
 
@@ -62,11 +63,11 @@ Data are classic scripts (not JSON/modules) so they run before paint, in `file:/
 
 ## Chat pipeline
 
-`chat.js` (UI) → `chat/regras.js` (ready-made intents; `LOCAL_ONLY` topics never call the AI) → `chat/ia.js` → Worker `POST /` (Turnstile → BGE-M3 embedding → Vectorize top 6 → Qwen3 with a fixed profile summary) → on any failure, `chat/busca.js` local TF-IDF-style search over the page. Voice questions: `chat/voz.js` records with MediaRecorder (≤ 20 s) → `chat/ia.js` `transcribe()` → Worker `POST /transcribe` (Whisper turbo, site language as hint) → text goes into the input for the visitor to review. AI errors come back as `{ error: "quota" | "unavailable" }` (3036 = daily free quota); the chat shows a notice, answers locally and dispatches `aistate`, which `sistema.js` shows in the footer (`GET /status` also returns `ai`).
+`chat.js` (UI) → `chat/regras.js` (ready-made intents; `LOCAL_ONLY` topics never call the AI) → `chat/ia.js` → Worker `POST /` (Turnstile → BGE-M3 embedding → `src/rag.js`: Vectorize candidates + exact-word search, fused, at most 6 → Qwen3 with a fixed profile summary, streamed as plain text when the site sends `stream: true`) → on any failure, `chat/busca.js` local TF-IDF-style search over the page. Voice questions: `chat/voz.js` records with MediaRecorder (≤ 20 s) → `chat/ia.js` `transcribe()` → Worker `POST /transcribe` (Whisper turbo, site language as hint) → text goes into the input for the visitor to review. AI errors come back as `{ error: "quota" | "unavailable" }` (3036 = daily free quota); the chat shows a notice, answers locally and dispatches `aistate`, which `sistema.js` shows in the footer (`GET /status` also returns `ai`).
 
 ## Worker
 
-`worker/src/index.js` routes to `src/rotas/*` (chat, avaliacao, imagem, precos, visitas, metricas, status) and records one technical metric per response (route, result, ms → Analytics Engine `METRICAS`; unknown paths as `outra`); shared helpers in `src/comum.js` (models, CORS, Turnstile, rate limits, AI error kind, `registrarMetrica`); Workers Logs are enabled only for the Worker's own `console` output (`invocation_logs: false`, `redact_query_string`) — never log visitor text; cron in `src/agendado.js` (hourly retention purge, Monday summary e-mail). D1 stores only daily aggregate tables keyed by date (migrations in `worker/migrations/`). Tests import route handlers directly and mock `env`/`fetch`; tests that import the site's `api.js` must `import "../../perfil.js"` first.
+`worker/src/index.js` routes to `src/rotas/*` (chat, avaliacao, imagem, precos, visitas, metricas, status) and records one technical metric per response (route, result, ms → Analytics Engine `METRICAS`; unknown paths as `outra`); shared helpers in `src/comum.js` (models, `GATEWAY` with no cache and no logs, CORS, Turnstile, rate limits, AI error kind, `registrarMetrica`; chat step times go to route `/chat/etapa`, and route `/` `ok` now measures the time to the first text); Workers Logs are enabled only for the Worker's own `console` output (`invocation_logs: false`, `redact_query_string`) — never log visitor text; cron in `src/agendado.js` (hourly retention purge, Monday summary e-mail). D1 stores only daily aggregate tables keyed by date (migrations in `worker/migrations/`). Tests import route handlers directly and mock `env`/`fetch`; tests that import the site's `api.js` must `import "../../perfil.js"` first.
 
 ## Project constraints
 

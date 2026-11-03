@@ -183,7 +183,7 @@ Sons por Web Audio e vibração; modais para páginas do site; visualizador do G
 #### `POST /` — chat
 **Requisição:** `{ "question": "1–500 caracteres", "lang": "en|pt|es", "turnstileToken": "…" }` · **200:** `{ "answer": "…" }` · **Erros:** `400 invalid_question` · `403 forbidden_origin` · `403 turnstile_failed` · `429 rate_limited` · `502 empty_answer` · `503 quota` (cota gratuita do dia, erro 3036) · `503 unavailable` (outra falha).
 
-**Fluxo:** origem → limite → validação → Turnstile → normalização → **RAG** (BGE-M3 → Vectorize top 6 → resumo fixo + trechos; em falha, perfil completo) → Qwen3 30B (`temperature 0.1`, `max_tokens 600`, `/no_think`) pelo AI Gateway **sem cache** → limpeza (`<think>`, Markdown). Em erro, `aiErrorKind()` classifica e, se for cota, marca a IA como "quota" até 00:00 UTC (na memória daquela instância do Worker).
+**Fluxo:** origem → limite → validação → Turnstile → normalização → **RAG** (BGE-M3 → 12 candidatos do Vectorize, descartando os muito abaixo do melhor + busca por palavras exatas, fundidos em até 6 trechos → resumo fixo + trechos; em falha, perfil completo) → Qwen3 30B (`temperature 0.1`, `max_tokens 600`, `/no_think`) pelo AI Gateway **sem cache e sem registro** → limpeza (`<think>`, Markdown) → texto em partes (`stream: true`; sem ele, JSON). Em erro, `aiErrorKind()` classifica e, se for cota, marca a IA como "quota" até 00:00 UTC (na memória daquela instância do Worker).
 
 #### `GET /status`
 **200:** `{ "colo": "GRU", "model": "qwen3-30b-a3b-fp8", "ai": "online" | "quota" }`. Só leitura; o site só chama quando o visitante clica em "medir conexão".

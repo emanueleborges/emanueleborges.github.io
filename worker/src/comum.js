@@ -1,10 +1,13 @@
 // Peças compartilhadas pelas rotas do Worker: modelos, idiomas, CORS/JSON, Turnstile e e-mail.
 
-// Modelo aberto multilíngue com bom custo na cota gratuita (~15 "neurônios" por pergunta).
+// Modelo aberto multilíngue com bom custo na cota gratuita (~6 "neurônios" por pergunta).
 export const MODEL = "@cf/qwen/qwen3-30b-a3b-fp8";
 // Modelo de embeddings multilíngue: a pergunta em qualquer idioma encontra os trechos em inglês.
 export const EMBEDDING_MODEL = "@cf/baai/bge-m3";
 export const MAX_QUESTION_LENGTH = 500;
+// AI Gateway sem cache e sem registro dos pedidos: o texto do visitante não fica guardado,
+// qualquer que seja a configuração do painel.
+export const GATEWAY = { id: "default", skipCache: true, collectLog: false };
 import "../../idiomas.js"; // idiomas do site (globalThis.IDIOMAS), os mesmos da página
 
 export const LANGUAGES = Object.fromEntries(Object.entries(globalThis.IDIOMAS).map(([code, idioma]) => [code, idioma.ia]));

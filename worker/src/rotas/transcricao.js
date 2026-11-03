@@ -1,7 +1,7 @@
 // POST /transcribe — pergunta falada no chat: áudio gravado no navegador (WebM/Opus ou MP4/AAC, até ~20 s)
 // → texto, com o Whisper do Workers AI (mesma cota gratuita do chat). O áudio só é usado para gerar o
 // texto: não é gravado nem guardado em cache. O texto volta para o campo do chat, onde o visitante revisa.
-import { LANGUAGES, aiErrorKind, isHuman, json, rateLimited } from "../comum.js";
+import { GATEWAY, LANGUAGES, aiErrorKind, isHuman, json, rateLimited } from "../comum.js";
 
 export const TRANSCRIBE_MODEL = "@cf/openai/whisper-large-v3-turbo";
 // ~20 s de áudio comprimido cabem com folga; acima disso o pedido é recusado sem chamar a IA.
@@ -18,7 +18,7 @@ export async function handleTranscribe(payload, ip, env, origin) {
 
   try {
     // O idioma do site como dica melhora nomes próprios e frases curtas; vad_filter ignora o silêncio.
-    const result = await env.AI.run(TRANSCRIBE_MODEL, { audio, language: lang, vad_filter: true }, { gateway: { id: "default" } });
+    const result = await env.AI.run(TRANSCRIBE_MODEL, { audio, language: lang, vad_filter: true }, { gateway: GATEWAY });
     const text = String(result?.text ?? "").replace(/\s+/g, " ").trim();
     if (!text) return json({ error: "no_speech" }, 422, origin);
     return json({ text: text.slice(0, 500) }, 200, origin);

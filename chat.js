@@ -306,13 +306,20 @@ function initChat() {
   };
 
   // Resposta da IA + atalho "Ver na página" para o trecho mais relevante do site.
-  const aiReply = async (question) => {
-    const { answer: reply, error } = await ai.ask(question, currentLang);
+  const aiReply = async (question, bubble) => {
+    const aiText = (text) => [el("span", "chat-ai-label", tc("aiLabel")), ...text.split(/\n{2,}/).map((paragraph) => el("p", null, paragraph))];
+    // O texto aparece na bolha conforme chega; leitores de tela recebem a resposta inteira no fim (aria-busy).
+    const { answer: reply, error } = await ai.ask(question, currentLang, (text) => {
+      bubble.removeAttribute("aria-hidden");
+      bubble.setAttribute("aria-busy", "true");
+      bubble.replaceChildren(...aiText(text));
+      const nearBottom = messages.scrollHeight - messages.scrollTop - messages.clientHeight < 80;
+      if (nearBottom) messages.scrollTop = messages.scrollHeight;
+    });
     // IA fora do ar ou sem cota: avisa e responde pela busca local; o rodapé técnico mostra o mesmo estado.
     document.dispatchEvent(new CustomEvent("aistate", { detail: { state: reply ? "online" : error } }));
     if (!reply) return [el("p", "chat-ai-fallback", tc(error === "quota" ? "aiQuota" : "aiDown")), ...answer(question)];
-    const nodes = [el("span", "chat-ai-label", tc("aiLabel"))];
-    reply.split(/\n{2,}/).forEach((paragraph) => nodes.push(el("p", null, paragraph)));
+    const nodes = aiText(reply);
     const { results } = search(question);
     const best = results.find((result) => result.item) ?? results[0];
     if (best) {
@@ -337,7 +344,7 @@ function initChat() {
   const ask = (query) => {
     const trimmed = query.trim();
     if (!trimmed) return;
-    if (usesAi(trimmed)) respond(trimmed, () => aiReply(trimmed));
+    if (usesAi(trimmed)) respond(trimmed, (bubble) => aiReply(trimmed, bubble));
     else respond(trimmed, () => answer(trimmed));
   };
 
@@ -349,10 +356,14 @@ function initChat() {
     typing.querySelector(".chat-typing").append(el("i"), el("i"), el("i"));
     typing.setAttribute("aria-hidden", "true");
     const minimumDelay = prefersReducedMotion ? 0 : 550;
-    const [reply] = await Promise.all([makeReply(), new Promise((resolve) => setTimeout(resolve, minimumDelay))]);
+    const [reply] = await Promise.all([makeReply(typing), new Promise((resolve) => setTimeout(resolve, minimumDelay))]);
+    // A resposta que chegou aos poucos já foi "digitada" na bolha; só falta completar (links e botões).
+    const streamed = typing.hasAttribute("aria-busy");
     typing.removeAttribute("aria-hidden");
+    typing.removeAttribute("aria-busy");
     typing.replaceChildren(...reply);
-    typeOut(typing);
+    if (streamed) messages.scrollTop = messages.scrollHeight;
+    else typeOut(typing);
   }
 
   // Efeito de digitação: revela o texto da resposta letra a letra, bloco por bloco (links e botões
@@ -678,7 +689,7 @@ function initChat() {
         .map((node) => node.textContent)
         .join(" | "),
     search: (query) => search(query).results.map((result) => result.label),
-    aiAnswerText: async (query) => (await aiReply(query)).map((node) => node.textContent).join(" | "),
+    aiAnswerText: async (query) => (await aiReply(query, el("div"))).map((node) => node.textContent).join(" | "),
   };
 }
 

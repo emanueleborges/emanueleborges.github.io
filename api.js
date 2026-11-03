@@ -72,6 +72,43 @@ export const PortfolioApi = (() => {
     }
   };
 
+  // Como post, mas entrega o texto aos poucos em onText quando o Worker responde em partes. Se a conexão
+  // cair no meio, fica com o que já chegou; um Worker que responda em JSON continua funcionando.
+  const postStream = async (path, body, onText, timeoutMs = 25000) => {
+    const token = await turnstileToken();
+    if (!token) return { ok: false, status: 0, data: null };
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), timeoutMs);
+    let text = "";
+    try {
+      const response = await fetch(`${BASE}${path}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...body, stream: true, turnstileToken: token }),
+        signal: controller.signal,
+      });
+      if (!response.ok || !response.headers.get("Content-Type")?.startsWith("text/plain")) {
+        const data = await response.json().catch(() => null);
+        return { ok: response.ok, status: response.status, data };
+      }
+      const decoder = new TextDecoder();
+      const reader = response.body.getReader();
+      for (;;) {
+        const { value, done } = await reader.read();
+        if (done) break;
+        const part = decoder.decode(value, { stream: true });
+        if (!part) continue;
+        text += part;
+        onText(part);
+      }
+      return { ok: true, status: response.status, data: { answer: text } };
+    } catch {
+      return text ? { ok: true, status: 200, data: { answer: text } } : { ok: false, status: 0, data: null };
+    } finally {
+      clearTimeout(timer);
+    }
+  };
+
   const recordVisit = async () => {
     const response = await fetch(`${BASE}/visit`, {
       method: "POST",
@@ -112,5 +149,5 @@ export const PortfolioApi = (() => {
     return { ms: Math.round(best), colo: data.colo, model: data.model, ai: data.ai };
   };
 
-  return { enabled: Boolean(BASE), loadTurnstile, post, recordVisit, recordClick, status };
+  return { enabled: Boolean(BASE), loadTurnstile, post, postStream, recordVisit, recordClick, status };
 })();

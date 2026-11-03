@@ -31,6 +31,35 @@ window.addEventListener("load", async () => {
     ok: got.startsWith(notice) && got.split(" | ").length > 1 && footer === footerText,
     got: `${got.slice(0, 120)} · rodapé: ${footer}`,
   });
+
+  // Resposta em partes: o texto aparece na bolha enquanto chega; botões só no fim, sem redigitar.
+  const waitFor = async (check) => {
+    for (let i = 0; i < 100 && !check(); i += 1) await new Promise((resolve) => setTimeout(resolve, 50));
+    return Boolean(check());
+  };
+  let stream;
+  const body = new ReadableStream({ start: (controller) => (stream = controller) });
+  window.fetch = async (url, init) =>
+    String(url).startsWith(window.PERFIL.servicos.worker)
+      ? new Response(body, { status: 200, headers: { "Content-Type": "text/plain; charset=utf-8" } })
+      : realFetch(url, init);
+  const encoder = new TextEncoder();
+  const bubble = () => document.querySelector(".chat-ai-label")?.parentElement;
+  document.dispatchEvent(new CustomEvent("portfolio:ask", { detail: { question: "Qual a experiência com Kafka?" } }));
+  await waitFor(() => document.querySelector(".chat-typing"));
+  stream.enqueue(encoder.encode("Kafka "));
+  const partial = await waitFor(() => bubble()?.textContent.includes("Kafka"));
+  const busyWhileStreaming = bubble()?.getAttribute("aria-busy") === "true" && !bubble()?.querySelector(".chat-rate-ask");
+  stream.enqueue(encoder.encode("é usado."));
+  stream.close();
+  const finished = await waitFor(() => bubble()?.querySelector(".chat-rate-ask"));
+  const reply = bubble();
+  results.push({
+    query: "[IA em partes] Kafka",
+    expected: "texto parcial + resposta inteira + avaliação, sem redigitar",
+    ok: partial && busyWhileStreaming && finished && reply.querySelector("p")?.textContent === "Kafka é usado." && !reply.hasAttribute("aria-busy") && !reply.classList.contains("is-typing"),
+    got: `parcial ${partial}, ocupado ${busyWhileStreaming}, fim ${finished}: ${reply?.textContent.slice(0, 80)}`,
+  });
   window.fetch = realFetch;
 
   const pre = document.createElement("pre");

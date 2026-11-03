@@ -4,7 +4,7 @@
 // traduzido — o que de fato vai ao FLUX — e teto diário global (protege a cota gratuita do chat).
 // A imagem e o texto pedido não são salvos. O D1 guarda o total do dia e, para a cota por visitante,
 // um HMAC do IP que muda todo dia (não dá para voltar ao IP nem ligar dias diferentes), apagado no dia seguinte.
-import { MODEL, aiText, isHuman, json, rateLimited } from "../comum.js";
+import { GATEWAY, MODEL, aiText, isHuman, json, rateLimited } from "../comum.js";
 
 export const IMAGE_MODEL = "@cf/black-forest-labs/flux-1-schnell";
 export const GUARD_MODEL = "@cf/meta/llama-guard-3-8b";
@@ -45,7 +45,7 @@ export async function toEnglish(prompt, env) {
       ],
       max_tokens: 200,
       temperature: 0,
-    }, { gateway: { id: "default", skipCache: true } });
+    }, { gateway: GATEWAY });
     const english = String(aiText(result))
       .replace(/<think>[\s\S]*?<\/think>/g, "")
       .replace(/<\/?description>/g, "")
@@ -108,7 +108,7 @@ export async function handleImage(payload, ip, env, origin) {
   if (BLOCKED.test(english)) return json({ error: "unsafe_prompt", remaining }, 422, origin);
 
   try {
-    const verdict = await env.AI.run(GUARD_MODEL, { messages: [{ role: "user", content: `Generate an image of: ${english}` }], max_tokens: 20, temperature: 0 }, { gateway: { id: "default", skipCache: true } });
+    const verdict = await env.AI.run(GUARD_MODEL, { messages: [{ role: "user", content: `Generate an image of: ${english}` }], max_tokens: 20, temperature: 0 }, { gateway: GATEWAY });
     // Pedido recusado pela moderação conta como tentativa (evita testar variações à vontade).
     if (!isSafeVerdict(verdict)) return json({ error: "unsafe_prompt", remaining }, 422, origin);
   } catch (error) {
@@ -134,7 +134,7 @@ export async function handleImage(payload, ip, env, origin) {
 
   try {
     // O schema do modelo aceita só prompt e steps (seed é recusado com o erro 5006).
-    const result = await env.AI.run(IMAGE_MODEL, { prompt: english, steps: STEPS }, { gateway: { id: "default", skipCache: true } });
+    const result = await env.AI.run(IMAGE_MODEL, { prompt: english, steps: STEPS }, { gateway: GATEWAY });
     if (typeof result?.image !== "string" || !result.image) {
       await refund();
       return json({ error: "unavailable" }, 503, origin);
