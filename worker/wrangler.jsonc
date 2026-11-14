@@ -8,7 +8,9 @@
   "observability": {
     "enabled": true,
     "redact_query_string": true,
-    "logs": { "enabled": true, "invocation_logs": false }
+    "logs": { "enabled": true, "invocation_logs": false },
+    // Traces desligado de propósito: cobrado a partir de 01/12/2026 e as métricas já vêm do Analytics Engine.
+    "traces": { "enabled": false }
   },
   // Métricas técnicas (Workers Analytics Engine, grátis): rota, resultado e tempo de resposta de cada
   // pedido — sem texto, IP, idioma ou identificador do visitante. Lidas pelo `npm run painel`.

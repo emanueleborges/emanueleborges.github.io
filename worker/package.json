@@ -8,6 +8,7 @@
     "deploy": "npm run conhecimento && wrangler deploy && node indexar-vectorize.mjs",
     "indexar": "npm run conhecimento && node indexar-vectorize.mjs",
     "avaliar": "node avaliacao/rodar.mjs",
+    "avaliar:busca": "node avaliacao/busca.mjs",
     "painel": "node painel.mjs",
     "panel": "node painel.mjs"
   },

@@ -60,3 +60,19 @@ test("without rare terms the vector ranking is used as is", () => {
 test("matches without text are ignored", () => {
   assert.deepEqual(combinarTrechos([{ id: "x", score: 0.9, metadata: {} }], []), []);
 });
+
+test("profile synonyms bring the chunks a paraphrased question needs", () => {
+  assert.ok(ids(buscaLexical("¿Ha trabajado con mensajería o colas de eventos?")).includes("skills-devops"));
+  assert.ok(termosRaros("Já trabalhou com a nuvem da Amazon?").includes("aws"));
+  assert.ok(ids(buscaLexical("Quais projetos usam visão computacional?")).includes("p8"));
+});
+
+test("long words one typo away from a profile term are corrected", () => {
+  assert.ok(termosRaros("tem experiencia com kubernets?").includes("kubernetes"));
+  assert.ok(termosRaros("has he used postgress?").includes("postgres"));
+});
+
+test("short pt/es words are not turned into English profile terms", () => {
+  assert.ok(!termosRaros("Ele escreve testes automatizados?").includes("tests"));
+  assert.ok(!termosRaros("qual o modelo").includes("model"));
+});

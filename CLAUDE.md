@@ -19,6 +19,7 @@ cd worker && npm run conhecimento           # regenerate worker/src/conhecimento
 cd worker && npm run dev                    # local Worker
 bash scripts/monitorar.sh                   # are the published site and Worker up? (also every 15 min in .github/workflows/monitor.yml)
 cd worker && npm run avaliar                # real-AI eval (latency, cost, expected passages, answer regressions; spends free quota, not in CI)
+cd worker && npm run avaliar:busca          # retrieval-only eval of src/rag.js (recall/MRR on perguntas.json + harder avaliacao/busca.json; no LLM, ~1 neuron)
 cd worker && npm run deploy                 # knowledge + wrangler deploy + Vectorize reindex (publishes!)
 ```
 
@@ -64,7 +65,7 @@ Data are classic scripts (not JSON/modules) so they run before paint, in `file:/
 
 ## Chat pipeline
 
-`chat.js` (UI) → `chat/regras.js` (ready-made intents; `LOCAL_ONLY` topics never call the AI) → `chat/ia.js` → Worker `POST /` (Turnstile → BGE-M3 embedding → `src/rag.js`: Vectorize candidates + exact-word search, fused, at most 6 → Qwen3 with a fixed profile summary, streamed as plain text when the site sends `stream: true`) → on any failure, `chat/busca.js` local TF-IDF-style search over the page. Voice questions: `chat/voz.js` records with MediaRecorder (≤ 20 s) → `chat/ia.js` `transcribe()` → Worker `POST /transcribe` (Whisper turbo, site language as hint) → text goes into the input for the visitor to review. AI errors come back as `{ error: "quota" | "unavailable" }` (3036 = daily free quota); the chat shows a notice, answers locally and dispatches `aistate`, which `sistema.js` shows in the footer (`GET /status` also returns `ai`).
+`chat.js` (UI) → `chat/regras.js` (ready-made intents; `LOCAL_ONLY` topics never call the AI) → `chat/ia.js` → Worker `POST /` (Turnstile → BGE-M3 embedding → `src/rag.js`: Vectorize candidates + exact-word search (with a small synonym map and typo correction for words ≥ 7 letters; check changes with `npm run avaliar:busca`), fused, at most 6 → Qwen3 with a fixed profile summary, streamed as plain text when the site sends `stream: true`) → on any failure, `chat/busca.js` local TF-IDF-style search over the page. Voice questions: `chat/voz.js` records with MediaRecorder (≤ 20 s) → `chat/ia.js` `transcribe()` → Worker `POST /transcribe` (Whisper turbo, site language as hint) → text goes into the input for the visitor to review. AI errors come back as `{ error: "quota" | "unavailable" }` (3036 = daily free quota); the chat shows a notice, answers locally and dispatches `aistate`, which `sistema.js` shows in the footer (`GET /status` also returns `ai`).
 
 ## Worker
 
