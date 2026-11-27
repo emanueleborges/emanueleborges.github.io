@@ -3,7 +3,7 @@
 // por idioma (<html data-idioma>): ?lang= e, na raiz, a última escolha salva levam à versão certa.
 (function () {
   // gerado: temas (não edite aqui: data/temas.json + node scripts/gerar-secoes.mjs)
-  var TEMAS = (window.TEMAS = {"padrao":"amazonia","intensidade":{"min":0.3,"max":1.7,"passo":0.05,"escurecer":0.8},"temas":{"amazonia":{"nome":{"en":"Amazon","pt":"Amazônia","es":"Amazonia"},"fundo":"#050f14"},"editorial":{"nome":{"en":"Editorial","pt":"Editorial","es":"Editorial"},"fundo":"#0b0f19"}}});
+  var TEMAS = (window.TEMAS = {"padrao":"amazonia","intensidade":{"min":0.3,"max":2,"passo":0.05,"escurecer":0.8},"temas":{"amazonia":{"nome":{"en":"Amazon","pt":"Amazônia","es":"Amazonia"},"fundo":"#050f14"},"editorial":{"nome":{"en":"Editorial","pt":"Editorial","es":"Editorial"},"fundo":"#0b0f19"}}});
   // /gerado: temas
   var raiz = new URL("../", document.currentScript.src);
   window.RAIZ = raiz.href; // raiz do site, para montar endereços vindos de qualquer pasta

@@ -1,0 +1,28 @@
+# A cada 15 minutos (e sob demanda): confere se o site e o Worker estão no ar (scripts/monitorar.sh).
+# Se falhar, o GitHub manda e-mail para quem alterou o agendamento por último — conferir em
+# Settings → Notifications → Actions ("Only notify for failed workflows").
+name: Monitor
+
+on:
+  schedule:
+    - cron: "*/15 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  monitor:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            data/perfil.json
+            idiomas.js
+            scripts/monitorar.sh
+          sparse-checkout-cone-mode: false
+
+      - name: Site e Worker no ar
+        run: bash scripts/monitorar.sh

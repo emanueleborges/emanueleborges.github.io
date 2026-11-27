@@ -1,0 +1,9 @@
+// Só para `npm run avaliar`: roda localmente, com IA e Vectorize reais. Nunca é publicado.
+{
+  "name": "avaliacao-local",
+  "main": "harness.js",
+  "compatibility_date": "2026-09-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "ai": { "binding": "AI", "remote": true },
+  "vectorize": [{ "binding": "VECTORIZE", "index_name": "portfolio-profile", "remote": true }]
+}

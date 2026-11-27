@@ -1,0 +1,22 @@
+[
+  { "lang": "es", "q": "¿Ha trabajado con mensajería o colas de eventos?", "trechos": ["skills-devops", "job1"] },
+  { "lang": "pt", "q": "Já trabalhou com a nuvem da Amazon?", "trechos": ["job1", "skills-devops"] },
+  { "lang": "pt", "q": "ele tem experiencia com kubernets e doker?", "trechos": ["skills-devops", "job1"] },
+  { "lang": "en", "q": "has he used postgress?", "trechos": ["skills-data"] },
+  { "lang": "es", "q": "¿Qué proyectos usan LangChain?", "trechos": ["p1", "p4"] },
+  { "lang": "pt", "q": "Quais projetos dele usam visão computacional?", "trechos": ["p8"] },
+  { "lang": "en", "q": "Has he built anything with generative image models?", "trechos": ["p12"] },
+  { "lang": "pt", "q": "Ele tem algum projeto de sistema de recomendação?", "trechos": ["p7"] },
+  { "lang": "es", "q": "¿Qué hizo en la Alcaldía de Manaos?", "trechos": ["job3", "public-sector"] },
+  { "lang": "pt", "q": "Quanto tempo ele ficou na ICCT e o que fazia lá?", "trechos": ["job2"] },
+  { "lang": "en", "q": "What postgraduate degrees is he pursuing?", "trechos": ["edu1", "edu2"] },
+  { "lang": "pt", "q": "Ele escreve testes automatizados e faz code review?", "trechos": ["skills-practices"] },
+  { "lang": "es", "q": "¿Cómo puedo ponerme en contacto con él?", "trechos": ["contact"] },
+  { "lang": "en", "q": "Which projects deal with LLM security or prompt injection?", "trechos": ["p11", "p1"] },
+  { "lang": "pt", "q": "Como foi construído o chat deste site?", "trechos": ["portfolio"] },
+  { "lang": "pt", "q": "Ele é mais backend ou frontend?", "trechos": ["skills-backend", "skills-frontend"] },
+  { "lang": "en", "q": "Is he good at mentoring and leading people?", "trechos": ["soft-skills"] },
+  { "lang": "es", "q": "¿Tiene experiencia con arquitectura hexagonal?", "trechos": ["p5"] },
+  { "lang": "pt", "q": "Ele programa em Python?", "trechos": ["skills-backend"] },
+  { "lang": "en", "q": "Where did he get his bachelor's degree?", "trechos": ["edu4"] }
+]

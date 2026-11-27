@@ -94,9 +94,9 @@ As **demos de IA** fazem a inferência no navegador: o LSTM roda em JavaScript p
 3. **IA com RAG** → o Worker:
    1. confere o token do **Turnstile**;
    2. gera o vetor da pergunta com **BGE-M3** (multilíngue);
-   3. busca no **Vectorize** os 6 trechos do perfil mais parecidos em significado;
+   3. busca até 6 trechos do perfil, combinando o **Vectorize** (mais parecidos em significado) com uma busca por palavras exatas (nomes como "Kafka");
    4. envia ao **Qwen3 30B** um resumo fixo do perfil + esses trechos, com regras para responder só sobre o perfil e nunca inventar dados;
-   5. envia a solicitação pelo **AI Gateway**, sem armazenar perguntas ou respostas em cache.
+   5. envia a solicitação pelo **AI Gateway**, sem guardar perguntas ou respostas em cache nem em registros, e entrega a resposta enquanto ela é gerada.
 4. **Busca local** (reserva) → se a IA falhar ou a cota do dia acabar (erro 3036), o chat **avisa o visitante** e procura no próprio conteúdo da página: ranking estilo TF-IDF, correção de digitação (Damerau-Levenshtein), sinônimos e tratamento de chinês.
 
 O conhecimento da IA é **gerado das mesmas fontes do site** (`data/` e `i18n/`): ao mudar o site e publicar o Worker, a IA e o índice vetorial acompanham.

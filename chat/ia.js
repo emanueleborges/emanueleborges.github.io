@@ -7,8 +7,10 @@ import { PortfolioApi as api } from "../api.js";
 const enabled = Boolean(api.enabled);
 
 // { answer } ou { error }: "quota" (cota gratuita do dia esgotada) ou "unavailable" (qualquer outra falha).
-const ask = async (question, lang) => {
-  const { ok, data } = await api.post("/", { question, lang });
+// onText recebe o texto acumulado enquanto a resposta chega.
+const ask = async (question, lang, onText) => {
+  let partial = "";
+  const { ok, data } = await api.postStream("/", { question, lang }, (part) => onText?.((partial += part)));
   const text = ok ? data?.answer : null;
   if (typeof text === "string" && text.trim()) return { answer: text.trim() };
   return { error: data?.error === "quota" ? "quota" : "unavailable" };

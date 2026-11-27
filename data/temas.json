@@ -3,7 +3,7 @@
   "padrao": "amazonia",
   "intensidade": {
     "min": 0.3,
-    "max": 1.7,
+    "max": 2.0,
     "passo": 0.05,
     "escurecer": 0.8
   },

@@ -1,0 +1,46 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$comment": "Só para o editor (associado em .vscode/settings.json): seletor de cor nos valores hex, autocompletar e validação de data/temas.json. Não é lido pelos scripts.",
+  "type": "object",
+  "required": ["padrao", "temas"],
+  "properties": {
+    "_doc": { "type": "string" },
+    "padrao": { "type": "string", "description": "Tema de quem visita pela primeira vez (uma chave de \"temas\")." },
+    "intensidade": {
+      "type": "object",
+      "properties": {
+        "min": { "type": "number" },
+        "max": { "type": "number" },
+        "passo": { "type": "number" },
+        "escurecer": { "type": "number", "minimum": 0, "maximum": 1 }
+      },
+      "additionalProperties": false
+    },
+    "temas": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["nome", "esquema", "cores"],
+        "additionalProperties": false,
+        "properties": {
+          "nome": {
+            "type": "object",
+            "required": ["en", "pt", "es"],
+            "properties": { "en": { "type": "string" }, "pt": { "type": "string" }, "es": { "type": "string" } }
+          },
+          "esquema": { "enum": ["dark", "light"], "description": "color-scheme do navegador." },
+          "cores": {
+            "type": "object",
+            "propertyNames": { "pattern": "^--[a-z0-9-]+$" },
+            "additionalProperties": {
+              "anyOf": [
+                { "type": "string", "pattern": "^#", "format": "color-hex" },
+                { "type": "string", "pattern": "^[^#]", "description": "rgba(), gradientes e outros valores CSS." }
+              ]
+            }
+          }
+        }
+      }
+    }
+  }
+}

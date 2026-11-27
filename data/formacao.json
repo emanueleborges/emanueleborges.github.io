@@ -6,7 +6,7 @@
       "school": "Universidade Federal de Goiás (UFG)",
       "alt": "UFG",
       "period": "2025 — 2026",
-      "emAndamento": true,
+      "emAndamento": false,
       "logo": "imagens/logos/ufg.svg",
       "ia": {
         "sobre": "a public federal university in Goiás, Brazil"
@@ -17,7 +17,7 @@
       "school": "FIAP",
       "alt": "FIAP",
       "period": "2025 — 2026",
-      "emAndamento": true,
+      "emAndamento": false,
       "logo": "imagens/logos/fiap.svg",
       "ia": {
         "sobre": "a technology college in São Paulo, Brazil"

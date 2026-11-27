@@ -183,7 +183,7 @@ Web Audio sounds and haptics; modals for site pages; GitHub viewer (listing from
 #### `POST /` — chat
 **Request:** `{ "question": "1–500 chars", "lang": "en|pt|es", "turnstileToken": "…" }` · **200:** `{ "answer": "…" }` · **Errors:** `400 invalid_question` · `403 forbidden_origin` · `403 turnstile_failed` · `429 rate_limited` · `502 empty_answer` · `503 quota` (daily free quota, error 3036) · `503 unavailable` (any other failure).
 
-**Flow:** origin → limit → validation → Turnstile → normalization → **RAG** (BGE-M3 → Vectorize top 6 → fixed summary + excerpts; on failure, full profile) → Qwen3 30B (`temperature 0.1`, `max_tokens 600`, `/no_think`) through AI Gateway **without cache** → cleanup (`<think>`, Markdown). On error, `aiErrorKind()` classifies it and, for quota, marks the AI as "quota" until 00:00 UTC (in that Worker instance's memory).
+**Flow:** origin → limit → validation → Turnstile → normalization → **RAG** (BGE-M3 → 12 Vectorize candidates, dropping those far below the best + exact-word search, fused into at most 6 excerpts → fixed summary + excerpts; on failure, full profile) → Qwen3 30B (`temperature 0.1`, `max_tokens 600`, `/no_think`) through AI Gateway **without cache or logs** → cleanup (`<think>`, Markdown) → text in parts (`stream: true`; without it, JSON). On error, `aiErrorKind()` classifies it and, for quota, marks the AI as "quota" until 00:00 UTC (in that Worker instance's memory).
 
 #### `GET /status`
 **200:** `{ "colo": "GRU", "model": "qwen3-30b-a3b-fp8", "ai": "online" | "quota" }`. Read-only; the site only calls it when the visitor clicks "measure connection".
