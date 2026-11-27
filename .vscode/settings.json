@@ -1,0 +1,5 @@
+{
+  "json.schemas": [
+    { "fileMatch": ["/data/temas.json"], "url": "./data/temas.schema.json" }
+  ]
+}
